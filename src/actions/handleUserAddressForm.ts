@@ -1,6 +1,6 @@
 'use server'
 
-import sharp from 'sharp'
+// import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
 import { Post } from '@/db/post.model.ts'
 import { revalidatePath } from 'next/cache'
@@ -40,13 +40,15 @@ const saveFile = async (file: File): Promise<string> => {
     return uniqueFullFilename
 }
 
-type PostData = {
-    id: number | undefined,
-    title: string,
-    text: string
+type UserDeliveryAddress = {
+    fullNameReceiver: string,
+    street: string,
+    city: string,
+    postalCode: string,
+    phoneNumber: string
 }
 
-const cleanFormData = (formData: FormData): PostData => {
+const cleanFormData = (formData: FormData): UserDeliveryAddress => {
     const id = formData.get('id')
     const title = formData.get('title')
     const text = formData.get('text')

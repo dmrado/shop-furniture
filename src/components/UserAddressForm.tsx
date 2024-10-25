@@ -10,16 +10,10 @@ import {User} from "next-auth"
 //     image?: string | null
 // }
 
-type UserAddressForm = {
-    fullNameReceiver: string,
-    street: string,
-    city: string,
-    postalCode: string,
-    phoneNumber: string
-}
+
 const UserAddressForm = ({user} : User ) => {
 
-    // Состояние для адреса доставки
+    // Состояние для сохранения в БД адреса доставки адреса доставки
     const [deliveryAddress, setDeliveryAddress] = useState({
         fullNameReceiver: '',
         street: '',
@@ -35,7 +29,7 @@ const UserAddressForm = ({user} : User ) => {
 
     const onSubmit = (formData: FormData) => {
         console.log('Адрес доставки:', deliveryAddress)
-        handleUserAddressForm(formData)
+        handleUserAddressForm(deliveryAddress)
     }
 
     return <div>

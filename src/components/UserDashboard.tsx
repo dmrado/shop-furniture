@@ -18,9 +18,13 @@ type User = {
         }
 }
 
+//todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
+
 // const createUser = (name: string, age: number): User => {
 //     return { name }
 // }
+
+// const user = createUser('Иван', 30)
 
 // Функция для приветствия пользователя
 const greetUser = (user: User): string => {
@@ -28,12 +32,10 @@ const greetUser = (user: User): string => {
     return `Здравствуйте, ${user.name}`
 }
 
-// const user = createUser('Иван', 30)
 
 const UserDashboard = ({ user, cartItems }) => {
     const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0)
     // todo отправка из корзины собственно заказа и выбранного адреса доставки
-
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
