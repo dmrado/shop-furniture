@@ -6,9 +6,35 @@ const Dashboard = () => {
         name: 'Иван Иванов',
         email: 'ivan@example.com',
         // photo: 'https://via.placeholder.com/150',
-        delivery_address: '',
-        delivery_date: Date.now(),
-    };
+        userAddress: [
+            {
+                fullNameReceiver: 'Иван Иванович Иванов',
+                street: 'Варварка дом. 38 корп. 2, кв. 24',
+                city: 'Москва',
+                postalCode: '111333',
+                phoneNumber: '8-901-0987654'
+            },
+            {
+                fullNameReceiver: 'Иванова Лидия Ивановна',
+                street: 'Петровка дом. 6 стр. 5, кв. 124',
+                city: 'Москва',
+                postalCode: '222444',
+                phoneNumber: '8-901-0987654'
+            },
+            {
+                fullNameReceiver: 'Кузнецова Василиса Ивановна',
+                street: 'Ордынка 11 строение 1, квартира 43',
+                city: 'Москва',
+                postalCode: '333555',
+                phoneNumber: '8-916-0982624'
+            },
+        ]
+    }
+
+
+
+    // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
+    // const deliveryAddress = userAddress[n]
 
     const cartItems = [
         {
@@ -30,9 +56,9 @@ const Dashboard = () => {
     ]
 
     return (  <>
-        <UserDashboard user={user} cartItems={cartItems} />
+        <UserDashboard user={user} cartItems={cartItems}/>
     </>
 )
 }
 
-export default Dashboard;
+export default Dashboard

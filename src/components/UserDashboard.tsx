@@ -1,48 +1,39 @@
 'use client'
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
+import UserAddressForm from "@/components/UserAddressForm"
 
 type User = {
     name: string;
-    age: number;
+    email: 'ivan@example.com',
+    // photo: 'https://via.placeholder.com/150',
+    userAddress:
+        {
+            fullName: '',
+            street: '',
+            city: '',
+            postalCode: '',
+            phoneNumber: ''
+        }
 }
 
-const createUser = (name: string, age: number): User => {
-    return { name, age };
-}
+// const createUser = (name: string, age: number): User => {
+//     return { name }
+// }
 
 // Функция для приветствия пользователя
 const greetUser = (user: User): string => {
-    return `Привет, меня зовут ${user.name} и мне ${user.age} лет.`;
+    console.log(greetUser(user))
+    return `Здравствуйте, ${user.name}`
 }
 
-const user = createUser('Иван', 30);
-console.log(greetUser(user));
-
+// const user = createUser('Иван', 30)
 
 const UserDashboard = ({ user, cartItems }) => {
-    const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0);
+    const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0)
+    // todo отправка из корзины собственно заказа и выбранного адреса доставки
 
-    // Состояние для адреса доставки
-    const [deliveryAddress, setDeliveryAddress] = useState({
-        fullName: '',
-        street: '',
-        city: '',
-        postalCode: '',
-        phoneNumber: ''
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setDeliveryAddress({ ...deliveryAddress, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Здесь можно обработать отправку адреса
-        console.log('Адрес доставки:', deliveryAddress);
-    };
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
@@ -51,7 +42,6 @@ const UserDashboard = ({ user, cartItems }) => {
             <div className="flex items-center mb-8">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
                     <Image
-                        src="/hero-desktop.png"
                         width={1000}
                         height={760}
                         className="hidden md:block"
@@ -85,7 +75,7 @@ const UserDashboard = ({ user, cartItems }) => {
                         </div>
                         <h3 className="text-lg font-semibold">{item.title}</h3>
                         <p className="text-gray-500">{item.description}</p>
-                        <p className="text-sm text-gray-400">Арт: {item.sku}</p> {/* Номер SKU */}
+                        <p className="text-sm text-gray-400">Арт: {item.sku}</p>
                         <p className="text-xl font-bold mt-2 text-right">${item.price.toFixed(2)}</p>
                     </div>
                 ))}
@@ -114,76 +104,11 @@ const UserDashboard = ({ user, cartItems }) => {
                 )}
             </div>
 
-            <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
-                {user.delivery_address.length === 0 ? (
-                    <p>Нет зарегистрированных адресов доставки</p>
-                ) : (
-                    <>
-                        <div className="mb-4">
-                                <div key={user.id} className="flex justify-between mb-2">
-                                    <span>${user.delivery_address}</span>
-                                </div>
-                        </div>
-                    </>
-                )}
-            </div>
 
-            {/* Форма ввода адреса доставки */}
-            <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">Адрес доставки</h2>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        name="fullName"
-                        placeholder="ФИО получателя"
-                        value={deliveryAddress.fullName}
-                        onChange={handleChange}
-                        required
-                        className="border p-2 mb-2 w-full"
-                    />
-                    <input
-                        type="text"
-                        name="street"
-                        placeholder="Улица, дом, квартира"
-                        value={deliveryAddress.street}
-                        onChange={handleChange}
-                        required
-                        className="border p-2 mb-2 w-full"
-                    />
-                    <input
-                        type="text"
-                        name="city"
-                        placeholder="Город"
-                        value={deliveryAddress.city}
-                        onChange={handleChange}
-                        required
-                        className="border p-2 mb-2 w-full"
-                    />
-                    <input
-                        type="text"
-                        name="postalCode"
-                        placeholder="Почтовый индекс"
-                        value={deliveryAddress.postalCode}
-                        onChange={handleChange}
-                        required
-                        className="border p-2 mb-2 w-full"
-                    />
-                    <input
-                        type="tel"
-                        name="phoneNumber"
-                        placeholder="Номер телефона"
-                        value={deliveryAddress.phoneNumber}
-                        onChange={handleChange}
-                        required
-                        className="border p-2 mb-4 w-full"
-                    />
-                    <button type="submit" className="bg-blue-500 text-white p-2 rounded">Добавить адрес</button>
-                </form>
-            </div>
+            <UserAddressForm user={user}/>
         </div>
-    );
-};
+    )
+}
 
-export default UserDashboard;
+export default UserDashboard
 
