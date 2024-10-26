@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {handleUserAddressForm} from "@/actions/handleUserAddressForm"
 import {User} from "next-auth"
+import {it} from "node:test";
 
 // todo удалить DefaultUser - это памятка что там за User расширяет DefaultUser в next-auth
 // export interface DefaultUser {
@@ -36,23 +37,6 @@ const UserAddressForm = ({user} : User ) => {
     }
 
     return <div>
-        {/* Список адресов доставки */}
-        <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
-            {user.userAddress.length === 0 ? (
-                <p>Нет зарегистрированных адресов доставки</p>
-            ) : (
-                <>
-                    <ul className="mb-4">
-                            {user.userAddress?.map(item =>
-                                <li key={item.id} className="flex justify-between mb-2">
-                                    <span>Получатель: {item.fullNameReceiver}; {item.postalCode}; {item.city}; {item.street}; Телефон: {item.phoneNumber}</span>
-                                </li>
-                            )}
-                    </ul>
-                </>
-            )}
-        </div>
 
         {/* Форма ввода адреса доставки */}
         <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
