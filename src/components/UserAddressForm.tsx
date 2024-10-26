@@ -23,11 +23,14 @@ const UserAddressForm = ({user} : User ) => {
     })
 
     const handleChange = (e) => {
-        const { name, value } = e.target
-        setDeliveryAddress({ ...deliveryAddress, [name]: value })
+        const { name, value } = e.target;
+        setDeliveryAddress((prevState) => ({
+            ...prevState,
+            [name]: value
+        }))
     }
 
-    const onSubmit = (formData: FormData) => {
+    const onSubmit = (deliveryAddress: FormData) => {
         console.log('Адрес доставки:', deliveryAddress)
         handleUserAddressForm(deliveryAddress)
     }
@@ -57,13 +60,14 @@ const UserAddressForm = ({user} : User ) => {
             <form action={onSubmit}>
                 <input
                     type="text"
-                    name="fullName"
+                    name="fullNameReceiver"
                     placeholder="ФИО получателя"
                     value={deliveryAddress.fullNameReceiver}
                     onChange={handleChange}
-                    required
+                    // required
                     className="border p-2 mb-2 w-full"
                 />
+
                 <input
                     type="text"
                     name="street"

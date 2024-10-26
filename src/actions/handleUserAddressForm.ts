@@ -1,15 +1,16 @@
 'use server'
 
-// import sharp from 'sharp'
+import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
 import { Post } from '@/db/post.model.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
+import {FILE_LIMIT, ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH} from '@/app/constants.ts'
 import fs from 'fs'
 
 class ValidationError extends Error {}
 
+//todo saveFile можно удалить если нек будем принимать файлы от юзера
 const saveFile = async (file: File): Promise<string> => {
     const buffer = Buffer.from(await file.arrayBuffer())
     const uniqueFilename = uuidv4()
@@ -41,6 +42,7 @@ const saveFile = async (file: File): Promise<string> => {
 }
 
 type UserDeliveryAddress = {
+    id: number,
     fullNameReceiver: string,
     street: string,
     city: string,
@@ -48,22 +50,32 @@ type UserDeliveryAddress = {
     phoneNumber: string
 }
 
-const cleanFormData = (formData: FormData): UserDeliveryAddress => {
-    const id = formData.get('id')
-    const title = formData.get('title')
-    const text = formData.get('text')
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof text !== 'string') {
-        throw new ValidationError('Filedata in text fields')
+const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
+    const id = deliveryAddress.get('id')
+    const fullNameReceiver = deliveryAddress.get('fullNameReceiver')
+    const street = deliveryAddress.get('street')
+    const city = deliveryAddress.get('city')
+    const postalCode = deliveryAddress.get('postalCode')
+    const phoneNumber = deliveryAddress.get('phoneNumber')
+    if (typeof id !== 'string' || typeof fullNameReceiver !== 'string' || typeof street !== 'string' || typeof city !== 'string' || typeof postalCode !== 'string' || typeof phoneNumber !== 'string') {
+        throw new ValidationError('I see you! Filedata in text fields')
     }
-    if (!title || !text) {
-        throw new ValidationError('Title or text is null')
+    if (!fullNameReceiver || !street || !city || !postalCode || !phoneNumber) {
+        throw new ValidationError('Все поля обязательны')
     }
-    if (title.length < TITLE_MIN_LENGTH) {
-        throw new ValidationError('Title too short')
+    if (fullNameReceiver.length < ADDRESS_MIN_LENGTH || street.length < ADDRESS_MIN_LENGTH || city.length < CITY_MIN_LENGTH || postalCode.length < ADDRESS_MIN_LENGTH || phoneNumber.length < ADDRESS_MIN_LENGTH) {
+        throw new ValidationError('Данные не корректны')
     }
-    return { title, text, id: id ? Number(id) : undefined }
+    return <UserDeliveryAddress>{
+        fullNameReceiver,
+        street,
+        city,
+        postalCode,
+        phoneNumber,
+        id: id ? Number(id) : undefined
+    }
 }
-
+//todo cleanFormFile можно удалить если нек будем принимать файлы от юзера
 const cleanFormFile = (formData: FormData): File | undefined => {
     const file = formData.get('post_picture')
     if (file == null) {
@@ -82,19 +94,23 @@ const cleanFormFile = (formData: FormData): File | undefined => {
     return file
 }
 
-export const handleUserAddressForm = async (formData: FormData) => {
+export const handleUserAddressForm = async (deliveryAddress: FormData) => {
     try {
-        const { id, title, text } = cleanFormData(formData)
-        const preview = text ? text.replace(/<[^>]+>/g, '').slice(0, 100) : ''//убираем HTML-разметку
+        const { id, fullNameReceiver, street, city, postalCode, phoneNumber } = cleanFormData(deliveryAddress)
+        const previewFullNameReceiver = fullNameReceiver ? fullNameReceiver.replace(/<[^>]+>/g, '').slice(0, 100) : ''//убираем HTML-разметку
+        const previewStreet = street ? street.replace(/<[^>]+>/g, '').slice(0, 100) : ''
+        const previewCity = city ? city.replace(/<[^>]+>/g, '').slice(0, 100) : ''
+        const previewPostalCode = postalCode ? postalCode.replace(/<[^>]+>/g, '').slice(0, 100) : ''
+        const previewPhoneNumber = phoneNumber ? phoneNumber.replace(/<[^>]+>/g, '').slice(0, 100) : ''
+//todo создать модель UserDeliveryAddress
+        const [ savedDeliveryAddress, isUpdated ] = await UserDeliveryAddress.upsert({ id: id, previewFullNameReceiver, previewStreet, previewCity, previewPostalCode, previewPhoneNumber })
 
-        const [ post, isUpdated ] = await Post.upsert({ id: id, title, text, preview })
+        // const formFile = cleanFormFile(formData)
 
-        const formFile = cleanFormFile(formData)
-
-        if (formFile) {
-            const fileName = await saveFile(formFile)
-            await Post.update({ path: `/img/${fileName}` }, { where: { id: post.id } })
-        }
+        // if (formFile) {
+        //     const fileName = await saveFile(formFile)
+        //     await Post.update({ path: `/img/${fileName}` }, { where: { id: post.id } })
+        // }
     } catch (err) {
         console.error('Error on handleForm:  ', err)
         if (err instanceof ValidationError) {
@@ -102,6 +118,6 @@ export const handleUserAddressForm = async (formData: FormData) => {
         }
         return redirect('/api/error/?code=500&message=SERVER_ERROR')
     }
-    revalidatePath('/posts')
-    redirect('/posts')
+    revalidatePath('/dashboard')
+    redirect('/dashboard')
 }

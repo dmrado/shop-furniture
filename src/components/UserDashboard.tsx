@@ -35,7 +35,7 @@ const greetUser = (user: User): string => {
 
 const UserDashboard = ({ user, cartItems }) => {
     const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0)
-    // todo отправка из корзины собственно заказа и выбранного адреса доставки
+    // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может бчть уникальный адрес из массива адресов доставки корпоративного юзера
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
