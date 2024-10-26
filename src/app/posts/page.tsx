@@ -1,10 +1,10 @@
-import PostList from '@/components/PostList.tsx'
+import PostList from '@/components/admin/PostList.tsx'
 import React from 'react'
 import { getPosts } from '@/actions/getPosts.ts'
 import { NUMBER_OF_POSTS_TO_FETCH } from '@/app/constants.ts'
 import CookieConsent from '@/components/CookieConsent.tsx'
 import { getConsentAccepted } from '@/actions/getCookiesAccepted.ts'
-import HeaderButtons from '@/components/HeaderButtons.tsx'
+import HeaderButtons from '@/components/admin/HeaderButtons.tsx'
 
 export const metadata = {
     title: 'Бейт-Иешуа | Блог'

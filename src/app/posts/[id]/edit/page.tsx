@@ -5,7 +5,7 @@ import React from 'react'
 import { getServerSession } from 'next-auth'
 import { isAdmin } from '@/app/isAdmin.ts'
 import { isSessionExpired } from '@/app/isSessionExpired.ts'
-import PostForm from '@/components/PostForm.tsx'
+import PostForm from '@/components/admin/PostForm.tsx'
 // import '../tailwind.css'
 
 type PostPageParams = { params: { id: number } }

@@ -2,8 +2,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import UserAddressForm from "@/components/UserAddressForm"
-import UserOrdersHistory from "@/components/UserOrdersHistory"
+import UserAddressForm from '@/components/user/UserAddressForm'
+import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 
 type User = {
     name: string;

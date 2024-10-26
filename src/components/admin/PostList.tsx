@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
 import { PostPreview } from '@/db/post.model'
-import PostsPreview from '@/components/PostsPreview.tsx'
+import PostsPreview from '@/components/admin/PostsPreview.tsx'
 import { getPosts } from '@/actions/getPosts.ts'
 import { NUMBER_OF_POSTS_TO_FETCH } from '@/app/constants.ts'
 
