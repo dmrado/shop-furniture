@@ -135,7 +135,7 @@ const Dashboard = () => {
             sku: 1114,
             title: 'Тумбочка для славянского шкафа',
             description: 'Красивая и функциональная мебель.',
-            price: 2700,
+            price: 300,
             image: '/tumbochka-for-slavianskii-shkaf.jpg',
         },
     ]
