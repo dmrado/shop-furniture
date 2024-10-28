@@ -49,7 +49,7 @@ const UserAddressForm = ({user} : User ) => {
                     value={deliveryAddress.fullNameReceiver}
                     onChange={handleChange}
                     // required
-                    className="border p-2 mb-2 w-full"
+                    className="border p-2 mb-2 w-full rounded-md"
                 />
 
                 <input
@@ -59,7 +59,7 @@ const UserAddressForm = ({user} : User ) => {
                     value={deliveryAddress.street}
                     onChange={handleChange}
                     required
-                    className="border p-2 mb-2 w-full"
+                    className="border p-2 mb-2 w-full rounded-md"
                 />
                 <input
                     type="text"
@@ -68,7 +68,7 @@ const UserAddressForm = ({user} : User ) => {
                     value={deliveryAddress.city}
                     onChange={handleChange}
                     required
-                    className="border p-2 mb-2 w-full"
+                    className="border p-2 mb-2 w-full rounded-md"
                 />
                 <input
                     type="text"
@@ -77,7 +77,7 @@ const UserAddressForm = ({user} : User ) => {
                     value={deliveryAddress.postalCode}
                     onChange={handleChange}
                     required
-                    className="border p-2 mb-2 w-full"
+                    className="border p-2 mb-2 w-full rounded-md"
                 />
                 <input
                     type="tel"
@@ -86,7 +86,7 @@ const UserAddressForm = ({user} : User ) => {
                     value={deliveryAddress.phoneNumber}
                     onChange={handleChange}
                     required
-                    className="border p-2 mb-4 w-full"
+                    className="border p-2 mb-4 w-full rounded-md"
                 />
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded" >Добавить адрес</button>
             </form>

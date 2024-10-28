@@ -3,7 +3,6 @@ import UserOrderForm from '@/components/user/UserOrderForm'
 
 interface UserAddress {
     id: string;
-    fullNameReceiver: string;
     postalCode: string;
     city: string;
     street: string;
@@ -44,7 +43,7 @@ const OrderPage: React.FC<Props> = ({ user }) => {
     // }
 
     return <>
-            <UserOrderForm />
+            <UserOrderForm/>
         </>
 }
 

@@ -40,7 +40,7 @@ const UserOrdersHistory: React.FC<UserDashboardProps> = ({ user, previousOrders 
     // const totalAmount = previousOrders.reduce((acc, item) => acc + item.price, 0);
 
     return (
-        <div className="p-8 bg-gray-100 min-h-screen">
+        <div className="p-8 max-w-6xl">
 
             {/* Рендер миниатюр предыдущих заказов */}
             <h2 className="text-xl font-semibold mt-8 mb-4">Предыдущие заказы</h2>

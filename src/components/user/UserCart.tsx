@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from "next/link"
-import { useState } from 'react'
+import {useState} from 'react'
 
 // todo компонент тьребует передать ему вес товара
 
@@ -77,7 +77,7 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
     };
 
     return (
-        <>
+        <div className="max-w-6xl mx-auto">
             <h1 className="text-xl font-semibold mb-4">Корзина</h1>
             <h2 className="text-xl font-semibold mb-4">Выбранные товары</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -121,7 +121,8 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800">Корзина</h2>
                     <Link href={'/order'}>
-                        <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10 flex-shrink-0">
+                        <button
+                            className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10 flex-shrink-0">
                             Оформить заказ
                         </button>
                     </Link>
@@ -150,7 +151,7 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
                                         <span className="text-gray-600">
                                             `${calculateItemTotal(item).toFixed(2)}`
                                         </span>
-                                        <br />
+                                        <br/>
                                         <span className="text-sm text-gray-400">
                                             {formatWeight(item.weight * quantities[item.id])}
                                         </span>
@@ -175,8 +176,8 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
                     </>
                 )}
             </div>
-        </>
-    );
-};
+        </div>
+    )
+}
 
 export default UserCart

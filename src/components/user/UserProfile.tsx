@@ -15,6 +15,10 @@ type User = {
             street: '',
             city: '',
             postalCode: '',
+            floor: '',
+            entrance: '',
+            intercom: '',
+            cargo_elevator: '',
             phoneNumber: ''
         }
 }
@@ -38,7 +42,7 @@ const UserProfile = ({ user, cartItems, previousOrders }) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может бчть уникальный адрес из массива адресов доставки корпоративного юзера
 
     return (
-        <div className="p-8 bg-gray-100 min-h-screen">
+        <div className="p-8 mx-auto max-w-6xl">
             <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>
 
             <div className="flex items-center mb-8">
@@ -77,7 +81,8 @@ const UserProfile = ({ user, cartItems, previousOrders }) => {
                                     //     // onSubmit={hideAlertForm}
                                     // /> :
                                     <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">
-                                        <span>Получатель: {item.fullNameReceiver}; {item.postalCode}; {item.city}; {item.street}; Телефон: {item.phoneNumber}</span>
+                                        <span> {item.postalCode}, {item.city}, {item.street}, этаж  {item.floor} подъезд {item.entrance}, домофон {item.intercom}
+                                            <br/> Телефон: {item.phoneNumber}</span>
                                         <button
                                             className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
                                             Отредактировать

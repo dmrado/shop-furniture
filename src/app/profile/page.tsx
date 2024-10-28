@@ -1,7 +1,7 @@
 import UserProfile from '@/components/user/UserProfile'
 
 const ProfilePage = () => {
-//todo страница серверная она ходит в базу получает юзера и раздает его компонентам со всеми данными из всех моделей, или только id, а уже компоненты ходят в базу и собирают данные из моделей для отрисовки, НО ОНИ КЛИЕНТСКИЕ потому что будут требовать взаимодействия (добавить в заказ из прошлых заказову) и нре смогут выполнять серверные экшены
+//todo страница серверная она ходит в базу получает юзера и раздает его компонентам со всеми данными из всех моделей
 
     //todo создать модели User, UserDeliveryAddress, Orders(status) с запросами к ним с этой страницы а хистори - это отфильтровано за период в Orders
     //todo создать модель для избранного "с сердечком"
@@ -15,26 +15,35 @@ const ProfilePage = () => {
         userAddress: [
             {
                 addressId: 1,
-                fullNameReceiver: 'Иван Иванович Иванов',
                 street: 'Варварка дом. 38 корп. 2, кв. 24',
                 city: 'Москва',
                 postalCode: '111333',
+                floor: '10',
+                entrance: '7',
+                intercom: '024',
+                cargo_elevator: '1',
                 phoneNumber: '8-901-0987654'
             },
             {
                 addressId: 2,
-                fullNameReceiver: 'Иванова Лидия Ивановна',
                 street: 'Петровка дом. 6 стр. 5, кв. 124',
                 city: 'Москва',
                 postalCode: '222444',
+                floor: '3',
+                entrance: '2',
+                intercom: '124',
+                cargo_elevator: '1',
                 phoneNumber: '8-901-0987654'
             },
             {
                 addressId: 3,
-                fullNameReceiver: 'Кузнецова Василиса Ивановна',
                 street: 'Ордынка 11 строение 1, квартира 43',
                 city: 'Москва',
                 postalCode: '333555',
+                floor: '5',
+                entrance: '1',
+                intercom: '043',
+                cargo_elevator: '0',
                 phoneNumber: '8-916-0982624'
             },
         ]
