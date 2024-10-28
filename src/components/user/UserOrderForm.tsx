@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-//todo получение адресов доставки или на странице dashboard выбор тоглером са передачей адреса сразу в форму ИЛИ ВООБЩЕ СДЕЛАТЬ ЗАКАЗ НА СТРАНИЦЕ DASHBOARD отметить "чекед" выбранные заказы, посчитать по ним сумму выбрать адрес, дату и время и отпроавить на email службы доставки.
+//todo получение адресов доставки или на странице profile выбор тоглером са передачей адреса сразу в форму ИЛИ ВООБЩЕ СДЕЛАТЬ ЗАКАЗ НА СТРАНИЦЕ DASHBOARD отметить "чекед" выбранные заказы, посчитать по ним сумму выбрать адрес, дату и время и отпроавить на email службы доставки.
 const UserOrderForm = () => {
     const [order, setOrder] = useState({
         productName: '',

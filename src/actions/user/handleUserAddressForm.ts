@@ -118,6 +118,6 @@ export const handleUserAddressForm = async (deliveryAddress: FormData) => {
         }
         return redirect('/api/error/?code=500&message=SERVER_ERROR')
     }
-    revalidatePath('/dashboard')
-    redirect('/dashboard')
+    revalidatePath('/profile')
+    redirect('/profile')
 }

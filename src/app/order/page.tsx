@@ -21,7 +21,7 @@ const OrderPage: React.FC<Props> = ({ user }) => {
     // const handleSubmit = async (e: React.FormEvent) => {
     //     e.preventDefault()
     //
-    //     // todo переделать  запрос на сервер в серверный экшен
+    //     // todo переделать  запрос на сервер в серверный экшен и передать его в компонент формы ниже UserOrderForm
     //     const response = await fetch('/api/order', {
     //         method: 'POST',
     //         headers: {

@@ -34,8 +34,7 @@ const greetUser = (user: User): string => {
 }
 
 
-const UserDashboard = ({ user, cartItems, previousOrders }) => {
-    const totalAmount = cartItems.reduce((acc, item) => acc + item.price, 0)
+const UserProfile = ({ user, cartItems, previousOrders }) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может бчть уникальный адрес из массива адресов доставки корпоративного юзера
 
     return (
@@ -61,57 +60,7 @@ const UserDashboard = ({ user, cartItems, previousOrders }) => {
                 </div>
             </div>
 
-            <h2 className="text-xl font-semibold mb-4">Ваши товары</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cartItems.map((item) => (
-                    <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
-                        <div className="relative w-full h-40 mb-4">
-                            <Image
-                                className="hidden md:block rounded-md"
-                                // width={1000}
-                                // height={760}
-                                layout="fill"
-                                objectFit="cover"
-                                src={item.image}
-                                alt={item.title}
-                            />
-                        </div>
-                        <h3 className="text-lg font-semibold">{item.title}</h3>
-                        <p className="text-gray-500">{item.description}</p>
-                        <p className="text-sm text-gray-400">Арт: {item.sku}</p>
-                        <p className="text-xl font-bold mt-2 text-right">${item.price.toFixed(2)}</p>
-                    </div>
-                ))}
-            </div>
 
-            {/* Корзина */}
-            <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-800">Корзина</h2>
-                    <button
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10 flex-shrink-0">
-                        Оформить заказ
-                    </button>
-                </div>
-                {cartItems.length === 0 ? (
-                    <p className="text-gray-600">Корзина пуста.</p>
-                ) : (
-                    <>
-                        <ul className="mb-4 border-t border-gray-200 pt-4">
-                            {cartItems.map((item) => (
-                                <li key={item.id} className="flex justify-between mb-3 py-2 border-b border-gray-200">
-                                    <span className="text-gray-800">{item.title}</span>
-                                    <span className="text-gray-600">${item.price.toFixed(2)}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="flex justify-between font-bold text-xl text-gray-800">
-                            <span>Итого:</span>
-                            <span>${totalAmount.toFixed(2)}</span>
-                        </div>
-                    </>
-                )}
-            </div>
 {/*todo UserAddressForm передать юзера с его  item.addressId */}
             {/* Список адресов доставки */}
             <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
@@ -147,5 +96,5 @@ const UserDashboard = ({ user, cartItems, previousOrders }) => {
     )
 }
 
-export default UserDashboard
+export default UserProfile
 

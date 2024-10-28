@@ -1,11 +1,11 @@
-import UserDashboard from '@/components/user/UserDashboard'
+import UserProfile from '@/components/user/UserProfile'
 
-const Dashboard = () => {
+const ProfilePage = () => {
 //todo страница серверная она ходит в базу получает юзера и раздает его компонентам со всеми данными из всех моделей, или только id, а уже компоненты ходят в базу и собирают данные из моделей для отрисовки, НО ОНИ КЛИЕНТСКИЕ потому что будут требовать взаимодействия (добавить в заказ из прошлых заказову) и нре смогут выполнять серверные экшены
 
-    //todo создать модели User, UserDeliveryAddress, ?UserOrdersHistory? с запросами к ним с этой страницы
+    //todo создать модели User, UserDeliveryAddress, Orders(status) с запросами к ним с этой страницы а хистори - это отфильтровано за период в Orders
     //todo создать модель для избранного "с сердечком"
-    //todo создать полусчение id-шников недавно пролсмотренного из Local Storage с запросом к модели для получения данных и соотв сохранения 20 недавно просмотренных товаров
+    //todo создать получение id-шников недавно пролсмотренного из Local Storage с запросом к модели для получения данных и соотв сохранения 20 недавно просмотренных товаров
 
     const user = {
         name: 'Иван Иванов',
@@ -44,41 +44,6 @@ const Dashboard = () => {
 
     // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
     // const deliveryAddress = userAddress[n]
-
-    const cartItems = [
-        {
-            id: 1,
-            sku: 1111,
-            title: 'Элитный диван',
-            description: 'Удобный и стильный диван для вашего дома.',
-            price: 1200,
-            image: '/modulnyj-divan.jpg',
-        },
-        {
-            id: 2,
-            sku: 1112,
-            title: 'Кофейный столик',
-            description: 'Красивая и функциональная мебель.',
-            price: 400,
-            image: '/kofeinii-stolik-elite.webp',
-        },
-        {
-            id: 3,
-            sku: 1113,
-            title: 'Славянский шкаф',
-            description: 'Красивая и функциональная мебель.',
-            price: 2700,
-            image: '/slavianskii-shkaf.jpg',
-        },
-        {
-            id: 4,
-            sku: 1114,
-            title: 'Тумбочка для славянского шкафа',
-            description: 'Красивая и функциональная мебель.',
-            price: 2700,
-            image: '/tumbochka-for-slavianskii-shkaf.jpg',
-        },
-    ]
 
     const previousOrders = [
         {
@@ -141,9 +106,9 @@ const Dashboard = () => {
     ]
 
     return (  <>
-        <UserDashboard user={user} cartItems={cartItems} previousOrders={previousOrders}/>
+        <UserProfile user={user} previousOrders={previousOrders}/>
     </>
 )
 }
 
-export default Dashboard
+export default ProfilePage
