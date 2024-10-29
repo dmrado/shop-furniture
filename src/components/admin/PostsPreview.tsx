@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { PostPreview } from '@/db/post.model'
+import { PostPreview } from '@/db/modelsold/post.model'
 
 const PostsPreview = ({ post }: { post: PostPreview }) => {
     // console.log('post on PostsPreview', post)

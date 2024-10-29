@@ -1,6 +1,6 @@
 import { Model, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, DataTypes } from 'sequelize'
 import { User } from './user.model'
-import { sequelize } from './connection'
+import { sequelize } from '../connection'
 
 export class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
     declare id: CreationOptional<number>

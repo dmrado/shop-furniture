@@ -1,5 +1,5 @@
 import { Model, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, DataTypes } from 'sequelize'
-import { sequelize } from './connection'
+import { sequelize } from '../connection'
 
 export class Alert extends Model<InferAttributes<Alert>, InferCreationAttributes<Alert>> {
     declare id: CreationOptional<number>

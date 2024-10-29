@@ -1,5 +1,5 @@
 'use server'
-import { Alert } from '@/db/alert.model.ts'
+import { Alert } from '@/db/modelsold/alert.model.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { TITLE_MIN_LENGTH } from '@/app/constants.ts'

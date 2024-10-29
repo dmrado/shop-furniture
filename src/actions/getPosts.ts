@@ -1,5 +1,5 @@
 'use server'
-import { Post, PostPreview } from '@/db/post.model.ts'
+import { Post, PostPreview } from '@/db/modelsold/post.model.ts'
 
 export const getPosts = async (offset: number, limit: number)
     : Promise<{count: number, posts: Array<PostPreview> }> => {

@@ -2,7 +2,7 @@
 
 import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
-import { Post } from '@/db/post.model.ts'
+import { Post } from '@/db/modelsold/post.model.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import {FILE_LIMIT, ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH} from '@/app/constants.ts'
