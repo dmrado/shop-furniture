@@ -1,5 +1,5 @@
 import { Model, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, DataTypes } from 'sequelize'
-import { User } from './user.model'
+import { Admin } from './admin.model'
 import { sequelize } from '../connection'
 
 export class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
@@ -43,6 +43,6 @@ Post.init({
     tableName: 'posts',
     timestamps: true
 })
-Post.belongsTo(User)
+Post.belongsTo(Admin)
 
 export type PostPreview = Pick< Post, 'id' | 'title' | 'preview' | 'path' | 'createdAt' >
