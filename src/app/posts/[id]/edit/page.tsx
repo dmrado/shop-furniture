@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation'
-import { Post } from '@/db/modelsold/post.model.ts'
+import { Post } from '@/db/modeladmin/post.model.ts'
 import Link from 'next/link'
 import React from 'react'
 import { getServerSession } from 'next-auth'

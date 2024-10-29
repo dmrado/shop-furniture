@@ -1,4 +1,3 @@
-// models/index.ts
 import AddressModel from './address'
 import ColorModel from './color'
 import ItemModel from './item'

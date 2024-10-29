@@ -1,7 +1,7 @@
-import {Admin} from '@/db/modelsold/admin.model'
-import { Post } from '@/db/modelsold/post.model'
+import {Admin} from '@/db/modeladmin/admin.model'
+import { Post } from '@/db/modeladmin/post.model'
 import { sequelize } from '@/db/connection'
-import { Alert } from '@/db/modelsold/alert.model.ts'
+import { Alert } from '@/db/modeladmin/alert.model.ts'
 import AddressModel from "./db/models/address"
 import ColorModel from "./db/models/color";
 import ItemModel from "./db/models/item";

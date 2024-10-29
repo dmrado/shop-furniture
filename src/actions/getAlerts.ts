@@ -1,5 +1,5 @@
 'use server'
-import { Alert } from '@/db/modelsold/alert.model.ts'
+import { Alert } from '@/db/modeladmin/alert.model.ts'
 import { InferAttributes, Op } from 'sequelize'
 
 export const getAlerts = async ()
