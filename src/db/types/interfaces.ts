@@ -1,14 +1,14 @@
-// types/models.ts
+// types/interfaces.ts
 export interface Address {
     id: number;
-    userid: number;
+    userId: number;
     phone: string;
     city: string;
     street: string;
-    home: number;
-    corps: number;
-    appart: number;
-    ismain: boolean;
+    home: string;
+    corps: string;
+    appart: string;
+    isMain: boolean;
 }
 
 export interface Color {
@@ -50,10 +50,10 @@ export interface OrderedItem {
 
 export interface Order {
     id: number;
-    userid: number;
-    adres: number;
-    orderdate: Date;
-    cartprice: number;
+    userId: number;
+    addressId: number;
+    orderDate: Date;
+    cartPrice: number;
 }
 
 export interface Stock {
@@ -66,9 +66,10 @@ export interface Stock {
 export interface User {
     id: number;
     email: string;
-    uname: string;
-    usurname: string;
-    ufathername: string;
-    cancontact: boolean;
-    isactive: boolean;
+    name: string;
+    surName: string;
+    fatherName: string;
+    canContact: boolean;
+    isActive: boolean;
+    addresses?: Address[]
 }

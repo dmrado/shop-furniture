@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model } from 'sequelize'
-import { Stock } from '../types/models'
+import { Stock } from '../types/interfaces'
 
-class StockModel extends Model<Stock> implements Stock {
+export class StockModel extends Model<Stock> implements Stock {
     public itemid!: number;
     public quantity!: number;
     public instock!: boolean;
@@ -34,6 +34,4 @@ StockModel.init(
         sequelize,
         tableName: 'stocks',
     }
-);
-
-export default StockModel
+)

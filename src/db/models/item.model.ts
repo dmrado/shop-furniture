@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model } from 'sequelize'
-import { Item } from '../types/models'
+import { Item } from '../types/interfaces'
 
-class ItemModel extends Model<Item> implements Item {
+export class ItemModel extends Model<Item> implements Item {
     public id!: number;
     public isactive!: boolean;
     public articul!: string;
@@ -113,6 +113,4 @@ ItemModel.init(
         sequelize,
         tableName: 'items',
     }
-);
-
-export default ItemModel
+)

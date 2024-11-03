@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model } from 'sequelize'
-import { Color } from '../types/models'
+import { Color } from '../types/interfaces'
 
-class ColorModel extends Model<Color> implements Color {
+export class ColorModel extends Model<Color> implements Color {
     public id!: number;
     public isactive!: boolean;
     public colorcode!: string;
@@ -28,6 +28,4 @@ ColorModel.init(
         sequelize,
         tableName: 'colors',
     }
-);
-
-export default ColorModel
+)

@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model } from 'sequelize'
-import { OrderedItem } from '../types/models'
+import { OrderedItem } from '../types/interfaces'
 
-class OrderedItemModel extends Model<OrderedItem> implements OrderedItem {
+export class OrderedItemModel extends Model<OrderedItem> implements OrderedItem {
     public order!: number;
     public item!: number;
     public quantity!: number;
@@ -32,6 +32,5 @@ OrderedItemModel.init(
         sequelize,
         tableName: 'ordered_items',
     }
-);
+)
 
-export default OrderedItemModel

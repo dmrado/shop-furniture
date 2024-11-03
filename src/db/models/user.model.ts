@@ -1,15 +1,18 @@
 import {sequelize} from '../connection'
-import { DataTypes, Model } from 'sequelize'
-import { User } from '../types/models'
+import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
+import { User } from '../types/interfaces'
+import {AddressModel} from "@/db/models/index.model"
+import {tr} from "date-fns/locale";
 
-class UserModel extends Model<User> implements User {
-    public id!: number;
-    public email!: string;
-    public uname!: string;
-    public usurname!: string;
-    public ufathername!: string;
-    public cancontact!: boolean;
-    public isactive!: boolean;
+export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> implements User {
+    declare id: number;
+    declare email: string;
+    declare name: string;
+    declare surName: string;
+    declare fatherName: string;
+    declare canContact: boolean;
+    declare isActive: boolean;
+    addresses: AddressModel[];
 }
 
 UserModel.init(
@@ -22,32 +25,31 @@ UserModel.init(
         email: {
             type: DataTypes.STRING(128),
             allowNull: false,
+            unique: true
         },
-        uname: {
+        name: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        usurname: {
+        surName: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        ufathername: {
+        fatherName: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        cancontact: {
+        canContact: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
-        isactive: {
+        isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
     },
     {
         sequelize,
-        tableName: 'user',
+        tableName: 'users',
     }
-);
-
-export default UserModel
+)
