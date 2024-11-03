@@ -114,6 +114,10 @@ const ProfilePage = () => {
         },
     ]
 
+    const userData = async () => {
+
+    }
+
     return (  <>
         <UserProfile user={user} previousOrders={previousOrders}/>
     </>

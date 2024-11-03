@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync": "npx tsx src/db-sync.ts"
+    "sync": "npx tsx src/db-sync.ts",
+    "seed": "npx tsx src/db-seed.ts"
   },
   "dependencies": {
     "dotenv": "^16.3.2",
