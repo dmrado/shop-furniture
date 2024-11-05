@@ -17,20 +17,20 @@ StockModel.belongsTo(ItemModel, { foreignKey: 'itemid' })
 
 AddressModel.belongsTo(UserModel, {
     // targetKey: 'id',
-    foreignKey: 'userId',
+    // foreignKey: 'userId',
 })
 UserModel.hasMany(AddressModel, {
     // sourceKey: 'id',
-    // foreignKey: 'userId',
+    foreignKey: 'userId',
     as: 'addresses', // Алиас для связи
 })
 
 export {
-    AddressModel,
-    ColorModel,
-    ItemModel,
-    OrderedItemModel,
-    OrderModel,
-    StockModel,
-    UserModel,
+    // AddressModel,
+    // ColorModel,
+    // ItemModel,
+    // OrderedItemModel,
+    // OrderModel,
+    // StockModel,
+    // UserModel,
 };

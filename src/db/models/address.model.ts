@@ -1,7 +1,6 @@
 import {sequelize} from '../connection'
 import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Address } from '../types/interfaces'
-import {UserModel} from "@/db/models/user.model";
 
 export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> implements Address {
     declare id: number;

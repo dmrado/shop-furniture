@@ -1,6 +1,7 @@
 import UserProfile from '@/components/user/UserProfile'
 import {UserModel} from '@/db/models/user.model'
-import {AddressModel} from "@/db/models/index.model";
+import { User } from "@/db/types/interfaces";
+import { AddressModel } from "@/db/models/address.model";
 
 const ProfilePage = async () => {
 
@@ -125,17 +126,37 @@ const ProfilePage = async () => {
         // Если нужны связанные данные
         include: [{
             model: AddressModel,
-            attributes: ['id'],
+            attributes: ['id', 'phone', 'city'],
             as: 'addresses'  // используем тот же алиас, что указали при определении связи
         }]
     })
-    // console.log('user on a page', userData)
 
     if(!userData){
         return 'Не вышло'
     }
+
+    const userProfile: User = {
+        id: userData.id,
+        name: userData.name,
+        surName: userData.surName,
+        fatherName: userData.fatherName,
+        email: userData.email,
+        isActive: userData.isActive,
+        canContact: userData.canContact,
+        addresses: userData.addresses.map(address=>({
+            id: userData.id,
+            city: address.city,
+            phone: address.phone,
+            street: address.street,
+            home: address.home,
+            corps: address.corps,
+            appart: address.appart,
+            userId: address.userId,
+            isMain: address.isMain
+        }))
+    }
     return (<>
-            <UserProfile user={userData} previousOrders={previousOrders}/>
+            <UserProfile user={userProfile} previousOrders={previousOrders}/>
         </>
     )
 }
