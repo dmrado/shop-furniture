@@ -57,10 +57,11 @@ export interface Order {
 }
 
 export interface Stock {
-    itemid: number;
+    itemId: number;
     quantity: number;
-    instock: boolean;
-    lastupdate: Date;
+    inStock: boolean;
+    lastUpdate: Date;
+    items?: Item[]
 }
 
 export interface User {

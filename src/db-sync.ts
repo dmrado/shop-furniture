@@ -13,7 +13,7 @@ import {UserModel} from "./db/models/user.model";
 const registeredModels = [Admin, Post, Alert, AddressModel, ColorModel, ItemModel, OrderedItemModel, OrderModel, StockModel, UserModel ]
 const runDbSync = async () => {
     console.log('Syncing DB schema for: ', registeredModels.map(m => m.name).join(', '))
-    await sequelize.sync({ alter: true, force: true })
+    await sequelize.sync({ alter: true,  })
     console.log('...done syncing DB schema')
 }
 runDbSync()

@@ -15,6 +15,8 @@ OrderedItemModel.belongsTo(OrderModel, { foreignKey: 'order' })
 
 StockModel.belongsTo(ItemModel, { foreignKey: 'itemid' })
 
+
+
 AddressModel.belongsTo(UserModel, {
     // targetKey: 'id',
     // foreignKey: 'userId',
@@ -23,6 +25,17 @@ UserModel.hasMany(AddressModel, {
     // sourceKey: 'id',
     foreignKey: 'userId',
     as: 'addresses', // Алиас для связи
+})
+
+
+ItemModel.belongsTo(StockModel, {
+    // targetKey: 'id',
+    // foreignKey: 'userId',
+})
+StockModel.hasMany(ItemModel, {
+    // sourceKey: 'id',
+    foreignKey: 'id',
+    as: 'items', // Алиас для связи
 })
 
 export {

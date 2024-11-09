@@ -68,15 +68,11 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
                                 //      onSubmit={hideAlertForm}
                                 // /> :
                                     <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">
-                                        <span>  {item.city},
+                                        <span>  {item.city},<br/>
                                                 {item.street},
                                                 дом {item.home},
                                                 корпус {item.corps},
                                                 квартира {item.appart},
-                                                этаж ,
-                                                подъезд ,
-                                                домофон ,
-                                                грузовой лифт ,
                                             <br/> Телефон: {item.phone}</span>
                                         <button
                                             className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">

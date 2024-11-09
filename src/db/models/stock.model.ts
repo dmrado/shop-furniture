@@ -1,17 +1,19 @@
 import {sequelize} from '../connection'
-import { DataTypes, Model } from 'sequelize'
+import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Stock } from '../types/interfaces'
+import {ItemModel} from '@/db/models/item.model'
 
-export class StockModel extends Model<Stock> implements Stock {
-    public itemid!: number;
-    public quantity!: number;
-    public instock!: boolean;
-    public lastupdate!: Date;
+export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> implements Stock {
+    declare itemId: number;
+    declare quantity: number;
+    declare inStock: boolean;
+    declare lastUpdate: Date;
+    items: ItemModel[];
 }
 
 StockModel.init(
     {
-        itemid: {
+        itemId: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false,
@@ -20,11 +22,11 @@ StockModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        instock: {
+        inStock: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
-        lastupdate: {
+        lastUpdate: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW,
