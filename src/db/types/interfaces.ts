@@ -59,7 +59,7 @@ export interface Order {
 export interface Stock {
     itemId: number;
     quantity: number;
-    inStock: boolean;
+    inStock: number;
     lastUpdate: Date;
     items?: Item[]
 }

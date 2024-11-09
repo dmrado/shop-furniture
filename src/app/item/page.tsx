@@ -1,56 +1,54 @@
 import {StockModel} from '@/db/models/stock.model'
 import {Stock} from '@/db/types/interfaces'
 import {ItemModel} from "@/db/models/item.model"
-import ItemList from "@/components/admin/ItemList";
+import ItemList from "@/components/admin/ItemList"
+import {Op} from "sequelize"
+import {number} from "prop-types";
 
 
 const ItemPage = async () => {
 
-    const stockData = await StockModel.findOne({
-        where: {
-            itemId: 1
-        },
-        // Дополнительные опции
-        // raw: true, // Получить простой объект вместо экземпляра модели
-        // nest: true, // Вложенные объекты в виде JSON
-        // Выбор конкретных полей
-        // attributes: ['id', 'email', 'name', 'surName'],
-        // Если нужны связанные данные
+    const stockData = await StockModel.findAndCountAll({
+        // where: {
+        //     quantity: {
+        //         [Op.gte]: 1
+        //     }
+        // },
+        // limit: 10,
+        // offset: 0,
         include: [{
             model: ItemModel,
-            attributes: ['id', 'articul', 'name', 'description_1', 'description_2'],
+            attributes: ['id', 'articul', 'name', 'description_1', 'description_2', 'old_price', 'new_price'],
             as: 'items'  // используем тот же алиас, что указали при определении связи
         }]
     })
-console.log('SEQUELIZE INSTANCE OF STOCK', stockData)
-    if(!stockData) {
-        return 'Почему никто не звонит?'
-    }
-//todo почему то не видит типов из импортированного интерфейса Stock
-    const stockList: {
-        itemId: number;
-        quantity: number;
-        lastUpdate: undefined;
-        inStock: boolean;
-        id: number;
-        items: { name: string; description_1: string; id: number; description_2: string; articul: string }[]
-    } = {
-        id: stockData.itemId,
-        quantity: stockData.quantity,
-        items: stockData.items.map(item => ({
-            id: stockData.itemId,
-            articul: item.articul,
-            name: item.name,
-            description_1: item.description_1,
-            description_2: item.description_2
-        })), inStock: false, itemId: 0, lastUpdate: undefined
+    console.log('SEQUELIZE INSTANCE OF stockData', stockData)
+
+    if (!stockData || !stockData.rows.length) {
+        return 'Данные не найдены и почему никто не звонит? '
     }
 
+    const stockList = stockData.rows.map(stock => ({
+            id: stock.itemId,
+            quantity: stock.quantity,
+            lastUpdate: stock.lastUpdate,
+            inStock: stock.inStock,
+            items: stock.items.map(item => ({
+                id: stock.itemId,
+                articul: item.articul,
+                name: item.name,
+                description_1: item.description_1,
+                description_2: item.description_2,
+                old_price: item.old_price,
+                new_price: item.new_price,
+            }))
+        }))
+    console.log('stockList', stockList)
     return (
         <div>
-            <ItemList stock={stockList}/>
+            <ItemList items={stockList}/>
         </div>
-    );
-};
+    )
+}
 
 export default ItemPage

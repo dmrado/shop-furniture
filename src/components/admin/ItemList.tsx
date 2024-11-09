@@ -3,71 +3,122 @@ import React, {useState, useEffect} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const ItemList = ({stock}) => {
-    const [items, setItems] = useState([])
+const ItemList = ({items}) => {
+
+    const [filters, setFilters] = useState({
+        category: 'all',
+        priceRange: 'all',
+        sortBy: 'newest'
+    })
+    const categories = [
+        'Все',
+        'Уютные диваны',
+        'Удобные кресла',
+        'Красивые столики',
+        'Вместительные шкафы'
+    ]
 
     return <>
-        <div className="container mx-auto px-4 py-8">
-            <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-                <div className="flex flex-wrap gap-4 justify-between items-center">
-                    <div className="space-x-4">
-                        Something
-                    </div>
-                </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+             Фильтры
+            <div className="mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <select
+                            className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            value={filters.category}
+                            onChange={(e) => setFilters({...filters, category: e.target.value})}
+                        >
+                            {categories.map(category => (
+                                <option key={category} value={category.toLowerCase()}>
+                                    {category}
+                                </option>
+                            ))}
+                        </select>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <div key={stock.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div className="relative h-48">
-                            <Image
-                                // src={item.image}
-                                // alt={item.name}
-                                layout="fill"
-                                objectFit="cover"
-                            />
-                        </div>
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2">{stock.quantity}</h3>
-                            <p className="text-gray-600 text-sm mb-2">{stock.description}</p>
-                            <div className="flex justify-between items-center">
-                                <span className="text-xl font-bold">${stock.price}</span>
-                                <div className="flex items-center">
-                                    <span className="text-yellow-400 mr-1">★</span>
-                                    <span className="text-sm text-gray-600">{stock.rating}</span>
+                        <select
+                            className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            value={filters.priceRange}
+                            onChange={(e) => setFilters({...filters, priceRange: e.target.value})}
+                        >
+                            <option value="all">Все цены</option>
+                            <option value="0-100">До 100₽</option>
+                            <option value="101-500">101₽ - 500₽</option>
+                            <option value="501+">От 501₽</option>
+                        </select>
+                    </div>
+
+                    <select
+                        className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        value={filters.sortBy}
+                        onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
+                    >
+                        <option value="newest">Сначала новые</option>
+                        <option value="price-low">Сначала дешевле</option>
+                        <option value="price-high">Сначала дороже</option>
+                        <option value="rating">По рейтингу</option>
+                    </select>
+                </div>
+            </div>
+
+            {/* Сетка товаров */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {items.map(item => ( // Убрали .items
+                    <div key={item.id}
+                         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md">
+                        {item.items.map(subItem => ( // Добавляем вложенный map для items
+                            <div key={subItem.id}>
+                                <div className="relative h-56 bg-gray-100">
+                                    <Image
+                                        src={subItem.image}
+                                        alt={subItem.name}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="p-5">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{subItem.name}</h3>
+                                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{subItem.description_1}</p>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-xl font-bold text-gray-900">{subItem.old_price}₽</span>
+                                        <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
+                                            <span className="text-yellow-400 mr-1">★</span>
+                                            <span className="text-sm text-gray-600">{subItem.new_price}</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        В корзину
+                                    </button>
                                 </div>
                             </div>
-                            <div className="mt-4">
-                                <button
-                                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+                        ))}
                     </div>
-                </div>
+                ))}
+            </div>
 
-                {/* Пагинация */}
-                {/*<div className="mt-8 flex justify-center">*/}
-                {/*    <div className="flex space-x-2">*/}
-                {/*        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">*/}
-                {/*            Previous*/}
-                {/*        </button>*/}
-                {/*        <button className="px-4 py-2 bg-blue-500 text-white rounded-md">*/}
-                {/*            1*/}
-                {/*        </button>*/}
-                {/*        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">*/}
-                {/*            2*/}
-                {/*        </button>*/}
-                {/*        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">*/}
-                {/*            3*/}
-                {/*        </button>*/}
-                {/*        <button className="px-4 py-2 border rounded-md hover:bg-gray-100">*/}
-                {/*            Next*/}
-                {/*        </button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+            {/* Пагинация */}
+            <div className="mt-12 flex justify-center">
+                <nav className="flex gap-2">
+                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
+                        Назад
+                    </button>
+                    <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
+                        1
+                    </button>
+                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
+                        2
+                    </button>
+                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
+                        3
+                    </button>
+                    <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
+                        Вперед
+                    </button>
+                </nav>
             </div>
         </div>
-        </>
-        }
+    </>
+}
 
-        export default ItemList
+export default ItemList

@@ -6,7 +6,7 @@ import {ItemModel} from '@/db/models/item.model'
 export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> implements Stock {
     declare itemId: number;
     declare quantity: number;
-    declare inStock: boolean;
+    declare inStock: number;
     declare lastUpdate: Date;
     items: ItemModel[];
 }
@@ -23,7 +23,7 @@ StockModel.init(
             allowNull: false,
         },
         inStock: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         lastUpdate: {
