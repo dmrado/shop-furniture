@@ -1,28 +1,28 @@
 import {sequelize} from '../connection'
-import { DataTypes, Model } from 'sequelize'
-import { Item } from '../types/interfaces'
+import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import {Item} from '../types/interfaces'
 
-export class ItemModel extends Model<Item> implements Item {
-    public id!: number;
-    public isactive!: boolean;
-    public articul!: string;
-    public sku!: string;
-    public name!: string;
-    public description_1!: string;
-    public description_2!: string;
-    public length!: number;
-    public width!: number;
-    public height!: number;
-    public weight!: number;
-    public box_lenght!: number;
-    public box_height!: number;
-    public box_weight!: number;
-    public pictures!: string;
-    public old_price!: number;
-    public new_price!: number;
-    public primary_color!: number;
-    public secondary_color!: number;
-    public instock!: boolean;
+export class ItemModel extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> implements Item {
+    declare id: number;
+    declare isActive: boolean;
+    declare articul: string;
+    declare sku: string;
+    declare name: string;
+    declare description_1: string;
+    declare description_2: string;
+    declare length: number;
+    declare width: number;
+    declare height: number;
+    declare weight: number;
+    declare box_lenght: number;
+    declare box_height: number;
+    declare box_weight: number;
+    declare pictures: string;
+    declare old_price: number;
+    declare new_price: number;
+    declare primary_color: number;
+    declare secondary_color: number;
+    declare inStock: boolean;
 }
 
 ItemModel.init(
@@ -32,7 +32,7 @@ ItemModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        isactive: {
+        isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
@@ -57,31 +57,31 @@ ItemModel.init(
             allowNull: false,
         },
         length: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         width: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         height: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         weight: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         box_lenght: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         box_height: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         box_weight: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         pictures: {
@@ -104,7 +104,7 @@ ItemModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        instock: {
+        inStock: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },

@@ -19,7 +19,7 @@ export interface Color {
 
 export interface Item {
     id: number;
-    isactive: boolean;
+    isActive: boolean;
     articul: string;
     sku: string;
     name: string;
@@ -37,7 +37,7 @@ export interface Item {
     new_price: number;
     primary_color: number;
     secondary_color: number;
-    instock: boolean;
+    inStock: boolean;
 }
 
 export interface OrderedItem {
