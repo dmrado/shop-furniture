@@ -10,7 +10,7 @@ export class StockModel extends Model<InferAttributes<StockModel>, InferCreation
     declare lastUpdate: Date;
     items: ItemModel[];
 }
-
+// todo добавить собственный id иначе джойновый запрос с вытаскиванием связанных данных из дочерней таблицы не отрабатывает
 StockModel.init(
     {
         itemId: {
