@@ -88,7 +88,7 @@ const UserAddressForm = ({user} : User ) => {
                     required
                     className="border p-2 mb-4 w-full rounded-md"
                 />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded" >Добавить адрес</button>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded font-bold" >Добавить адрес</button>
             </form>
         </div>
 

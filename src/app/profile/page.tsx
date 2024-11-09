@@ -1,7 +1,7 @@
 import UserProfile from '@/components/user/UserProfile'
 import {UserModel} from '@/db/models/user.model'
-import { User } from "@/db/types/interfaces";
-import { AddressModel } from "@/db/models/address.model";
+import { User, Address } from "@/db/types/interfaces"
+import { AddressModel } from "@/db/models/address.model"
 
 const ProfilePage = async () => {
 
@@ -126,7 +126,7 @@ const ProfilePage = async () => {
         // Если нужны связанные данные
         include: [{
             model: AddressModel,
-            attributes: ['id', 'phone', 'city'],
+            attributes: ['id', 'phone', 'city', 'street', 'home', 'corps', 'appart', 'isMain' ],
             as: 'addresses'  // используем тот же алиас, что указали при определении связи
         }]
     })

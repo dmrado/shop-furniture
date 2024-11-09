@@ -45,14 +45,14 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
                 </div>
                 <div>
                     <h2 className="text-xl">{user.name}</h2>
-                    <p className="text-gray-600">{user.email}</p>
-                    <p className="text-gray-600">{user.surName}</p>
                     <p className="text-gray-600">{user.fatherName}</p>
+                    <p className="text-gray-600">{user.surName}</p>
+                    <p className="text-gray-600">{user.email}</p>
                 </div>
             </div>
 
 
-{/*todo а странице profile получить адреса из модели orders и реализовать условие ниже*/}
+            {/*todo а странице profile получить адреса из модели orders и реализовать условие ниже*/}
             {/* Список адресов доставки */}
             <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
@@ -68,11 +68,19 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
                                 //      onSubmit={hideAlertForm}
                                 // /> :
                                     <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">
-                                        <span> {item.city}, {item.street}, этаж  {item.home} подъезд {item.corps}, домофон {item.appart}
+                                        <span>  {item.city},
+                                                {item.street},
+                                                дом {item.home},
+                                                корпус {item.corps},
+                                                квартира {item.appart},
+                                                этаж ,
+                                                подъезд ,
+                                                домофон ,
+                                                грузовой лифт ,
                                             <br/> Телефон: {item.phone}</span>
                                         <button
                                             className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
-                                            Отредактировать
+                                            Редактировать
                                         </button>
                                     </li>
                             ))}
