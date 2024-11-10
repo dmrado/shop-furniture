@@ -37,7 +37,7 @@ type UserDashboardProps = {
 
 const UserOrdersHistory: React.FC<UserDashboardProps> = ({ user, previousOrders }) => {
 
-    // const totalAmount = previousOrders.reduce((acc, item) => acc + item.price, 0);
+    // const totalAmount = previousOrders.reduce((acc, products) => acc + products.price, 0);
 
     return (
         <div className="p-8 max-w-6xl">

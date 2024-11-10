@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const ItemList = ({items}) => {
+const ProductsList = ({products}) => {
 
     const [filters, setFilters] = useState({
         category: 'all',
@@ -20,7 +20,7 @@ const ItemList = ({items}) => {
 
     return <>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-             Фильтры
+            Фильтры
             <div className="mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -63,36 +63,34 @@ const ItemList = ({items}) => {
 
             {/* Сетка товаров */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {items.map(item => ( // Убрали .items
-                    <div key={item.id}
+                {products.map(product => (
+                    <div key={product.id}
                          className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-transform hover:scale-[1.02] hover:shadow-md">
-                        {item.items.map(subItem => ( // Добавляем вложенный map для items
-                            <div key={subItem.id}>
-                                <div className="relative h-56 bg-gray-100">
-                                    <Image
-                                        src={subItem.image}
-                                        alt={subItem.name}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                                <div className="p-5">
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{subItem.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{subItem.description_1}</p>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <span className="text-xl font-bold text-gray-900">{subItem.old_price}₽</span>
-                                        <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
-                                            <span className="text-yellow-400 mr-1">★</span>
-                                            <span className="text-sm text-gray-600">{subItem.new_price}</span>
-                                        </div>
-                                    </div>
-                                    <button
-                                        className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        В корзину
-                                    </button>
+
+                        <div className="relative h-56 bg-gray-100">
+                            <Image
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                        <div className="p-5">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description_1}</p>
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-xl font-bold text-gray-900">{product.old_price}₽</span>
+                                <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
+                                    <span className="text-yellow-400 mr-1">★</span>
+                                    <span className="text-sm text-gray-600">{product.new_price}</span>
                                 </div>
                             </div>
-                        ))}
+                            <button
+                                className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                В корзину
+                            </button>
+                        </div>
+
                     </div>
                 ))}
             </div>
@@ -121,4 +119,4 @@ const ItemList = ({items}) => {
     </>
 }
 
-export default ItemList
+export default ProductsList

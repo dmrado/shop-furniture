@@ -1,21 +1,24 @@
 import {sequelize} from '../connection'
 import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Stock } from '../types/interfaces'
-import {ItemModel} from '@/db/models/item.model'
+import {ProductModel} from '@/db/models/product.model'
 
 export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> implements Stock {
     declare itemId: number;
     declare quantity: number;
     declare inStock: number;
     declare lastUpdate: Date;
-    items: ItemModel[];
 }
-// todo добавить собственный id иначе джойновый запрос с вытаскиванием связанных данных из дочерней таблицы не отрабатывает
+
 StockModel.init(
     {
-        itemId: {
+        id: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
+        },
+        productId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         quantity: {
@@ -23,7 +26,7 @@ StockModel.init(
             allowNull: false,
         },
         inStock: {
-            type: DataTypes.INTEGER,
+        type: DataTypes.BOOLEAN,
             allowNull: false,
         },
         lastUpdate: {

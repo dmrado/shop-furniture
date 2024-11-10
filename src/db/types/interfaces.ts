@@ -17,7 +17,7 @@ export interface Color {
     colorcode: string;
 }
 
-export interface Item {
+export interface Product {
     id: number;
     isActive: boolean;
     articul: string;
@@ -59,9 +59,9 @@ export interface Order {
 export interface Stock {
     itemId: number;
     quantity: number;
-    inStock: number;
+    inStock: boolean;
     lastUpdate: Date;
-    items?: Item[]
+    items?: Product[]
 }
 
 export interface User {

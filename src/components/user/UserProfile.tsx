@@ -62,9 +62,9 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
                     <>
                         <ul className="mb-4">
                             {user.addresses.map(item => (
-                                // item.addressId
+                                // products.addressId
                                 //     === editId
-                                //    ? <UserAddressForm key={item.id} id={item.id} fullNameReceiver={item.fullNameReceiver} postalCode={item.postalCode} city={item.city} street={item.street} phoneNumber={item.phoneNumber}
+                                //    ? <UserAddressForm key={products.id} id={products.id} fullNameReceiver={products.fullNameReceiver} postalCode={products.postalCode} city={products.city} street={products.street} phoneNumber={products.phoneNumber}
                                 //      onSubmit={hideAlertForm}
                                 // /> :
                                     <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">

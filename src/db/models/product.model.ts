@@ -1,8 +1,9 @@
 import {sequelize} from '../connection'
 import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
-import {Item} from '../types/interfaces'
+import {Product} from '../types/interfaces'
+import {StockModel} from "@/db/models/stock.model"
 
-export class ItemModel extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> implements Item {
+export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> implements Product {
     declare id: number;
     declare isActive: boolean;
     declare articul: string;
@@ -23,9 +24,10 @@ export class ItemModel extends Model<InferAttributes<Item>, InferCreationAttribu
     declare primary_color: number;
     declare secondary_color: number;
     declare inStock: boolean;
+    stock: StockModel
 }
 
-ItemModel.init(
+ProductModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -111,6 +113,6 @@ ItemModel.init(
     },
     {
         sequelize,
-        tableName: 'items',
+        tableName: 'products',
     }
 )
