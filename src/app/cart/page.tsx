@@ -1,5 +1,7 @@
 import React from 'react'
 import UserCart from "@/components/user/UserCart"
+import {CartModel} from '@/db/models/cart.model'
+import {ProductModel} from "@/db/models/product.model";
 
 const cartItems = [
     {
@@ -36,13 +38,42 @@ const cartItems = [
     },
 ]
 
+const CartPage = async () => {
 
-
-const CartPage = () => {
     // todo получение данных по выбранным товарам, подсчет, скидка, скелетон
 
+    const cartData = await CartModel.findAndCountAll({
+        include: [{
+            model: ProductModel,
+            as: 'products',
+            required: false, // используйте true, если нужны только записи с существующими продуктами
+            attributes: ['name', 'description_1', 'weight', 'image']
+        }]
+    });
+
+
+    if(!cartData || !cartData.rows.length){
+        return 'Корзина пуста'
+    }
+    console.log('Raw cart data:', JSON.stringify(cartData.rows[0], null, 2))
+
+    const cartList = cartData.rows.map(cartProducts => ({
+        id: cartProducts.id,
+        userId: cartProducts.userId,
+        datetime: cartProducts.datetime,
+        quantity: cartProducts.quantity,
+        discount: cartProducts.discount,
+        name: cartProducts.products?.name,
+        description_1: cartProducts.products?.description_1,
+        weight: cartProducts.products?.weight,
+        image: cartProducts.products?.image,
+        price: cartProducts.products?.weight,
+    }))
+    // todo не забыть поменять значение new_price
+    console.log('>>>>> >>> this is cartList', cartList)
+
     return <>
-        <UserCart cartItems={cartItems}/>
+        <UserCart cartProducts={cartList}/>
     </>
 }
 

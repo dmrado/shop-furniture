@@ -18,7 +18,7 @@ export class ProductModel extends Model<InferAttributes<ProductModel>, InferCrea
     declare box_lenght: number;
     declare box_height: number;
     declare box_weight: number;
-    declare pictures: string;
+    declare image: string;
     declare old_price: number;
     declare new_price: number;
     declare primary_color: number;
@@ -86,7 +86,7 @@ ProductModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        pictures: {
+        image: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },

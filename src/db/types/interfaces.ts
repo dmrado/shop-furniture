@@ -1,5 +1,6 @@
 // types/interfaces.ts
 import {UserModel} from "@/db/models/user.model";
+import {ProductModel} from "@/db/models/product.model";
 
 export interface Address {
     id: number;
@@ -34,7 +35,7 @@ export interface Product {
     box_lenght: number;
     box_height: number;
     box_weight: number;
-    pictures: string;
+    image: string;
     old_price: number;
     new_price: number;
     primary_color: number;
@@ -82,7 +83,8 @@ export interface Cart {
     itemId: number;
     quantity: number;
     userId: number;
+    discount: number;
     datetime: Date;
-    item?: ItemModel;
+    item?: ProductModel;
     user?: UserModel;
 }

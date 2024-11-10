@@ -6,7 +6,7 @@ import {useState} from 'react'
 // todo компонент тьребует передать ему вес товара
 
 //  описывает структуру товара
-interface CartItem {
+interface cartProducts {
     id: number;
     title: string;
     description: string;
@@ -25,15 +25,15 @@ interface Quantities {
 
 // описывает пропсы компонента
 interface UserCartProps {
-    cartItems: CartItem[];
+    cartItems: cartProducts[];
 }
 
-const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
+const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartProducts}) => {
     const [quantities, setQuantities] = useState<Quantities>(
-        cartItems.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
+        cartProducts.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
     )
-
-    const calculateItemTotal = (item: CartItem): number => {
+    console.log('>>>> this is cartProducts', cartProducts)
+    const calculateItemTotal = (item: cartProducts): number => {
         const quantity = quantities[item.id];
         const discount = item.discount || 0;
         const priceWithDiscount = item.price * (1 - discount / 100);
@@ -45,21 +45,21 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
     };
 
     const calculateTotalWeight = (): number => {
-        return cartItems.reduce((acc, item) => {
+        return cartProducts.reduce((acc, item) => {
             const itemWeight = item.weight || 0;
             return acc + (itemWeight * quantities[item.id]);
         }, 0);
     };
 
-    const totalDiscount: number = cartItems.reduce((acc, item) => {
+    const totalDiscount: number = cartProducts.reduce((acc, item) => {
         const quantity = quantities[item.id];
         const itemDiscount = (item.discount || 0) * item.price * quantity / 100;
         return acc + itemDiscount;
     }, 0);
 
-    const promoCodeDiscount: number = cartItems[0]?.promoDiscount || 0;
+    const promoCodeDiscount: number = cartProducts[0]?.promoDiscount || 0;
 
-    const subtotal: number = cartItems.reduce((acc, item) => acc + calculateItemTotal(item), 0);
+    const subtotal: number = cartProducts.reduce((acc, item) => acc + calculateItemTotal(item), 0);
     const totalAmount: number = subtotal - promoCodeDiscount;
     const totalItems: number = calculateTotalItems();
     const totalWeight: number = calculateTotalWeight();
@@ -81,7 +81,7 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
             <h1 className="text-xl font-semibold mb-4">Корзина</h1>
             <h2 className="text-xl font-semibold mb-4">Выбранные товары</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cartItems.map((item: CartItem) => (
+                {cartProducts.map((item: cartProducts) => (
                     <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
                         <div className="relative w-full h-40 mb-4">
                             <Image
@@ -127,7 +127,7 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
                         </button>
                     </Link>
                 </div>
-                {cartItems.length === 0 ? (
+                {cartProducts.length === 0 ? (
                     <p className="text-gray-600">Корзина пуста.</p>
                 ) : (
                     <>
@@ -142,7 +142,7 @@ const UserCart: React.FC<UserCartProps> = ({cartItems}) => {
                             </div>
                         </div>
                         <ul className="mb-4 border-t border-gray-200 pt-4">
-                            {cartItems.map((item: CartItem) => (
+                            {cartProducts.map((item: cartProduct) => (
                                 <li key={item.id} className="flex justify-between mb-3 py-2 border-b border-gray-200">
                                     <span className="text-gray-800">
                                         {item.title} (x{quantities[item.id]})

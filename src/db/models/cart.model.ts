@@ -9,6 +9,7 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare productId: number;
     declare quantity: number;
     declare userId: number;
+    declare discount: number;
     declare datetime: Date;
     products?: ProductModel;
     user?: UserModel;
@@ -41,6 +42,11 @@ CartModel.init(
                 model: 'users',
                 key: 'id'
             }
+        },
+        discount: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 1
         },
         datetime: {
             type: DataTypes.DATE,
