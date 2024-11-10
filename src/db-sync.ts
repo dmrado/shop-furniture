@@ -9,8 +9,9 @@ import {OrderedItemModel} from "./db/models/orderedItem.model";
 import {OrderModel} from "./db/models/order.model";
 import {StockModel} from "./db/models/stock.model";
 import {UserModel} from "./db/models/user.model";
+import {CartModel} from "@/db/models/cart.model";
 
-const registeredModels = [Admin, Post, Alert, AddressModel, ColorModel, ProductModel, OrderedItemModel, OrderModel, StockModel, UserModel ]
+const registeredModels = [Admin, Post, Alert, AddressModel, ColorModel, ProductModel, OrderedItemModel, OrderModel, StockModel, UserModel, CartModel ]
 const runDbSync = async () => {
     console.log('Syncing DB schema for: ', registeredModels.map(m => m.name).join(', '))
     await sequelize.sync({ alter: true,  })

@@ -1,10 +1,11 @@
-import {AddressModel} from './address.model'
-import {ColorModel} from './color.model'
-import {ProductModel} from './product.model'
-import {OrderedItemModel} from './orderedItem.model'
-import {OrderModel} from './order.model'
-import {StockModel} from './stock.model'
-import {UserModel} from './user.model'
+import {AddressModel} from '@/db/models/address.model'
+import {ColorModel} from '@/db/models/color.model'
+import {ProductModel} from '@/db/models/product.model'
+import {OrderedItemModel} from '@/db/models/orderedItem.model'
+import {OrderModel} from '@/db/models/order.model'
+import {StockModel} from '@/db/models/stock.model'
+import {UserModel} from '@/db/models/user.model'
+import {CartModel} from '@/db/models/cart.model'
 
 // Установка связей
 ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -40,6 +41,18 @@ ProductModel.hasOne(StockModel, {
     as: 'stock', // Алиас для связи
 })
 
+
+CartModel.belongsTo(ProductModel, {
+    foreignKey: 'productId',
+    as: 'item'
+})
+
+CartModel.belongsTo(UserModel, {
+    foreignKey: 'userId',
+    as: 'user'
+})
+
+//файл подключен в root layout
 export {
     // AddressModel,
     // ColorModel,
@@ -48,4 +61,4 @@ export {
     // OrderModel,
     // StockModel,
     // UserModel,
-};
+}

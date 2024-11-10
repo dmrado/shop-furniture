@@ -1,8 +1,7 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { User } from '../types/interfaces'
-import {AddressModel} from "@/db/models/index.model"
-import {tr} from "date-fns/locale";
+import {AddressModel} from "@/db/models/address.model"
 
 export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> implements User {
     declare id: number;
