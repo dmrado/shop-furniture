@@ -8,35 +8,50 @@ import {useState} from 'react'
 //  описывает структуру товара
 interface cartProducts {
     id: number;
-    title: string;
-    description: string;
-    price: number;
-    image: string;
+    isActive: number;
+    articul: string;
     sku: string;
+    name: string;
+    description_1: string;
+    description_2: string;
+    length: number;
+    width: number;
+    height: number;
     weight: number;
-    discount?: number;
-    promoDiscount?: number;
+    box_length: number;
+    box_height: number;
+    box_weight: number;
+    old_price: number;
+    new_price: number;
+    primary_color: number;
+    secondary_color: number;
+    inStock: number;
+    createdAt: Date;
+    updatedAt: Date;
+    image: string;
+    discount: number;
+    promoDiscount: number;
 }
 
 // описывает объект с количествами товаров
 interface Quantities {
-    [key: number]: number;
+    [key: number]: number
 }
 
 // описывает пропсы компонента
 interface UserCartProps {
-    cartItems: cartProducts[];
+    cartItems: cartProducts[]
 }
 
 const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartProducts}) => {
     const [quantities, setQuantities] = useState<Quantities>(
         cartProducts.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
     )
-    console.log('>>>> this is cartProducts', cartProducts)
+    console.log('>>>> this is cartProducts on Next-14', cartProducts)
     const calculateItemTotal = (item: cartProducts): number => {
         const quantity = quantities[item.id];
         const discount = item.discount || 0;
-        const priceWithDiscount = item.price * (1 - discount / 100);
+        const priceWithDiscount = item.new_price * (1 - discount / 100);
         return priceWithDiscount * quantity;
     };
 
@@ -53,7 +68,7 @@ const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartP
 
     const totalDiscount: number = cartProducts.reduce((acc, item) => {
         const quantity = quantities[item.id];
-        const itemDiscount = (item.discount || 0) * item.price * quantity / 100;
+        const itemDiscount = (item.discount || 0) * item.new_price * quantity / 100;
         return acc + itemDiscount;
     }, 0);
 
@@ -89,11 +104,11 @@ const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartP
                                 layout="fill"
                                 objectFit="cover"
                                 src={item.image}
-                                alt={item.title}
+                                alt={item.name}
                             />
                         </div>
-                        <h3 className="text-lg font-semibold">{item.title}</h3>
-                        <p className="text-gray-500">{item.description}</p>
+                        <h3 className="text-lg font-semibold">{item.name}</h3>
+                        <p className="text-gray-500">{item.description_1}</p>
                         <p className="text-sm text-gray-400">Арт: {item.sku}</p>
                         <p className="text-sm text-gray-400">Вес: {formatWeight(item.weight)}</p>
                         {item.discount > 0 && (
@@ -109,7 +124,7 @@ const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartP
                                 className="w-20 p-1 border rounded"
                             />
                             <p className="text-xl font-bold">
-                                `${(item.price * (1 - (item.discount || 0) / 100)).toFixed(2)}`
+                                {(item.new_price * (1 - (item.discount || 0) / 100)).toFixed(2)}
                             </p>
                         </div>
                     </div>
@@ -142,18 +157,18 @@ const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartP
                             </div>
                         </div>
                         <ul className="mb-4 border-t border-gray-200 pt-4">
-                            {cartProducts.map((item: cartProduct) => (
-                                <li key={item.id} className="flex justify-between mb-3 py-2 border-b border-gray-200">
+                            {cartProducts.map((cartProduct) => (
+                                <li key={cartProduct.id} className="flex justify-between mb-3 py-2 border-b border-gray-200">
                                     <span className="text-gray-800">
-                                        {item.title} (x{quantities[item.id]})
+                                        {cartProduct.title} (x{quantities[cartProduct.id]})
                                     </span>
                                     <div className="text-right">
                                         <span className="text-gray-600">
-                                            `${calculateItemTotal(item).toFixed(2)}`
+                                            {calculateItemTotal(cartProduct).toFixed(2)}
                                         </span>
                                         <br/>
                                         <span className="text-sm text-gray-400">
-                                            {formatWeight(item.weight * quantities[item.id])}
+                                            {formatWeight(cartProduct.weight * quantities[cartProduct.id])}
                                         </span>
                                     </div>
                                 </li>
@@ -162,15 +177,15 @@ const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartP
                         <div className="space-y-2">
                             <div className="flex justify-between text-gray-600">
                                 <span>Сумма скидок по товарам:</span>
-                                <span>-`${totalDiscount.toFixed(2)}`</span>
+                                <span>{totalDiscount.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-gray-600">
                                 <span>Скидка по промокоду:</span>
-                                <span>-`${promoCodeDiscount.toFixed(2)}`</span>
+                                <span>{promoCodeDiscount.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between font-bold text-xl text-gray-800 pt-2 border-t">
                                 <span>Итого:</span>
-                                <span>`${totalAmount.toFixed(2)}`</span>
+                                <span>{totalAmount.toFixed(2)}</span>
                             </div>
                         </div>
                     </>

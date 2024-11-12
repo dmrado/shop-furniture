@@ -32,7 +32,7 @@ export interface Product {
     width: number;
     height: number;
     weight: number;
-    box_lenght: number;
+    box_length: number;
     box_height: number;
     box_weight: number;
     image: string;

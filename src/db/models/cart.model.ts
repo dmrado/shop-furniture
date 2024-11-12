@@ -11,8 +11,10 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare userId: number;
     declare discount: number;
     declare datetime: Date;
-    products?: ProductModel;
-    user?: UserModel;
+    declare products?: ProductModel;
+    declare user?: UserModel;
+    declare createdAt: any;
+    declare updatedAt: any;
 }
 
 CartModel.init(

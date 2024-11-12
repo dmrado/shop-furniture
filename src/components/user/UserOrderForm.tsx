@@ -135,13 +135,21 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                 <button
                     type="submit"
                     className="bg-blue-500 text-white p-2 rounded-md transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    Оформить заказ
+                    Отправить
                 </button>
 
                 <Link href={'/cart'}>
                     <button
                         className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Вернуться
+                        Вернуться в корзину
+                    </button>
+                </Link>
+
+
+                <Link href={'/products'}>
+                    <button
+                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                        Хочу больше!
                     </button>
                 </Link>
             </form>
