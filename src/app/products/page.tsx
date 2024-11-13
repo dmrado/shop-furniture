@@ -1,7 +1,7 @@
 import {StockModel} from '@/db/models/stock.model'
 import {Stock} from '@/db/types/interfaces'
 import {ProductModel} from "@/db/models/product.model"
-import ItemList from "@/components/admin/ProductList"
+import ProductList from "@/components/admin/ProductList"
 import {Op} from "sequelize"
 import {number} from "prop-types";
 
@@ -43,7 +43,7 @@ const ProductsPage = async () => {
     console.log('stockList', productList)
     return (
         <div>
-            <ItemList products={productList}/>
+            <ProductList products={productList}/>
         </div>
     )
 }
