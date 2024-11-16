@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import PaymentMethods from "@/components/user/PaymentMethods"
 import Link from "next/link"
+import {Address} from "@/db/types/interfaces"
 
 type OrderFormData = {
     id?: number;
@@ -31,28 +32,70 @@ interface UserOrderFormProps {
 
 //todo сюда пропсами получить юзера с адресами вытащить массив адресов и передать в селект формы где сейчас addresses[], а если юзер захочет новый адрес ввести, то перебросить его на страницу profile пусть там заводит новый адрес, а здесь пусть только выбирает
 
-//todo латежные инструменты убрать пока
 
 //todo статус заказа перенести в профиль понадобится миниатюра заказа
-const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) => {
 
-    const [order, setOrder] = useState<OrderFormData>({
-        id: 1,
-        userId: 1,
-        phone: '654345432',
-        city: '',
-        street: '',
-        home: '',
-        building: '',
-        corps: '',
-        apartment: '',
-        isMain: false,
-        paymentMethod: 'cash',
-        name: '',
-        email: '',
-        comment: '',
-        deliveryDate: null
-    });
+const UserOrderForm = ({user, onSubmit}) => {
+
+    // Создаем строки адресов для select
+    const formatAddress = (address: Address) => {
+        return <p>{address.city}, {address.street}, д.{address.home} {address.corps ? `, корп.${address.corps}` : ''} {address.appart ? `, кв.${address.appart}` : ''}</p>
+}
+
+// Находим основной адрес
+const mainAddress = user.addresses.find(addr => addr.isMain);
+
+// Инициализируем начальное состояние формы
+const [order, setOrder] = useState<OrderFormData>({
+    id: user.id || '',
+    userId: user.id || '',
+    phone: mainAddress?.phone || '',
+    city: mainAddress?.city || '',
+    street: mainAddress?.street || '',
+    home: mainAddress?.home || '',
+    corps: mainAddress?.corps || '',
+    apartment: mainAddress?.appart || '',
+    isMain: false,
+    paymentMethod: 'cash',
+    name: user.name || '',
+    email: user.email || '',
+    comment: '',
+    deliveryDate: null
+});
+
+// Состояние для выбранного адреса
+const [selectedAddress, setSelectedAddress] = useState(
+    mainAddress ? formatAddress(mainAddress) : ''
+);
+// Форматируем все адреса для select
+const addressOptions = user.addresses.map(addr => ({
+    value: formatAddress(addr),
+    address: addr
+}));
+
+// Обработчик изменения адреса в select
+const handleAddressChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedAddress(selectedValue);
+
+    // Находим выбранный адрес в массиве
+    const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
+
+    if (selectedAddressData) {
+        setOrder(prev => ({
+            ...prev,
+            city: selectedAddressData.city,
+            street: selectedAddressData.street,
+            home: selectedAddressData.home,
+            corps: selectedAddressData.corps || '',
+            apartment: selectedAddressData.appart || '',
+            phone: selectedAddressData.phone
+        }));
+    }
+};
+    // const [usingAddress, setUsingAddress] = useState('')//для выбранного в select сконкатинированного адреса
+    // const [addresses, setAddresses] = useState ([//нужен массив сконкатинированных адресов])
+    //
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -73,14 +116,7 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
         e.preventDefault();
         // Обработка отправки формы
         console.log(order);
-    };
-
-    const addresses = [
-        'Улица 1, дом 1',
-        'Улица 2, дом 2',
-        'Улица 3, дом 3',
-    ];
-
+    }
 
     return (
         <div className="max-w-6xl mx-auto p-6">
@@ -122,15 +158,17 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                 <div className="mb-4">
                     <label className="block mb-1">Адрес доставки:</label>
                     <select
-                        name="deliveryAddress"
-                        value={order.city}
-                        onChange={handleChange}
+                        name="selectedAddress"
+                        value={selectedAddress}
+                        onChange={handleAddressChange}
                         required
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
                         <option value="">Выберите адрес</option>
-                        {addresses.map((address, index) => (
-                            <option key={index} value={address}>{address}</option>
+                        {addressOptions.map((opt, index) => (
+                            <option key={index} value={opt.value}>
+                                {opt.value}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -204,30 +242,31 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                     />
                 </div>
                 <PaymentMethods/>
-
                 <button
                     type="submit"
                     className="bg-blue-500 text-white p-2 rounded-md transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                     Отправить
                 </button>
-                <Link href={'/cart'}>
-                    <button
-                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Вернуться в корзину
-                    </button>
-                </Link>
-
-
-                <Link href={'/products'}>
-                    <button
-                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Хочу больше!
-                    </button>
-                </Link>
             </form>
+
+
+            <Link href={'/cart'}>
+                <button
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    Вернуться в корзину
+                </button>
+            </Link>
+
+
+            <Link href={'/products'}>
+                <button
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    Хочу больше!
+                </button>
+            </Link>
         </div>
-    );
-};
+    )
+}
 
 export default UserOrderForm
 
