@@ -69,6 +69,8 @@ const UserAddressForm = ({user}: UserInterface) => {
         console.log('Адрес доставки:', deliveryAddress)
         handleUserAddressForm(deliveryAddress)
     }
+    //todo по сабмиту если есть незавершенный заказ, то есть покупатель перешел для добавления адреса со страницы order page.ts, нужен (получить id и актуальность заказа) редирект на страницу актуального заказа. Для этого перенести этот сабмит на profile page.ts и пробросить сюда через пропсы.
+
     if (!user) {
         return <div>Loading...</div>
     }

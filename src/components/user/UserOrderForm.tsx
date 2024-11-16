@@ -4,9 +4,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import PaymentMethods from "@/components/user/PaymentMethods"
 import Link from "next/link"
-import UserAddressForm from "@/components/user/UserAddressForm";
 
-//todo слить интерфейс адрес и интерфейс гзер в один тип для ts
 type OrderFormData = {
     id?: number;
     userId?: number;
@@ -30,7 +28,6 @@ interface UserOrderFormProps {
     userAddress?: string;
     onSubmit: (orderData: OrderFormData) => void;
 }
-//todo привести в соответствие с моделью OdreredItemsModel, которую подготовить и переимновать в OrderedProductsModel
 
 //todo сюда пропсами получить юзера с адресами вытащить массив адресов и передать в селект формы где сейчас addresses[], а если юзер захочет новый адрес ввести, то перебросить его на страницу profile пусть там заводит новый адрес, а здесь пусть только выбирает
 
@@ -78,7 +75,7 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
         console.log(order);
     };
 
-        const addresses = [
+    const addresses = [
         'Улица 1, дом 1',
         'Улица 2, дом 2',
         'Улица 3, дом 3',
@@ -137,7 +134,12 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                         ))}
                     </select>
                 </div>
-
+                <Link href={'/profile'}>
+                    <button
+                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                        Добавить адрес
+                    </button>
+                </Link>
 
                 <div className="mb-4">
                     <label className="block mb-1">Комментарий к заказу:</label>
@@ -148,67 +150,6 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 h-24"
                     />
                 </div>
-
-                {/* Новый Адрес доставки */}
-                {/*<div className="mb-6">*/}
-                {/*    <h3 className="text-xl font-semibold mb-4">Новый адрес доставки</h3>*/}
-                {/*    <div className="grid grid-cols-2 gap-4">*/}
-                {/*        <div className="mb-4">*/}
-                {/*            <label className="block mb-1">Город:</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                name="city"*/}
-                {/*                value={order.city}*/}
-                {/*                onChange={handleChange}*/}
-                {/*                required*/}
-                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*        <div className="mb-4">*/}
-                {/*            <label className="block mb-1">Улица:</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                name="street"*/}
-                {/*                value={order.street}*/}
-                {/*                onChange={handleChange}*/}
-                {/*                required*/}
-                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*        <div className="mb-4">*/}
-                {/*            <label className="block mb-1">Дом:</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                name="house"*/}
-                {/*                value={order.home}*/}
-                {/*                onChange={handleChange}*/}
-                {/*                required*/}
-                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*        <div className="mb-4">*/}
-                {/*            <label className="block mb-1">Корпус:</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                name="building"*/}
-                {/*                value={order.building}*/}
-                {/*                onChange={handleChange}*/}
-                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*        <div className="mb-4">*/}
-                {/*            <label className="block mb-1">Квартира:</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                name="apartment"*/}
-                {/*                value={order.apartment}*/}
-                {/*                onChange={handleChange}*/}
-                {/*                required*/}
-                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
                 {/* Способ оплаты */}
                 <div className="mb-6">

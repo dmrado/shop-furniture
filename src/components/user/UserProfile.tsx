@@ -27,7 +27,6 @@ type UserProfileProps = {
 const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может бчть уникальный адрес из массива адресов доставки корпоративного юзера
 
-    useEffect(() => {}, [user])
     return (
         <div className="p-8 mx-auto max-w-6xl">
             <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>

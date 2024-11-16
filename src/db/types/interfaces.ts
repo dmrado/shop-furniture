@@ -43,13 +43,13 @@ export interface Product {
     inStock: boolean;
 }
 
-export interface OrderedItem {
-    order: number;
-    item: number;
+export interface OrderedProducts {
+    id: number;
+    orderId: number;
+    product: number;
     quantity: number;
     status: number;
 }
-
 
 export interface Order {
     id: number;

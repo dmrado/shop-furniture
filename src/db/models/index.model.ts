@@ -1,7 +1,7 @@
 import {AddressModel} from '@/db/models/address.model'
 import {ColorModel} from '@/db/models/color.model'
 import {ProductModel} from '@/db/models/product.model'
-import {OrderedItemModel} from '@/db/models/orderedItem.model'
+import {OrderedProductsModel} from '@/db/models/orderedProductsModel'
 import {OrderModel} from '@/db/models/order.model'
 import {StockModel} from '@/db/models/stock.model'
 import {UserModel} from '@/db/models/user.model'
@@ -11,8 +11,15 @@ import {CartModel} from '@/db/models/cart.model'
 ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
 ProductModel.belongsTo(ColorModel, { as: 'secondaryColor', foreignKey: 'secondary_color' })
 
-OrderedItemModel.belongsTo(ProductModel, { foreignKey: 'item' })
-OrderedItemModel.belongsTo(OrderModel, { foreignKey: 'order' })
+
+OrderModel.hasMany(OrderedProductsModel, {
+    foreignKey: 'orderId',
+    as: 'products'
+})
+OrderedProductsModel.belongsTo(OrderModel, {
+    // foreignKey: 'order'
+})
+
 
 StockModel.belongsTo(ProductModel, { foreignKey: 'itemid' })
 
