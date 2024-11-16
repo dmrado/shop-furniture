@@ -12,60 +12,65 @@ import Search from './img/Search.svg';
 
 const MainPage = () => {
     return (
-        <header className="bg-[#171613] w-[1440px] h-[121px] shadow-md">
-            <div className="flex items-center px-[50px] h-full">
+        <div className="flex justify-center items-center bg-[#171613]">
+            <header className="bg-[#171613] shadow-md w-full max-w-[1440px]">
+                <div className="flex flex-wrap items-center px-[20px] lg:px-[50px] py-[10px] lg:py-[40px] gap-y-[20px]">
 
-                <div className="flex-shrink-0">
-                    <a href="">
-                    <Image src={Decoro} alt="Logo" width={135} height={35} />
-                    </a>
-                </div>
-
-                <nav className="flex space-x-[30px] ml-[78px]">
-                    {["Каталог", "Кухни", "Свет", "Диваны", "Декор"].map((item) => (
-                        <a
-                            key={item}
-                            href={`/${item.toLowerCase()}`}
-                            className="text-white hover:text-[#E99C28] transition-colors duration-200"
-                        >
-                            {item}
+                    <div className="flex-shrink-0">
+                        <a href="">
+                            <Image src={Decoro} alt="Logo" width={135} height={35} />
                         </a>
-                    ))}
-                </nav>
+                    </div>
 
-                <div className="w-px h-8 bg-[#E99C28] ml-[38px] mr-[41px]"></div>
+                    <nav className="flex space-x-[20px] lg:space-x-[30px] mt-[10px] lg:mt-0 lg:ml-[78px]">
+                        {["Каталог", "Кухни", "Свет", "Диваны", "Декор"].map((item) => (
+                            <a
+                                key={item}
+                                href={`/${item.toLowerCase()}`}
+                                className="text-white hover:text-[#E99C28] transition-colors duration-200 text-sm lg:text-base"
+                            >
+                                {item}
+                            </a>
+                        ))}
+                    </nav>
 
-                <div className="flex space-x-[30px] text-white">
-                    <a href="/contacts" className="hover:text-[#E99C28]">Контакты</a>
-                    <a href="/about" className="hover:text-[#E99C28]">О нас</a>
-                    <a href="/search" className="hover:text-[#E99C28]">Поиск</a>
+                    <div className="hidden lg:block w-px h-8 bg-[#E99C28] lg:ml-[38px] lg:mr-[41px]"></div>
+
+                    <div className="flex space-x-[15px] lg:space-x-[28px] text-white mt-[10px] lg:mt-0">
+                        <a href="/contacts" className="hover:text-[#E99C28] text-sm lg:text-base">Контакты</a>
+                        <a href="/about" className="hover:text-[#E99C28] text-sm lg:text-base">О нас</a>
+                        <a href="/search" className="hover:text-[#E99C28] flex items-center space-x-[2px]">
+                            <Image src={Search} alt="Лупа" width={16} height={16} />
+                            <span className="text-sm lg:text-base">Поиск</span>
+                        </a>
+                    </div>
+
+                    <button
+                        className="ml-[20px] lg:ml-[50px] flex items-center justify-center text-white border border-[#E99C28] hover:bg-[#E99C28] transition-colors duration-200 mt-[10px] lg:mt-0"
+                        style={{ width: 258, height: 46 }}
+                    >
+                        <Image src={Phone} width={15} height={15} className="mr-[11px]" />
+                        <span className="text-sm lg:text-base">Заказать обратный звонок</span>
+                    </button>
+
+                    <div className="flex items-center ml-[10px] lg:ml-[20px] space-x-[10px] mt-[10px] lg:mt-0">
+                        <a href="/favorites" className="hover:text-[#E99C28]">
+                            <Image src={Heart} alt="Избранное" width={20} height={20} />
+                        </a>
+                        <a href="/cart" className="hover:text-[#E99C28]">
+                            <Image src={Cart} alt="Корзина" width={23} height={23} />
+                        </a>
+                    </div>
+
+                    <div className="ml-[20px] lg:ml-[50px] mt-[10px] lg:mt-0">
+                        <a href="/profile" className="hover:text-[#E99C28]">
+                            <Image src={Profile} alt="Профиль" width={24} height={24} />
+                        </a>
+                    </div>
                 </div>
-
-                <button
-                    className="ml-[50px] flex items-center justify-center text-white border border-[#E99C28] hover:bg-[#E99C28] transition-colors duration-200"
-                    style={{width: 258, height: 46}}
-                >
-                    <Image src={Phone} width={15} height={15} className="mr-[11px]"/>
-                    Заказать обратный звонок
-                </button>
-
-                <div className="flex items-center ml-[20px] space-x-[10px]">
-                    <a href="/favorites">
-                        <Image src={Heart} alt="Избранное" width={20} height={20}/>
-                    </a>
-                    <a href="/cart">
-                        <Image src={Cart} alt="Корзина" width={23} height={23}/>
-                    </a>
-                </div>
-
-                <div className="ml-[50px]">
-                    <a href="/profile">
-                        <Image src={Profile} alt="Профиль" width={24} height={24}/>
-                    </a>
-                </div>
-            </div>
-        </header>
+            </header>
+        </div>
     );
-}
+};
 
 export default MainPage;
