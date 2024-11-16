@@ -21,10 +21,6 @@ OrderedProductsModel.belongsTo(OrderModel, {
 })
 
 
-StockModel.belongsTo(ProductModel, { foreignKey: 'itemid' })
-
-
-
 AddressModel.belongsTo(UserModel, {
     // targetKey: 'id',
     // foreignKey: 'userId',

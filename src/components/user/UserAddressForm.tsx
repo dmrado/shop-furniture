@@ -1,18 +1,7 @@
 'use client'
 import React, {useEffect, useState} from 'react'
 import {handleUserAddressForm} from '@/actions/user/handleUserAddressForm'
-import {User} from "next-auth"
 import {User as UserInterface} from '@/db/types/interfaces'
-import {it} from "node:test";
-
-// todo удалить DefaultUser - это памятка что там за User расширяет DefaultUser в next-auth
-// export interface DefaultUser {
-//     id: string
-//     name?: string | null
-//     email?: string | null
-//     image?: string | null
-// }
-
 
 const UserAddressForm = ({user}: UserInterface) => {
 

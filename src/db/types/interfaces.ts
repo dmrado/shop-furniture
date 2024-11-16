@@ -16,8 +16,8 @@ export interface Address {
 
 export interface Color {
     id: number;
-    isactive: boolean;
-    colorcode: string;
+    isActive: boolean;
+    colorCode: string;
 }
 
 export interface Product {

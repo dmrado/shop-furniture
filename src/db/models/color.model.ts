@@ -1,11 +1,11 @@
 import {sequelize} from '../connection'
-import { DataTypes, Model } from 'sequelize'
+import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Color } from '../types/interfaces'
 
-export class ColorModel extends Model<Color> implements Color {
-    public id!: number;
-    public isactive!: boolean;
-    public colorcode!: string;
+export class ColorModel extends Model<InferAttributes<ColorModel>, InferCreationAttributes<ColorModel>> implements Color {
+    declare id: number;
+    declare isActive: boolean;
+    declare colorCode: string;
 }
 
 ColorModel.init(
@@ -15,11 +15,11 @@ ColorModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        isactive: {
+        isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
-        colorcode: {
+        colorCode: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
