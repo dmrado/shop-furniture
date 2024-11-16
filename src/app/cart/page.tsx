@@ -75,7 +75,7 @@ const CartPage = async () => {
         inStock: cartProducts.products?.inStock
     }))
 
-    // todo не забыть поменять значение new_price
+
     console.log('>>>>> >>> this is cartList', cartList)
 
     return <>

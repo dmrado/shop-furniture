@@ -70,6 +70,12 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
         console.log(order);
     };
 
+        const addresses = [
+        'Улица 1, дом 1',
+        'Улица 2, дом 2',
+        'Улица 3, дом 3',
+    ];
+
 
     return (
         <div className="max-w-6xl mx-auto p-6">
@@ -109,6 +115,21 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                     />
                 </div>
                 <div className="mb-4">
+                    <label className="block mb-1">Адрес доставки:</label>
+                    <select
+                        name="deliveryAddress"
+                        value={order.deliveryAddress}
+                        onChange={handleChange}
+                        required
+                        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    >
+                        <option value="">Выберите адрес</option>
+                        {addresses.map((address, index) => (
+                            <option key={index} value={address}>{address}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-4">
                     <label className="block mb-1">Комментарий к заказу:</label>
                     <textarea
                         name="comment"
@@ -118,9 +139,9 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                     />
                 </div>
 
-                {/* Адрес доставки */}
+                {/* Новый Адрес доставки */}
                 <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4">Адрес доставки</h3>
+                    <h3 className="text-xl font-semibold mb-4">Новый адрес доставки</h3>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="mb-4">
                             <label className="block mb-1">Город:</label>
@@ -149,7 +170,7 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                             <input
                                 type="text"
                                 name="house"
-                                value={order.house}
+                                value={order.home}
                                 onChange={handleChange}
                                 required
                                 className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -162,17 +183,6 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                                 name="building"
                                 value={order.building}
                                 onChange={handleChange}
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-1">Этаж:</label>
-                            <input
-                                type="number"
-                                name="floor"
-                                value={order.floor}
-                                onChange={handleChange}
-                                required
                                 className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
                         </div>

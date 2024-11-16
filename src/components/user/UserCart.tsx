@@ -3,9 +3,6 @@ import Image from 'next/image'
 import Link from "next/link"
 import {useState} from 'react'
 
-// todo компонент тьребует передать ему вес товара
-
-//  описывает структуру товара
 interface cartProducts {
     id: number;
     isActive: number;
@@ -43,7 +40,8 @@ interface UserCartProps {
     cartItems: cartProducts[]
 }
 
-const UserCart: ({cartProducts}: { cartProducts: any }) => JSX.Element = ({cartProducts}) => {
+const UserCart = ({cartProducts}: UserCartProps) => {
+
     const [quantities, setQuantities] = useState<Quantities>(
         cartProducts.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
     )

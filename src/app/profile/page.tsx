@@ -1,6 +1,6 @@
 import UserProfile from '@/components/user/UserProfile'
 import {UserModel} from '@/db/models/user.model'
-import { User, Address } from "@/db/types/interfaces"
+import { User } from "@/db/types/interfaces"
 import { AddressModel } from "@/db/models/address.model"
 
 const ProfilePage = async () => {

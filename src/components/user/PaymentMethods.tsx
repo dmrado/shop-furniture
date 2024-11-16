@@ -35,6 +35,30 @@ const PaymentMethods = () => {
             name: 'Visa',
             cardNumber: '****4567',
             image: '/visa-card.png'
+        },
+        {
+            id: 4,
+            name: 'Visa',
+            cardNumber: '****2212',
+            image: '/visa-card.png'
+        },
+        {
+            id: 5,
+            name: 'Visa',
+            cardNumber: '****9939',
+            image: '/visa-card.png'
+        },
+        {
+            id: 5,
+            name: 'MIR',
+            cardNumber: '****6113',
+            image: '/mir.png'
+        },
+        {
+            id: 5,
+            name: 'MIR',
+            cardNumber: '****4772',
+            image: '/mir.png'
         }
     ]
 
@@ -59,7 +83,7 @@ const PaymentMethods = () => {
 
             {/* Секция способов оплаты */}
             <div className="mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">Способ оплаты</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">Ваши платежные инструменты</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                     {paymentMethods.map(method => (
                         <div
@@ -67,7 +91,7 @@ const PaymentMethods = () => {
                             className="flex items-center p-3 sm:p-4 lg:p-6 border rounded-lg cursor-pointer hover:bg-gray-50"
                             onClick={() => setOrder(prev => ({...prev, paymentMethod: method.id}))}
                         >
-                            <div className="w-12 sm:w-16 lg:w-24 h-10 sm:h-14 lg:h-20 relative mr-3 sm:mr-4 lg:mr-6">
+                            <div className="w-10 sm:w-16 lg:w-24 h-10 sm:h-14 lg:h-20 relative mr-3 sm:mr-4 lg:mr-6">
                                 <Image
                                     src={method.image}
                                     alt={method.name}
