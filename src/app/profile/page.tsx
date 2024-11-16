@@ -1,7 +1,7 @@
 import UserProfile from '@/components/user/UserProfile'
 import {UserModel} from '@/db/models/user.model'
-import { User } from "@/db/types/interfaces"
-import { AddressModel } from "@/db/models/address.model"
+import { User } from '@/db/types/interfaces'
+import { AddressModel } from '@/db/models/address.model'
 
 const ProfilePage = async () => {
 
@@ -132,7 +132,7 @@ const ProfilePage = async () => {
     })
 
     if(!userData){
-        return 'Не вышло'
+        return 'Не вышло profile'
     }
 
     const userProfile: User = {

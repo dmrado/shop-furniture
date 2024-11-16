@@ -4,6 +4,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import PaymentMethods from "@/components/user/PaymentMethods"
 import Link from "next/link"
+import UserAddressForm from "@/components/user/UserAddressForm";
+
 //todo слить интерфейс адрес и интерфейс гзер в один тип для ts
 type OrderFormData = {
     id?: number;
@@ -28,7 +30,13 @@ interface UserOrderFormProps {
     userAddress?: string;
     onSubmit: (orderData: OrderFormData) => void;
 }
+//todo привести в соответствие с моделью OdreredItemsModel, которую подготовить и переимновать в OrderedProductsModel
 
+//todo сюда пропсами получить юзера с адресами вытащить массив адресов и передать в селект формы где сейчас addresses[], а если юзер захочет новый адрес ввести, то перебросить его на страницу profile пусть там заводит новый адрес, а здесь пусть только выбирает
+
+//todo латежные инструменты убрать пока
+
+//todo статус заказа перенести в профиль понадобится миниатюра заказа
 const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) => {
 
     const [order, setOrder] = useState<OrderFormData>({
@@ -118,7 +126,7 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                     <label className="block mb-1">Адрес доставки:</label>
                     <select
                         name="deliveryAddress"
-                        value={order.deliveryAddress}
+                        value={order.city}
                         onChange={handleChange}
                         required
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -129,6 +137,8 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                         ))}
                     </select>
                 </div>
+
+
                 <div className="mb-4">
                     <label className="block mb-1">Комментарий к заказу:</label>
                     <textarea
@@ -140,65 +150,65 @@ const UserOrderForm: React.FC<UserOrderFormProps> = ({userAddress, onSubmit}) =>
                 </div>
 
                 {/* Новый Адрес доставки */}
-                <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4">Новый адрес доставки</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="mb-4">
-                            <label className="block mb-1">Город:</label>
-                            <input
-                                type="text"
-                                name="city"
-                                value={order.city}
-                                onChange={handleChange}
-                                required
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-1">Улица:</label>
-                            <input
-                                type="text"
-                                name="street"
-                                value={order.street}
-                                onChange={handleChange}
-                                required
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-1">Дом:</label>
-                            <input
-                                type="text"
-                                name="house"
-                                value={order.home}
-                                onChange={handleChange}
-                                required
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-1">Корпус:</label>
-                            <input
-                                type="text"
-                                name="building"
-                                value={order.building}
-                                onChange={handleChange}
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block mb-1">Квартира:</label>
-                            <input
-                                type="text"
-                                name="apartment"
-                                value={order.apartment}
-                                onChange={handleChange}
-                                required
-                                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                    </div>
-                </div>
+                {/*<div className="mb-6">*/}
+                {/*    <h3 className="text-xl font-semibold mb-4">Новый адрес доставки</h3>*/}
+                {/*    <div className="grid grid-cols-2 gap-4">*/}
+                {/*        <div className="mb-4">*/}
+                {/*            <label className="block mb-1">Город:</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                name="city"*/}
+                {/*                value={order.city}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                required*/}
+                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*        <div className="mb-4">*/}
+                {/*            <label className="block mb-1">Улица:</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                name="street"*/}
+                {/*                value={order.street}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                required*/}
+                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*        <div className="mb-4">*/}
+                {/*            <label className="block mb-1">Дом:</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                name="house"*/}
+                {/*                value={order.home}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                required*/}
+                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*        <div className="mb-4">*/}
+                {/*            <label className="block mb-1">Корпус:</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                name="building"*/}
+                {/*                value={order.building}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*        <div className="mb-4">*/}
+                {/*            <label className="block mb-1">Квартира:</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                name="apartment"*/}
+                {/*                value={order.apartment}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                required*/}
+                {/*                className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Способ оплаты */}
                 <div className="mb-6">
