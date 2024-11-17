@@ -52,8 +52,8 @@ const UserOrderForm = ({user, onSubmit}) => {
     // Создаем строки адресов для select
     //todo правильно расставить обратные кавычки и убрать <p>
     const formatAddress = (address: Address) => {
-        return <p>{address.city}, {address.street},
-            д.{address.home} {address.corps ? `, корп.${address.corps}` : ''} {address.appart ? `, кв.${address.appart}` : ''}</p>
+        return `${address.city}, ${address.street},
+            д.${address.home} ${address.corps ? `, корп.${address.corps}` : ''} ${address.appart ? `, кв.${address.appart}` : ''}`
     }
 
 // Находим основной адрес
@@ -62,72 +62,57 @@ const UserOrderForm = ({user, onSubmit}) => {
 
 // Инициализируем начальное состояние формы
     //todo isMain не отрабатывает
-    const [order, setOrder] = useState<OrderFormData>({
-        id: user.id || '',
-        userId: user.id || '',
-        phone: mainAddress?.phone || '',
-        // todo addressId:
-        selectedAddress: mainAddress ? formatAddress(mainAddress) : '',
-        // city: mainAddress?.city || '',
-        // street: mainAddress?.street || '',
-        // home: mainAddress?.home || '',
-        // corps: mainAddress?.corps || '',
-        // apartment: mainAddress?.appart || '',
-        isMain: false,
-        paymentMethod: 'cash',
-        name: user.name || '',
-        email: user.email || '',
-        comment: '',
-        deliveryDate: null
-    });
+   //  const [order, setOrder] = useState<OrderFormData>({
+   //      // todo addressId:
+   // });
 
 // Состояние для выбранного адреса
-    const [selectedAddress, setSelectedAddress] = useState(
-        mainAddress ? formatAddress(mainAddress) : ''
-    );
+//     const [selectedAddress, setSelectedAddress] = useState(
+//         mainAddress ? formatAddress(mainAddress) : ''
+//     );
+//
 // Форматируем все адреса для select
-    const addressOptions = user.addresses.map(addr => ({
-        addressId: addr.id,
-        value: formatAddress(addr),
-        address: addr
-    }));
+//     const addressOptions = user.addresses.map(addr => ({
+//         addressId: addr.id,
+//         value: formatAddress(addr)
+//     }));
 
 // Обработчик изменения адреса в select
-    const handleAddressChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const  [id, value] = e.target.value.split('|');
+//     const handleAddressChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+//         const  [id, value] = e.target.value.split('|');
 
         // Находим выбранный адрес в массиве
-        const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
+    //     const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
+    //
+    //     if (selectedAddressData) {
+    //         setOrder(prev => ({
+    //             ...prev,
+    //             // city: selectedAddressData.city,
+    //             // street: selectedAddressData.street,
+    //             // home: selectedAddressData.home,
+    //             // corps: selectedAddressData.corps || '',
+    //             // apartment: selectedAddressData.appart || '',
+    //             selectedAddress: selectedAddressData.selectedAddress,
+    //             phone: selectedAddressData.phone
+    //         }));
+    //     }
+    // };
 
-        if (selectedAddressData) {
-            setOrder(prev => ({
-                ...prev,
-                // city: selectedAddressData.city,
-                // street: selectedAddressData.street,
-                // home: selectedAddressData.home,
-                // corps: selectedAddressData.corps || '',
-                // apartment: selectedAddressData.appart || '',
-                selectedAddress: selectedAddressData.selectedAddress,
-                phone: selectedAddressData.phone
-            }));
-        }
-    };
 
+    // const handleChange = (e) => {
+    //     const {name, value} = e.target;
+    //     setOrder(prev => ({
+    //         ...prev,
+    //         [name]: value
+    //     }));
+    // };
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setOrder(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleDateChange = (date) => {
-        setOrder(prev => ({
-            ...prev,
-            deliveryDate: date
-        }));
-    };
+    // const handleDateChange = (date) => {
+    //     setOrder(prev => ({
+    //         ...prev,
+    //         deliveryDate: date
+    //     }));
+    // };
 
     const handleSubmit = async (formData: FormData) => {
         await handleOrderToDB(formData)
@@ -137,53 +122,20 @@ const UserOrderForm = ({user, onSubmit}) => {
     return (
         <div className="max-w-6xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-6">Оформление заказа</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block mb-1">Имя:</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={order.name}
-                        onChange={handleChange}
-                        required
-                        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-1">Телефон:</label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={order.phone}
-                        onChange={handleChange}
-                        required
-                        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-1">Email:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={order.email}
-                        onChange={handleChange}
-                        required
-                        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+            {user.name} {mainAddress.phone} {user.email}
+            <form action={handleSubmit}>
                 <div className="mb-4">
                     <label className="block mb-1">Адрес доставки:</label>
                     <select
                         name="selectedAddress"
-                        value={order.selectedAddress}
-                        onChange={handleAddressChange}
+                        defaultValue={mainAddress.id}
+                        // onChange={handleAddressChange}
                         required
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                        <option value="">Выберите адрес</option>
-                        {addressOptions.map((opt, index) => (
-                            <option key={index} value={`${opt.addressId}|${opt.value}`}>
-                                {opt.value}
+                        {user.addresses.map((address, index) => (
+                            <option key={index} value={address.id}>
+                                {formatAddress(address)}
                             </option>
                         ))}
                     </select>
@@ -199,64 +151,65 @@ const UserOrderForm = ({user, onSubmit}) => {
                     <label className="block mb-1">Комментарий к заказу:</label>
                     <textarea
                         name="comment"
-                        value={order.comment}
-                        onChange={handleChange}
+                        defaultValue=''
+                        // onChange={handleChange}
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 h-24"
                     />
                 </div>
 
                 {/* Способ оплаты */}
-                <div className="mb-6">
-                    <h3 className="text-xl font-semibold mb-4">Способ оплаты</h3>
-                    <div className="space-y-2">
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                value="cash"
-                                checked={order.paymentMethod === 'cash'}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            Наличные курьеру
-                        </label>
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                value="card"
-                                checked={order.paymentMethod === 'card'}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            Карта курьеру
-                        </label>
-                        <label className="flex items-center">
-                            <input
-                                type="radio"
-                                name="paymentMethod"
-                                value="online"
-                                checked={order.paymentMethod === 'online'}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            Онлайн на сайте
-                        </label>
-                    </div>
-                </div>
+                {/*<div className="mb-6">*/}
+                {/*    <h3 className="text-xl font-semibold mb-4">Способ оплаты</h3>*/}
+                {/*    <div className="space-y-2">*/}
+                {/*        <label className="flex items-center">*/}
+                {/*            <input*/}
+                {/*                type="radio"*/}
+                {/*                name="paymentMethod"*/}
+                {/*                value="cash"*/}
+                {/*                checked={order.paymentMethod === 'cash'}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                className="mr-2"*/}
+                {/*            />*/}
+                {/*            Наличные курьеру*/}
+                {/*        </label>*/}
+                {/*        <label className="flex items-center">*/}
+                {/*            <input*/}
+                {/*                type="radio"*/}
+                {/*                name="paymentMethod"*/}
+                {/*                value="card"*/}
+                {/*                checked={order.paymentMethod === 'card'}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                className="mr-2"*/}
+                {/*            />*/}
+                {/*            Карта курьеру*/}
+                {/*        </label>*/}
+                {/*        <label className="flex items-center">*/}
+                {/*            <input*/}
+                {/*                type="radio"*/}
+                {/*                name="paymentMethod"*/}
+                {/*                value="online"*/}
+                {/*                checked={order.paymentMethod === 'online'}*/}
+                {/*                onChange={handleChange}*/}
+                {/*                className="mr-2"*/}
+                {/*            />*/}
+                {/*            Онлайн на сайте*/}
+                {/*        </label>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
-                <div className="mb-4">
-                    <label className="block mb-1">Дата и время доставки:</label>
-                    <DatePicker
-                        selected={order.deliveryDate}
-                        onChange={handleDateChange}
-                        showTimeSelect
-                        dateFormat="Pp"
-                        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholderText="Выберите дату и время"
-                        required
-                    />
-                </div>
+                {/*<div className="mb-4">*/}
+                {/*    <label className="block mb-1">Дата и время доставки:</label>*/}
+
+                {/*    <DatePicker*/}
+                {/*        selected={order.deliveryDate}*/}
+                {/*        onChange={handleDateChange}*/}
+                {/*        showTimeSelect*/}
+                {/*        dateFormat="Pp"*/}
+                {/*        className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"*/}
+                {/*        placeholderText="Выберите дату и время"*/}
+                {/*        required*/}
+                {/*    />*/}
+                {/*</div>*/}
                 {/*<PaymentMethods/>*/}
                 <button
                     type="submit"

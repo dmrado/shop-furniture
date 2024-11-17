@@ -34,7 +34,9 @@ const OrderPage = async ({ user }) => {
             model: AddressModel,
             attributes: ['id', 'phone', 'city', 'street', 'home', 'corps', 'appart', 'isMain' ],
             as: 'addresses'  // используем тот же алиас, что указали при определении связи
-        }]
+        },
+            //todo сделать модель телефонов юзеру
+        ]
     })
 
     if(!userData){
@@ -51,7 +53,7 @@ const OrderPage = async ({ user }) => {
         isActive: userData.isActive,
         canContact: userData.canContact,
         addresses: userData.addresses.map(address=>({
-            id: userData.id,
+            id: address.id,
             city: address.city,
             phone: address.phone,
             street: address.street,
@@ -62,6 +64,8 @@ const OrderPage = async ({ user }) => {
             isMain: address.isMain
         }))
     }
+
+
 
     return <>
             <UserOrderForm user={userProfile}/>

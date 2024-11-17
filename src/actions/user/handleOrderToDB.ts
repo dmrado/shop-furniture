@@ -18,7 +18,6 @@ interface CleanedFormData {
     deliveryDate: Date;
 }
 
-
 class ValidationError extends Error {
     constructor(message: string) {
         super(message);
@@ -107,15 +106,15 @@ export const handleOrderToDB = async (formData: FormData) => {
     try {
         const {userId: id, name, phone, email, selectedAddress, comment, paymentMethod, deliveryDate} = cleanFormData(formData)
 
-        if(id){
-            await OrderModel.update({userId, addressId, deliveryDate as orderDate
-                    // name, phone, email, comment, paymentMethod, selectedAddress
-                },
-                { where: { id } }
-            )
-        } else {
-            await OrderModel.create({userId, addressId, deliveryDate as orderDate})
-        }
+        // if(id){
+        //     await OrderModel.update({userId, addressId, deliveryDate as orderDate
+        //             // name, phone, email, comment, paymentMethod, selectedAddress
+        //         },
+        //         { where: { id } }
+        //     )
+        // } else {
+        //     await OrderModel.create({userId, addressId, deliveryDate as orderDate})
+        // }
     } catch (err) {
         console.error('Error on handleForm:  ', err)
         if (err instanceof ValidationError) {
