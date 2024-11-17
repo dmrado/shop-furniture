@@ -5,17 +5,32 @@ import 'react-datepicker/dist/react-datepicker.css'
 import PaymentMethods from "@/components/user/PaymentMethods"
 import Link from "next/link"
 import {Address} from "@/db/types/interfaces"
+import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
+
+//todo Это слитые две модели UserModel + AddressModel но без некоторых свойств
+// Сравнивая два списка, в OrderFormData не хватает следующих полей, которые есть в UserProfile: возможно стоит слить имя и отчесатво в name позже
+//
+// 1. surName
+// 2. fatherName
+// 3. isActive
+// 4. canContact
+//При этом в OrderFormData списке есть дополнительные поля, которых нет в UserProfile:
+// 1. building
+// 2. paymentMethod
+// 3. comment
+// 4. deliveryDate
 
 type OrderFormData = {
+    selectedAddress: string | readonly string[] | number | undefined;
     id?: number;
     userId?: number;
     phone: string;
-    city: string;
-    street: string;
-    home: string;
-    building: string;
-    corps: string;
-    apartment: string;
+    // city: string;
+    // street: string;
+    // home: string;
+    // building: string;
+    // corps: string;
+    // appart: string;
     isMain: boolean;
     paymentMethod: 'cash' | 'card' | 'online';
     name: string;
@@ -24,78 +39,78 @@ type OrderFormData = {
     deliveryDate: Date | null;
 };
 
-
+//todo нужно это?
 interface UserOrderFormProps {
     userAddress?: string;
     onSubmit: (orderData: OrderFormData) => void;
 }
 
-//todo сюда пропсами получить юзера с адресами вытащить массив адресов и передать в селект формы где сейчас addresses[], а если юзер захочет новый адрес ввести, то перебросить его на страницу profile пусть там заводит новый адрес, а здесь пусть только выбирает
-
-
-//todo статус заказа перенести в профиль понадобится миниатюра заказа
+//todo позже статус заказа перенести в профиль понадобится миниатюра заказа
 
 const UserOrderForm = ({user, onSubmit}) => {
 
     // Создаем строки адресов для select
+    //todo правильно расставить обратные кавычки и убрать <p>
     const formatAddress = (address: Address) => {
-        return <p>{address.city}, {address.street}, д.{address.home} {address.corps ? `, корп.${address.corps}` : ''} {address.appart ? `, кв.${address.appart}` : ''}</p>
-}
+        return <p>{address.city}, {address.street},
+            д.{address.home} {address.corps ? `, корп.${address.corps}` : ''} {address.appart ? `, кв.${address.appart}` : ''}</p>
+    }
 
 // Находим основной адрес
-const mainAddress = user.addresses.find(addr => addr.isMain);
+    const mainAddress = user.addresses.find(addr => addr.isMain);
+
 
 // Инициализируем начальное состояние формы
-const [order, setOrder] = useState<OrderFormData>({
-    id: user.id || '',
-    userId: user.id || '',
-    phone: mainAddress?.phone || '',
-    city: mainAddress?.city || '',
-    street: mainAddress?.street || '',
-    home: mainAddress?.home || '',
-    corps: mainAddress?.corps || '',
-    apartment: mainAddress?.appart || '',
-    isMain: false,
-    paymentMethod: 'cash',
-    name: user.name || '',
-    email: user.email || '',
-    comment: '',
-    deliveryDate: null
-});
+    //todo isMain не отрабатывает
+    const [order, setOrder] = useState<OrderFormData>({
+        id: user.id || '',
+        userId: user.id || '',
+        phone: mainAddress?.phone || '',
+        selectedAddress: mainAddress ? formatAddress(mainAddress) : '',
+        // city: mainAddress?.city || '',
+        // street: mainAddress?.street || '',
+        // home: mainAddress?.home || '',
+        // corps: mainAddress?.corps || '',
+        // apartment: mainAddress?.appart || '',
+        isMain: false,
+        paymentMethod: 'cash',
+        name: user.name || '',
+        email: user.email || '',
+        comment: '',
+        deliveryDate: null
+    });
 
 // Состояние для выбранного адреса
-const [selectedAddress, setSelectedAddress] = useState(
-    mainAddress ? formatAddress(mainAddress) : ''
-);
+    const [selectedAddress, setSelectedAddress] = useState(
+        mainAddress ? formatAddress(mainAddress) : ''
+    );
 // Форматируем все адреса для select
-const addressOptions = user.addresses.map(addr => ({
-    value: formatAddress(addr),
-    address: addr
-}));
+    const addressOptions = user.addresses.map(addr => ({
+        value: formatAddress(addr),
+        address: addr
+    }));
 
 // Обработчик изменения адреса в select
-const handleAddressChange = (e) => {
-    const selectedValue = e.target.value;
-    setSelectedAddress(selectedValue);
+    const handleAddressChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedValue = e.target.value;
 
-    // Находим выбранный адрес в массиве
-    const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
+        // Находим выбранный адрес в массиве
+        const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
 
-    if (selectedAddressData) {
-        setOrder(prev => ({
-            ...prev,
-            city: selectedAddressData.city,
-            street: selectedAddressData.street,
-            home: selectedAddressData.home,
-            corps: selectedAddressData.corps || '',
-            apartment: selectedAddressData.appart || '',
-            phone: selectedAddressData.phone
-        }));
-    }
-};
-    // const [usingAddress, setUsingAddress] = useState('')//для выбранного в select сконкатинированного адреса
-    // const [addresses, setAddresses] = useState ([//нужен массив сконкатинированных адресов])
-    //
+        if (selectedAddressData) {
+            setOrder(prev => ({
+                ...prev,
+                // city: selectedAddressData.city,
+                // street: selectedAddressData.street,
+                // home: selectedAddressData.home,
+                // corps: selectedAddressData.corps || '',
+                // apartment: selectedAddressData.appart || '',
+                selectedAddress: selectedAddressData.selectedAddress,
+                phone: selectedAddressData.phone
+            }));
+        }
+    };
+
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -112,11 +127,10 @@ const handleAddressChange = (e) => {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Обработка отправки формы
-        console.log(order);
+    const handleSubmit = async (formData: FormData) => {
+        await handleOrderToDB(formData)
     }
+
 
     return (
         <div className="max-w-6xl mx-auto p-6">
@@ -159,7 +173,7 @@ const handleAddressChange = (e) => {
                     <label className="block mb-1">Адрес доставки:</label>
                     <select
                         name="selectedAddress"
-                        value={selectedAddress}
+                        value={order.selectedAddress}
                         onChange={handleAddressChange}
                         required
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -241,7 +255,7 @@ const handleAddressChange = (e) => {
                         required
                     />
                 </div>
-                <PaymentMethods/>
+                {/*<PaymentMethods/>*/}
                 <button
                     type="submit"
                     className="bg-blue-500 text-white p-2 rounded-md transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
