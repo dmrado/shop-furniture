@@ -55,6 +55,7 @@ export interface Order {
     id: number;
     userId: number;
     addressId: number;
+    comment: string;
     orderDate: Date;
     cartPrice: number;
 }
@@ -75,7 +76,7 @@ export interface User {
     fatherName: string;
     canContact: boolean;
     isActive: boolean;
-    addresses?: Address[]
+    addresses: Address[]
 }
 
 export interface Cart {
