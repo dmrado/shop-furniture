@@ -10,6 +10,8 @@ interface CleanedFormData {
     name: string;
     phone: string;
     email: string;
+    //todo userId: number;
+    //todo addressId: number;
     selectedAddress: string;
     comment?: string;
     paymentMethod: string;
@@ -30,6 +32,8 @@ const cleanFormData = (formData: FormData) : CleanedFormData => {
     const name = formData.get('name')?.toString().trim()
     const phone = formData.get('phone')?.toString().trim()
     const email = formData.get('email')?.toString().trim()
+    // todo const addressId = formData.get('userId')
+    // todo const addressId = formData.get('addressId')
     const selectedAddress = formData.get('selectedAddress')?.toString().trim()
     const comment = formData.get('comment')?.toString().trim()
     const paymentMethod = formData.get('paymentMethod')
@@ -91,6 +95,8 @@ const cleanFormData = (formData: FormData) : CleanedFormData => {
         phone: phone.toString(),
         email: email.toString(),
         selectedAddress: selectedAddress.toString(),
+        // todo userId:
+        // todo addressId:
         comment: comment?.toString() || '',
         paymentMethod: paymentMethod.toString(),
         deliveryDate: deliveryDateObj
@@ -102,11 +108,13 @@ export const handleOrderToDB = async (formData: FormData) => {
         const {userId: id, name, phone, email, selectedAddress, comment, paymentMethod, deliveryDate} = cleanFormData(formData)
 
         if(id){
-            await OrderModel.update({userId, name, phone, email, selectedAddress, comment, paymentMethod, deliveryDate},
+            await OrderModel.update({userId, addressId, deliveryDate as orderDate
+                    // name, phone, email, comment, paymentMethod, selectedAddress
+                },
                 { where: { id } }
             )
         } else {
-            await OrderModel.create({userId, name, phone, email, selectedAddress, comment, paymentMethod, deliveryDate})
+            await OrderModel.create({userId, addressId, deliveryDate as orderDate})
         }
     } catch (err) {
         console.error('Error on handleForm:  ', err)

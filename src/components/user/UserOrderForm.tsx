@@ -66,6 +66,7 @@ const UserOrderForm = ({user, onSubmit}) => {
         id: user.id || '',
         userId: user.id || '',
         phone: mainAddress?.phone || '',
+        // todo addressId:
         selectedAddress: mainAddress ? formatAddress(mainAddress) : '',
         // city: mainAddress?.city || '',
         // street: mainAddress?.street || '',
@@ -86,13 +87,14 @@ const UserOrderForm = ({user, onSubmit}) => {
     );
 // Форматируем все адреса для select
     const addressOptions = user.addresses.map(addr => ({
+        addressId: addr.id,
         value: formatAddress(addr),
         address: addr
     }));
 
 // Обработчик изменения адреса в select
     const handleAddressChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedValue = e.target.value;
+        const  [id, value] = e.target.value.split('|');
 
         // Находим выбранный адрес в массиве
         const selectedAddressData = addressOptions.find(opt => opt.value === selectedValue)?.address;
@@ -180,7 +182,7 @@ const UserOrderForm = ({user, onSubmit}) => {
                     >
                         <option value="">Выберите адрес</option>
                         {addressOptions.map((opt, index) => (
-                            <option key={index} value={opt.value}>
+                            <option key={index} value={`${opt.addressId}|${opt.value}`}>
                                 {opt.value}
                             </option>
                         ))}
