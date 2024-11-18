@@ -1,6 +1,7 @@
 import UserCart from '@/components/user/UserCart'
 import {CartModel} from '@/db/models/cart.model'
 import {ProductModel} from '@/db/models/product.model'
+import {OrderedProductsModel} from "@/db/models/orderedProducts.model";
 
 const CartPage = async () => {
 
@@ -37,7 +38,7 @@ const CartPage = async () => {
             ]
         }]
     })
-    if(!cartData || !cartData.rows.length){
+    if (!cartData || !cartData.rows.length) {
         return 'Корзина пуста'
     }
     console.log('Raw cart data:', JSON.stringify(cartData.rows[0], null, 2))
@@ -75,11 +76,40 @@ const CartPage = async () => {
         inStock: cartProducts.products?.inStock
     }))
 
-
-    console.log('>>>>> >>> this is cartList', cartList)
-
     return <>
-        <UserCart cartProducts={cartList}/>
+        <div className="max-w-4xl mx-auto p-6">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Корзина</h2>
+                <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2">
+                        <input type="checkbox" className="rounded"/>
+                        <span>Выбрать все</span>
+                    </label>
+                    <button className="px-4 py-2 text-red-600 hover:bg-red-50 rounded">
+                        Удалить выбранные
+                    </button>
+                    {/*<button className="px-4 py-2 hover:bg-gray-100 rounded">*/}
+                    {/*    Поделиться*/}
+                    {/*</button>*/}
+                </div>
+            </div>
+
+            <div className="mt-6 text-right">
+                <div className="text-2xl font-bold">
+                    Итого:
+                    {/*{total.toFixed(2)} ₽*/}
+                </div>
+            </div>
+        </div>
+        <ul>
+            {cartList.map(product =>
+                <li key={product.id}>
+                    <UserCart product={product}
+                              // orderedProduct={orderedProductQuantities}
+                    />
+                </li>
+            )}
+        </ul>
     </>
 }
 

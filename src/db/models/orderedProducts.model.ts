@@ -5,7 +5,7 @@ import {OrderModel} from "@/db/models/order.model";
 
 export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>>  implements OrderedProducts {
     declare id: number;
-    declare order: number;
+    declare orderId: number;
     declare product: number;
     declare quantity: number;
     declare status: number;

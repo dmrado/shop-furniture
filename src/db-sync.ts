@@ -5,7 +5,7 @@ import { Alert } from '@/db/modeladmin/alert.model.ts'
 import {AddressModel} from "./db/models/address.model"
 import {ColorModel} from "./db/models/color.model";
 import {ProductModel} from "./db/models/product.model";
-import {OrderedProductsModel} from "./db/models/orderedProductsModel";
+import {OrderedProductsModel} from "./db/models/orderedProducts.model";
 import {OrderModel} from "./db/models/order.model";
 import {StockModel} from "./db/models/stock.model";
 import {UserModel} from "./db/models/user.model";
