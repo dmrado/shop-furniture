@@ -1,13 +1,16 @@
 'use server'
-import { OrderedProductsModel } from '@/db/models/orderedProducts.model'
-import { revalidatePath } from 'next/cache'
+import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
+import {revalidatePath} from 'next/cache'
+import {redirect} from "next/navigation";
 
-export async function incrementQuantity(productId: number) {
+export const incrementQuantity =  async (productId: number)=> {
     try {
         // let orderedProduct = await OrderedProductsModel.findByPk(productId)
-        let orderedProduct = await OrderedProductsModel.findOne({where: {
+        let orderedProduct = await OrderedProductsModel.findOne({
+            where: {
                 product: productId
-            }})
+            }
+        })
 
         const instantOrderId = parseInt(Date.now().toString() + Math.floor(Math.random() * 1000).toString().padStart(3, '0'))
 
@@ -23,7 +26,7 @@ export async function incrementQuantity(productId: number) {
         } else {
             // Если запись существует, увеличиваем количество
             const newQuantity = orderedProduct.quantity + 1
-            await orderedProduct.update({ quantity: newQuantity })
+            await orderedProduct.update({quantity: newQuantity})
         }
 
         revalidatePath('/cart')
@@ -34,7 +37,7 @@ export async function incrementQuantity(productId: number) {
     }
 }
 
-export async function decrementQuantity(productId: number) {
+export const decrementQuantity = async (productId: number)=> {
     try {
         const orderedProduct = await OrderedProductsModel.findOne({
             where: {
@@ -53,7 +56,7 @@ export async function decrementQuantity(productId: number) {
         }
 
         const newQuantity = orderedProduct.quantity - 1
-        await orderedProduct.update({ quantity: newQuantity })
+        await orderedProduct.update({quantity: newQuantity})
 
         revalidatePath('/cart')
         return newQuantity
@@ -61,4 +64,15 @@ export async function decrementQuantity(productId: number) {
         console.error('Error decrementing quantity:', error)
         throw error
     }
+}
+
+export const cartProductDelete = async (productId: number) => {
+
+    await OrderedProductsModel.destroy({
+        where: {
+            product: productId
+        }
+    })
+    revalidatePath('/cart')
+    redirect('/cart')
 }
