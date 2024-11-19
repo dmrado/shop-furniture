@@ -5,8 +5,8 @@ import {OrderedProductsModel} from "@/db/models/orderedProducts.model";
 
 const CartPage = async () => {
 
-    // todo получение данных по выбранным товарам, подсчет, скидка, скелетон
-
+    // todo получение данных из модели OrderedProductsModel по выбранным товарам и по алиасу products только связанные данне с теми что записаны в модель OrderedProductsModel, подсчет, скидка, скелетон
+    // todo сделать страницу товаров отукуда класть в корзину
     const cartData = await CartModel.findAndCountAll({
         include: [{
             model: ProductModel,

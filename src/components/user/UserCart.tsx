@@ -52,7 +52,7 @@ const UserCart = ({product}: UserCartProps) => {
     // const [quantities, setQuantities] = useState<Quantities>(
     //     product.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
     // )
-    console.log('>>>> this is product on Next-14', product)
+    console.log('>>>> this is one product on UserCart', product)
     // const calculateItemTotal = (item: cartProducts): number => {
     //     const quantity = quantities[item.id];
     //     const discount = item.discount || 0;
@@ -162,7 +162,7 @@ const UserCart = ({product}: UserCartProps) => {
                 </button>
                 <input
                     type="text"
-                    value={quantity}
+                    defaultValue={quantity}
                     className="w-16 text-center border border-gray-300 rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
                 <button

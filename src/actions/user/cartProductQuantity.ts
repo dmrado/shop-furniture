@@ -1,7 +1,7 @@
 'use server'
 import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
 import {revalidatePath} from 'next/cache'
-import {redirect} from "next/navigation";
+import {redirect} from 'next/navigation'
 
 export const incrementQuantity =  async (productId: number)=> {
     try {
@@ -29,7 +29,7 @@ export const incrementQuantity =  async (productId: number)=> {
             await orderedProduct.update({quantity: newQuantity})
         }
 
-        revalidatePath('/cart')
+        revalidatePath('/cart')//не требуется
         return orderedProduct.quantity
     } catch (error) {
         console.error('Error incrementing quantity:', error)
@@ -58,7 +58,7 @@ export const decrementQuantity = async (productId: number)=> {
         const newQuantity = orderedProduct.quantity - 1
         await orderedProduct.update({quantity: newQuantity})
 
-        revalidatePath('/cart')
+        revalidatePath('/cart')//не требуется
         return newQuantity
     } catch (error) {
         console.error('Error decrementing quantity:', error)
@@ -73,6 +73,6 @@ export const cartProductDelete = async (productId: number) => {
             product: productId
         }
     })
-    revalidatePath('/cart')
+    revalidatePath('/cart')//todo проверить работает ли после создания запроса к OrderedProductsModel и рендера оставшихся в корзине товаров на cart page
     redirect('/cart')
 }
