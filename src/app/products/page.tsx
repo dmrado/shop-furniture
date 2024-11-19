@@ -1,9 +1,8 @@
 import {StockModel} from '@/db/models/stock.model'
-import {Stock} from '@/db/types/interfaces'
-import {ProductModel} from "@/db/models/product.model"
-import ProductList from "@/components/admin/ProductList"
-import {Op} from "sequelize"
-import {number} from "prop-types";
+import {ProductModel} from '@/db/models/product.model'
+import Product from '@/components/site/Product'
+import FiltersCategories from '@/components/site/FiltersCategories'
+import Pagination from '@/components/site/Pagination'
 
 
 const ProductsPage = async () => {
@@ -38,14 +37,21 @@ const ProductsPage = async () => {
         quantity: product.stock.quantity,
         lastUpdate: product.stock.lastUpdate,
         inStock: product.stock.inStock,
-        image:  product.image
-        }))
+        image: product.image
+    }))
     console.log('stockList', productList)
-    return (
+
+    return <>
         <div>
-            <ProductList products={productList}/>
+            <FiltersCategories/>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {productList.map(product => (
+                    <Product product={product}/>
+                ))}
+            </div>
+            <Pagination/>
         </div>
-    )
+    </>
 }
 
 export default ProductsPage
