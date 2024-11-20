@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { getProductById } from '@/actions/getProductById'
+import { getProductBiId } from '@/actions/productActions'
 
 const ProductPage = ({ params }: { params: { id: string } }) => {
     const [product, setProduct] = useState(null)
@@ -13,7 +13,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         const loadProduct = async () => {
             try {
-                const response = await getProductById(params.id)
+                const response = await getProductBiId(params.id)
                 if (response.success) {
                     setProduct(response.data)
                 } else {

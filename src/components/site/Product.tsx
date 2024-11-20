@@ -1,7 +1,8 @@
 'use client'
 import React, {useState} from 'react'
 import Image from 'next/image'
-import Link from "next/link";
+import Link from 'next/link'
+import {putProductToCart} from "@/actions/productActions";
 
 const Product = ({product}) => {
     const [isHovered, setIsHovered] = useState(false)
@@ -83,7 +84,9 @@ const Product = ({product}) => {
                     </div>
                 </div>
                 {/*todo серверный экшен по онклику на добавление товара в модель CartModel*/}
-                <button className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
+                <button
+                    onClick={() => putProductToCart(product.id)}
+                    className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
                     transition-all duration-300 transform
                     hover:bg-indigo-700 hover:shadow-lg
                     focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2

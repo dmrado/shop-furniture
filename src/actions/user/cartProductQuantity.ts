@@ -2,6 +2,7 @@
 import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
 import {revalidatePath} from 'next/cache'
 import {redirect} from 'next/navigation'
+import {CartModel} from "@/db/models/cart.model";
 
 export const incrementQuantity =  async (productId: number)=> {
     try {
@@ -67,12 +68,17 @@ export const decrementQuantity = async (productId: number)=> {
 }
 
 export const cartProductDelete = async (productId: number) => {
-
-    await OrderedProductsModel.destroy({
+    await CartModel.destroy({
         where: {
-            product: productId
+            productId: productId,
+            userId: 1
         }
     })
+    // await OrderedProductsModel.destroy({
+    //     where: {
+    //         product: productId
+    //     }
+    // })
     revalidatePath('/cart')//todo проверить работает ли после создания запроса к OrderedProductsModel и рендера оставшихся в корзине товаров на cart page
     redirect('/cart')
 }

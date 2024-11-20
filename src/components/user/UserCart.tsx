@@ -125,7 +125,7 @@ const UserCart = ({product}: UserCartProps) => {
                         <span role="img" aria-label="favorite" className="text-xl">❤️</span>
                     </button>
                     <button
-                        onClick={() => cartProductDelete(product.id)}
+                        onClick={() => cartProductDelete(product.product_id)}
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
                         <span role="img" aria-label="delete" className="text-xl">🗑</span>
                     </button>
