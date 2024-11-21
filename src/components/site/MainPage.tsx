@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Image from "next/image";
 import Decoro from './img/Decoro.svg';
 import Cart from './img/Cart.svg';
@@ -15,28 +15,47 @@ import Arrow from './img/Arrow.svg';
 import sampleImage from "./img/sample-carousel.svg";
 
 const MainPage = () => {
-    // Состояния для смены иконок
     const [heartIcon, setHeartIcon] = useState(Heart);
     const [cartIcon, setCartIcon] = useState(Cart);
     const [profileIcon, setProfileIcon] = useState(Profile);
 
+    const images = [sampleImage, sampleImage, sampleImage, sampleImage];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
     const Carousel: React.FC = () => {
         return (
             <div className="relative w-full h-[700px]">
+                {/* Картинка текущей карусели */}
                 <Image
-                    src={sampleImage}
-                    alt="Карусель"
+                    src={images[currentImageIndex]}
+                    alt={`Карусель ${currentImageIndex + 1}`}
                     layout="fill"
                     objectFit="cover"
                     className="w-full h-full"
                 />
 
+                {/* Полупрозрачная плашка */}
                 <div className="absolute left-[68px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-8 max-w-[589px] h-[265px]">
-                    <h1 className="text-4xl mb-4 font-semibold mt-7">Новая коллекция диванов <br/>со скидкой 10%</h1>
+                    <h1 className="text-4xl mb-4 font-semibold mt-7">Новая коллекция диванов <br />со скидкой 10%</h1>
                     <button className="flex items-center px-4 py-5 bg-[#171613] transition-all duration-200 mt-5">
                         Подробнее
-                        <Image src={Arrow} className="ml-2.5 mt-1"/>
+                        <Image src={Arrow} className="ml-2.5 mt-1" />
                     </button>
+                </div>
+
+                {/* Точки навигации */}
+                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                    {images.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`w-3 h-3 rounded-full ${
+                                currentImageIndex === index
+                                    ? "bg-[#232E26]"
+                                    : "bg-white opacity-50"
+                            } transition-opacity duration-200`}
+                        ></button>
+                    ))}
                 </div>
             </div>
         );
@@ -69,7 +88,8 @@ const MainPage = () => {
                         <div className="block w-px h-8 bg-[#E99C28] ml-9 mr-10"></div>
 
                         <div className="flex space-x-7 text-white">
-                            <a href="/contacts" className="hover:text-[#E99C28] transition-colors duration-200">Контакты</a>
+                            <a href="/contacts"
+                               className="hover:text-[#E99C28] transition-colors duration-200">Контакты</a>
                             <a href="/about" className="hover:text-[#E99C28] transition-colors duration-200">О нас</a>
                             <a href="/search"
                                className="hover:text-[#E99C28] transition-colors duration-200 flex items-center space-x-0.5">
@@ -83,7 +103,7 @@ const MainPage = () => {
                             style={{width: 258, height: 46}}
                         >
                             <Image src={Phone} width={15} height={15} className="mr-2.5"/>
-                            <span className="text-sm lg:text-base">Заказать обратный звонок</span>
+                            <span className="text-base">Заказать обратный звонок</span>
                         </button>
 
                         <div className="flex items-center ml-5 space-x-2.5">
@@ -91,15 +111,29 @@ const MainPage = () => {
                                 href="/favorites"
                                 onMouseEnter={() => setHeartIcon(HeartY)}
                                 onMouseLeave={() => setHeartIcon(Heart)}
+                                className="flex items-center"
                             >
-                                <Image src={heartIcon} alt="Избранное" width={20} height={20}/>
+                                <Image
+                                    src={heartIcon}
+                                    alt="Избранное"
+                                    width={20}
+                                    height={20}
+                                    className="w-5 h-5 transform-none"
+                                />
                             </a>
                             <a
                                 href="/cart"
                                 onMouseEnter={() => setCartIcon(CartY)}
                                 onMouseLeave={() => setCartIcon(Cart)}
+                                className="flex items-center"
                             >
-                                <Image src={cartIcon} alt="Корзина" width={24} height={24}/>
+                                <Image
+                                    src={cartIcon}
+                                    alt="Корзина"
+                                    width={24}
+                                    height={24}
+                                    className="w-6 h-6 transform-none"
+                                />
                             </a>
                         </div>
 
@@ -108,19 +142,26 @@ const MainPage = () => {
                                 href="/profile"
                                 onMouseEnter={() => setProfileIcon(ProfileY)}
                                 onMouseLeave={() => setProfileIcon(Profile)}
+                                className="flex items-center"
                             >
-                                <Image src={profileIcon} alt="Профиль" width={25} height={25}/>
+                                <Image
+                                    src={profileIcon}
+                                    alt="Профиль"
+                                    width={25}
+                                    height={25}
+                                    className="w-6 h-6 transform-none"
+                                />
                             </a>
                         </div>
+
                     </div>
                 </header>
             </div>
             <main>
-                <Carousel />
+                <Carousel/>
             </main>
         </div>
-    )
-        ;
+    );
 };
 
 export default MainPage;
