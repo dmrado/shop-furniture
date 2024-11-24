@@ -41,13 +41,13 @@ const UserCart = ({cartItem}: any) => {
     //todo initialState должен быть текущее значение из БД
     // const [quantity, setQuantity] = useState(orderedProductQuantity?.quantity || 0)
     const [quantity, setQuantity] = useState<number>(cartItem.quantity)
-
-
+    const [isLoading, setIsLoading] = useState(false)
 
 
     // const [quantities, setQuantities] = useState<Quantities>(
     //     product.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
     // )
+
     console.log('>>>> this is one product on UserCart', cartItem)
     // const calculateItemTotal = (item: cartProducts): number => {
     //     const quantity = quantities[item.id];
@@ -91,7 +91,8 @@ const UserCart = ({cartItem}: any) => {
         {/* Левая часть с изображением и информацией */}
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
             {/* Изображение */}
-            <div className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
+            <div
+                className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
                 <Image
                     src={cartItem.image}
                     alt={cartItem.name}
@@ -150,26 +151,44 @@ const UserCart = ({cartItem}: any) => {
             <div className="flex items-center gap-2">
                 <button
                     onClick={async () => {
+                        setIsLoading(true)
                         const updatedQuantity = await updateQuantityAction({id: cartItem.id, newQuantity: quantity - 1})
                         setQuantity(updatedQuantity)
+                        setIsLoading(false)
                     }}
+                    disabled={isLoading}
                     className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600">
                     -
                 </button>
                 <input
-                    onChange={async (event)=>{
-                        const updatedQuantity= await updateQuantityAction({id: cartItem.id, newQuantity: event.target.value})
+                    onChange={async (event) => {
+                        const newValue = event.target.value
+                        console.log('newValue', newValue)
+                        //по букве сработает ретурн, по пробелу и пустой строке вернет 0 и обнулит в БД значени
+                        if (isNaN(Number(newValue))) {
+                            return
+                        }
+                        setIsLoading(true)
+                        const updatedQuantity = await updateQuantityAction({
+                            id: cartItem.id,
+                            newQuantity: Number(newValue)
+                        })
                         setQuantity(updatedQuantity)
-                    } }
+                        setIsLoading(false)
+                    }}
+                    readOnly={isLoading}
                     type="text"
                     value={quantity}
                     className="w-16 text-center border border-gray-300 rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
                 <button
                     onClick={async () => {
-                        const updatedQuantity= await updateQuantityAction({id: cartItem.id, newQuantity: quantity + 1})
+                        setIsLoading(true)
+                        const updatedQuantity = await updateQuantityAction({id: cartItem.id, newQuantity: quantity + 1})
                         setQuantity(updatedQuantity)
+                        setIsLoading(false)
                     }}
+                    disabled={isLoading}
                     className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 ">
                     +
                 </button>
