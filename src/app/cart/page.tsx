@@ -8,6 +8,7 @@ const CartPage = async () => {
     // todo получение данных из модели OrderedProductsModel по выбранным товарам и по алиасу products только связанные данне с теми что записаны в модель OrderedProductsModel, подсчет, скидка, скелетон
     // todo сделать страницу товаров отукуда класть в корзину
     const cartData = await CartModel.findAndCountAll({
+        //todo rename alias to product
         include: [{
             model: ProductModel,
             as: 'products',
@@ -43,37 +44,39 @@ const CartPage = async () => {
     }
     console.log('Raw cart data:', JSON.stringify(cartData.rows[0], null, 2))
 
-    const cartList = cartData.rows.map(cartProducts => ({
+    const cartList = cartData.rows.map(cart => ({
+        // todo remove datetime
         // Поля из таблицы carts
-        id: cartProducts.id,
-        productId: cartProducts.productId,
-        quantity: cartProducts.quantity,
-        userId: cartProducts.userId,
-        datetime: cartProducts.datetime,
-        createdAt: cartProducts?.createdAt,
-        updatedAt: cartProducts?.updatedAt,
-        discount: cartProducts.discount,
+        id: cart.id,
+        productId: cart.productId,
+        quantity: cart.quantity,
+        userId: cart.userId,
+        datetime: cart.datetime,
+        createdAt: cart?.createdAt,
+        updatedAt: cart?.updatedAt,
+        discount: cart.discount,
         // Поля из таблицы products
-        product_id: cartProducts.products?.id,
-        isActive: cartProducts.products?.isActive,
-        articul: cartProducts.products?.articul,
-        sku: cartProducts.products?.sku,
-        name: cartProducts.products?.name,
-        description_1: cartProducts.products?.description_1,
-        description_2: cartProducts.products?.description_2,
-        length: cartProducts.products?.length,
-        width: cartProducts.products?.width,
-        height: cartProducts.products?.height,
-        weight: cartProducts.products?.weight,
-        box_length: cartProducts.products?.box_length,
-        box_height: cartProducts.products?.box_height,
-        box_weight: cartProducts.products?.box_weight,
-        image: cartProducts.products?.image,
-        old_price: cartProducts.products?.old_price,
-        new_price: cartProducts.products?.new_price,
-        primary_color: cartProducts.products?.primary_color,
-        secondary_color: cartProducts.products?.secondary_color,
-        inStock: cartProducts.products?.inStock
+        // todo сделать объект вложенным
+        product_id: cart.products?.id,
+        isActive: cart.products?.isActive,
+        articul: cart.products?.articul,
+        sku: cart.products?.sku,
+        name: cart.products?.name,
+        description_1: cart.products?.description_1,
+        description_2: cart.products?.description_2,
+        length: cart.products?.length,
+        width: cart.products?.width,
+        height: cart.products?.height,
+        weight: cart.products?.weight,
+        box_length: cart.products?.box_length,
+        box_height: cart.products?.box_height,
+        box_weight: cart.products?.box_weight,
+        image: cart.products?.image,
+        old_price: cart.products?.old_price,
+        new_price: cart.products?.new_price,
+        primary_color: cart.products?.primary_color,
+        secondary_color: cart.products?.secondary_color,
+        inStock: cart.products?.inStock
     }))
 
     return <>
@@ -102,9 +105,9 @@ const CartPage = async () => {
             </div>
         </div>
         <ul>
-            {cartList.map(product =>
-                <li key={product.id}>
-                    <UserCart product={product}
+            {cartList.map(cart =>
+                <li key={cart.id}>
+                    <UserCart cartItem={cart}
                               // orderedProduct={orderedProductQuantities}
                     />
                 </li>
