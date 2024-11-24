@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const NavbarWithSubmenu = () => {
+export const Navigation = () => {
 
-    const firstLevel = [
+    const navItem = [
         {
             id: 1,
             name: 'item_1',
@@ -35,67 +35,15 @@ export const NavbarWithSubmenu = () => {
         },
     ]
 
-    const secondLevelFirst = [
-        {
-            id: 11,
-            name: 'item_11',
-            href: '#'
-        },
-        {
-            id: 12,
-            name: 'item_12',
-            href: '#'
-        },
-        {
-            id: 13,
-            name: 'item_13',
-            href: '#'
-        },
-        {
-            id: 14,
-            name: 'item_14',
-            href: '#'
-        },
-    ]
-
-    const secondLevelSecond = [
-        {
-            id: 21,
-            name: 'item_11',
-            href: '#'
-        },
-        {
-            id: 22,
-            name: 'item_22',
-            href: '#'
-        },
-        {
-            id: 23,
-            name: 'item_23',
-            href: '#'
-        },
-    ]
-
-    export const NavbarWithSubmenu = () => {
-        return (
-            <div>
-                <ul className="ul">
-                    {firstLevel.map((item, index) => (
-                        <li key={item.id}>
-                            {item.name}
-                            {index === 1 && ( // показываем подменю только для второго элемента
-                                <ul className="submenu">
-                                    {secondLevelFirst.map(subItem => (
-                                        <li key={subItem.id}>
-                                            {subItem.name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <ul className="ul">
+                {navItem.map((item) => (
+                    <li key={item.id}>
+                        {item.name}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
 }
