@@ -12,14 +12,15 @@ import CartY from "./img/CartY.svg";
 import Phone from "./img/Phone.svg";
 import Search from "./img/Search.svg";
 import Carousel from "@/components/site/Carousel";
-import {Navigation} from "@/components/site/Navigation";
+import Navigation from "@/components/site/Navigation";
 
 const MainPage = () => {
     const [heartIcon, setHeartIcon] = useState(Heart);
     const [cartIcon, setCartIcon] = useState(Cart);
     const [profileIcon, setProfileIcon] = useState(Profile);
+    
     const [activeMenu, setActiveMenu] = useState<string | null>(null);
-
+    const [menuTimer, setMenuTimer] = useState<NodeJS.Timeout | null>(null);
     const navItems = [
         { name: "Каталог", subItems: ["Мебель", "Декор", "Текстиль"] },
         { name: "Кухни", subItems: ["Модульные кухни", "Аксессуары"] },

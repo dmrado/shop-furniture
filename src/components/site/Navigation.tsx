@@ -54,8 +54,7 @@
 
 import React from "react";
 
-export const Navigation = ({ items }: { items: string[] }) => {
-
+const Navigation = ({ items }: { items: string[] }) => {
     return (
         <div className="absolute bg-black shadow-md p-4 top-full mt-2 z-10 bg-opacity-70">
             <ul className="space-y-2">
@@ -74,3 +73,4 @@ export const Navigation = ({ items }: { items: string[] }) => {
     );
 };
 
+export default Navigation
