@@ -18,7 +18,7 @@ const MainPage = () => {
     const [heartIcon, setHeartIcon] = useState(Heart);
     const [cartIcon, setCartIcon] = useState(Cart);
     const [profileIcon, setProfileIcon] = useState(Profile);
-    
+
     const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [menuTimer, setMenuTimer] = useState<NodeJS.Timeout | null>(null);
     const navItems = [
