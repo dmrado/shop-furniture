@@ -7,7 +7,7 @@ const CartPage = async () => {
     const cartData = await CartModel.findAndCountAll({
         include: [{
             model: ProductModel,
-            as: 'products',
+            as: 'product',
             required: false,
             attributes: [
                 'id',
@@ -50,27 +50,27 @@ const CartPage = async () => {
         updatedAt: cart?.updatedAt,
         discount: cart.discount,
         // Вложенный объект products
-        product: cart.products ? {
-            id: cart.products.id,
-            isActive: cart.products.isActive,
-            articul: cart.products.articul,
-            sku: cart.products.sku,
-            name: cart.products.name,
-            description_1: cart.products.description_1,
-            description_2: cart.products.description_2,
-            length: cart.products.length,
-            width: cart.products.width,
-            height: cart.products.height,
-            weight: cart.products.weight,
-            box_length: cart.products.box_length,
-            box_height: cart.products.box_height,
-            box_weight: cart.products.box_weight,
-            image: cart.products.image,
-            old_price: cart.products.old_price,
-            new_price: cart.products.new_price,
-            primary_color: cart.products.primary_color,
-            secondary_color: cart.products.secondary_color,
-            inStock: cart.products.inStock
+        product: cart.product ? {
+            id: cart.product.id,
+            isActive: cart.product.isActive,
+            articul: cart.product.articul,
+            sku: cart.product.sku,
+            name: cart.product.name,
+            description_1: cart.product.description_1,
+            description_2: cart.product.description_2,
+            length: cart.product.length,
+            width: cart.product.width,
+            height: cart.product.height,
+            weight: cart.product.weight,
+            box_length: cart.product.box_length,
+            box_height: cart.product.box_height,
+            box_weight: cart.product.box_weight,
+            image: cart.product.image,
+            old_price: cart.product.old_price,
+            new_price: cart.product.new_price,
+            primary_color: cart.product.primary_color,
+            secondary_color: cart.product.secondary_color,
+            inStock: cart.product.inStock
         } : null
     }));
 

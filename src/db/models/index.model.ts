@@ -47,7 +47,7 @@ ProductModel.hasOne(StockModel, {
 
 CartModel.belongsTo(ProductModel, {
     foreignKey: 'productId',
-    as: 'products'
+    as: 'product'
 })
 
 CartModel.belongsTo(UserModel, {
