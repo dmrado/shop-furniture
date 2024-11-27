@@ -42,55 +42,42 @@ interface CartProduct {
     // [key: number]: number
 // }
 
-const UserCart = ({cartItem}: CartProduct) => {
+interface UserCartProps {
+    cartItem: CartProduct;
+    isSelected: boolean;
+    onSelect: (id: number) => void;
+}
+
+interface CartItem {
+    id: number
+    product: {
+        new_price: number
+        old_price: number
+    }
+    quantity: number
+}
+
+
+
+const UserCart = ({cartItem, isSelected, onSelect,  initialQuantity}:  any) => {
     const [quantity, setQuantity] = useState<number>(cartItem.quantity)
     const [isLoading, setIsLoading] = useState(false)
 
-
-    // const [quantities, setQuantities] = useState<Quantities>(
-    //     product.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
-    // )
-
     console.log('>>>> this is one product on UserCart', cartItem)
-    // const calculateItemTotal = (item: cartProducts): number => {
-    //     const quantity = quantities[item.id];
-    //     const discount = item.discount || 0;
-    //     const priceWithDiscount = item.new_price * (1 - discount / 100);
-    //     return priceWithDiscount * quantity;
-    // };
-    //
-    // const calculateTotalItems = (): number => {
-    //     return Object.values(quantities).reduce((acc, quantity) => acc + quantity, 0);
-    // };
-    //
-    // const calculateTotalWeight = (): number => {
-    //     return cartProducts.reduce((acc, item) => {
-    //         const itemWeight = item.weight || 0;
-    //         return acc + (itemWeight * quantities[item.id]);
-    //     }, 0);
-    // };
-
-    // const totalDiscount: number = cartProducts.reduce((acc, item) => {
-    //     const quantity = quantities[item.id];
-    //     const itemDiscount = (item.discount || 0) * item.new_price * quantity / 100;
-    //     return acc + itemDiscount;
-    // }, 0);
-
-    // const promoCodeDiscount: number = cartProducts[0]?.promoDiscount || 0;
-    //
-    // const subtotal: number = cartProducts.reduce((acc, item) => acc + calculateItemTotal(item), 0);
-    // const totalAmount: number = subtotal - promoCodeDiscount;
-    // const totalItems: number = calculateTotalItems();
-    // const totalWeight: number = calculateTotalWeight();
-    //
-    // const handleQuantityChange = (id: number, value: number): void => {
-    //     const newValue = Math.max(0, Math.min(300, value));
-    //     setQuantities(prev => ({...prev, [id]: newValue}));
-    // }
-
 
     return <div
         className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-4 mx-6 gap-4 border border-gray-100 hover:border-gray-200">
+
+        {/* Чекбокс для выбора товара */}
+        <div className="flex items-center">
+            <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onSelect(cartItem.id)}
+                className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+        </div>
+
         {/* Левая часть с изображением и информацией */}
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
             {/* Изображение */}
@@ -129,10 +116,6 @@ const UserCart = ({cartItem}: CartProduct) => {
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
                         <span role="img" aria-label="delete" className="text-xl">🗑</span>
                     </button>
-                    <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200 text-sm font-medium  transform hover:scale-105 active:scale-95">
-                        Купить
-                    </button>
                 </div>
             </div>
         </div>
@@ -160,7 +143,7 @@ const UserCart = ({cartItem}: CartProduct) => {
                         setIsLoading(false)
                     }}
                     disabled={isLoading}
-                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600">
+                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
                     -
                 </button>
                 <input
@@ -192,7 +175,7 @@ const UserCart = ({cartItem}: CartProduct) => {
                         setIsLoading(false)
                     }}
                     disabled={isLoading}
-                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 ">
+                    className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
                     +
                 </button>
             </div>
