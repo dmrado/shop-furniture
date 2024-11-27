@@ -85,7 +85,6 @@ export interface Cart {
     quantity: number;
     userId: number;
     discount: number;
-    datetime: Date;
     item?: ProductModel;
     user?: UserModel;
 }

@@ -4,42 +4,45 @@ import Link from "next/link"
 import {useState} from 'react'
 import {cartProductDelete, updateQuantityAction} from '@/actions/user/cartProductQuantity'
 
-//todo сделать отдельный под cartList (ProductListItem) но толькол то, что понадобится на корзине
-// interface CartProducts {
-//     id: number;
-//     isActive: number;
-//     articul: string;
-//     sku: string;
-//     name: string;
-//     description_1: string;
-//     description_2: string;
-//     length: number;
-//     width: number;
-//     height: number;
-//     weight: number;
-//     box_length: number;
-//     box_height: number;
-//     box_weight: number;
-//     old_price: number;
-//     new_price: number;
-//     primary_color: number;
-//     secondary_color: number;
-//     inStock: number;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     image: string;
-//     discount: number;
-//     promoDiscount: number;
-// }
+interface CartProduct {
+    id: number;
+    productId: number;
+    quantity: number;
+    userId: number;
+    createdAt: Date;
+    updatedAt: Date;
+    discount: number;
+    products: {
+        id: number;
+        isActive: boolean;
+        articul: string;
+        sku: string;
+        name: string;
+        description_1: string;
+        description_2: string;
+        length: number;
+        width: number;
+        height: number;
+        weight: number;
+        box_length: number;
+        box_height: number;
+        box_weight: number;
+        image: string;
+        old_price: number;
+        new_price: number;
+        primary_color: number;
+        secondary_color: number;
+        inStock: boolean;
+    } | null;
 
-// описывает объект с количествами товаров
-interface Quantities {
-    [key: number]: number
 }
 
-const UserCart = ({cartItem}: any) => {
-    //todo initialState должен быть текущее значение из БД
-    // const [quantity, setQuantity] = useState(orderedProductQuantity?.quantity || 0)
+// описывает объект с количествами товаров
+// interface Quantities {
+    // [key: number]: number
+// }
+
+const UserCart = ({cartItem}: CartProduct) => {
     const [quantity, setQuantity] = useState<number>(cartItem.quantity)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -94,8 +97,8 @@ const UserCart = ({cartItem}: any) => {
             <div
                 className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
                 <Image
-                    src={cartItem.image}
-                    alt={cartItem.name}
+                    src={cartItem.product.image}
+                    alt={cartItem.product.name}
                     fill
                     className="object-contain hover:scale-105 transition-transform duration-300"
                 />
@@ -105,13 +108,13 @@ const UserCart = ({cartItem}: any) => {
             <div className="flex flex-col justify-between space-y-2">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200">
-                        {cartItem.name}
+                        {cartItem.product.name}
                     </h3>
                     <div className="text-sm text-gray-600 mt-1">
-                        {cartItem.description_1}
+                        {cartItem.product.description_1}
                     </div>
                     <div className="text-sm text-gray-600">
-                        {cartItem.description_2}
+                        {cartItem.product.description_2}
                     </div>
                 </div>
 
@@ -122,7 +125,7 @@ const UserCart = ({cartItem}: any) => {
                         <span role="img" aria-label="favorite" className="text-xl">❤️</span>
                     </button>
                     <button
-                        onClick={() => cartProductDelete(cartItem.id)}
+                        onClick={() => cartProductDelete(cartItem.product.id)}
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
                         <span role="img" aria-label="delete" className="text-xl">🗑</span>
                     </button>
@@ -140,10 +143,10 @@ const UserCart = ({cartItem}: any) => {
             {/* Цена */}
             <div className="text-right">
                 <div className="text-green-600 font-bold text-lg md:text-xl">
-                    {cartItem.new_price} ₽
+                    {cartItem.product.new_price} ₽
                 </div>
                 <div className="text-gray-400 line-through text-sm">
-                    {cartItem.old_price} ₽
+                    {cartItem.product.old_price} ₽
                 </div>
             </div>
 
@@ -164,7 +167,7 @@ const UserCart = ({cartItem}: any) => {
                     onChange={async (event) => {
                         const newValue = event.target.value
                         console.log('newValue', newValue)
-                        //по букве сработает ретурн, по пробелу и пустой строке вернет 0 и обнулит в БД значени
+                        //по букве сработает ретурн, по пробелу и пустой строке вернет 0 и обнулит в БД значени поэтому проверяем приведеенное к числу значение
                         if (isNaN(Number(newValue))) {
                             return
                         }

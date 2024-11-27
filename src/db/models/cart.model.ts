@@ -10,7 +10,6 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare quantity: number;
     declare userId: number;
     declare discount: number;
-    declare datetime: Date;
     declare products?: ProductModel;
     declare user?: UserModel;
     declare createdAt: any;
@@ -50,11 +49,6 @@ CartModel.init(
             allowNull: true,
             defaultValue: 1
         },
-        datetime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW
-        }
     },
     {
         sequelize,

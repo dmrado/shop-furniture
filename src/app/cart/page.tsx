@@ -1,14 +1,10 @@
 import UserCart from '@/components/user/UserCart'
 import {CartModel} from '@/db/models/cart.model'
 import {ProductModel} from '@/db/models/product.model'
-import {OrderedProductsModel} from "@/db/models/orderedProducts.model";
 
 const CartPage = async () => {
 
-    // todo получение данных из модели OrderedProductsModel по выбранным товарам и по алиасу products только связанные данне с теми что записаны в модель OrderedProductsModel, подсчет, скидка, скелетон
-    // todo сделать страницу товаров отукуда класть в корзину
     const cartData = await CartModel.findAndCountAll({
-        //todo rename alias to product
         include: [{
             model: ProductModel,
             as: 'products',
@@ -45,39 +41,38 @@ const CartPage = async () => {
     console.log('Raw cart data:', JSON.stringify(cartData.rows[0], null, 2))
 
     const cartList = cartData.rows.map(cart => ({
-        // todo remove datetime
         // Поля из таблицы carts
         id: cart.id,
         productId: cart.productId,
         quantity: cart.quantity,
         userId: cart.userId,
-        datetime: cart.datetime,
         createdAt: cart?.createdAt,
         updatedAt: cart?.updatedAt,
         discount: cart.discount,
-        // Поля из таблицы products
-        // todo сделать объект вложенным
-        product_id: cart.products?.id,
-        isActive: cart.products?.isActive,
-        articul: cart.products?.articul,
-        sku: cart.products?.sku,
-        name: cart.products?.name,
-        description_1: cart.products?.description_1,
-        description_2: cart.products?.description_2,
-        length: cart.products?.length,
-        width: cart.products?.width,
-        height: cart.products?.height,
-        weight: cart.products?.weight,
-        box_length: cart.products?.box_length,
-        box_height: cart.products?.box_height,
-        box_weight: cart.products?.box_weight,
-        image: cart.products?.image,
-        old_price: cart.products?.old_price,
-        new_price: cart.products?.new_price,
-        primary_color: cart.products?.primary_color,
-        secondary_color: cart.products?.secondary_color,
-        inStock: cart.products?.inStock
-    }))
+        // Вложенный объект products
+        product: cart.products ? {
+            id: cart.products.id,
+            isActive: cart.products.isActive,
+            articul: cart.products.articul,
+            sku: cart.products.sku,
+            name: cart.products.name,
+            description_1: cart.products.description_1,
+            description_2: cart.products.description_2,
+            length: cart.products.length,
+            width: cart.products.width,
+            height: cart.products.height,
+            weight: cart.products.weight,
+            box_length: cart.products.box_length,
+            box_height: cart.products.box_height,
+            box_weight: cart.products.box_weight,
+            image: cart.products.image,
+            old_price: cart.products.old_price,
+            new_price: cart.products.new_price,
+            primary_color: cart.products.primary_color,
+            secondary_color: cart.products.secondary_color,
+            inStock: cart.products.inStock
+        } : null
+    }));
 
     return <>
         {/*todo превратить в отдельный компонент Total для стейта итого и только для этого*/}

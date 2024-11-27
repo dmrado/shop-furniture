@@ -33,11 +33,11 @@ const ProductsPage = async () => {
         description_1: product.description_1,
         description_2: product.description_2,
         old_price: product.old_price,
-        new_price: product.new_price,
-        quantity: product.stock.quantity,
-        lastUpdate: product.stock.lastUpdate,
-        inStock: product.stock.inStock,
-        image: product.image
+        new_price: product?.new_price,
+        quantity: product.stock?.quantity,
+        lastUpdate: product.stock?.lastUpdate,
+        inStock: product.stock?.inStock,
+        image: product?.image
     }))
     console.log('stockList', productList)
 
