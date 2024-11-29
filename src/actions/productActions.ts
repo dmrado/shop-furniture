@@ -31,9 +31,9 @@ export async function getProductBiId(id: string) {
 }
 
 export const putProductToCart = async (productId: number) => {
+    console.log('productId', productId)
     try{
         const userId = 1
-
         const existingCartItem = await CartModel.findOne({
             where: {
                 productId,

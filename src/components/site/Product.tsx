@@ -36,6 +36,7 @@ const Product = ({product}) => {
                     className={`object-cover transform transition-transform duration-700 ${
                         isHovered ? 'scale-110' : 'scale-100'
                     }`}
+                    priority
                 />
 
 
