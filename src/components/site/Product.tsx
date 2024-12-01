@@ -86,7 +86,10 @@ const Product = ({product}) => {
                 </div>
                 {/*todo серверный экшен по онклику на добавление товара в модель CartModel*/}
                 <button
-                    onClick={() => putProductToCart(product.id)}
+                    onClick={() => {
+                        console.log('product.id front', product.id)
+                        putProductToCart(product.id)}
+                }
                     className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
                     transition-all duration-300 transform
                     hover:bg-indigo-700 hover:shadow-lg

@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import Link from "next/link"
 import {useState} from 'react'
 import {cartProductDelete, updateQuantityAction} from '@/actions/user/cartProductQuantity'
 
@@ -36,7 +37,29 @@ interface CartProduct {
 
 }
 
-const UserCart = ({cartItem}:  CartProduct) => {
+// описывает объект с количествами товаров
+// interface Quantities {
+    // [key: number]: number
+// }
+
+interface UserCartProps {
+    cartItem: CartProduct;
+    isSelected: boolean;
+    onSelect: (id: number) => void;
+}
+
+interface CartItem {
+    id: number
+    product: {
+        new_price: number
+        old_price: number
+    }
+    quantity: number
+}
+
+
+
+const UserCart = ({cartItem, isSelected, onSelect,  initialQuantity}:  any) => {
     const [quantity, setQuantity] = useState<number>(cartItem.quantity)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -45,15 +68,15 @@ const UserCart = ({cartItem}:  CartProduct) => {
     return <div
         className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-4 mx-6 gap-4 border border-gray-100 hover:border-gray-200">
 
-        {/* todo со временем реализовать чекбокс для выбора товара */}
-        {/*<div className="flex items-center">*/}
-        {/*    <input*/}
-        {/*        type="checkbox"*/}
-        {/*        checked={isSelected}*/}
-        {/*        onChange={() => onSelect(cartItem.id)}*/}
-        {/*        className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"*/}
-        {/*    />*/}
-        {/*</div>*/}
+        {/* Чекбокс для выбора товара */}
+        <div className="flex items-center">
+            <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onSelect(cartItem.id)}
+                className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+        </div>
 
         {/* Левая часть с изображением и информацией */}
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -86,12 +109,12 @@ const UserCart = ({cartItem}:  CartProduct) => {
                 <div className="flex flex-wrap gap-2 mt-2">
                     <button
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
-                        <span title="Добавить в избранное" role="img" aria-label="favorite" className="text-xl">❤️</span>
+                        <span role="img" aria-label="favorite" className="text-xl">❤️</span>
                     </button>
                     <button
                         onClick={() => cartProductDelete(cartItem.product.id)}
                         className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
-                        <span title="Удалить" role="img" aria-label="delete" className="text-xl">🗑</span>
+                        <span role="img" aria-label="delete" className="text-xl">🗑</span>
                     </button>
                 </div>
             </div>
@@ -101,17 +124,10 @@ const UserCart = ({cartItem}:  CartProduct) => {
         <div
             className="flex flex-row md:flex-col justify-between md:justify-center items-center md:items-end gap-4 w-full md:w-auto">
             {/* Цена */}
-
             <div className="text-right">
                 <div className="text-green-600 font-bold text-lg md:text-xl">
                     {cartItem.product.new_price} ₽
                 </div>
-                    <div className="text-red-500 font-bold text-xl md:text-xl">
-                        {Math.round((cartItem.product.new_price / cartItem.product.old_price) * 100 - 100)} %
-
-                        {/*todo вариант если админ будет ставить дискаунт в админке исходя из рентабельности продукта*/}
-                        {/*- {Math.round(cartItem.discount)} %*/}
-                    </div>
                 <div className="text-gray-400 line-through text-sm">
                     {cartItem.product.old_price} ₽
                 </div>
@@ -150,7 +166,6 @@ const UserCart = ({cartItem}:  CartProduct) => {
                     type="text"
                     value={quantity}
                     className="w-16 text-center border border-gray-300 rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    title="Введите число"
                 />
                 <button
                     onClick={async () => {

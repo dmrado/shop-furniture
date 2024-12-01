@@ -32,35 +32,30 @@ export async function getProductBiId(id: string) {
 
 export const putProductToCart = async (productId: number) => {
     console.log('productId', productId)
-    try{
-        const userId = 1
-        const existingCartItem = await CartModel.findOne({
-            where: {
-                productId,
-                userId
-            }
-        })
-        if (existingCartItem) {
-            await existingCartItem.update({
-                quantity: existingCartItem.quantity + 1
-            })
-            revalidatePath('/cart')
-            return existingCartItem
-        }
-
-        const newProductInCart = await CartModel.create({
+    const userId = 1
+    const existingCartItem = await CartModel.findOne({
+        where: {
             productId,
-            userId: 1,
-        })
-        if (!newProductInCart) {
-            return notFound()
+            userId
         }
+    })
+    if (existingCartItem) {
+        await existingCartItem.update({
+            quantity: existingCartItem.quantity + 1
+        })
         revalidatePath('/products')
-        return
-    }catch(error){
-        throw new Error('Не вышло положить товар в корзину')
+        return {productId: existingCartItem.productId, quantity:  existingCartItem.quantity}
     }
 
+    const newProductInCart = await CartModel.create({
+        productId,
+        userId: 1,
+    })
+    if (!newProductInCart) {
+        return notFound()
+    }
+    revalidatePath('/products')
+    return
 }
 
 

@@ -32,7 +32,7 @@ UserModel.hasMany(AddressModel, {
 })
 
 
-
+//todo need fix
 StockModel.belongsTo(ProductModel, {
     // sourceKey: 'id',
     // foreignKey: 'id',
