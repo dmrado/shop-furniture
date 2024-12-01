@@ -36,24 +36,24 @@ interface CartItem {
 }
 
 interface UserCartTotalProps {
-    cartList: CartItem[];
+    cartList: CartItem[]
 }
 
-export const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
+const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
 
-    const [selectedItems, setSelectedItems] = useState<number[]>([])
+    // const [selectedItems, setSelectedItems] = useState<number[]>([])
 
-    const handleItemSelect = (itemId: number) => {
-        setSelectedItems(prev =>
-            prev.includes(itemId)
-                ? prev.filter(id => id !== itemId)
-                : [...prev, itemId]
-        )
-    }
-    const selectedTotal = cartList
-        .filter(item => selectedItems.includes(item.id))
-        .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
-
+    // const handleItemSelect = (itemId: number) => {
+    //     setSelectedItems(prev =>
+    //         prev.includes(itemId)
+    //             ? prev.filter(id => id !== itemId)
+    //             : [...prev, itemId]
+    //     )
+    // }
+    // const selectedTotal = cartList
+    //     .filter(item => selectedItems.includes(item.id))
+    //     .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
+    //
     const total = cartList
         .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
 
@@ -61,18 +61,30 @@ export const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
 
     // Расчет общей суммы
     const calculateItemTotal = (item: CartItem): number => {
-        if (!item.product) return 0;
-        return item.product.new_price * item.quantity;
+        if (!item.product) return 0
+        return item.product.new_price * item.quantity
     };
 
-    // Расчет общей скидки
-    const totalDiscount = cartList.reduce((acc, item) => acc + (item.discount || 0), 0);
+    // Расчет общей скидки в рублях
+    const totalDiscount = cartList.reduce((acc, item) => {
+        if (!item.product) return acc
+        const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
+        return acc + itemDiscount
+    }, 0)
 
-    // Расчет промежуточной суммы без скидки
-    const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0);
+    // Расчет общей скидки в процентах
+    const totalOldPrice = cartList.reduce((sum, item) =>
+        sum + (item.product?.old_price || 0) * item.quantity, 0);
+    const totalNewPrice = cartList.reduce((sum, item) =>
+        sum + (item.product?.new_price || 0) * item.quantity, 0);
+    const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
+
+
+    // Расчет промежуточной суммы выделенных позиций без скидки
+    // const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0)
 
     // Итоговая сумма со скидкой
-    const totalAmount = subtotal - totalDiscount;
+    // const totalAmount = subtotal - totalDiscount
 
     // Функция для шаринга корзины
     const shareCart = async () => {
@@ -80,36 +92,38 @@ export const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
             await navigator.share({
                 title: 'Моя корзина',
                 text: `Товаров в корзине: ${cartList.length}`,
-            url: window.location.href
-        });
+                url: window.location.href
+            })
         } catch (error) {
-            console.error('Ошибка при попытке поделиться:', error);
+            console.error('Ошибка при попытке поделиться:', error)
         }
-    };
+    }
 
     // Обработчики событий
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('Select all:', e.target.checked);
+        console.log('Select all:', e.target.checked)
     };
 
     const handleDeleteSelected = () => {
-        console.log('Delete selected items');
-    };
+        console.log('Delete selected items')
+    }
 
     return <>
         <div className="max-w-4xl mx-auto p-6">
-            <h2 className="text-2xl font-bold">Корзина</h2>
             <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Корзина</h2>
+
 
                 <div className="flex flex-col gap-4">
-                    {selectedItems.length > 0 && (
-                        <div className="flex justify-between">
-                            <span>Выбрано на сумму:</span>
-                            <span>{(selectedTotal)}</span>
-                        </div>
-                    )}
+                    {/*для подсчета только выбранных*/}
+                    {/*{selectedItems.length > 0 && (*/}
+                    {/*    <div className="flex justify-between">*/}
+                    {/*        <span>Выбрано на сумму:</span>*/}
+                    {/*        <span>{(selectedTotal)}</span>*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                     <div className="flex justify-between font-bold">
-                        <span>Общая сумма:</span>
+                        <span>Общая сумма:&nbsp;</span>
                         <span>{(total)}</span>
                     </div>
                 </div>
@@ -122,32 +136,35 @@ export const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
                             className="rounded"
                             onChange={handleSelectAll}
                         />
-                        <span>Выбрать все</span>
+                        <span title="Выбрать все" role="img" aria-label="select all" className="text-xl">☑️</span>
+
                     </label>
                     <button
                         className="px-4 py-2 text-red-600 hover:bg-red-50 rounded"
                         onClick={handleDeleteSelected}
                     >
-
-                        <span title="Удалить выбранные" role="img" aria-label="delete selected"
-                              className="text-xl">🗑️</span>
-                        Удалить выбранные
+                        <span title="Удалить выбранные" role="img" aria-label="delete selected" className="text-xl">🗑️</span>
                     </button>
                     <button
                         className="px-4 py-2 hover:bg-gray-100 rounded"
                         onClick={shareCart}
                     >
-                        Поделиться
+                        <span title="Поделиться" role="img" aria-label="share" className="text-xl">↗️</span>
                     </button>
                 </div>
             </div>
 
             <div className="mt-6 text-right">
-                <div className="text-2xl font-bold">
-                    Итого: {totalAmount.toFixed(2)} ₽
+                <div className="text-2xl text-green-600 font-bold">
+                    Итого: {total.toFixed(2) - totalDiscount.toFixed(2)} ₽
                 </div>
+                {totalDiscountPercent > 0 && (
+                    <div className="text-sm text-red-600 font-bold">
+                        - {totalDiscountPercent.toFixed()} %
+                    </div>
+                )}
                 {totalDiscount > 0 && (
-                    <div className="text-sm text-green-600">
+                    <div className="text-sm text-red-600 font-bold">
                         Скидка: {totalDiscount.toFixed(2)} ₽
                     </div>
                 )}
@@ -158,3 +175,5 @@ export const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
         </div>
     </>
 }
+
+export default UserCartTotal
