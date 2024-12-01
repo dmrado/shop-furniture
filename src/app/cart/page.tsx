@@ -1,9 +1,18 @@
 import UserCart from '@/components/user/UserCart'
 import {CartModel} from '@/db/models/cart.model'
 import {ProductModel} from '@/db/models/product.model'
-import UserCartTotal from "@/components/user/UserCartTotal";
+import UserCartTotal from '@/components/user/UserCartTotal'
+import { getServerSession } from 'next-auth'
+
 
 const CartPage = async () => {
+    const session = await getServerSession()
+    console.log('session', session)
+
+    // if (!session || !isAdmin(session) || isSessionExpired(session)) {
+    //     return redirect('/api/auth/signin')
+    // }
+
 
     const cartData = await CartModel.findAndCountAll({
         include: [{
