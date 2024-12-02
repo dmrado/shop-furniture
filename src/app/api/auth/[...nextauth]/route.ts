@@ -35,7 +35,7 @@ const handler = NextAuth({
             console.warn('redirect url', url)
             console.warn('redirect baseUrl', baseUrl)
 
-            return ''
+            return baseUrl
         },
         async jwt({token, user, account, profile, trigger, isNewUser, session}){
             console.warn('jwt session', session)
