@@ -1,6 +1,7 @@
 'use client'
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import UserCartTotalAmount from '@/components/user/UserCartTotalAmount'
+import {useUserCartContext} from "@/components/user/UserCartContext";
 
 interface Product {
     id: number;
@@ -42,20 +43,6 @@ interface UserCartTotalProps {
 
 const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
 
-    // const [selectedItems, setSelectedItems] = useState<number[]>([])
-
-    // const handleItemSelect = (itemId: number) => {
-    //     setSelectedItems(prev =>
-    //         prev.includes(itemId)
-    //             ? prev.filter(id => id !== itemId)
-    //             : [...prev, itemId]
-    //     )
-    // }
-    // const selectedTotal = cartList
-    //     .filter(item => selectedItems.includes(item.id))
-    //     .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
-    //
-
     // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
     const total = cartList
         .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
@@ -68,7 +55,9 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
         return acc + itemDiscount
     }, 0)
 
-    const finalUserCartAmount = total.toFixed(2) - totalDiscount.toFixed(2)
+    const finalAmount = total.toFixed(2) - totalDiscount.toFixed(2)
+
+    localStorage.setItem('finalAmount', finalAmount.toString())
     // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
 
 
@@ -86,6 +75,18 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
         sum + (item.product?.new_price || 0) * item.quantity, 0);
     const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
 
+
+    // const [selectedItems, setSelectedItems] = useState<number[]>([])
+    // const handleItemSelect = (itemId: number) => {
+    //     setSelectedItems(prev =>
+    //         prev.includes(itemId)
+    //             ? prev.filter(id => id !== itemId)
+    //             : [...prev, itemId]
+    //     )
+    // }
+    // const selectedTotal = cartList
+    //     .filter(item => selectedItems.includes(item.id))
+    //     .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
 
     // Расчет промежуточной суммы выделенных позиций без скидки
     // const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0)
@@ -158,7 +159,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
             </div>
 
             <div className="mt-6 text-right">
-                <UserCartTotalAmount finalCartAmount={finalUserCartAmount}/>
+                <UserCartTotalAmount finalUserCartAmount={finalAmount}/>
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
                     <span>{(total)}</span>
