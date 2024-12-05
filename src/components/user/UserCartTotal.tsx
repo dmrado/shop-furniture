@@ -55,9 +55,21 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
     //     .filter(item => selectedItems.includes(item.id))
     //     .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
     //
+
+    // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
     const total = cartList
         .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
 
+
+    // Расчет общей скидки в рублях
+    const totalDiscount = cartList.reduce((acc, item) => {
+        if (!item.product) return acc
+        const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
+        return acc + itemDiscount
+    }, 0)
+
+    const finalUserCartAmount = total.toFixed(2) - totalDiscount.toFixed(2)
+    // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
 
 
     // Расчет общей суммы
@@ -66,12 +78,6 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
         return item.product.new_price * item.quantity
     };
 
-    // Расчет общей скидки в рублях
-    const totalDiscount = cartList.reduce((acc, item) => {
-        if (!item.product) return acc
-        const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
-        return acc + itemDiscount
-    }, 0)
 
     // Расчет общей скидки в процентах
     const totalOldPrice = cartList.reduce((sum, item) =>
@@ -152,7 +158,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
             </div>
 
             <div className="mt-6 text-right">
-                <UserCartTotalAmount total={total} totalDiscount={totalDiscount}/>
+                <UserCartTotalAmount finalCartAmount={finalUserCartAmount}/>
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
                     <span>{(total)}</span>
