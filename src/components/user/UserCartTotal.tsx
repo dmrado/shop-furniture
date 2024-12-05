@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react'
+import UserCartTotalAmount from '@/components/user/UserCartTotalAmount'
 
 interface Product {
     id: number;
@@ -114,7 +115,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
                 <h2 className="text-2xl font-bold">Корзина</h2>
 
 
-                <div className="flex flex-col gap-4">
+                {/*<div className="flex flex-col gap-4">*/}
                     {/*для подсчета только выбранных*/}
                     {/*{selectedItems.length > 0 && (*/}
                     {/*    <div className="flex justify-between">*/}
@@ -122,11 +123,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
                     {/*        <span>{(selectedTotal)}</span>*/}
                     {/*    </div>*/}
                     {/*)}*/}
-                    <div className="flex justify-between font-bold">
-                        <span>Общая сумма:&nbsp;</span>
-                        <span>{(total)}</span>
-                    </div>
-                </div>
+                {/*</div>*/}
 
 
                 <div className="flex items-center gap-4">
@@ -155,8 +152,10 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
             </div>
 
             <div className="mt-6 text-right">
-                <div className="text-2xl text-green-600 font-bold">
-                    Итого: {total.toFixed(2) - totalDiscount.toFixed(2)} ₽
+                <UserCartTotalAmount total={total} totalDiscount={totalDiscount}/>
+                <div className="flex justify-end font-bold">
+                    <span>Общая сумма:&nbsp;</span>
+                    <span>{(total)}</span>
                 </div>
                 {totalDiscountPercent > 0 && (
                     <div className="text-sm text-red-600 font-bold">
