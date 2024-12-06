@@ -44,8 +44,7 @@ interface UserCartTotalProps {
 const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
 
     // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
-    const total = cartList
-        .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
+    const total = (cartList.reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)).toFixed(2)
 
 
     // Расчет общей скидки в рублях
@@ -55,7 +54,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
         return acc + itemDiscount
     }, 0)
 
-    const finalAmount = total.toFixed(2) - totalDiscount.toFixed(2)
+    const finalAmount = (total - totalDiscount).toFixed(2)
 
     localStorage.setItem('finalAmount', finalAmount.toString())
     // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
