@@ -1,7 +1,7 @@
 'use client'
 import React, {useEffect, useState} from 'react'
 import UserCartTotalAmount from '@/components/user/UserCartTotalAmount'
-import {useUserCartContext} from "@/components/user/UserCartContext";
+import {useUserCartContext} from '@/components/user/UserCartContext.tsx'
 
 interface Product {
     id: number;
@@ -41,22 +41,24 @@ interface UserCartTotalProps {
     cartList: CartItem[]
 }
 
-const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
+const UserCartTotal: React.FC<UserCartTotalProps> = () => {
+    const {total, totalDiscount, finalAmount, totalDiscountPercent, count} = useUserCartContext()
 
     // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
-    const total = (cartList.reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)).toFixed(2)
-
-
-    // Расчет общей скидки в рублях
-    const totalDiscount = cartList.reduce((acc, item) => {
-        if (!item.product) return acc
-        const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
-        return acc + itemDiscount
-    }, 0)
-
-    const finalAmount = (total - totalDiscount).toFixed(2)
-
-    localStorage.setItem('finalAmount', finalAmount.toString())
+    //todo превратить в функцию и вызывать из контекста
+    //
+    // const total = (cartList.reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)).toFixed(2)
+    //
+    // // Расчет общей скидки в рублях
+    // const totalDiscount = cartList.reduce((acc, item) => {
+    //     if (!item.product) return acc
+    //     const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
+    //     return acc + itemDiscount
+    // }, 0)
+    //
+    // const finalAmount = (total - totalDiscount).toFixed(2)
+    //
+    // localStorage.setItem('finalAmount', finalAmount.toString())
     // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
 
 
@@ -68,14 +70,14 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
 
 
     // Расчет общей скидки в процентах
-    const totalOldPrice = cartList.reduce((sum, item) =>
-        sum + (item.product?.old_price || 0) * item.quantity, 0);
-    const totalNewPrice = cartList.reduce((sum, item) =>
-        sum + (item.product?.new_price || 0) * item.quantity, 0);
-    const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
+    // const totalOldPrice = cartList.reduce((sum, item) =>
+    //     sum + (item.product?.old_price || 0) * item.quantity, 0);
+    // const totalNewPrice = cartList.reduce((sum, item) =>
+    //     sum + (item.product?.new_price || 0) * item.quantity, 0);
+    // const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
 
 
-    // const [selectedItems, setSelectedItems] = useState<number[]>([])
+    // todo const [selectedItems, setSelectedItems] = useState<number[]>([])
     // const handleItemSelect = (itemId: number) => {
     //     setSelectedItems(prev =>
     //         prev.includes(itemId)
@@ -88,17 +90,16 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
     //     .reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)
 
     // Расчет промежуточной суммы выделенных позиций без скидки
-    // const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0)
+    // todo const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0)
 
-    // Итоговая сумма со скидкой
-    // const totalAmount = subtotal - totalDiscount
 
-    // Функция для шаринга корзины
+    // todo Функция для шаринга корзины
     const shareCart = async () => {
+        return
         try {
             await navigator.share({
                 title: 'Моя корзина',
-                text: `Товаров в корзине: ${cartList.length}`,
+                text: `Товаров в корзине: ${count}`,
                 url: window.location.href
             })
         } catch (error) {
@@ -174,7 +175,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = ({ cartList }) => {
                     </div>
                 )}
                 <div className="text-sm text-gray-600 mt-1">
-                    Количество товаров: {cartList.length}
+                    Количество товаров: {count}
                 </div>
             </div>
         </div>

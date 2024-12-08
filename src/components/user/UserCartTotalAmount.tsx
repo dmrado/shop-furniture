@@ -1,11 +1,11 @@
 import React from 'react'
-import {useUserCartContext} from "@/components/user/UserCartContext";
+import {useUserCartContext} from '@/components/user/UserCartContext.tsx'
 
 const UserCartTotalAmount = () => {
-    const {finalUserCartAmount} = useUserCartContext()
+    const {finalAmount} = useUserCartContext()
     return (
         <div className="text-2xl text-green-600 font-bold">
-            Итого: {finalUserCartAmount} ₽
+            Итого: {finalAmount} ₽
         </div>
     )
 }

@@ -13,7 +13,7 @@ const CartPage = async () => {
     //     return redirect('/api/auth/signin')
     // }
 
-
+//todo передавать из контекста например использовать функцию getFinalAmount
     const cartData = await CartModel.findAndCountAll({
         include: [{
             model: ProductModel,
@@ -85,7 +85,9 @@ const CartPage = async () => {
     }));
 
     return <>
-        <UserCartTotal cartList={cartList}/>
+        <UserCartTotal
+            // cartList={cartList}
+        />
 
         <ul>
             {cartList.map(cart =>

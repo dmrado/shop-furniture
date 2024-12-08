@@ -2,7 +2,6 @@
 import {CartModel} from '@/db/models/cart.model'
 import {ProductModel} from '@/db/models/product.model'
 
-
 export async function getFinalAmount() {
     const cartData = await CartModel.findAndCountAll({
         include: [{
@@ -36,7 +35,11 @@ export async function getFinalAmount() {
         }]
     })
     if (!cartData || !cartData.rows.length) {
-        return 'Корзина пуста'
+        console.log('Корзина пуста from getFinalAmount')
+        return {
+            count: 0,
+            cartList: []
+        }
     }
     console.log('Raw cart data from getFinalAmount:', JSON.stringify(cartData.rows[0], null, 2))
 
@@ -48,13 +51,8 @@ export async function getFinalAmount() {
         } : null
     }))
 
-    const total = cartList.reduce((sum, item) =>
-        sum + (item.product?.new_price || 0) * item.quantity, 0)
-
-    const totalDiscount = cartList.reduce((acc, item) => {
-        if (!item.product) return acc
-        return acc + ((item.product.old_price - item.product.new_price) * item.quantity)
-    }, 0)
-
-    return total - totalDiscount
+    return  {
+        count: cartData.count,
+        cartList: cartList
+    }
 }
