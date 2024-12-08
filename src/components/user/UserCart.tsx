@@ -92,7 +92,7 @@ const UserCart = ({cartItem, isSelected, onSelect,  initialQuantity}:  any) => {
             </div>
 
             {/* Информация о продукте */}
-            <div className="flex flex-col justify-between space-y-2">
+            <div className="flex flex-col justify-between space-y-2 w-full sm:w-[400px]">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200">
                         {cartItem.product.name}

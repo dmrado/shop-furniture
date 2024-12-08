@@ -55,3 +55,7 @@ CartModel.init(
         tableName: 'carts',
     }
 )
+// CartModel.belongsTo(ProductModel, {
+//     foreignKey: 'productId',
+//     as: 'product'
+// })
