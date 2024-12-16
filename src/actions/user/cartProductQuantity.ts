@@ -1,8 +1,8 @@
 'use server'
 // import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
 import {revalidatePath} from 'next/cache'
-import {redirect} from 'next/navigation'
-import {CartModel} from '@/db/models'
+// import {redirect} from 'next/navigation'
+import {CartModel, ProductModel} from '@/db/models'
 
 
 export const updateQuantityAction = async ({id, newQuantity}) => {
@@ -18,14 +18,14 @@ export const updateQuantityAction = async ({id, newQuantity}) => {
             {where: {id}}
         )
     }
-    const updatedCart = await CartModel.findByPk(id)
+    const updatedCart = await CartModel.findByPk(id, {include: [{model: ProductModel, as: 'product'}]})
 
     if (!updatedCart) {
         throw new Error('updated cart not found')
     }
 
     revalidatePath('/cart')//для подсчета итого
-    return updatedCart.quantity
+    return updatedCart.toJSON()
 }
 
 

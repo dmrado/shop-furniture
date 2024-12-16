@@ -1,20 +1,9 @@
-import UserCartRow from '@/components/user/UserCartRow'
+'use server'
 import {CartModel} from '@/db/models'
 import {ProductModel} from '@/db/models'
-import UserCartTotal from '@/components/user/UserCartTotal'
-import { getServerSession } from 'next-auth'
 
-
-const CartPage = async () => {
-    const session = await getServerSession()
-    console.log('session', session)
-
-    // if (!session || !isAdmin(session) || isSessionExpired(session)) {
-    //     return redirect('/api/auth/signin')
-    // }
-
-//todo передавать из контекста например использовать функцию getFinalAmount
-    const cartData = await CartModel.findAndCountAll({
+export async function getCart() {
+    const { rows } = await CartModel.findAndCountAll({
         include: [{
             model: ProductModel,
             as: 'product',
@@ -43,24 +32,15 @@ const CartPage = async () => {
                 'updatedAt',
                 'image',
             ]
-        }]
+        }],
+        where: { userId: 1 }
     })
-    if (!cartData || !cartData.rows.length) {
-        return 'Корзина пуста'
-    }
-    console.log('Raw cart data:', JSON.stringify(cartData.rows[0], null, 2))
+    console.log('Raw cart data from getFinalAmount:', JSON.stringify(rows[0], null, 2))
 
-    const cartList = cartData.rows.map(cart => ({
-        // Поля из таблицы carts
+    return rows.map(cart => ({
         id: cart.id,
-        productId: cart.productId,
         quantity: cart.quantity,
-        userId: cart.userId,
-        createdAt: cart?.createdAt,
-        updatedAt: cart?.updatedAt,
-        discount: cart.discount,
-        // Вложенный объект products
-        product: cart.product ? {
+        product: {
             id: cart.product.id,
             isActive: cart.product.isActive,
             articul: cart.product.articul,
@@ -81,22 +61,6 @@ const CartPage = async () => {
             primary_color: cart.product.primary_color,
             secondary_color: cart.product.secondary_color,
             inStock: cart.product.inStock
-        } : null
-    }));
-
-    return <>
-        <UserCartTotal
-            // cartList={cartList}
-        />
-
-        <ul>
-            {cartList.map(cart =>
-                <li key={cart.id}>
-                    <UserCartRow cartItem={cart} />
-                </li>
-            )}
-        </ul>
-    </>
+        }
+    }))
 }
-
-export default CartPage

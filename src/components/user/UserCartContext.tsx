@@ -1,62 +1,58 @@
 'use client'
 import {createContext, useContext, useState, useEffect, useCallback} from 'react'
-import {getFinalAmount} from '@/actions/user/getFinalAmount'
+import {getCart} from '@/actions/user/getCart'
+import {cartProductDelete, updateQuantityAction} from '@/actions/user/cartProductQuantity'
 
-const UserCartContext = createContext<{
-    finalAmount: number,
-    total: number,
-    totalDiscount: number,
-    totalDiscountPercent: number,
-
-}>({finalAmount: 0, total: 0, totalDiscount: 0, totalDiscountPercent: 0, })
+const UserCartContext = createContext({finalAmount: 0, total: 0, totalDiscount: 0, totalDiscountPercent: 0, count: 0, cartRows: [], updateQuantity: (id: number, quantity: number)=> Promise<void> })
 
 export const UserCartProvider = ({children}) => {
-    const [finalAmount, setFinalAmount] = useState(0)
-    const [total, setTotal] = useState(0)
-    const [totalDiscount, setTotalDiscount] = useState(0)
-    const [totalDiscountPercent, setTotalDiscountPercent] = useState(0)
-    const [count, setCount] = useState(0)
+    const [cartRows, setCartRows] = useState<any[]>([])
 
     useEffect(() => {
         const fetchCart = async () => {
-            const {cartList, count} = await getFinalAmount()
-            if (!Array.isArray(cartList)) return
-
-            const newTotal = cartList.reduce((sum, item) =>
-                sum + item.product?.new_price * item?.quantity, 0)
-
-            const newTotalDiscount = cartList.reduce((acc, item) =>
-                acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
-
-            const newFinalAmount = total - totalDiscount
-
-
-            // Расчет общей скидки в процентах
-            const totalOldPrice = cartList.reduce((sum, item) =>
-                sum + (item.product?.old_price || 0) * item.quantity, 0);
-            const totalNewPrice = cartList.reduce((sum, item) =>
-                sum + (item.product?.new_price || 0) * item.quantity, 0);
-            const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
-
-
-            setFinalAmount(newFinalAmount)
-            setTotal(newTotal)
-            setTotalDiscount(newTotalDiscount)
-            setTotalDiscountPercent(totalDiscountPercent)
-            setCount(count)
-            console.log('newFinalAmount', newFinalAmount, 'newTotal', newTotal, 'newTotalDiscount', newTotalDiscount, 'totalDiscountPercent', totalDiscountPercent, 'count', count)
+            const rows = await getCart()
+            setCartRows(rows)
+            console.log('rows', rows)
         }
         fetchCart()
     }, [])
 
+    const updateQuantity = async (cartId: number, newQuantity: number) => {
+        const updatedCart = await updateQuantityAction({id: cartId, newQuantity})
+        setCartRows(cartRows.map(row =>
+            row.id === updatedCart.id
+                ? updatedCart
+                : row
+        ))
+    }
+    // todo: define addItemToCart and deleteItemFromCart functions.
+
+    const total = cartRows.reduce((sum, item) =>
+        sum + item.product.new_price * item.quantity, 0)
+
+    const totalDiscount = cartRows.reduce((acc, item) =>
+        acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
+
+    const finalAmount = total - totalDiscount
+
+
+    // Расчет общей скидки в процентах
+    const totalOldPrice = cartRows.reduce((sum, item) =>
+        sum + (item.product?.old_price || 0) * item.quantity, 0);
+    const totalNewPrice = cartRows.reduce((sum, item) =>
+        sum + (item.product?.new_price || 0) * item.quantity, 0);
+    const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
+
         const value = {
-            finalAmount,
             total,
             totalDiscount,
+            finalAmount,
             totalDiscountPercent,
-            count
+            count: cartRows.length,
+            cartRows,
+            updateQuantity
         }
-    console.warn( '>>> >>>>>>>>>>>> finalAmount', finalAmount, 'total', total,  'totalDiscount', totalDiscount, 'count', count)
+    console.warn( '>>> >>>>>>>>>>>> finalAmount', finalAmount, 'total', total,  'totalDiscount', totalDiscount)
 
         return <UserCartContext.Provider value={value}>{children}</UserCartContext.Provider>
     }
