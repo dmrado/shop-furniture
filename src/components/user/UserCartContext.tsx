@@ -44,6 +44,7 @@ export const UserCartProvider = ({children}) => {
             setTotalDiscount(newTotalDiscount)
             setTotalDiscountPercent(totalDiscountPercent)
             setCount(count)
+            console.log('newFinalAmount', newFinalAmount, 'newTotal', newTotal, 'newTotalDiscount', newTotalDiscount, 'totalDiscountPercent', totalDiscountPercent, 'count', count)
         }
         fetchCart()
     }, [])

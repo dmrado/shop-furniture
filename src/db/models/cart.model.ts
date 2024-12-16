@@ -10,8 +10,8 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare quantity: number;
     declare userId: number;
     declare discount: number;
-    declare product?: ProductModel;
-    declare user?: UserModel;
+    declare product: ProductModel;
+    declare user: UserModel;
     declare createdAt: any;
     declare updatedAt: any;
 }
@@ -55,7 +55,7 @@ CartModel.init(
         tableName: 'carts',
     }
 )
-// CartModel.belongsTo(ProductModel, {
-//     foreignKey: 'productId',
-//     as: 'product'
-// })
+CartModel.belongsTo(ProductModel, {
+    foreignKey: 'productId',
+    as: 'product'
+})
