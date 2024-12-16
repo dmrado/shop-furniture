@@ -1,9 +1,9 @@
 'use server'
 
-import {ProductModel} from '@/db/models/product.model'
+import {ProductModel} from '@/db/models'
 import {revalidatePath} from 'next/cache'
 import {notFound} from 'next/navigation'
-import {CartModel} from '@/db/models/cart.model'
+import { CartModel } from '@/db/models'
 
 export async function getProductBiId(id: string) {
     try {

@@ -1,5 +1,5 @@
-import {StockModel} from '@/db/models/stock.model'
-import {ProductModel} from '@/db/models/product.model'
+import {StockModel} from '@/db/models'
+import {ProductModel} from '@/db/models'
 import Product from '@/components/site/Product'
 import FiltersCategories from '@/components/site/FiltersCategories'
 import Pagination from '@/components/site/Pagination'

@@ -1,6 +1,6 @@
 'use server'
-import {CartModel} from '@/db/models/cart.model'
-import {ProductModel} from '@/db/models/product.model'
+import {CartModel} from '@/db/models'
+import {ProductModel} from '@/db/models'
 
 export async function getFinalAmount() {
     const cartData = await CartModel.findAndCountAll({

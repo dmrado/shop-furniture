@@ -45,10 +45,10 @@ ProductModel.hasOne(StockModel, {
 })
 
 
-// CartModel.belongsTo(ProductModel, {
-//     foreignKey: 'productId',
-//     as: 'product'
-// })
+CartModel.belongsTo(ProductModel, {
+    foreignKey: 'productId',
+    as: 'product'
+})
 
 CartModel.belongsTo(UserModel, {
     foreignKey: 'userId',
@@ -57,11 +57,12 @@ CartModel.belongsTo(UserModel, {
 
 //файл подключен в root layout
 export {
-    // AddressModel,
-    // ColorModel,
-    // ItemModel,
-    // OrderedItemModel,
-    // OrderModel,
-    // StockModel,
-    // UserModel,
+    CartModel,
+    ProductModel,
+    AddressModel,
+    ColorModel,
+    OrderedProductsModel,
+    OrderModel,
+    StockModel,
+    UserModel,
 }

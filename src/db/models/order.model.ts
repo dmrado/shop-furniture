@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Order } from '../types/interfaces'
-import {AddressModel} from "@/db/models/address.model"
-import {UserModel} from "@/db/models/user.model"
+// import {AddressModel} from "@/db/models"
+// import {UserModel} from "@/db/models"
 
 export class OrderModel extends Model<InferAttributes<OrderModel>, InferCreationAttributes<OrderModel>> implements Order {
     declare id: CreationOptional<number>;
@@ -51,10 +51,10 @@ OrderModel.init(
         tableName: 'orders',
     }
 )
-
-OrderModel.belongsTo(UserModel, {
-    // foreignKey: 'userId'
-})
-OrderModel.belongsTo(AddressModel,
-    // { foreignKey: 'addressId' }
-)
+//
+// OrderModel.belongsTo(UserModel, {
+//     // foreignKey: 'userId'
+// })
+// OrderModel.belongsTo(AddressModel,
+//     // { foreignKey: 'addressId' }
+// )

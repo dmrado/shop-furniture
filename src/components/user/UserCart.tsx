@@ -12,7 +12,7 @@ interface CartProduct {
     createdAt: Date;
     updatedAt: Date;
     discount: number;
-    products: {
+    product: {
         id: number;
         isActive: boolean;
         articul: string;

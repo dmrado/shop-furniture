@@ -1,8 +1,8 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { Cart } from '../types/interfaces'
-import {ProductModel} from "@/db/models/product.model"
-import {UserModel} from "@/db/models/user.model"
+import {ProductModel} from "@/db/models"
+import {UserModel} from "@/db/models"
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> implements Cart {
     declare id: number;
@@ -27,7 +27,7 @@ CartModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'product',
+                model: 'products',
                 key: 'id'
             }
         },
@@ -55,7 +55,7 @@ CartModel.init(
         tableName: 'carts',
     }
 )
-CartModel.belongsTo(ProductModel, {
-    foreignKey: 'productId',
-    as: 'product'
-})
+// CartModel.belongsTo(ProductModel, {
+//     foreignKey: 'productId',
+//     as: 'product'
+// })

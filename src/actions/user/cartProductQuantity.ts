@@ -1,8 +1,8 @@
 'use server'
-import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
+// import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
 import {revalidatePath} from 'next/cache'
 import {redirect} from 'next/navigation'
-import {CartModel} from '@/db/models/cart.model'
+import {CartModel} from '@/db/models'
 
 
 export const updateQuantityAction = async ({id, newQuantity}) => {

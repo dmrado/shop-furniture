@@ -1,6 +1,6 @@
 import UserCart from '@/components/user/UserCart'
-import {CartModel} from '@/db/models/cart.model'
-import {ProductModel} from '@/db/models/product.model'
+import {CartModel} from '@/db/models'
+import {ProductModel} from '@/db/models'
 import UserCartTotal from '@/components/user/UserCartTotal'
 import { getServerSession } from 'next-auth'
 

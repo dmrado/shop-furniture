@@ -1,7 +1,7 @@
 import {sequelize} from '../connection'
 import { DataTypes, Model, InferAttributes, InferCreationAttributes  } from 'sequelize'
 import { OrderedProducts } from '../types/interfaces'
-import {OrderModel} from "@/db/models/order.model";
+// import {OrderModel} from "@/db/models";
 
 export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>>  implements OrderedProducts {
     declare id: number;
@@ -40,7 +40,7 @@ OrderedProductsModel.init(
         tableName: 'ordered_products',
     }
 )
-//иначе не цепляет внешний ключ если в index.model.ts только
-OrderedProductsModel.belongsTo(OrderModel, {
-    // foreignKey: 'order'
-})
+//иначе не цепляет внешний ключ если в index.ts только
+// OrderedProductsModel.belongsTo(OrderModel, {
+//     // foreignKey: 'order'
+// })

@@ -1,7 +1,7 @@
 import {sequelize} from '../connection'
 import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 import { Stock } from '../types/interfaces'
-import {ProductModel} from '@/db/models/product.model'
+// import {ProductModel} from '@/db/models/product.model'
 
 export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> implements Stock {
     declare itemId: number;

@@ -1,7 +1,7 @@
 'use server'
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
-import {OrderModel} from "@/db/models/order.model";
+import {OrderModel} from "@/db/models";
 const validPaymentMethods = ['cash', 'card', 'online'] as const;
 type PaymentMethod = typeof validPaymentMethods[number]
 

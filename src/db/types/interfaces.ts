@@ -1,6 +1,6 @@
 // types/interfaces.ts
-import {UserModel} from "@/db/models/user.model";
-import {ProductModel} from "@/db/models/product.model";
+import {UserModel} from "@/db/models";
+import {ProductModel} from "@/db/models";
 
 export interface Address {
     id: number;

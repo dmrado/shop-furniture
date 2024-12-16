@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import '../db/models/index.model'
+import '../db/models'
 import "./globals.css";
 import Link from "next/link";
 import {UserCartProvider} from '@/components/user/UserCartContext.tsx'
