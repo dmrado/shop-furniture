@@ -19,6 +19,7 @@ export const UserCartProvider = ({children}) => {
 
     const updateQuantity = async (cartId: number, newQuantity: number) => {
         const updatedCart = await updateQuantityAction({id: cartId, newQuantity})
+        console.log('>>>>>>>>>>>>>> >>updatedCart', updatedCart)
         setCartRows(cartRows.map(row =>
             row.id === updatedCart.id
                 ? updatedCart
