@@ -3,6 +3,7 @@ import {ProductModel} from '@/db/models'
 import Product from '@/components/site/Product'
 import FiltersCategories from '@/components/site/FiltersCategories'
 import Pagination from '@/components/site/Pagination'
+import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
 
 
 const ProductsPage = async () => {
@@ -49,8 +50,7 @@ const ProductsPage = async () => {
                     <Product product={product} key={product.id}/>
                 ))}
             </div>
-            <Pagination/>
-        </div>
+            <ReactPaginateWrapper activePage={activePage} pages={commentPages} setActivePage={setActivePage}/>        </div>
     </>
 }
 
