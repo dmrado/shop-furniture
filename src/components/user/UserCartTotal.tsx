@@ -166,7 +166,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
                 </div>
                 {totalDiscountPercent > 0 && (
                     <div className="text-sm text-red-600 font-bold">
-                        - {totalDiscountPercent.toFixed()} %
+                        - {totalDiscountPercent.toFixed(2)} %
                     </div>
                 )}
                 {totalDiscount > 0 && (

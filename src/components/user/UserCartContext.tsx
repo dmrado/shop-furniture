@@ -31,10 +31,10 @@ export const UserCartProvider = ({children}) => {
     const total = cartRows.reduce((sum, item) =>
         sum + item.product.old_price * item.quantity, 0)
 
-    const totalDiscount = cartRows.reduce((acc, item) =>
-        acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
+    // const totalDiscount = cartRows.reduce((acc, item) =>
+    //     acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
 
-    const finalAmount = total - totalDiscount
+    
 
 
     // Расчет общей скидки в процентах
@@ -42,7 +42,13 @@ export const UserCartProvider = ({children}) => {
         sum + (item.product?.old_price || 0) * item.quantity, 0);
     const totalNewPrice = cartRows.reduce((sum, item) =>
         sum + (item.product?.new_price || 0) * item.quantity, 0);
-    const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
+
+    const totalDiscount = totalOldPrice - totalNewPrice
+
+    const totalDiscountPercent = totalDiscount / totalOldPrice * 100
+
+    const finalAmount = total - totalDiscount
+
 
         const value = {
             total,
