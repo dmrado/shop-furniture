@@ -35,7 +35,7 @@ export async function getCart() {
         }],
         where: { userId: 1 }
     })
-    console.log('Raw cart data from getFinalAmount:', JSON.stringify(rows[0], null, 2))
+    console.log('rows from getCart:', JSON.stringify(rows[0], null, 2))
 
     return rows.map(cart => ({
         id: cart.id,
