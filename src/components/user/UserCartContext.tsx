@@ -29,7 +29,7 @@ export const UserCartProvider = ({children}) => {
     // todo: define addItemToCart and deleteItemFromCart functions.
 
     const total = cartRows.reduce((sum, item) =>
-        sum + item.product.new_price * item.quantity, 0)
+        sum + item.product.old_price * item.quantity, 0)
 
     const totalDiscount = cartRows.reduce((acc, item) =>
         acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
