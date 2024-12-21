@@ -4,12 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
 import {putProductToCart} from "@/actions/productActions";
-import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
 
 const Product = ({product, totalPages}) => {
     const [isHovered, setIsHovered] = useState(false)
-    const [activePage, setActivePage] = useState(0)
-
 
     return (
         <div
@@ -17,6 +14,7 @@ const Product = ({product, totalPages}) => {
             onMouseLeave={() => setIsHovered(false)}
             className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-indigo-100"
         >
+
             {/* Image Container */}
             <div className="relative h-64 overflow-hidden bg-gray-50">
                 <div className="absolute top-3 right-3 z-10 space-y-2">
@@ -102,9 +100,8 @@ const Product = ({product, totalPages}) => {
                     В корзину
                 </button>
             </div>
-            <ReactPaginateWrapper activePage={activePage} pages={totalPages} setActivePage={setActivePage}/>
         </div>
-    );
+    )
 }
 
 export default Product
