@@ -1,11 +1,11 @@
+'use client'
 import ReactPaginate from "react-paginate"
 import {useState} from "react"
 
-const ReactPaginateWrapper = ({setActivePage, pages, activePage}) => {
+const ReactPaginateWrapper = ({pages}) => {
     const [activePage, setActivePage] = useState(0)
 
     return <ReactPaginate onPageChange={(data) => {
-        //был бы activePage по умолчанию 0 тогда просто data.selected
         setActivePage(data.selected)
     }}
                           pageCount={pages}

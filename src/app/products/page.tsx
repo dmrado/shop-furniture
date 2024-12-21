@@ -6,22 +6,24 @@ import Pagination from '@/components/site/Pagination'
 import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
 
 
-const ProductsPage = async () => {
-
+const ProductsPage = async ({ page = 1 }) => {
+    const limit = 2
+    const offset = (page - 1) * limit
     const productData = await ProductModel.findAndCountAll({
         // where: {
         //     quantity: {
         //         [Op.gte]: 1
         //     }
         // },
-        // limit: 10,
-        // offset: 0,
+        limit,
+        offset,
         include: [{
             model: StockModel,
             attributes: ['id', 'productId', 'quantity', 'inStock', 'lastUpdate'],
             as: 'stock'  // используем тот же алиас, что указали при определении связи
         }]
     })
+    const totalPages = Math.ceil(productData.count / limit)
 
     if (!productData || !productData.rows.length) {
         return 'Данные не найдены и почему никто не звонит? '
@@ -47,10 +49,10 @@ const ProductsPage = async () => {
             <FiltersCategories/>
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {productList.map(product => (
-                    <Product product={product} key={product.id}/>
+                    <Product product={product} key={product.id} totalPages={totalPages}/>
                 ))}
             </div>
-            <ReactPaginateWrapper activePage={activePage} pages={commentPages} setActivePage={setActivePage}/>        </div>
+        </div>
     </>
 }
 

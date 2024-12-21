@@ -4,9 +4,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
 import {putProductToCart} from "@/actions/productActions";
+import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
 
-const Product = ({product}) => {
+const Product = ({product, totalPages}) => {
     const [isHovered, setIsHovered] = useState(false)
+    const [activePage, setActivePage] = useState(0)
+
 
     return (
         <div
@@ -99,6 +102,7 @@ const Product = ({product}) => {
                     В корзину
                 </button>
             </div>
+            <ReactPaginateWrapper activePage={activePage} pages={totalPages} setActivePage={setActivePage}/>
         </div>
     );
 }
