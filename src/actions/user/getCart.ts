@@ -1,6 +1,6 @@
 'use server'
-import {CartModel} from '@/db/models'
-import {ProductModel} from '@/db/models'
+import { CartModel } from '@/db/models'
+import { ProductModel } from '@/db/models'
 
 export async function getCart() {
     const { rows } = await CartModel.findAndCountAll({
@@ -9,6 +9,7 @@ export async function getCart() {
             as: 'product',
             required: false,
             attributes: [
+                // todo: remove reduntant atributes
                 'id',
                 'isActive',
                 'articul',
@@ -27,7 +28,7 @@ export async function getCart() {
                 'new_price',
                 'primary_color',
                 'secondary_color',
-                'inStock',
+                // 'inStock',
                 'createdAt',
                 'updatedAt',
                 'image',
@@ -60,7 +61,7 @@ export async function getCart() {
             new_price: cart.product.new_price,
             primary_color: cart.product.primary_color,
             secondary_color: cart.product.secondary_color,
-            inStock: cart.product.inStock
+            // inStock: cart.product.inStock
         }
     }))
 }

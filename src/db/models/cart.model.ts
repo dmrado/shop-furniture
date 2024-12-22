@@ -1,19 +1,18 @@
-import {sequelize} from '../connection'
+import { sequelize } from '../connection'
 import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
-import { Cart } from '../types/interfaces'
-import {ProductModel} from "@/db/models"
-import {UserModel} from "@/db/models"
+import { ProductModel } from '@/db/models'
+import { UserModel } from '@/db/models'
 
-export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> implements Cart {
-    declare id: number;
-    declare productId: number;
-    declare quantity: number;
-    declare userId: number;
-    declare discount: number;
-    declare product: ProductModel;
-    declare user: UserModel;
-    declare createdAt: any;
-    declare updatedAt: any;
+export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
+    declare id: number
+    declare productId: number
+    declare quantity: number
+    declare userId: number
+    declare discount: number
+    declare product?: ProductModel
+    declare user?: UserModel
+    declare createdAt: Date
+    declare updatedAt: Date
 }
 
 CartModel.init(
@@ -49,6 +48,14 @@ CartModel.init(
             allowNull: true,
             defaultValue: 1
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        }
     },
     {
         sequelize,

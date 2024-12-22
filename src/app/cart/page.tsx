@@ -1,10 +1,6 @@
-import UserCartRow from '@/components/user/UserCartRow'
-import {CartModel} from '@/db/models'
-import {ProductModel} from '@/db/models'
 import UserCartTotal from '@/components/user/UserCartTotal'
 import UserCart from '@/components/user/UserCart'
 import { getServerSession } from 'next-auth'
-
 
 const CartPage = async () => {
     const session = await getServerSession()
@@ -14,7 +10,7 @@ const CartPage = async () => {
     //     return redirect('/api/auth/signin')
     // }
 
-//todo передавать из контекста например использовать функцию getFinalAmount
+    //todo передавать из контекста например использовать функцию getFinalAmount
     // const cartData = await CartModel.findAndCountAll({
     //     include: [{
     //         model: ProductModel,
@@ -86,11 +82,9 @@ const CartPage = async () => {
     // }));
 
     return <>
-        <UserCartTotal
-            // cartList={cartList}
-        />
-        
-        <UserCart/>
+        <UserCartTotal />
+
+        <UserCart />
 
         {/* <ul>
             {cartList.map(cart =>

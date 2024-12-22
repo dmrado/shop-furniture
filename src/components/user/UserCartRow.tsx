@@ -1,9 +1,9 @@
 'use client'
 import Image from 'next/image'
-import Link from "next/link"
-import {useState} from 'react'
-import {cartProductDelete, updateQuantityAction} from '@/actions/user/cartProductQuantity'
-import {useUserCartContext} from "@/components/user/UserCartContext";
+import Link from 'next/link'
+import { useState } from 'react'
+import { cartProductDelete, updateQuantityAction } from '@/actions/user/cartProductQuantity'
+import { useUserCartContext } from '@/components/user/UserCartContext'
 
 interface CartProduct {
     id: number;
@@ -40,7 +40,7 @@ interface CartProduct {
 
 // описывает объект с количествами товаров
 // interface Quantities {
-    // [key: number]: number
+// [key: number]: number
 // }
 
 interface UserCartProps {
@@ -58,12 +58,10 @@ interface CartItem {
     quantity: number
 }
 
-
-
-const UserCartRow = ({cartItem, isSelected, onSelect,  initialQuantity}:  any) => {
+const UserCartRow = ({ cartItem, isSelected, onSelect, initialQuantity }: any) => {
     // const [quantity, setQuantity] = useState<number>(cartItem.quantity)
-    const {updateQuantity} = useUserCartContext()
-    const [isLoading, setIsLoading] = useState(false)
+    const { updateQuantity } = useUserCartContext()
+    const [ isLoading, setIsLoading ] = useState(false)
 
     console.log('>>>> this is one product on UserCart', cartItem)
 

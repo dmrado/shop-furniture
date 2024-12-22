@@ -1,7 +1,7 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import UserCartTotalAmount from '@/components/user/UserCartTotalAmount'
-import {useUserCartContext} from '@/components/user/UserCartContext.tsx'
+import { useUserCartContext } from '@/components/user/UserCartContext'
 
 interface Product {
     id: number;
@@ -37,12 +37,8 @@ interface CartItem {
     product: Product | null;
 }
 
-interface UserCartTotalProps {
-    cartList: CartItem[]
-}
-
-const UserCartTotal: React.FC<UserCartTotalProps> = () => {
-    const {total, totalDiscount, finalAmount, totalDiscountPercent, count} = useUserCartContext()
+const UserCartTotal = () => {
+    const { total, totalDiscount, finalAmount, totalDiscountPercent, count } = useUserCartContext()
 
     // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
     //todo превратить в функцию и вызывать из контекста
@@ -61,13 +57,11 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
     // localStorage.setItem('finalAmount', finalAmount.toString())
     // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
 
-
     // Расчет общей суммы
     const calculateItemTotal = (item: CartItem): number => {
         if (!item.product) return 0
         return item.product.new_price * item.quantity
-    };
-
+    }
 
     // Расчет общей скидки в процентах
     // const totalOldPrice = cartList.reduce((sum, item) =>
@@ -75,7 +69,6 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
     // const totalNewPrice = cartList.reduce((sum, item) =>
     //     sum + (item.product?.new_price || 0) * item.quantity, 0);
     // const totalDiscountPercent = ((totalOldPrice - totalNewPrice) / totalOldPrice * 100);
-
 
     // todo const [selectedItems, setSelectedItems] = useState<number[]>([])
     // const handleItemSelect = (itemId: number) => {
@@ -91,7 +84,6 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
 
     // Расчет промежуточной суммы выделенных позиций без скидки
     // todo const subtotal = cartList.reduce((acc, item) => acc + calculateItemTotal(item), 0)
-
 
     // todo Функция для шаринга корзины
     const shareCart = async () => {
@@ -110,7 +102,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
     // Обработчики событий
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log('Select all:', e.target.checked)
-    };
+    }
 
     const handleDeleteSelected = () => {
         console.log('Delete selected items')
@@ -121,17 +113,15 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Корзина</h2>
 
-
                 {/*<div className="flex flex-col gap-4">*/}
-                    {/*для подсчета только выбранных*/}
-                    {/*{selectedItems.length > 0 && (*/}
-                    {/*    <div className="flex justify-between">*/}
-                    {/*        <span>Выбрано на сумму:</span>*/}
-                    {/*        <span>{(selectedTotal)}</span>*/}
-                    {/*    </div>*/}
-                    {/*)}*/}
+                {/*для подсчета только выбранных*/}
+                {/*{selectedItems.length > 0 && (*/}
+                {/*    <div className="flex justify-between">*/}
+                {/*        <span>Выбрано на сумму:</span>*/}
+                {/*        <span>{(selectedTotal)}</span>*/}
+                {/*    </div>*/}
+                {/*)}*/}
                 {/*</div>*/}
-
 
                 <div className="flex items-center gap-4">
                     <label className="flex items-center gap-2">
@@ -159,7 +149,7 @@ const UserCartTotal: React.FC<UserCartTotalProps> = () => {
             </div>
 
             <div className="mt-6 text-right">
-                <UserCartTotalAmount finalUserCartAmount={finalAmount}/>
+                <UserCartTotalAmount />
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
                     <span>{(total)}</span>

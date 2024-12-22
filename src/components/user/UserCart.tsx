@@ -1,9 +1,9 @@
 'use client'
-import {useUserCartContext} from "@/components/user/UserCartContext";
-import UserCartRow from "@/components/user/UserCartRow";
+import { useUserCartContext } from '@/components/user/UserCartContext'
+import UserCartRow from '@/components/user/UserCartRow'
 
 const UserCart = () => {
-    const {cartRows} = useUserCartContext()
+    const { cartRows } = useUserCartContext()
 
     return (
         <ul>
@@ -13,7 +13,7 @@ const UserCart = () => {
                 </li>
             )}
         </ul>
-    );
-};
+    )
+}
 
-export default UserCart;
+export default UserCart
