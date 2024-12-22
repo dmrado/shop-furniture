@@ -1,3 +1,21 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "semi": ["error", "never"],
+    "quotes": ["error", "single"],
+    "indent": ["error", 4],
+    "arrow-spacing": ["error"],
+    "key-spacing": ["error"],
+    "array-bracket-spacing": ["error","always", {"objectsInArrays": false}],
+    "no-multi-spaces": ["error"],
+    "no-trailing-spaces": "error",// object-curly-spacing устарело  '@stylistic/js/indent': ['error', 2]'
+    "object-curly-spacing": ["error","always"],//'@stylistic/js/indent': ['error', 2],
+    "space-before-blocks": ["error","always"],
+    "space-in-parens": ["error", "never"],
+    "space-infix-ops": ["error", { "int32Hint": false }],
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    //        "comma-dangle": ["error", "never"],
+    "no-multiple-empty-lines": ["error",{ "max": 1, "maxEOF": 0 }]
+    //    "max-len": ["error", { "code": 96 }]
+  }
 }

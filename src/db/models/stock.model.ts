@@ -1,13 +1,14 @@
-import {sequelize} from '../connection'
-import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
-import { Stock } from '../types/interfaces'
-// import {ProductModel} from '@/db/models/product.model'
+import { sequelize } from '../connection'
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
-export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> implements Stock {
-    declare itemId: number;
-    declare quantity: number;
-    declare inStock: number;
-    declare lastUpdate: Date;
+export class StockModel extends Model<InferAttributes<StockModel>, InferCreationAttributes<StockModel>> {
+    declare id: number
+    declare productId: number
+    declare quantity: number
+    // Активирует возможность заказать товар. Нужен для управления "снятием с продажи", даже если товар есть на складе.
+    // Товар отображается в каталоге, даже если false
+    declare inStock: boolean
+    declare lastUpdate: Date
 }
 
 StockModel.init(
@@ -25,8 +26,9 @@ StockModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        // todo: clarify why this is needed, when we have quantity already
         inStock: {
-        type: DataTypes.BOOLEAN,
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         },
         lastUpdate: {

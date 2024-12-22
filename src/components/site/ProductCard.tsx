@@ -1,12 +1,26 @@
 'use client'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
-import {putProductToCart} from "@/actions/productActions";
+import { putProductToCart } from '@/actions/productActions'
 
-const Product = ({product, totalPages}) => {
-    const [isHovered, setIsHovered] = useState(false)
+type Props = {
+    product: {
+        id: number,
+        isNew: boolean,
+        image: string,
+        name: string,
+        category: string,
+        description_1: string,
+        old_price: number,
+        new_price: number,
+    }
+}
+
+const ProductCard = ({ product }: Props) => {
+    const [ isHovered, setIsHovered ] = useState(false)
+    const discount = (1 - product.new_price / product.old_price) * 100
 
     return (
         <div
@@ -14,19 +28,18 @@ const Product = ({product, totalPages}) => {
             onMouseLeave={() => setIsHovered(false)}
             className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-indigo-100"
         >
-
+            <p>Discount: {discount}</p>
             {/* Image Container */}
             <div className="relative h-64 overflow-hidden bg-gray-50">
                 <div className="absolute top-3 right-3 z-10 space-y-2">
-                    {/*todo заменить на признак новинки гл в БД пока нет*/}
-                    {product.inStock && (
+                    {product.isNew && (
                         <span className="block px-3 py-1 text-xs font-medium text-white bg-indigo-600 rounded-full">
                             Новинка
                         </span>
                     )}
-                    {product.discount && (
+                    {discount > 0 && (
                         <span className="block px-3 py-1 text-xs font-medium text-white bg-red-500 rounded-full">
-                            -{product.discount}%
+                            -{discount.toFixed()}%
                         </span>
                     )}
                 </div>
@@ -41,7 +54,6 @@ const Product = ({product, totalPages}) => {
                     priority
                 />
 
-
                 <div className={`absolute inset-0 bg-black bg-opacity-10 transition-opacity duration-300 ${
                     isHovered ? 'opacity-100' : 'opacity-0'
                 }`}/>
@@ -51,7 +63,7 @@ const Product = ({product, totalPages}) => {
             <div className="p-6">
                 {/* Category */}
                 <div className="text-xs font-medium text-indigo-600 mb-2">
-                    {product.category}
+                    Category: {product.category}
                 </div>
 
                 {/* Title */}
@@ -71,7 +83,7 @@ const Product = ({product, totalPages}) => {
                         <div className="text-2xl font-bold text-gray-900">
                             {product.new_price}₽
                         </div>
-                        {product.old_price && (
+                        {product.old_price > product.new_price && (
                             <div className="text-sm text-gray-500 line-through">
                                 {product.old_price}₽
                             </div>
@@ -91,7 +103,7 @@ const Product = ({product, totalPages}) => {
                     onClick={() => {
                         console.log('product.id front', product.id)
                         putProductToCart(product.id)}
-                }
+                    }
                     className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
                     transition-all duration-300 transform
                     hover:bg-indigo-700 hover:shadow-lg
@@ -104,4 +116,4 @@ const Product = ({product, totalPages}) => {
     )
 }
 
-export default Product
+export default ProductCard
