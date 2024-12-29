@@ -1,0 +1,55 @@
+import { ProductModel } from '../models/product.model'
+
+const productSeedData = [
+  {
+    isActive: true,
+    isNew: true,
+    articul: 'ART001',
+    sku: 'SKU001',
+    name: 'Product 1',
+    description_1: 'Description 1 for Product 1',
+    description_2: 'Description 2 for Product 1',
+    length: 100,
+    width: 50,
+    height: 30,
+    weight: 2000,
+    box_length: 110,
+    box_height: 40,
+    box_weight: 2200,
+    image: '/kofeinii-stolik-elite.webp',
+    old_price: 999.99,
+    new_price: 799.99,
+    primary_color: 1,
+    secondary_color: 2
+  },
+  {
+    isActive: true,
+    isNew: false,
+    articul: 'ART002',
+    sku: 'SKU002',
+    name: 'Product 2',
+    description_1: 'Description 1 for Product 2',
+    description_2: 'Description 2 for Product 2',
+    length: 120,
+    width: 60,
+    height: 40,
+    weight: 2500,
+    box_length: 130,
+    box_height: 50,
+    box_weight: 2700,
+    image: '/modulnyj-divan.jpg',
+    old_price: 1299.99,
+    new_price: 1099.99,
+    primary_color: 3,
+    secondary_color: 4
+  }
+]
+
+export async function seedProducts() {
+  try {
+    await ProductModel.bulkCreate(productSeedData)
+    console.log('Products seeded successfully')
+  } catch (error) {
+    console.error('Error seeding products:', error)
+  }
+}
