@@ -38,7 +38,10 @@ interface CartItem {
 }
 
 const UserCartTotal = () => {
-    const { total, totalDiscount, finalAmount, totalDiscountPercent, count } = useUserCartContext()
+    const { total, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading } = useUserCartContext()
+
+    // if (isLoading)
+    //     return 'Loading...'
 
     // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
     //todo превратить в функцию и вызывать из контекста
@@ -126,6 +129,7 @@ const UserCartTotal = () => {
                 <div className="flex items-center gap-4">
                     <label className="flex items-center gap-2">
                         <input
+                            disabled={isLoading}
                             type="checkbox"
                             className="rounded"
                             onChange={handleSelectAll}
@@ -152,20 +156,20 @@ const UserCartTotal = () => {
                 <UserCartTotalAmount />
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
-                    <span>{(total)}</span>
+                    <span>{(isLoading ? '...' : total)}</span>
                 </div>
                 {totalDiscountPercent > 0 && (
                     <div className="text-sm text-red-600 font-bold">
-                        - {totalDiscountPercent.toFixed(2)} %
+                        - {isLoading ? '...' : totalDiscountPercent.toFixed(2)} %
                     </div>
                 )}
                 {totalDiscount > 0 && (
                     <div className="text-sm text-red-600 font-bold">
-                        Скидка: {totalDiscount.toFixed(2)} ₽
+                        Скидка: {isLoading ? '...' : totalDiscount.toFixed(2)} ₽
                     </div>
                 )}
                 <div className="text-sm text-gray-600 mt-1">
-                    Количество товаров: {count}
+                    Количество товаров: {isLoading ? '...' : count}
                 </div>
             </div>
         </div>

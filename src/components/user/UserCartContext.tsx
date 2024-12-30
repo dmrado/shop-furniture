@@ -1,7 +1,8 @@
 'use client'
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { getCart } from '@/actions/user/getCart'
-import { cartProductDelete, updateQuantityAction } from '@/actions/user/cartProductQuantity'
+import { ReactNode, createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { CartRow, getCart } from '@/actions/user/getCart'
+import { deleteCartRowAction, updateQuantityAction } from '@/actions/user/cartProductQuantity'
+import { putProductToCartAction } from '@/actions/productActions'
 
 const UserCartContext = createContext({
     finalAmount: 0,
@@ -9,23 +10,28 @@ const UserCartContext = createContext({
     totalDiscount: 0,
     totalDiscountPercent: 0,
     count: 0,
-    cartRows: [],
-    updateQuantity: (id: number, quantity: number) => Promise<void>
+    cartRows: [] as CartRow[],
+    isLoading: false,
+    updateQuantity: async (id: number, quantity: number) => {},
+    deleteCartRow: async (id: number) => {}
 })
 
-export const UserCartProvider = ({ children }) => {
-    const [ cartRows, setCartRows ] = useState<any[]>([])
+export const UserCartProvider = ({ children }: {children: ReactNode}) => {
+    const [ cartRows, setCartRows ] = useState<CartRow[]>([])
+    const [ isLoading, setIsLoading ] = useState(false)
 
     useEffect(() => {
         const fetchCart = async () => {
+            setIsLoading(true)
             const rows = await getCart()
             setCartRows(rows)
+            setIsLoading(false)
             console.log('rows', rows)
         }
         fetchCart()
     }, [])
 
-    const updateQuantity = async (cartId: number, newQuantity: number) => {
+    const updateQuantity = async (cartId: number, newQuantity: number): Promise<void> => {
         const updatedCartRow = await updateQuantityAction({ id: cartId, newQuantity })
         const updatedCartRows = cartRows.map(row =>
             row.id === updatedCartRow.id
@@ -35,6 +41,16 @@ export const UserCartProvider = ({ children }) => {
         setCartRows(updatedCartRows)
     }
     // todo: define addItemToCart and deleteItemFromCart functions.
+
+    const deleteCartRow = async (id: number) => {
+        await deleteCartRowAction(id)
+        const updatedCartRows = cartRows.filter(row => row.id !== id)
+        setCartRows(updatedCartRows)
+    }
+
+    const addProductToCart = async (productId: number) => {
+        await putProductToCartAction(productId)
+    }
 
     const total = cartRows.reduce((sum, item) =>
         sum + item.product.old_price * item.quantity, 0)
@@ -55,13 +71,15 @@ export const UserCartProvider = ({ children }) => {
     const finalAmount = total - totalDiscount
 
     const value = {
+        isLoading,
         total,
         totalDiscount,
         finalAmount,
         totalDiscountPercent,
         count: cartRows.length,
         cartRows,
-        updateQuantity
+        updateQuantity,
+        deleteCartRow,
     }
     console.warn('>>> >>>>>>>>>>>> finalAmount', finalAmount, 'total', total, 'totalDiscount', totalDiscount)
 

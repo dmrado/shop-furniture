@@ -1,8 +1,8 @@
 'use server'
 
-import {ProductModel} from '@/db/models'
-import {revalidatePath} from 'next/cache'
-import {notFound} from 'next/navigation'
+import { ProductModel } from '@/db/models'
+import { revalidatePath } from 'next/cache'
+import { notFound } from 'next/navigation'
 import { CartModel } from '@/db/models'
 
 export async function getProductBiId(id: string) {
@@ -24,13 +24,13 @@ export async function getProductBiId(id: string) {
             updatedAt: product.updatedAt
         }
         revalidatePath(`/products/${id}`)
-        return {success: true, data: plainProduct}
+        return { success: true, data: plainProduct }
     } catch (error) {
-        return {success: false, error: 'Failed to fetch product'}
+        return { success: false, error: 'Failed to fetch product' }
     }
 }
 
-export const putProductToCart = async (productId: number) => {
+export const putProductToCartAction = async (productId: number) => {
     console.log('productId', productId)
     const userId = 1
     const existingCartItem = await CartModel.findOne({
@@ -44,18 +44,17 @@ export const putProductToCart = async (productId: number) => {
             quantity: existingCartItem.quantity + 1
         })
         revalidatePath('/products')
-        return {productId: existingCartItem.productId, quantity:  existingCartItem.quantity}
+        return { productId: existingCartItem.productId, quantity: existingCartItem.quantity }
     }
 
     const newProductInCart = await CartModel.create({
+        quantity: 1,
         productId,
-        userId: 1,
+        userId,
     })
-    if (!newProductInCart) {
-        return notFound()
-    }
-    revalidatePath('/products')
-    return
+    // if (!newProductInCart) {
+    //     return notFound()
+    // }
+    // revalidatePath('/products')
+    // return
 }
-
-

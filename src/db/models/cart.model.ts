@@ -9,7 +9,7 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare quantity: number
     declare userId: number
     declare discount: number
-    declare product?: ProductModel
+    declare product?: InferAttributes<ProductModel>
     declare user?: UserModel
     declare createdAt: Date
     declare updatedAt: Date

@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
-import { putProductToCart } from '@/actions/productActions'
+import { putProductToCartAction } from '@/actions/productActions'
+import { useUserCartContext } from '@/components/user/UserCartContext'
 
 type Props = {
     product: {
@@ -19,6 +20,7 @@ type Props = {
 }
 
 const ProductCard = ({ product }: Props) => {
+    const { } = useUserCartContext()
     const [ isHovered, setIsHovered ] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100
 
@@ -102,7 +104,8 @@ const ProductCard = ({ product }: Props) => {
                 <button
                     onClick={() => {
                         console.log('product.id front', product.id)
-                        putProductToCart(product.id)}
+                        // todo: use cart context for this
+                        putProductToCartAction(product.id)}
                     }
                     className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
                     transition-all duration-300 transform
