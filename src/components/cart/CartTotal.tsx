@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import CartTotalAmount from '@/components/cart/CartTotalAmount'
-import { useUserCartContext } from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 
 interface Product {
     id: number;
@@ -38,7 +38,7 @@ interface CartItem {
 }
 
 const CartTotal = () => {
-    const { total, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading } = useUserCartContext()
+    const { total, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading } = useCartContext()
 
     // if (isLoading)
     //     return 'Loading...'

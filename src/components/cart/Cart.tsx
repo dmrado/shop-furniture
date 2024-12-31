@@ -1,11 +1,11 @@
 'use client'
 // этот компонент нужен для использования его как клиентский для деструктурирования из контекста useUserCartContext
-import { useUserCartContext } from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 import CartRow from '@/components/cart/CartRow'
 import Loading from '@/app/cart/loading'
 
 const Cart = () => {
-    const { cartRows, isLoading } = useUserCartContext()
+    const { cartRows, isLoading } = useCartContext()
     if (isLoading) {
         return <Loading />
     }

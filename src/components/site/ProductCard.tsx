@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
 import { putProductToCartAction } from '@/actions/productActions'
-import { useUserCartContext } from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 
 type Props = {
     product: {
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const ProductCard = ({ product }: Props) => {
-    const { } = useUserCartContext()
+    const { } = useCartContext()
     const [ isHovered, setIsHovered ] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100
 

@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import '../db/models'
 import "./globals.css";
 import Link from "next/link";
-import {UserCartProvider} from '@/components/cart/CartContext'
+import {CartProvider} from '@/components/cart/CartContext'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,9 +39,9 @@ export default function RootLayout({
       <Link href={'/api/auth/signout'}>
         <button className='bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded'>Выйти из аккаунта</button>
       </Link>
-      <UserCartProvider>
+      <CartProvider>
           {children}
-      </UserCartProvider>
+      </CartProvider>
       </body>
     </html>
   );

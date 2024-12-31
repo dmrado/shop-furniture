@@ -1,6 +1,6 @@
 'use server'
-import { CartModel } from '@/db/models'
-import { ProductModel } from '@/db/models'
+// import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
+import { CartModel, ProductModel } from '@/db/models'
 import { InferAttributes } from 'sequelize'
 
 export type CartRow = Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
@@ -8,7 +8,7 @@ export type CartRow = Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'disc
 
 export async function getCart(): Promise<CartRow[]> {
     // fixme: remove timeout
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
     const { rows } = await CartModel.findAndCountAll({
         include: [{
@@ -76,4 +76,44 @@ export async function getCart(): Promise<CartRow[]> {
                 secondary_color: cart.product.secondary_color,
             }
         }})
+}
+
+
+export const updateQuantityAction = async ({ id, newQuantity }: { id: number, newQuantity: number }): Promise<CartRow> => {
+
+    if (newQuantity <= 1) {
+        await CartModel.update(
+            { quantity: 1 },
+            { where: { id } }
+        )
+    } else {
+        await CartModel.update(
+            { quantity: newQuantity },
+            { where: { id } }
+        )
+    }
+    const updatedCart = await CartModel.findByPk(id, { include: [{ model: ProductModel, as: 'product' }] })
+
+    if (!updatedCart) {
+        throw new Error('updated cart not found')
+    }
+
+    // revalidatePath('/cart')//для подсчета итого
+    return updatedCart.toJSON() as CartRow
+}
+
+export const deleteCartRowAction = async (cartId: number) => {
+    await CartModel.destroy({
+        where: {
+            id: cartId,
+            // userId: 1
+        }
+    })
+    // await OrderedProductsModel.destroy({
+    //     where: {
+    //         product: productId
+    //     }
+    // })
+    // revalidatePath('/cart')//todo проверить работает ли после создания запроса к OrderedProductsModel и рендера оставшихся в корзине товаров на cart page
+    // redirect('/cart')
 }

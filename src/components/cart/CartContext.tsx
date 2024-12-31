@@ -1,10 +1,9 @@
 'use client'
 import { ReactNode, createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { CartRow, getCart } from '@/actions/user/getCart'
-import { deleteCartRowAction, updateQuantityAction } from '@/actions/user/cartProductQuantity'
+import { CartRow, getCart, deleteCartRowAction, updateQuantityAction } from '@/actions/cartActions'
 import { putProductToCartAction } from '@/actions/productActions'
 
-const UserCartContext = createContext({
+const CartContext = createContext({
     finalAmount: 0,
     total: 0,
     totalDiscount: 0,
@@ -16,7 +15,7 @@ const UserCartContext = createContext({
     deleteCartRow: async (id: number) => {}
 })
 
-export const UserCartProvider = ({ children }: {children: ReactNode}) => {
+export const CartProvider = ({ children }: {children: ReactNode}) => {
     const [ cartRows, setCartRows ] = useState<CartRow[]>([])
     const [ isLoading, setIsLoading ] = useState(false)
 
@@ -83,6 +82,6 @@ export const UserCartProvider = ({ children }: {children: ReactNode}) => {
     }
     console.warn('>>> >>>>>>>>>>>> finalAmount', finalAmount, 'total', total, 'totalDiscount', totalDiscount)
 
-    return <UserCartContext.Provider value={value}>{children}</UserCartContext.Provider>
+    return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }
-export const useUserCartContext = () => useContext(UserCartContext)
+export const useCartContext = () => useContext(CartContext)
