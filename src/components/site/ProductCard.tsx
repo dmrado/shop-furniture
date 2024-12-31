@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 // todo: remove this to cart context
 import { putProductToCartAction } from '@/actions/productActions'
-import { useUserCartContext } from '@/components/user/UserCartContext'
+import { useUserCartContext } from '@/components/cart/CartContext'
 
 type Props = {
     product: {

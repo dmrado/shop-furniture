@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Loading from './loading'
-import UserCartTotal from '@/components/user/UserCartTotal'
-import UserCart from '@/components/user/UserCart'
+import CartTotal from '@/components/cart/CartTotal'
+import UserCart from '@/components/cart/Cart'
 import { getServerSession } from 'next-auth'
 
 const CartPage = async () => {
@@ -86,7 +86,7 @@ const CartPage = async () => {
     return (
         <div>
             {/*<Suspense fallback={<Loading />}>*/}
-            <UserCartTotal />
+            <CartTotal />
             {/*</Suspense>*/}
 
             {/*<Suspense fallback={<Loading />}>*/}

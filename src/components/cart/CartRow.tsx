@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 // import { deleteCartRowAction } from '@/actions/user/cartProductQuantity'
-import { useUserCartContext } from '@/components/user/UserCartContext'
+import { useUserCartContext } from '@/components/cart/CartContext'
 
 // interface CartProduct {
 //     id: number;
@@ -58,7 +58,7 @@ import { useUserCartContext } from '@/components/user/UserCartContext'
 //     quantity: number
 // }
 
-const UserCartRow = ({ cartRow, isSelected, onSelect, initialQuantity }: any) => {
+const CartRow = ({ cartRow, isSelected, onSelect, initialQuantity }: any) => {
     // const [quantity, setQuantity] = useState<number>(cartRow.quantity)
     const { updateQuantity, deleteCartRow } = useUserCartContext()
     const [ isLoading, setIsLoading ] = useState(false)
@@ -84,7 +84,7 @@ const UserCartRow = ({ cartRow, isSelected, onSelect, initialQuantity }: any) =>
             <div
                 className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
                 <Image
-                    src={cartRow.product.image}
+                    src={cartRow.product.image}  
                     alt={cartRow.product.name}
                     fill
                     className="object-contain hover:scale-105 transition-transform duration-300"
@@ -178,4 +178,4 @@ const UserCartRow = ({ cartRow, isSelected, onSelect, initialQuantity }: any) =>
     </div>
 
 }
-export default UserCartRow
+export default CartRow

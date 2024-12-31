@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import '../db/models'
 import "./globals.css";
 import Link from "next/link";
-import {UserCartProvider} from '@/components/user/UserCartContext.tsx'
+import {UserCartProvider} from '@/components/cart/CartContext'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

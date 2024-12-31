@@ -1,7 +1,7 @@
 import React from 'react'
-import { useUserCartContext } from '@/components/user/UserCartContext'
+import { useUserCartContext } from '@/components/cart/CartContext'
 
-const UserCartTotalAmount = () => {
+const CartTotalAmount = () => {
     const { finalAmount } = useUserCartContext()
     return (
         <div className="text-2xl text-green-600 font-bold">
@@ -10,4 +10,4 @@ const UserCartTotalAmount = () => {
     )
 }
 
-export default UserCartTotalAmount
+export default CartTotalAmount

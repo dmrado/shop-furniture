@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import UserCartTotalAmount from '@/components/user/UserCartTotalAmount'
-import { useUserCartContext } from '@/components/user/UserCartContext'
+import CartTotalAmount from '@/components/cart/CartTotalAmount'
+import { useUserCartContext } from '@/components/cart/CartContext'
 
 interface Product {
     id: number;
@@ -37,7 +37,7 @@ interface CartItem {
     product: Product | null;
 }
 
-const UserCartTotal = () => {
+const CartTotal = () => {
     const { total, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading } = useUserCartContext()
 
     // if (isLoading)
@@ -153,7 +153,7 @@ const UserCartTotal = () => {
             </div>
 
             <div className="mt-6 text-right">
-                <UserCartTotalAmount />
+                <CartTotalAmount />
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
                     <span>{(isLoading ? '...' : total)}</span>
@@ -176,4 +176,4 @@ const UserCartTotal = () => {
     </>
 }
 
-export default UserCartTotal
+export default CartTotal
