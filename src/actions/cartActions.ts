@@ -98,7 +98,6 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
         throw new Error('updated cart not found')
     }
 
-    // revalidatePath('/cart')//для подсчета итого
     return updatedCart.toJSON() as CartRow
 }
 

@@ -2,8 +2,6 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-// todo: remove this to cart context
-import { putProductToCartAction } from '@/actions/productActions'
 import { useCartContext } from '@/components/cart/CartContext'
 
 type Props = {
@@ -20,7 +18,7 @@ type Props = {
 }
 
 const ProductCard = ({ product }: Props) => {
-    const { } = useCartContext()
+    const { addProductToCart } = useCartContext()
     const [ isHovered, setIsHovered ] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100
 
@@ -100,12 +98,11 @@ const ProductCard = ({ product }: Props) => {
                         </span>
                     </div>
                 </div>
-                {/*todo серверный экшен по онклику на добавление товара в модель CartModel*/}
                 <button
                     onClick={() => {
                         console.log('product.id front', product.id)
-                        // todo: use cart context for this
-                        putProductToCartAction(product.id)}
+                        addProductToCart(product.id)
+                    }
                     }
                     className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium
                     transition-all duration-300 transform

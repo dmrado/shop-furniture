@@ -12,7 +12,8 @@ const CartContext = createContext({
     cartRows: [] as CartRow[],
     isLoading: false,
     updateQuantity: async (id: number, quantity: number) => {},
-    deleteCartRow: async (id: number) => {}
+    deleteCartRow: async (id: number) => {},
+    addProductToCart: async (id: number) => {}
 })
 
 export const CartProvider = ({ children }: {children: ReactNode}) => {
@@ -39,7 +40,6 @@ export const CartProvider = ({ children }: {children: ReactNode}) => {
         )
         setCartRows(updatedCartRows)
     }
-    // todo: define addItemToCart and deleteItemFromCart functions.
 
     const deleteCartRow = async (id: number) => {
         await deleteCartRowAction(id)
@@ -77,6 +77,7 @@ export const CartProvider = ({ children }: {children: ReactNode}) => {
         totalDiscountPercent,
         count: cartRows.length,
         cartRows,
+        addProductToCart,
         updateQuantity,
         deleteCartRow,
     }

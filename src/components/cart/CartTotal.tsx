@@ -43,22 +43,6 @@ const CartTotal = () => {
     // if (isLoading)
     //     return 'Loading...'
 
-    // +++++++++++ расчет финальной суммы заказа со скидкой начало +++++++++++++++
-    //todo превратить в функцию и вызывать из контекста
-    //
-    // const total = (cartList.reduce((sum, item) => sum + (item.product?.new_price || 0) * item.quantity, 0)).toFixed(2)
-    //
-    // // Расчет общей скидки в рублях
-    // const totalDiscount = cartList.reduce((acc, item) => {
-    //     if (!item.product) return acc
-    //     const itemDiscount = ((item.product.old_price - item.product.new_price) * item.quantity)
-    //     return acc + itemDiscount
-    // }, 0)
-    //
-    // const finalAmount = (total - totalDiscount).toFixed(2)
-    //
-    // localStorage.setItem('finalAmount', finalAmount.toString())
-    // +++++++++++ расчет финальной суммы заказа со скидкой окончание ++++++++++++++
 
     // Расчет общей суммы
     const calculateItemTotal = (item: CartItem): number => {
