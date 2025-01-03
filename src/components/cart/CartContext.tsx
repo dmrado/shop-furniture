@@ -48,7 +48,9 @@ export const CartProvider = ({ children }: {children: ReactNode}) => {
     }
 
     const addProductToCart = async (productId: number) => {
-        await putProductToCartAction(productId)
+        const newCartRow = await putProductToCartAction(productId)
+        const updatedCartRows = [newCartRow, ...cartRows]
+        setCartRows(updatedCartRows)
     }
 
     const total = cartRows.reduce((sum, item) =>
