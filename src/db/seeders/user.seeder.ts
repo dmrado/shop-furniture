@@ -1,44 +1,40 @@
-import {QueryInterface} from 'sequelize'
+import { UserModel } from '@/db/models/user.model'
 
-export const up = async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.bulkInsert(
-        'users',
-        [
-            // {
-            //     email: 'john.doe@example.com',
-            //     uname: 'John',
-            //     usurname: 'Doe',
-            //     ufathername: 'Michael',
-            //     cancontact: true,
-            //     isactive: true,
-            //     createdAt: new Date(),
-            //     updatedAt: new Date()
-            // },
-            // {
-            //     email: 'jane.smith@example.com',
-            //     uname: 'Jane',
-            //     usurname: 'Smith',
-            //     ufathername: 'William',
-            //     cancontact: true,
-            //     isactive: true,
-            //     createdAt: new Date(),
-            //     updatedAt: new Date()
-            // },
-            // {
-            //     email: 'bob.johnson@example.com',
-            //     name: 'Bob',
-            //     surName: 'Johnson',
-            //     fatherName: 'Robert',
-            //     canContact: false,
-            //     isActive: true,
-            //     createdAt: new Date(),
-            //     updatedAt: new Date()
-            // }
-        ],
-        {}
-    )
-}
+export const seedUsers = async (): Promise<void> => {
+  try {
+    const users = [
+      {
+        email: 'john.doe@example.com',
+        name: 'John',
+        surName: 'Doe',
+        fatherName: 'Michael',
+        canContact: true,
+        isActive: true
+      },
+      {
+        email: 'jane.smith@example.com',
+        name: 'Jane',
+        surName: 'Smith',
+        fatherName: 'William',
+        canContact: false,
+        isActive: true
+      },
+      {
+        email: 'bob.johnson@example.com',
+        name: 'Bob',
+        surName: 'Johnson',
+        fatherName: 'James',
+        canContact: true,
+        isActive: false
+      }
+    ];
 
-export const down = async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.bulkDelete('users', {}, {})
-}
+    await UserModel.destroy({ where: {} });
+    await UserModel.bulkCreate(users);
+
+    console.log('Users seeded successfully');
+  } catch (error) {
+    console.error('Error seeding users:', error);
+    throw error;
+  }
+};

@@ -52,9 +52,9 @@ export const CartProvider = ({ children }: {children: ReactNode}) => {
         const updatedCartRows = [newCartRow, ...cartRows]
         setCartRows(updatedCartRows)
     }
-
+//todo проверить почему падает приложение ели снять знак вопроса в item.product?.old_price 
     const total = cartRows.reduce((sum, item) =>
-        sum + item.product.old_price * item.quantity, 0)
+        sum + item.product?.old_price * item.quantity, 0)
 
     // const totalDiscount = cartRows.reduce((acc, item) =>
     //     acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)

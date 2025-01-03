@@ -5,7 +5,7 @@ const CartTotalAmount = () => {
     const { finalAmount } = useCartContext()
     return (
         <div className="text-2xl text-green-600 font-bold">
-            Итого: {finalAmount.toFixed(2)} ₽
+            Итого: {Number(finalAmount.toFixed(2))} ₽
         </div>
     )
 }

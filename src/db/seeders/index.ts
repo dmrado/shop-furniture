@@ -1,5 +1,8 @@
-import { sequelize } from '../connection'
-import { seedProducts } from './product.seeder'
+import { sequelize } from '@/db/connection'
+import { seedProducts } from '@/db/seeders/product.seeder'
+import { seedColors } from '@/db/seeders/color.seeder'
+import { seedUsers } from '@/db/seeders/user.seeder'
+
 
 async function runSeeders() {
   try {
@@ -7,7 +10,11 @@ async function runSeeders() {
     await sequelize.sync({ alter: true }) // force: true пересоздаст таблицы
 
     // Запуск сидеров
-    await seedProducts()
+    await Promise.all([
+      seedColors(),
+      seedProducts(),
+      seedUsers()
+    ])
 
     console.log('All seeds completed successfully')
     process.exit(0)
