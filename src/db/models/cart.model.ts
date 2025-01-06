@@ -1,18 +1,18 @@
 import { sequelize } from '../connection'
-import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
+import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
 import { ProductModel } from '@/db/models'
 import { UserModel } from '@/db/models'
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
-    declare id: number
+    declare id: CreationOptional<number>
     declare productId: number
     declare quantity: number
     declare userId: number
-    declare discount: number
+    declare discount: CreationOptional<number | null>
     declare product?: InferAttributes<ProductModel>
     declare user?: UserModel
-    declare createdAt: Date
-    declare updatedAt: Date
+    declare createdAt: CreationOptional<Date>
+    declare updatedAt: CreationOptional<Date>
 }
 
 CartModel.init(
@@ -46,7 +46,7 @@ CartModel.init(
         discount: {
             type: DataTypes.INTEGER,
             allowNull: true,
-            defaultValue: 1
+            defaultValue: null
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -60,9 +60,6 @@ CartModel.init(
     {
         sequelize,
         tableName: 'carts',
+        timestamps: true
     }
 )
-// CartModel.belongsTo(ProductModel, {
-//     foreignKey: 'productId',
-//     as: 'product'
-// })

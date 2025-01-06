@@ -1,7 +1,7 @@
 'use client'
 import { ReactNode, createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { CartRow, getCart, deleteCartRowAction, updateQuantityAction } from '@/actions/cartActions'
-import { putProductToCartAction } from '@/actions/productActions'
+import { addProductToCartAction } from '@/actions/cartActions'
 
 const CartContext = createContext({
     finalAmount: 0,
@@ -48,11 +48,10 @@ export const CartProvider = ({ children }: {children: ReactNode}) => {
     }
 
     const addProductToCart = async (productId: number) => {
-        const newCartRow = await putProductToCartAction(productId)
-        const updatedCartRows = [newCartRow, ...cartRows]
+        const updatedCartRows = await addProductToCartAction(productId)
         setCartRows(updatedCartRows)
     }
-//todo проверить почему падает приложение ели снять знак вопроса в item.product?.old_price 
+    //todo проверить почему падает приложение ели снять знак вопроса в item.product?.old_price
     const total = cartRows.reduce((sum, item) =>
         sum + item.product?.old_price * item.quantity, 0)
 
