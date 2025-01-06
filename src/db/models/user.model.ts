@@ -1,17 +1,16 @@
-import {sequelize} from '../connection'
+import { sequelize } from '../connection'
 import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
-import { User } from '../types/interfaces'
-import {AddressModel} from "@/db/models"
+import { AddressModel } from '@/db/models'
 
-export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> implements User {
-    declare id: number;
-    declare email: string;
-    declare name: string;
-    declare surName: string;
-    declare fatherName: string;
-    declare canContact: boolean;
-    declare isActive: boolean;
-    addresses: AddressModel[];
+export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
+    declare id: number
+    declare email: string
+    declare name: string
+    declare surName: string
+    declare fatherName: string
+    declare canContact: boolean
+    declare isActive: boolean
+    declare addresses?: InferAttributes<AddressModel>[]
 }
 
 UserModel.init(

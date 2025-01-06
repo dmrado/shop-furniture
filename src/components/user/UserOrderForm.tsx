@@ -1,16 +1,20 @@
 'use client'
 import React from 'react'
-import Link from "next/link"
-import {Address, User} from "@/db/types/interfaces"
-import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
+import Link from 'next/link'
+import { Address } from '@/db/types/interfaces'
+import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
+import { UserProfile } from '@/app/order/page'
 
-const UserOrderForm = ({user}: {user: User}) => {
+type Props = {
+    user: UserProfile
+}
+
+const UserOrderForm = ({ user }: Props) => {
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},
             д.${address.home} ${address.corps ? `, корп.${address.corps}` : ''} ${address.appart ? `, кв.${address.appart}` : ''}`
     }
-
-    const mainAddress = user?.addresses.find(addr => addr.isMain);
+    const mainAddress = user.addresses.find(addr => addr.isMain)
 
     const handleSubmit = async (formData: FormData) => {
         await handleOrderToDB(formData)
@@ -118,14 +122,12 @@ const UserOrderForm = ({user}: {user: User}) => {
                 </button>
             </form>
 
-
             <Link href={'/cart'}>
                 <button
                     className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
                     Вернуться в корзину
                 </button>
             </Link>
-
 
             <Link href={'/products'}>
                 <button

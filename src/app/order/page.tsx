@@ -1,30 +1,14 @@
 import React from 'react'
 import UserOrderForm from '@/components/user/UserOrderForm'
-import {UserModel} from "@/db/models";
-import {AddressModel} from "@/db/models";
-import UserAddressForm from "@/components/user/UserAddressForm";
-import {User} from "@/db/types/interfaces";
-import {Address} from "@/db/types/interfaces";
+import { UserModel } from '@/db/models'
+import { AddressModel } from '@/db/models'
+import { InferAttributes } from 'sequelize'
 
-// interface UserAddress {
-//     id: string;
-//     postalCode: string;
-//     city: string;
-//     street: string;
-//     phoneNumber: string;
-// }
-//
-// interface Props {
-//     user: {
-//         userAddress: UserAddress[]
-//     }
-// }
-
-export interface UserProfile extends Omit<User, 'addresses'> {
-    addresses: Address[]
+export interface UserProfile extends InferAttributes<UserModel> {
+    addresses: InferAttributes<AddressModel>[]
 }
 
-const OrderPage = async ({ user }) => {
+const OrderPage = async () => {
     //todo получить id пользователя
     const userData = await UserModel.findOne({
         where: {
@@ -32,18 +16,18 @@ const OrderPage = async ({ user }) => {
         },
         include: [{
             model: AddressModel,
-            attributes: ['id', 'phone', 'city', 'street', 'home', 'corps', 'appart', 'isMain' ],
-            as: 'addresses'  // используем тот же алиас, что указали при определении связи
+            attributes: [ 'id', 'phone', 'city', 'street', 'home', 'corps', 'appart', 'isMain' ],
+            as: 'addresses' // используем тот же алиас, что указали при определении связи
         },
             //todo сделать модель телефонов юзеру
         ]
     })
 
-    if(!userData){
-        return 'Не вышло order'
+    if(!userData || !userData.addresses) {
+        throw new Error('Invalid DB response')
     }
 
-//todo userProfile это смесь интерфейсов User и Address слитый см наверху
+    //todo userProfile это смесь интерфейсов User и Address слитый см наверху
     const userProfile: UserProfile = {
         id: userData.id,
         name: userData.name,
@@ -52,7 +36,7 @@ const OrderPage = async ({ user }) => {
         email: userData.email,
         isActive: userData.isActive,
         canContact: userData.canContact,
-        addresses: userData.addresses.map(address=>({
+        addresses: userData.addresses.map(address => ({
             id: address.id,
             city: address.city,
             phone: address.phone,
@@ -65,11 +49,9 @@ const OrderPage = async ({ user }) => {
         }))
     }
 
-
-
     return <>
-            <UserOrderForm user={userProfile}/>
-        </>
+        <UserOrderForm user={userProfile}/>
+    </>
 }
 
 export default OrderPage

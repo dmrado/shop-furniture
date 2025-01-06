@@ -1,6 +1,4 @@
 // types/interfaces.ts
-import {UserModel} from "@/db/models";
-import {ProductModel} from "@/db/models";
 
 export interface Address {
     id: number;
@@ -66,25 +64,4 @@ export interface Stock {
     inStock: boolean;
     lastUpdate: Date;
     items?: Product[]
-}
-
-export interface User {
-    id: number;
-    email: string;
-    name: string;
-    surName: string;
-    fatherName: string;
-    canContact: boolean;
-    isActive: boolean;
-    addresses: Address[]
-}
-
-export interface Cart {
-    id: number;
-    itemId: number;
-    quantity: number;
-    userId: number;
-    discount: number;
-    item?: ProductModel;
-    user?: UserModel;
 }
