@@ -2,6 +2,7 @@ import { sequelize } from '@/db/connection'
 import { seedProducts } from '@/db/seeders/product.seeder'
 import { seedColors } from '@/db/seeders/color.seeder'
 import { seedUsers } from '@/db/seeders/user.seeder'
+import { seedAddresses } from './address.seeder'
 
 
 async function runSeeders() {
@@ -13,6 +14,7 @@ async function runSeeders() {
     await Promise.all([
       seedColors(),
       seedProducts(),
+      seedAddresses(),
       seedUsers()
     ])
 
