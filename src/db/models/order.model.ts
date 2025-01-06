@@ -38,7 +38,7 @@ OrderModel.init(
             allowNull: false,
         },
         cartPrice: {
-            type: DataTypes.DOUBLE(10, 2),
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
         comment: {

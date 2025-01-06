@@ -27,7 +27,6 @@ const OrderPage = async () => {
         throw new Error('Invalid DB response')
     }
 
-    //todo userProfile это смесь интерфейсов User и Address слитый см наверху
     const userProfile: UserProfile = {
         id: userData.id,
         name: userData.name,
