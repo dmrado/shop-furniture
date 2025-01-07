@@ -3,7 +3,12 @@ import { ProductModel } from '@/db/models'
 import ProductCard from '@/components/site/ProductCard'
 import FiltersCategories from '@/components/site/FiltersCategories'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
+import { InferAttributes } from 'sequelize'
 
+export interface IProductDescription extends InferAttributes<ProductModel> {
+    // color: InferAttributes<ColorModel>[]
+    // color: InferAttributes<StockModel>[]
+}
 type Props = {
     searchParams: Record<'page'|'itemsPerPage', string | string[] | undefined>
 }
