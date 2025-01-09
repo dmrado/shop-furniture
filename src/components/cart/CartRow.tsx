@@ -9,23 +9,14 @@ import { CartRow as TCartRow } from "@/actions/cartActions";
 // [key: number]: number
 // }
 
-// interface CartCheckbox {
-//     cartRow: CartProduct;
-//     isSelected: boolean;
-//     onSelect: (id: number) => void;
-// }
-
 type Props = {
   cartRow: TCartRow;
 };
 
 const CartRow = ({ cartRow }: Props) => {
-    const { selectedItems, toggleSelection } = useCartContext()
-
-  // const [quantity, setQuantity] = useState<number>(cartRow.quantity)
+  const { selectedItems, toggleSelection } = useCartContext();
   const { updateQuantity, deleteCartRow } = useCartContext();
   const [isLoading, setIsLoading] = useState(false);
-
 
   console.log(">>>> this is one product on UserCart", cartRow);
 
@@ -33,16 +24,16 @@ const CartRow = ({ cartRow }: Props) => {
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-4 mx-6 gap-4 border border-gray-100 hover:border-gray-200">
       {/* Чекбокс для выбора товара */}
       <div className="flex items-center">
-            <input
-                type="checkbox"
-                checked={selectedItems.has(cartRow.id)}
-                onChange={() => {
-                    toggleSelection(cartRow.id)
-                    console.log('cartRow.id', cartRow.id)
-                }}
-                className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-        </div>
+        <input
+          type="checkbox"
+          checked={selectedItems.has(cartRow.id)}
+          onChange={() => {
+            toggleSelection(cartRow.id);
+            console.log("cartRow.id", cartRow.id);
+          }}
+          className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+      </div>
 
       {/* Левая часть с изображением и информацией */}
       <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -96,10 +87,10 @@ const CartRow = ({ cartRow }: Props) => {
         {/* Цена */}
         <div className="text-right">
           <div className="text-green-600 font-bold text-lg md:text-xl">
-            {cartRow.product.new_price * cartRow.quantity} ₽
+            {(cartRow.product.new_price * cartRow.quantity).toFixed(2)} ₽
           </div>
           <div className="text-gray-400 line-through text-sm">
-            {cartRow.product.old_price * cartRow.quantity} ₽
+            {(cartRow.product.old_price * cartRow.quantity).toFixed(2)} ₽
           </div>
         </div>
 

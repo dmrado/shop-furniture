@@ -28,12 +28,12 @@ const CartContext = createContext({
   addProductToCart: async (id: number) => {},
   selectedItems: new Set<number>(), // храним ID выбранных элементов
   toggleSelection: (id: number) => {}, // функция для переключения выбора
-  setSelectedItems: () => {
-    id: Number;
-  },
+  setSelectedItems: Set<number>,
   onSelect: true,
   setOnSelect: () => {},
   selectedTotalAmount: 0,
+  selectAll: () => {id: Number},
+  unselectAll: () => {id: Number},
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -56,8 +56,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  //  todo применить функции выбора всех элементов ниже
-  //  Функция для выбора всех элементов корзины
+  //  Функции для выбора/сброса всех элементов корзины
   const selectAll = useCallback(() => {
     const allIds = new Set(cartRows.map((row) => row.id));
     setSelectedItems(allIds);
@@ -73,7 +72,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0)
 
 
-  //   Функция получения содержимого корзины
+  // Функция получения содержимого корзины
   useEffect(() => {
     const fetchCart = async () => {
       setIsLoading(true);
@@ -112,9 +111,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const updatedCartRows = await addProductToCartAction(productId);
     setCartRows(updatedCartRows);
   };
-
-  // const totalDiscount = cartRows.reduce((acc, item) =>
-  //     acc + (item.product?.old_price - item.product?.new_price) * item?.quantity, 0)
 
   // Расчет общей скидки в процентах
   const totalOldPrice = cartRows.reduce(
