@@ -38,7 +38,7 @@ interface CartItem {
 }
 
 const CartTotal = () => {
-    const { total, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading } = useCartContext()
+    const { totalOldPrice, totalDiscount, finalAmount, totalDiscountPercent, count, isLoading, selectedTotalAmount} = useCartContext()
 
     // if (isLoading)
     //     return 'Loading...'
@@ -100,15 +100,15 @@ const CartTotal = () => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Корзина</h2>
 
-                {/*<div className="flex flex-col gap-4">*/}
+                <div className="flex flex-col gap-4">
                 {/*для подсчета только выбранных*/}
-                {/*{selectedItems.length > 0 && (*/}
-                {/*    <div className="flex justify-between">*/}
-                {/*        <span>Выбрано на сумму:</span>*/}
-                {/*        <span>{(selectedTotal)}</span>*/}
-                {/*    </div>*/}
-                {/*)}*/}
-                {/*</div>*/}
+                {selectedTotalAmount > 0 && ( 
+                   <div className="flex justify-between">
+                       <span>Выбрано на сумму:</span>
+                       <span>{(selectedTotalAmount.toFixed(2))}</span>
+                   </div>
+                )}
+                </div>
 
                 <div className="flex items-center gap-4">
                     <label className="flex items-center gap-2">
@@ -140,7 +140,7 @@ const CartTotal = () => {
                 <CartTotalAmount />
                 <div className="flex justify-end font-bold">
                     <span>Общая сумма:&nbsp;</span>
-                    <span>{(isLoading ? '...' : total)}</span>
+                    <span>{(isLoading ? '...' : totalOldPrice.toFixed(2))}</span>
                 </div>
                 {totalDiscountPercent > 0 && (
                     <div className="text-sm text-red-600 font-bold">
