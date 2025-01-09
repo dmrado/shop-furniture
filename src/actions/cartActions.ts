@@ -1,9 +1,16 @@
 'use server'
 import { CartModel, ProductModel } from '@/db/models'
-import { InferAttributes } from 'sequelize'
+import { InferAttributes, Op } from 'sequelize'
 
 export type CartRow = Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
     & Required<Pick<CartModel, 'product'>>
+
+type DeleteResult = {
+    success: boolean;
+    deletedCount?: number;
+    error?: string;
+  }
+
 
 const CART_INCLUDE = [{
     model: ProductModel,
@@ -105,6 +112,21 @@ export const deleteCartRowAction = async (cartId: number) => {
             id: cartId,
         }
     })
+}
+
+export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<DeleteResult> => {
+    const ids = await CartModel.destroy({
+        where: {
+            id: {
+                [Op.in]: cartIds
+            }
+        }
+        
+    })
+    return {
+        success: true,
+        deletedCount: ids
+      };
 }
 
 // fixme: use real userId

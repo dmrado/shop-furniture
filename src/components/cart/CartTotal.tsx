@@ -47,6 +47,8 @@ const CartTotal = () => {
     selectedTotalAmount,
     selectAll,
     unselectAll,
+    selectedItems,
+    deleteSelectedCartRows,
   } = useCartContext();
 
   // Расчет общей суммы
@@ -67,11 +69,6 @@ const CartTotal = () => {
     } catch (error) {
       console.error("Ошибка при попытке поделиться:", error);
     }
-  };
-
-    // todo Функция удаления выделенных
-  const handleDeleteSelected = () => {
-    console.log("Delete selected items");
   };
 
   return (
@@ -109,8 +106,9 @@ const CartTotal = () => {
               </span>
             </label>
             <button
-              className="px-4 py-2 text-red-600 hover:bg-red-50 rounded"
-              onClick={handleDeleteSelected}
+              className="px-4 py-2 rounded transition-all duration-200 text-red-600 hover:bg-red-50 active:bg-red-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+              onClick={deleteSelectedCartRows}
+              disabled={selectedItems.size === 0}
             >
               <span
                 title="Удалить выбранные"
@@ -121,6 +119,7 @@ const CartTotal = () => {
                 🗑️
               </span>
             </button>
+
             <button
               className="px-4 py-2 hover:bg-gray-100 rounded"
               onClick={shareCart}

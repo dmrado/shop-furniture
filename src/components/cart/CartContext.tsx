@@ -11,6 +11,7 @@ import {
   CartRow,
   getCart,
   deleteCartRowAction,
+  deleteSelectedCartRowsAction,
   updateQuantityAction,
 } from "@/actions/cartActions";
 import { addProductToCartAction } from "@/actions/cartActions";
@@ -28,12 +29,16 @@ const CartContext = createContext({
   addProductToCart: async (id: number) => {},
   selectedItems: new Set<number>(), // храним ID выбранных элементов
   toggleSelection: (id: number) => {}, // функция для переключения выбора
-  setSelectedItems: Set<number>,
+  //   setSelectedItems: Set<number>,
   onSelect: true,
   setOnSelect: () => {},
   selectedTotalAmount: 0,
-  selectAll: () => {id: Number},
-  unselectAll: () => {id: Number},
+  selectAll: () => {
+    id: Number;
+  },
+  unselectAll: () => {
+    id: Number;
+  },
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
@@ -66,11 +71,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setSelectedItems(new Set());
   }, []);
 
-// Функция для подсчета общей суммы только выбранных товаров
+  // Функция для подсчета общей суммы только выбранных товаров
   const selectedTotalAmount = cartRows
-  .filter(row => selectedItems.has(row.id))
-  .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0)
-
+    .filter((row) => selectedItems.has(row.id))
+    .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0);
 
   // Функция получения содержимого корзины
   useEffect(() => {
@@ -106,6 +110,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartRows(updatedCartRows);
   };
 
+  //  Функции для удаления выделенных элементов корзины
+  const deleteSelectedCartRows = async (id: Array<number>) => {
+    const selectedIds = Array.from(selectedItems);
+    const result = await deleteSelectedCartRowsAction(selectedIds);
+    
+    if (result.success) {
+      console.log(`Successfully deleted ${result.deletedCount} items`);
+      setCartRows(prevItems => prevItems.filter(item => !selectedIds.includes(item.id)));
+    // Warning изменить если все элементы по умолчанию должны быть выделены
+      setSelectedItems(new Set());
+  }};
+
   //   Функция добавления элемента корзины
   const addProductToCart = async (productId: number) => {
     const updatedCartRows = await addProductToCartAction(productId);
@@ -139,13 +155,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     addProductToCart,
     updateQuantity,
     deleteCartRow,
+    deleteSelectedCartRows,
     selectedItems,
     toggleSelection,
     onSelect,
     setOnSelect,
     selectAll,
     unselectAll,
-    selectedTotalAmount
+    selectedTotalAmount,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
