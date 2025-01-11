@@ -15,7 +15,7 @@ type Props = {
 
 const ProductsPage = async ({ searchParams }: Props) => {
     const page = Number(searchParams?.page) || 1
-    const limit = 2
+    const limit = 3
     const offset = (page - 1) * limit
     const productData = await ProductModel.findAndCountAll({
         limit,
