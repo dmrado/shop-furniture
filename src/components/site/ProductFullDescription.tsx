@@ -1,11 +1,17 @@
 'use client'
-import { useState } from 'react'
-import { IProductDescription } from '@/app/products/page'
+import {useState} from 'react'
+import {IProductDescription} from '@/app/products/page'
+import QuantitySelector from "@/components/site/QuantitySelector";
+import {useCartContext} from "@/components/cart/CartContext";
 
-const ProductFullDescription = ({ product }: {product : IProductDescription }) => {
+const ProductFullDescription = ({product}: { product: IProductDescription }) => {
+    const {updateQuantity, cartRows} = useCartContext();
     const [selectedImage, setSelectedImage] = useState(0)
     const [quantity, setQuantity] = useState(1)
+    const [isLoading, setIsLoading] = useState(false);
 
+// Находим cartRow для текущего продукта
+    const cartRow = cartRows.find(row => row.product.id === product.id) || null;
     console.log('>>>> >>product', product)
 
     const productArray = {
@@ -84,34 +90,42 @@ const ProductFullDescription = ({ product }: {product : IProductDescription }) =
                         <div className="space-y-4 pt-6">
                             <div className="flex items-center space-x-4">
                                 <label className="text-gray-700">Количество:</label>
-                                <div className="flex items-center border border-gray-300 rounded-lg">
-                                    <button
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="px-3 py-2 hover:bg-gray-100"
-                                    >
-                                        -
-                                    </button>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                        className="w-16 text-center border-x border-gray-300 focus:outline-none"
-                                    />
-                                    <button
-                                        onClick={() => setQuantity(quantity + 1)}
-                                        className="px-3 py-2 hover:bg-gray-100"
-                                    >
-                                        +
-                                    </button>
-                                </div>
+                                <QuantitySelector
+                                    isLoading={isLoading}
+                                    setIsLoading={setIsLoading}
+                                    updateQuantity={updateQuantity}
+                                    cartRow={cartRow}/>
+
+                                {/*<div className="flex items-center border border-gray-300 rounded-lg">*/}
+                                {/*    <button*/}
+                                {/*        onClick={() => setQuantity(Math.max(1, quantity - 1))}*/}
+                                {/*        className="px-3 py-2 hover:bg-gray-100"*/}
+                                {/*    >*/}
+                                {/*        -*/}
+                                {/*    </button>*/}
+                                {/*    <input*/}
+                                {/*        type="number"*/}
+                                {/*        min="1"*/}
+                                {/*        value={quantity}*/}
+                                {/*        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}*/}
+                                {/*        className="w-16 text-center border-x border-gray-300 focus:outline-none"*/}
+                                {/*    />*/}
+                                {/*    <button*/}
+                                {/*        onClick={() => setQuantity(quantity + 1)}*/}
+                                {/*        className="px-3 py-2 hover:bg-gray-100"*/}
+                                {/*    >*/}
+                                {/*        +*/}
+                                {/*    </button>*/}
+                                {/*</div>*/}
                             </div>
 
                             <div className="flex space-x-4">
-                                <button className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                                <button
+                                    className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
                                     Добавить в корзину
                                 </button>
-                                <button className="flex-1 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
+                                <button
+                                    className="flex-1 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
                                     Купить сейчас
                                 </button>
                             </div>

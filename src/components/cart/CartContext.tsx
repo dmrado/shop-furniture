@@ -145,7 +145,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const finalAmount = totalOldPrice - totalDiscount;
 
   const value = {
-    isLoading,
     totalOldPrice,
     totalDiscount,
     finalAmount,
