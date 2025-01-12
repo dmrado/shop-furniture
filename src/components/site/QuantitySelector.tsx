@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 const QuantitySelector = ({ count, onCountChange, disabled }: any) => {
+    const [ inputValue, setInputValue ] = useState<number>(count)
+
+    useEffect(() => {
+        // tiny debounce implementation
+        const timeout = setTimeout(() => {
+            onCountChange(inputValue)
+        }, 500)
+        return () => clearTimeout(timeout)
+    }, [ inputValue ])
+
+    useEffect(() => {
+        setInputValue(count)
+    }, [ count ])
+
     return <>
         <button
             onClick={() => {
@@ -20,11 +34,11 @@ const QuantitySelector = ({ count, onCountChange, disabled }: any) => {
                 if (isNaN(quantity)) {
                     return
                 }
-                onCountChange(quantity)
+                setInputValue(quantity)
             }}
             readOnly={disabled}
             type="text"
-            value={count}
+            value={inputValue}
             className="w-16 text-center border border-gray-300 rounded-lg p-1
                        focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
                        disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent

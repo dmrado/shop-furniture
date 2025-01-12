@@ -83,8 +83,9 @@ export async function getCart(userId: number = 1): Promise<CartRow[]> {
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({ id, newQuantity }: { id: number, newQuantity: number }): Promise<CartRow> => {
-    await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
+export const updateQuantityAction = async ({ id, newQuantity, userId = 1 }: { id: number, newQuantity: number, userId?: number }):
+Promise<CartRow[]> => {
+    // await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
 
     if (newQuantity <= 1) {
         await CartModel.update(
@@ -97,13 +98,13 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
             { where: { id } }
         )
     }
-    const updatedCart = await CartModel.findByPk(id, { include: CART_INCLUDE })
-    // todo: return whole cart for user
-    if (!updatedCart) {
+
+    const updatedCart = await CartModel.findAll({ where: { userId }, include: CART_INCLUDE })
+    if (!updatedCart.length) {
         throw new Error('updated cart not found')
     }
 
-    return mapCartRow(updatedCart)
+    return updatedCart.map(mapCartRow)
 }
 
 export const deleteCartRowAction = async (cartId: number) => {

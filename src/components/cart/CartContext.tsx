@@ -93,13 +93,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         cartId: number,
         newQuantity: number
     ): Promise<void> => {
-        const updatedCartRow = await updateQuantityAction({
+        const updatedCartRows = await updateQuantityAction({
             id: cartId,
             newQuantity,
         })
-        const updatedCartRows = cartRows.map((row) =>
-            row.id === updatedCartRow.id ? updatedCartRow : row
-        )
         setCartRows(updatedCartRows)
     }
 
