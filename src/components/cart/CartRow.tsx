@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useCartContext } from "@/components/cart/CartContext";
 import { CartRow as TCartRow } from "@/actions/cartActions";
 import QuantitySelector from "@/components/site/QuantitySelector";
+import Link from "next/link";
 
 // описывает объект с количествами товаров
 // interface Quantities {
@@ -50,6 +51,7 @@ const CartRow = ({ cartRow }: Props) => {
         {/* Информация о продукте */}
         <div className="flex flex-col justify-between space-y-2 w-full sm:w-[400px]">
           <div>
+            <Link href={`/products/${cartRow.product.id}`}>
             <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200">
               {cartRow.product.name}
             </h3>
@@ -61,9 +63,10 @@ const CartRow = ({ cartRow }: Props) => {
                 cartRow.product.description_2?.length > 60 ? "..." : ""
               }`}
             </div>
+            </Link>
           </div>
 
-          {/* Кнопки действий */}
+         {/* Кнопки действий */}
           <div className="flex flex-wrap gap-2 mt-2">
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
               <span role="img" aria-label="favorite" className="text-xl">
