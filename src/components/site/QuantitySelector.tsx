@@ -1,43 +1,40 @@
-import React from 'react';
+import React from 'react'
 
-const QuantitySelector = ({isLoading, setIsLoading, updateQuantity, cartRow, }) => {
+const QuantitySelector = ({ count, onCountChange, disabled }: any) => {
     return <>
         <button
-            onClick={async () => {
-                setIsLoading(true);
-                await updateQuantity(cartRow.id, cartRow.quantity - 1);
-                setIsLoading(false);
+            onClick={() => {
+                onCountChange(count - 1)
             }}
-            disabled={isLoading}
+            disabled={disabled || count === 1}
             className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
             -
         </button>
         <input
             onChange={async (event) => {
-                const newValue = event.target.value;
-                console.log("newValue", newValue);
+                const newValue = event.target.value
+                console.log('newValue', newValue)
                 //по букве сработает ретурн, по пробелу и пустой строке вернет 0 и обнулит в БД значени поэтому проверяем приведеенное к числу значение
-                if (isNaN(Number(newValue))) {
-                    return;
+                const quantity = Number(newValue)
+                if (isNaN(quantity)) {
+                    return
                 }
-                setIsLoading(true);
-                await updateQuantity(cartRow.id, Number(newValue));
-
-                setIsLoading(false);
+                onCountChange(quantity)
             }}
-            readOnly={isLoading}
+            readOnly={disabled}
             type="text"
-            value={cartRow.quantity}
-            className="w-16 text-center border border-gray-300 rounded-lg p-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            value={count}
+            className="w-16 text-center border border-gray-300 rounded-lg p-1
+                       focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+                       disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent
+                       "
         />
         <button
-            onClick={async () => {
-                setIsLoading(true);
-                await updateQuantity(cartRow.id, cartRow.quantity + 1);
-                setIsLoading(false);
+            onClick={() => {
+                onCountChange(count + 1)
             }}
-            disabled={isLoading}
+            disabled={disabled}
             className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors duration-200 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
             +
@@ -45,4 +42,4 @@ const QuantitySelector = ({isLoading, setIsLoading, updateQuantity, cartRow, }) 
     </>
 }
 
-export default QuantitySelector;
+export default QuantitySelector

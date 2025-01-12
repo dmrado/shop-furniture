@@ -11,7 +11,6 @@ type DeleteResult = {
     error?: string;
   }
 
-
 const CART_INCLUDE = [{
     model: ProductModel,
     as: 'product',
@@ -85,6 +84,7 @@ export async function getCart(userId: number = 1): Promise<CartRow[]> {
 }
 
 export const updateQuantityAction = async ({ id, newQuantity }: { id: number, newQuantity: number }): Promise<CartRow> => {
+    await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
 
     if (newQuantity <= 1) {
         await CartModel.update(
@@ -98,7 +98,7 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
         )
     }
     const updatedCart = await CartModel.findByPk(id, { include: CART_INCLUDE })
-
+    // todo: return whole cart for user
     if (!updatedCart) {
         throw new Error('updated cart not found')
     }
@@ -121,16 +121,16 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
                 [Op.in]: cartIds
             }
         }
-        
+
     })
     return {
         success: true,
         deletedCount: ids
-      };
+    }
 }
 
 // fixme: use real userId
-export const addProductToCartAction = async (productId: number, userId = 1): Promise<CartRow[]> => {
+export const addProductToCartAction = async (productId: number, quantity: number, userId = 1): Promise<CartRow[]> => {
     const existingCartItem = await CartModel.findOne({
         where: {
             productId,
@@ -140,11 +140,11 @@ export const addProductToCartAction = async (productId: number, userId = 1): Pro
     })
     if (existingCartItem) {
         await existingCartItem.update({
-            quantity: existingCartItem.quantity + 1,
+            quantity: existingCartItem.quantity + quantity,
         })
     } else {
         await CartModel.create({
-            quantity: 1,
+            quantity: quantity,
             productId,
             userId,
         })

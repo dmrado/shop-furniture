@@ -1,35 +1,35 @@
 'use client'
-import {useState} from 'react'
-import {IProductDescription} from '@/app/products/page'
-import QuantitySelector from "@/components/site/QuantitySelector";
-import {useCartContext} from "@/components/cart/CartContext";
+import { useState } from 'react'
+import { IProductDescription } from '@/app/products/page'
+import QuantitySelector from '@/components/site/QuantitySelector'
+import { useCartContext } from '@/components/cart/CartContext'
 
-const ProductFullDescription = ({product}: { product: IProductDescription }) => {
-    const {updateQuantity, cartRows} = useCartContext();
-    const [selectedImage, setSelectedImage] = useState(0)
-    const [quantity, setQuantity] = useState(1)
-    const [isLoading, setIsLoading] = useState(false);
+const ProductFullDescription = ({ product }: { product: IProductDescription }) => {
+    const { addProductToCart } = useCartContext()
+    const [ selectedImage, setSelectedImage ] = useState(0)
+    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
+    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
 
-// Находим cartRow для текущего продукта
-    const cartRow = cartRows.find(row => row.product.id === product.id) || null;
+    // Находим cartRow для текущего продукта
+    // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
 
     const productArray = {
-        name: "Название товара",
-        category: "Категория",
+        name: 'Название товара',
+        category: 'Категория',
         price: 1999,
         oldPrice: 2499, // опционально
-        description: "Подробное описание товара...",
+        description: 'Подробное описание товара...',
         images: [
-            "url1.jpg",
-            "url2.jpg",
-            "url3.jpg",
-            "url4.jpg"
+            'url1.jpg',
+            'url2.jpg',
+            'url3.jpg',
+            'url4.jpg'
         ],
         specifications: {
-            "Материал": "Дерево",
-            "Размеры": "200x150x75 см",
-            "Вес": "25 кг",
+            'Материал': 'Дерево',
+            'Размеры': '200x150x75 см',
+            'Вес': '25 кг',
             // другие характеристики
         }
     }
@@ -91,10 +91,12 @@ const ProductFullDescription = ({product}: { product: IProductDescription }) => 
                             <div className="flex items-center space-x-4">
                                 <label className="text-gray-700">Количество:</label>
                                 <QuantitySelector
-                                    isLoading={isLoading}
-                                    setIsLoading={setIsLoading}
-                                    updateQuantity={updateQuantity}
-                                    cartRow={cartRow}/>
+                                    count={quantitySelectorCount}
+                                    onCountChange={async (quantity: number) => {
+                                        setQuantitySelectorCount(quantity)
+                                    }}
+                                    disabled={isCartUpdating}
+                                />
 
                                 {/*<div className="flex items-center border border-gray-300 rounded-lg">*/}
                                 {/*    <button*/}
@@ -121,6 +123,11 @@ const ProductFullDescription = ({product}: { product: IProductDescription }) => 
 
                             <div className="flex space-x-4">
                                 <button
+                                    onClick={async () => {
+                                        setIsCartUpdating(true)
+                                        await addProductToCart(product.id, quantitySelectorCount)
+                                        setIsCartUpdating(false)
+                                    }}
                                     className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
                                     Добавить в корзину
                                 </button>
