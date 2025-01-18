@@ -40,7 +40,7 @@ const MainPage = () => {
                             </a>
                         </div>
 
-                        <nav className="flex space-x-5 ml-16 mt-0 relative">
+                        <nav className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-5 ml-4 md:ml-16 mt-0 relative">
                             {navItems.map((item) => (
                                 <div
                                     key={item.name}
