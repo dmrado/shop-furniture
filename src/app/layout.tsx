@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import '../db/models/index.model'
 import "./globals.css";
+import Header from "@/components/site/Header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,9 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased size-full relative`} // это body-wrapper нужен для меню навигации справа в режиме телефона
       >
-        {children}
+      <div className="overflow-hidden max-w-full mx-auto"> {/*свойство overflow: hidden у контейнера нужно что бы боковое бургер-меню не вылезало*/}
+          {/*<Header/>*/}
+          {children}
+      </div>
+
       </body>
     </html>
   );

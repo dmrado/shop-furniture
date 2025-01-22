@@ -40,7 +40,8 @@ const MainPage = () => {
                             </a>
                         </div>
 
-                        <nav className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-5 ml-4 md:ml-16 mt-0 relative">
+                        <nav
+                            className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-5 ml-4 md:ml-16 mt-0 relative">
                             {navItems.map((item) => (
                                 <div
                                     key={item.name}
@@ -70,85 +71,87 @@ const MainPage = () => {
                         </nav>
 
                         <div className="block w-px h-8 bg-[#E99C28] ml-9 mr-10"></div>
+                        <nav2
+                            className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-5 ml-4 md:ml-16 mt-0 relative">
+                            <div className="flex space-x-7 text-white">
 
-                        <div className="flex space-x-7 text-white">
+                                <a
+                                    href="/contacts"
+                                    className="hover:text-[#E99C28] transition-colors duration-200"
+                                >
+                                    Контакты
+                                </a>
+                                <a
+                                    href="/about"
+                                    className="hover:text-[#E99C28] transition-colors duration-200"
+                                >
+                                    О нас
+                                </a>
+                                <a
+                                    href="/search"
+                                    className="hover:text-[#E99C28] transition-colors duration-200 flex items-center space-x-0.5"
+                                >
+                                    <Image src={Search} alt="Лупа" width={16} height={16}/>
+                                    <span>Поиск</span>
+                                </a>
+                            </div>
 
-                            <a
-                                href="/contacts"
-                                className="hover:text-[#E99C28] transition-colors duration-200"
+                            <button
+                                className="ml-12 flex items-center justify-center text-white border border-[#E99C28] hover:bg-[#E99C28] transition-colors duration-200"
+                                style={{width: 258, height: 46}}
                             >
-                                Контакты
-                            </a>
-                            <a
-                                href="/about"
-                                className="hover:text-[#E99C28] transition-colors duration-200"
-                            >
-                                О нас
-                            </a>
-                            <a
-                                href="/search"
-                                className="hover:text-[#E99C28] transition-colors duration-200 flex items-center space-x-0.5"
-                            >
-                                <Image src={Search} alt="Лупа" width={16} height={16}/>
-                                <span>Поиск</span>
-                            </a>
-                        </div>
+                                <Image src={Phone} width={15} height={15} className="mr-2.5"/>
+                                <span className="text-base">Заказать обратный звонок</span>
+                            </button>
 
-                        <button
-                            className="ml-12 flex items-center justify-center text-white border border-[#E99C28] hover:bg-[#E99C28] transition-colors duration-200"
-                            style={{width: 258, height: 46}}
-                        >
-                            <Image src={Phone} width={15} height={15} className="mr-2.5"/>
-                            <span className="text-base">Заказать обратный звонок</span>
-                        </button>
+                            <div className="flex items-center ml-5 space-x-2.5">
+                                <a
+                                    href="/favorites"
+                                    onMouseEnter={() => setHeartIcon(HeartY)}
+                                    onMouseLeave={() => setHeartIcon(Heart)}
+                                    className="flex items-center"
+                                >
+                                    <Image
+                                        src={heartIcon}
+                                        alt="Избранное"
+                                        width={20}
+                                        height={20}
+                                        className="w-5 h-5 transform-none"
+                                    />
+                                </a>
+                                <a
+                                    href="/cart"
+                                    onMouseEnter={() => setCartIcon(CartY)}
+                                    onMouseLeave={() => setCartIcon(Cart)}
+                                    className="flex items-center"
+                                >
+                                    <Image
+                                        src={cartIcon}
+                                        alt="Корзина"
+                                        width={24}
+                                        height={24}
+                                        className="w-6 h-6 transform-none"
+                                    />
+                                </a>
+                            </div>
 
-                        <div className="flex items-center ml-5 space-x-2.5">
-                            <a
-                                href="/favorites"
-                                onMouseEnter={() => setHeartIcon(HeartY)}
-                                onMouseLeave={() => setHeartIcon(Heart)}
-                                className="flex items-center"
-                            >
-                                <Image
-                                    src={heartIcon}
-                                    alt="Избранное"
-                                    width={20}
-                                    height={20}
-                                    className="w-5 h-5 transform-none"
-                                />
-                            </a>
-                            <a
-                                href="/cart"
-                                onMouseEnter={() => setCartIcon(CartY)}
-                                onMouseLeave={() => setCartIcon(Cart)}
-                                className="flex items-center"
-                            >
-                                <Image
-                                    src={cartIcon}
-                                    alt="Корзина"
-                                    width={24}
-                                    height={24}
-                                    className="w-6 h-6 transform-none"
-                                />
-                            </a>
-                        </div>
-
-                        <div className="ml-12">
-                            <a
-                                href="/profile"
-                                onMouseEnter={() => setProfileIcon(ProfileY)}
-                                onMouseLeave={() => setProfileIcon(Profile)}
-                                className="flex items-center"
-                            >
-                                <Image
-                                    src={profileIcon}
-                                    alt="Профиль"
-                                    width={25}
-                                    height={25}
-                                    className="w-6 h-6 transform-none"
-                                />
-                            </a>
-                        </div>
+                            <div className="ml-12">
+                                <a
+                                    href="/profile"
+                                    onMouseEnter={() => setProfileIcon(ProfileY)}
+                                    onMouseLeave={() => setProfileIcon(Profile)}
+                                    className="flex items-center"
+                                >
+                                    <Image
+                                        src={profileIcon}
+                                        alt="Профиль"
+                                        width={25}
+                                        height={25}
+                                        className="w-6 h-6 transform-none"
+                                    />
+                                </a>
+                            </div>
+                        </nav2>
                     </div>
                 </header>
             </div>
