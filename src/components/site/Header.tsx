@@ -20,14 +20,22 @@ const Header = () => {
     // if (!session || !isAdmin(session) || isSessionExpired(session)) {
     //     return redirect('/api/auth/signin')
     // }
-
+    // для мобильного меню
     const [isOpen, setIsOpen] = useState(false)
+
+    // для изменения поведения svg-иконок
     const [heartIcon, setHeartIcon] = useState(Heart);
     const [cartIcon, setCartIcon] = useState(Cart);
     const [profileIcon, setProfileIcon] = useState(Profile);
 
+    // для подменю в десктопном меню
     const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [menuTimer, setMenuTimer] = useState<NodeJS.Timeout | null>(null);
+
+    // для аккордеона в мобильном меню
+    const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
     const navItems = [
         {name: "Каталог", subItems: ["Мебель", "Декор", "Текстиль"]},
         {name: "Кухни", subItems: ["Модульные кухни", "Аксессуары"]},
@@ -35,6 +43,27 @@ const Header = () => {
         {name: "Диваны", subItems: ["Кожаные", "Тканевые"]},
         {name: "Декор", subItems: ["Картины", "Зеркала"]},
     ];
+
+    // функция закрытия мобильного меню в планшетной и мобильной версии
+    const closeMenu = () => {
+        if (window.innerWidth < 768) {
+            setIsOpen(false)
+            setActiveMenu(null)
+        }
+    }
+
+    // функция для аккордеона в мобильном меню
+    const handleMenuClick = (itemName: string) => {
+        setActiveMenuItem(activeMenuItem === itemName ? null : itemName);
+    };
+    const handleMouseEnter = (itemName: string) => {
+        setHoveredItem(itemName);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredItem(null);
+    };
+
 
     const LogoDecoro = () => {
         return <>
@@ -53,34 +82,107 @@ const Header = () => {
             </Link>
         </>
     }
-    const NavLeft = () => {
-        return <>
-            {navItems.map((item) => (
-                <Link key={item.name}
-                      href={`${item.name.toLowerCase()}`}
-                      onClick={closeMenu}
-                      className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
-                    <div
-                        className="relative"
-                        onMouseEnter={() => {
-                            if (menuTimer) clearTimeout(menuTimer);
-                            setActiveMenu(item.name);
-                        }}
-                        onMouseLeave={() => {
-                            const timer = setTimeout(() => {
-                                setActiveMenu(null);
-                            }, 100);
-                            setMenuTimer(timer);
-                        }}
-                    >{item.name}
-                        {activeMenu === item.name && (
-                            <Navigation items={item.subItems} closeMenu={closeMenu}/>
-                        )}
-                    </div>
-                </Link>
-            ))}
-        </>
+
+
+    interface NavItem {
+        name: string;
+        subItems: string[];
     }
+
+    const NavLeft = () => {
+        return (
+            <>
+                {/* Десктопное меню */}
+                <nav className="hidden md:flex">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.name}
+                            href="#"
+                            className="relative group"
+                            onMouseEnter={() => handleMouseEnter(item.name)}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                        <span className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
+                            {item.name}
+                        </span>
+                            {hoveredItem === item.name && (
+                                <div
+                                    className="absolute left-0 mt-0 w-48 bg-[#222] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    {item.subItems.map((subItem) => (
+                                        <Link
+                                            key={subItem}
+                                            href={`/${subItem.toLowerCase()}`}
+                                            className="block p-4 text-white hover:text-[#E99C28]"
+                                        >
+                                            {subItem}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* Мобильное меню */}
+                <nav className="md:hidden w-full text-center">
+                    {navItems.map((item) => (
+                        <div key={item.name} className="w-full">
+                            <Link
+                                href="#"
+                                onClick={() => handleMenuClick(item.name)}
+                                className="block w-full p-4 text-white hover:text-[#E99C28] transition-colors duration-200 text-center"
+                            >
+                                {item.name}
+                            </Link>
+                            {activeMenuItem === item.name && (
+                                <div className="py-2 bg-[#222] text-white">
+                                    {item.subItems.map((subItem) => (
+                                        <Link
+                                            key={subItem}
+                                            href={`/${subItem.toLowerCase()}`}
+                                            onClick={closeMenu}
+                                            className="block py-2 hover:text-[#E99C28]"
+                                        >
+                                            {subItem}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </nav>
+            </>
+        )
+    }
+
+    // const NavLeft = () => {
+    //     return <>
+    //         {navItems.map((item) => (
+    //             <Link key={item.name}
+    //                   href={`${item.name.toLowerCase()}`}
+    //                   onClick={closeMenu}
+    //                   className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
+    //                 <div
+    //                     className="relative"
+    //                     onMouseEnter={() => {
+    //                         if (menuTimer) clearTimeout(menuTimer);
+    //                         setActiveMenu(item.name);
+    //                     }}
+    //                     onMouseLeave={() => {
+    //                         const timer = setTimeout(() => {
+    //                             setActiveMenu(null);
+    //                         }, 100);
+    //                         setMenuTimer(timer);
+    //                     }}
+    //                 >{item.name}
+    //                     {activeMenu === item.name && (
+    //                         <Navigation items={item.subItems} closeMenu={closeMenu}/>
+    //                     )}
+    //                 </div>
+    //             </Link>
+    //         ))}
+    //     </>
+    // }
 
     const NavStick = () => {
         return <>
@@ -191,20 +293,12 @@ const Header = () => {
     const NavCartTotal = () => {
         return <>
             <div className="relative">
-                <span className="absolute -top-12 bg-white text-yellow-700 text-md font-bold px-1.5 py-0.5 rounded-xl min-w-[20px] text-center shadow-sm z-30">
+                <span
+                    className="absolute -top-12 bg-white text-yellow-700 text-md font-bold px-1.5 py-0.5 rounded-xl min-w-[20px] text-center shadow-sm z-30">
                     <CartTotalAmount/>
                 </span>
             </div>
         </>
-    }
-
-
-    // функция закрытия мобильного меню в планшетной и мобильной версии
-    const closeMenu = () => {
-        if (window.innerWidth < 768) {
-            setIsOpen(false)
-            setActiveMenu(null)
-        }
     }
 
     return (
