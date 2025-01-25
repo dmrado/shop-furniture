@@ -1,11 +1,9 @@
-import React from 'react'
+"use client"
+import Carousel from "@/components/site/Carousel"
 
 const MainPage = () => {
-    return (
-        <div className="">
-            Верстай здесь!
-        </div>
-    )
+     return <main>
+                <Carousel/>
+            </main>
 }
-
 export default MainPage
