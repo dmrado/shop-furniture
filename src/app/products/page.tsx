@@ -4,7 +4,6 @@ import ProductCard from '@/components/site/ProductCard'
 import FiltersCategories from '@/components/site/FiltersCategories'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import { InferAttributes } from 'sequelize'
-import CartTotalAmount from "@/components/cart/CartTotalAmount";
 
 export interface IProductDescription extends InferAttributes<ProductModel> {
     // color: InferAttributes<ColorModel>[]
@@ -52,7 +51,6 @@ const ProductsPage = async ({ searchParams }: Props) => {
 
     return <>
         <div>
-            <CartTotalAmount/>
             <FiltersCategories/>
             <ReactPaginateWrapper pages={totalPages} currentPage={page}/>
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

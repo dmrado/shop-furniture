@@ -1,15 +1,16 @@
 'use server'
-import { CartModel, ProductModel } from '@/db/models'
-import { InferAttributes, Op } from 'sequelize'
+import {CartModel, ProductModel} from '@/db/models'
+import {InferAttributes, Op} from 'sequelize'
 
-export type CartRow = Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
+export type CartRow =
+    Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
     & Required<Pick<CartModel, 'product'>>
 
 type DeleteResult = {
     success: boolean;
     deletedCount?: number;
     error?: string;
-  }
+}
 
 const CART_INCLUDE = [{
     model: ProductModel,
@@ -75,31 +76,35 @@ const mapCartRow = (cart: CartModel): CartRow => {
 
 // fixme: use real userId
 export async function getCart(userId: number = 1): Promise<CartRow[]> {
-    const { rows } = await CartModel.findAndCountAll({
+    const {rows} = await CartModel.findAndCountAll({
         include: CART_INCLUDE,
-        where: { userId }
+        where: {userId}
     })
 
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({ id, newQuantity, userId = 1 }: { id: number, newQuantity: number, userId?: number }):
-Promise<CartRow[]> => {
+export const updateQuantityAction = async ({id, newQuantity, userId = 1}: {
+    id: number,
+    newQuantity: number,
+    userId?: number
+}):
+    Promise<CartRow[]> => {
     // await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
 
     if (newQuantity <= 1) {
         await CartModel.update(
-            { quantity: 1 },
-            { where: { id } }
+            {quantity: 1},
+            {where: {id}}
         )
     } else {
         await CartModel.update(
-            { quantity: newQuantity },
-            { where: { id } }
+            {quantity: newQuantity},
+            {where: {id}}
         )
     }
 
-    const updatedCart = await CartModel.findAll({ where: { userId }, include: CART_INCLUDE })
+    const updatedCart = await CartModel.findAll({where: {userId}, include: CART_INCLUDE})
     if (!updatedCart.length) {
         throw new Error('updated cart not found')
     }

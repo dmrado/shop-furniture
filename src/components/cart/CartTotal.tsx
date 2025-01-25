@@ -137,7 +137,9 @@ const CartTotal = () => {
         </div>
 
         <div className="mt-6 text-right">
-          <CartTotalAmount />
+          <div className="text-2xl text-green-600 font-bold">
+            Итого:  <CartTotalAmount /> ₽
+          </div>
           <div className="flex justify-end font-bold">
             <span>Общая сумма:&nbsp;</span>
             <span>{isLoading ? "..." : totalOldPrice.toFixed(2)}</span>

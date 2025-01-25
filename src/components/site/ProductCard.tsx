@@ -28,7 +28,7 @@ const ProductCard = ({ product }: Props) => {
             onMouseLeave={() => setIsHovered(false)}
             className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-indigo-100"
         >
-            <p>Discount: {discount}</p>
+            {/*<p>Discount: {discount}</p>*/}
             {/* Image Container */}
             <div className="relative h-64 overflow-hidden bg-gray-50">
                 <div className="absolute top-3 right-3 z-10 space-y-2">

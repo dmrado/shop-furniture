@@ -12,8 +12,15 @@ import Phone from "@/components/site/img/Phone.svg";
 import HeartY from "@/components/site/img/HeartY.svg";
 import CartY from "@/components/site/img/CartY.svg";
 import ProfileY from "@/components/site/img/ProfileY.svg";
+import CartTotal from "@/components/cart/CartTotal";
+import CartTotalAmount from "@/components/cart/CartTotalAmount";
 
 const Header = () => {
+
+    // if (!session || !isAdmin(session) || isSessionExpired(session)) {
+    //     return redirect('/api/auth/signin')
+    // }
+
     const [isOpen, setIsOpen] = useState(false)
     const [heartIcon, setHeartIcon] = useState(Heart);
     const [cartIcon, setCartIcon] = useState(Cart);
@@ -142,6 +149,7 @@ const Header = () => {
                         className="w-5 h-5 transform-none"
                     />
                 </Link>
+                <NavCartTotal/>
                 <Link
                     href="/cart"
                     onClick={closeMenu}
@@ -157,7 +165,6 @@ const Header = () => {
                         className="w-6 h-6 transform-none"
                     />
                 </Link>
-
 
                 <div className="ml-12">
                     {/*todo add session*/}
@@ -180,6 +187,17 @@ const Header = () => {
             </div>
         </>
     }
+
+    const NavCartTotal = () => {
+        return <>
+            <div className="relative">
+                <span className="absolute -top-12 bg-white text-yellow-700 text-md font-bold px-1.5 py-0.5 rounded-xl min-w-[20px] text-center shadow-sm z-30">
+                    <CartTotalAmount/>
+                </span>
+            </div>
+        </>
+    }
+
 
     // функция закрытия мобильного меню в планшетной и мобильной версии
     const closeMenu = () => {
