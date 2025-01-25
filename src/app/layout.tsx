@@ -37,7 +37,7 @@ export default function RootLayout({
         >
        <CartProvider>
             <Header/>
-            <main className="pt-[137px]">
+            <main className="pt-[137px] ">
                 {children}
             </main>
         </CartProvider>

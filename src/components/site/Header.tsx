@@ -1,7 +1,6 @@
 'use client'
 import React, {useState} from 'react'
 import Link from 'next/link'
-import Navigation from "@/components/site/Navigation";
 import Heart from "@/components/site/img/Heart.svg";
 import Cart from "@/components/site/img/Cart.svg";
 import Profile from "@/components/site/img/Profile.svg";
@@ -124,7 +123,7 @@ const Header = () => {
                 </nav>
 
                 {/* Мобильное меню */}
-                <nav className="md:hidden w-full text-center">
+                <nav className="md:hidden text-center">
                     {navItems.map((item) => (
                         <div key={item.name} className="w-full">
                             <Link
@@ -155,38 +154,9 @@ const Header = () => {
         )
     }
 
-    // const NavLeft = () => {
-    //     return <>
-    //         {navItems.map((item) => (
-    //             <Link key={item.name}
-    //                   href={`${item.name.toLowerCase()}`}
-    //                   onClick={closeMenu}
-    //                   className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
-    //                 <div
-    //                     className="relative"
-    //                     onMouseEnter={() => {
-    //                         if (menuTimer) clearTimeout(menuTimer);
-    //                         setActiveMenu(item.name);
-    //                     }}
-    //                     onMouseLeave={() => {
-    //                         const timer = setTimeout(() => {
-    //                             setActiveMenu(null);
-    //                         }, 100);
-    //                         setMenuTimer(timer);
-    //                     }}
-    //                 >{item.name}
-    //                     {activeMenu === item.name && (
-    //                         <Navigation items={item.subItems} closeMenu={closeMenu}/>
-    //                     )}
-    //                 </div>
-    //             </Link>
-    //         ))}
-    //     </>
-    // }
-
     const NavStick = () => {
         return <>
-            <div className="hidden md:block w-px h-8 bg-[#E99C28] ml-9 mr-5"></div>
+            <div className="hidden md:block w-px h-8 bg-[#E99C28] ml-9 mr-10"></div>
         </>
     }
     const NavRight = ({className}) => {
@@ -303,7 +273,7 @@ const Header = () => {
 
     return (
         <header className="fixed w-full h-[137px] shadow-md flex justify-center items-center bg-[#171613] z-50">
-            <div className="container flex items-center mx-auto px-4 h-full">
+            <div className="flex items-center h-full">
                 {/* flex-wrap для планшетов */}
                 <div
                     className="flex items-center flex-wrap xl:flex-nowrap justify-between md:justify-center xl:justify-between gap-y-4">
@@ -349,14 +319,11 @@ const Header = () => {
                     </button>
 
                     {/* Mobile Menu */}
-                    {/*todo сделать для NavLeft-а аккордионового типа раскрытие-акрытие по onClick*/}
                     {isOpen && (
-                        <div className="absolute top-[137px] left-0 w-full shadow-md md:hidden bg-[#171613]">
-                            <nav className="flex flex-col items-center">
-                                <NavIcons className="flex justify-center"/>
+                        <div className="flex flex-col items-center absolute top-[137px] left-0 w-full shadow-md md:hidden bg-[#171613]">
+                                <NavIcons/>
                                 <NavLeft/>
-                                <NavRight className="flex flex-col items-center space-y-4 mt-4 gap-3"/>
-                            </nav>
+                                <NavRight className="flex flex-col items-center space-y-3 mt-4"/>
                         </div>
                     )}
                 </div>
