@@ -35,18 +35,7 @@ export default function RootLayout({
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-        <Link href={'/api/auth/signin'}>
-            <button
-                className='bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded'>Войти
-            </button>
-        </Link>
-        <Link href={'/api/auth/signout'}>
-            <button
-                className='bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded'>Выйти
-                из аккаунта
-            </button>
-        </Link>
-        <CartProvider>
+       <CartProvider>
             <Header/>
             <main className="pt-[137px]">
                 {children}

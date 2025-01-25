@@ -4,6 +4,7 @@ import Arrow from "@/components/site/img/Arrow.svg";
 import sampleImage from "@/components/site/img/sample-carousel.svg";
 import sampleImage2 from "@/components/site/img/sample-carousel2.webp";
 import sampleImage3 from "@/components/site/img/sample-carousel3.jpg";
+import Link from "next/link";
 
 const Carousel: React.FC = () => {
     const images = [sampleImage, sampleImage2, sampleImage3, sampleImage];
@@ -64,10 +65,13 @@ const Carousel: React.FC = () => {
                     Новая коллекция диванов <br />
                     со скидкой 10%
                 </h1>
-                <button className="flex items-center px-4 py-5 bg-[#171613] transition-all duration-200 mt-5">
-                    Подробнее
-                    <Image src={Arrow} className="ml-2.5 mt-1" />
-                </button>
+                <Link href='/products'>
+                    <button className="flex items-center px-4 py-5 bg-[#171613] transition-all duration-200 mt-5">
+                        Подробнее
+                        <Image src={Arrow} className="ml-2.5 mt-1"/>
+                    </button>
+                </Link>
+
             </div>
 
             {/* Точки навигации */}
