@@ -221,14 +221,15 @@ const Header = () => {
                         className="w-5 h-5 transform-none"
                     />
                 </Link>
-                <NavCartTotal/>
+
                 <Link
                     href="/cart"
                     onClick={closeMenu}
                     onMouseEnter={() => setCartIcon(CartY)}
                     onMouseLeave={() => setCartIcon(Cart)}
-                    className="flex items-center"
+                    className="flex items-center relative"
                 >
+                    <NavCartTotal/>
                     <Image
                         src={cartIcon}
                         alt="Корзина"
@@ -262,9 +263,9 @@ const Header = () => {
 
     const NavCartTotal = () => {
         return <>
-            <div className="relative">
+            <div className="absolute left-1/2 -top-8 -translate-x-1/2">
                 <span
-                    className="absolute -top-12 bg-white text-yellow-700 text-md font-bold px-1.5 py-0.5 rounded-xl min-w-[20px] text-center shadow-sm z-30">
+                    className="bg-white text-yellow-700 text-md font-bold px-1.5 py-0.5 rounded-xl min-w-[20px] text-center shadow-sm z-30">
                     <CartTotalAmount/>
                 </span>
             </div>
