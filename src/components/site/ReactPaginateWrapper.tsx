@@ -31,10 +31,13 @@ const ReactPaginateWrapper = ({ pages, currentPage }) => {
             onPageChange={handlePageClick}
             forcePage={activePage}
             containerClassName={'flex justify-center gap-2 mt-8'}
-            pageClassName={'px-3 py-1 rounded border hover:bg-indigo-50'}
+            pageClassName={'rounded border hover:bg-indigo-50'}
+            pageLinkClassName={'px-3 py-1 block'}
             activeClassName={'bg-indigo-600 text-white'}
-            previousClassName={'px-3 py-1 rounded border hover:bg-indigo-50'}
-            nextClassName={'px-3 py-1 rounded border hover:bg-indigo-50'}
+            previousClassName={'rounded border hover:bg-indigo-50'}
+            previousLinkClassName={'px-3 py-1 block'}
+            nextClassName={'rounded border hover:bg-indigo-50'}
+            nextLinkClassName={'px-3 py-1 block'}
             disabledClassName={'opacity-50 cursor-not-allowed'}
             breakClassName={'px-3 py-1'}
         />
