@@ -27,7 +27,7 @@ const CartRow = ({ cartRow }: Props) => {
             <div className="flex items-center">
                 <input
                     type="checkbox"
-                    checked={selectedItems.has(cartRow.id)}
+                    checked={selectedItems.includes(cartRow.id)}
                     onChange={() => {
                         toggleSelection(cartRow.id)
                         console.log('cartRow.id', cartRow.id)

@@ -27,7 +27,7 @@ const CartContext = createContext({
     updateQuantity: async (cartId: number, quantity: number) => {},
     deleteCartRow: async (cartId: number) => {},
     addProductToCart: async (productId: number, quantity?: number) => {},
-    selectedItems: new Set<number>(), // храним ID выбранных элементов
+    selectedItems: [], // храним ID выбранных элементов
     toggleSelection: (id: number) => {}, // функция для переключения выбора
     //   setSelectedItems: Set<number>,
     onSelect: true,
@@ -45,35 +45,33 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [ cartRows, setCartRows ] = useState<CartRow[]>([])
     const [ isLoading, setIsLoading ] = useState(false)
     // todo стейты для чекбокса выбора товаров в корзине
-    const [ selectedItems, setSelectedItems ] = useState<Set<number>>(new Set())
+    const [ selectedItems, setSelectedItems ] = useState<number[]>([])
     const [ onSelect, setOnSelect ] = useState(true)
 
     // Функция для переключения выбора элемента корзины
     const toggleSelection = useCallback((id: number) => {
         setSelectedItems((prev) => {
-            const newSet = new Set(prev)
-            if (newSet.has(id)) {
-                newSet.delete(id)
+            if (prev.includes(id)) {
+                return prev.filter(newId => newId !== id)
             } else {
-                newSet.add(id)
+                return [...prev, id]
             }
-            return newSet
         })
     }, [])
 
     //  Функции для выбора/сброса всех элементов корзины
     const selectAll = useCallback(() => {
-        const allIds = new Set(cartRows.map((row) => row.id))
+        const allIds = [...cartRows.map((row) => row.id)]
         setSelectedItems(allIds)
     }, [ cartRows ])
 
     const unselectAll = useCallback(() => {
-        setSelectedItems(new Set())
+        setSelectedItems([])
     }, [])
 
     // Функция для подсчета общей суммы только выбранных товаров
     const selectedTotalAmount = cartRows
-        .filter((row) => selectedItems.has(row.id))
+        .filter((row) => selectedItems.includes(row.id))
         .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0)
 
     // Функция получения содержимого корзины
@@ -83,6 +81,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             const rows = await getCart()
             setCartRows(rows)
             setIsLoading(false)
+            setSelectedItems(rows.map(row => row.id))
             console.log('rows', rows)
         }
         fetchCart()
@@ -116,7 +115,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             console.log(`Successfully deleted ${result.deletedCount} items`)
             setCartRows(prevItems => prevItems.filter(item => !selectedIds.includes(item.id)))
             // Warning изменить если все элементы по умолчанию должны быть выделены
-            setSelectedItems(new Set())
+            setSelectedItems([])
         }}
 
     //   Функция добавления элемента корзины
