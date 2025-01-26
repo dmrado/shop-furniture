@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { IProductDescription } from '@/app/products/page'
 import QuantitySelector from '@/components/site/QuantitySelector'
 import { useCartContext } from '@/components/cart/CartContext'
+import Link from "next/link";
 
 const ProductFullDescription = ({ product }: { product: IProductDescription }) => {
     const { addProductToCart } = useCartContext()
@@ -121,20 +122,24 @@ const ProductFullDescription = ({ product }: { product: IProductDescription }) =
                                 {/*</div>*/}
                             </div>
 
-                            <div className="flex space-x-4">
+                            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                <Link href="#" className="w-full sm:w-auto">
                                 <button
                                     onClick={async () => {
                                         setIsCartUpdating(true)
                                         await addProductToCart(product.id, quantitySelectorCount)
                                         setIsCartUpdating(false)
                                     }}
-                                    className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                                    className="w-full sm:w-60 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
                                     Добавить в корзину
                                 </button>
+                                </Link>
+                                <Link href="/cart" className="w-full sm:w-auto">
                                 <button
-                                    className="flex-1 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
+                                    className="w-full sm:w-60 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
                                     Купить сейчас
                                 </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
