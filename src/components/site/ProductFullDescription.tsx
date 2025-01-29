@@ -1,16 +1,20 @@
 'use client'
-import { useState } from 'react'
+import {useState} from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import { useCartContext } from '@/components/cart/CartContext'
+import {useCartContext} from '@/components/cart/CartContext'
 import Link from "next/link"
 import Image from "next/image"
 import {Product} from "@/actions/productActions"
+import {InstantOrderModal} from "@/components/site/InstantOrderModal";
 
-const ProductFullDescription = ({ product }: { product: Product }) => {
-    const { addProductToCart } = useCartContext()
-    const [ selectedImage, setSelectedImage ] = useState(0)
-    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
-    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
+const ProductFullDescription = ({product}: { product: Product }) => {
+    const {addProductToCart} = useCartContext()
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
+    const [isCartUpdating, setIsCartUpdating] = useState(false)
+
+    // for InstantOrderModal
+    const [isOpenModal, setIsOpenModal] = useState(false)
 
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
@@ -125,24 +129,27 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                 {/*</div>*/}
                             </div>
 
-                            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <div
+                                className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+
                                 <Link href="#" className="w-full sm:w-auto">
-                                <button
-                                    onClick={async () => {
-                                        setIsCartUpdating(true)
-                                        await addProductToCart(product.id, quantitySelectorCount)
-                                        setIsCartUpdating(false)
-                                    }}
-                                    className="w-full sm:w-60 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                                    Добавить в корзину
-                                </button>
+                                    <button
+                                        onClick={async () => {
+                                            setIsCartUpdating(true)
+                                            await addProductToCart(product.id, quantitySelectorCount)
+                                            setIsCartUpdating(false)
+                                        }}
+                                        className="w-full sm:w-60 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                                        Добавить в корзину
+                                    </button>
                                 </Link>
-                                <Link href="/cart" className="w-full sm:w-auto">
+                                <InstantOrderModal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}/>
                                 <button
+                                    onClick={() => setIsOpenModal(true)}
                                     className="w-full sm:w-60 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
                                     Купить сейчас
                                 </button>
-                                </Link>
+
                             </div>
                         </div>
                     </div>

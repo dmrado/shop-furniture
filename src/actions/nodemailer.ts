@@ -1,6 +1,6 @@
-import nodemailer from '@/actions/nodemailer'
+import nodemailer from 'nodemailer'
 
-const config = {
+const transporter = nodemailer.createTransport = {
     host: 'russian.education',
     port: 587,
     to: process.env.NODEMAILER_SEND_TO,
@@ -27,8 +27,6 @@ const renderHtml = ({ name, email, title, message }: SendMailProps) => {
         <h4>Сообщение: ${message}</h4>`
 }
 export const sendMail = async (props: SendMailProps) => {
-
-    const transporter = nodemailer.createTransport(config)
 
     const result = await transporter.sendMail({
         from: `"My team" <${config.auth.user}>`,
