@@ -3,21 +3,9 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCartContext } from '@/components/cart/CartContext'
+import {ProductListItem} from "@/actions/productActions";
 
-type Props = {
-    product: {
-        id: number,
-        isNew: boolean,
-        image: string,
-        name: string,
-        category: string,
-        description_1: string,
-        old_price: number,
-        new_price: number,
-    }
-}
-
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product }: {  product: ProductListItem }) => {
     const { addProductToCart } = useCartContext()
     const [ isHovered, setIsHovered ] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100

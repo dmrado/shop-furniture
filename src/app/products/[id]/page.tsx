@@ -1,24 +1,29 @@
-import ProductFullDescription from "@/components/site/ProductFullDescription";
-// import { getProductBiId } from "@/actions/productActions";
-import { ProductModel } from '@/db/models'
+import ProductFullDescription from "@/components/site/ProductFullDescription"
+import { getProductBiId } from "@/actions/productActions"
+import {notFound} from "next/navigation"
 
 type Props = {
     params: { id: string }
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
-const ProductPage = async ({params, searchParams }: Props) => {
+const ProductPage = async ({params}: Props) => {
 //todo разобрать params или searchParams 
     const id = Number(params.id)
-    console.log('params.id', params.id)
-    console.log('searchParams.id', searchParams.id)
+    if (isNaN(id)) {
+        return notFound()
+    }
+    console.log('params', params)
 
-    const product = await ProductModel.findByPk(id)
-    // const productPlain = product.toJSON()
+    const product = await getProductBiId(id)
 
-  return <>
-      <ProductFullDescription product={product}/>
+    if (!product) {
+        return notFound()
+    }
+
+    return <>
+        <ProductFullDescription product={product}/>
     </>
 }
 
-export default ProductPage;
+export default ProductPage

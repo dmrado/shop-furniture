@@ -1,11 +1,12 @@
 'use client'
 import { useState } from 'react'
-import { IProductDescription } from '@/app/products/page'
 import QuantitySelector from '@/components/site/QuantitySelector'
 import { useCartContext } from '@/components/cart/CartContext'
-import Link from "next/link";
+import Link from "next/link"
+import Image from "next/image"
+import {Product} from "@/actions/productActions"
 
-const ProductFullDescription = ({ product }: { product: IProductDescription }) => {
+const ProductFullDescription = ({ product }: { product: Product }) => {
     const { addProductToCart } = useCartContext()
     const [ selectedImage, setSelectedImage ] = useState(0)
     const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
@@ -42,10 +43,12 @@ const ProductFullDescription = ({ product }: { product: IProductDescription }) =
                     {/* Галерея изображений */}
                     <div className="space-y-4">
                         <div className="aspect-w-1 aspect-h-1 rounded-xl overflow-hidden">
-                            <img
-                                // src={productArray.images[selectedImage]}
+                            <Image
                                 src={product.image}
-                                alt={productArray.name}
+                                alt={product.name}
+                                width={500}
+                                height={300}
+                                priority={false}
                                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                             />
                         </div>
