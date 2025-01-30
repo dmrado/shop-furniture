@@ -11,6 +11,8 @@
     "seed": "npx tsx src/db/seeders/index.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "@types/nodemailer": "^6.4.17",
     "@types/react-google-recaptcha": "^2.1.9",
     "dotenv": "^16.3.2",
@@ -27,6 +29,7 @@
     "sequelize": "6.37.5",
     "sequelize-typescript": "^2.1.1",
     "sharp": "^0.33.5",
+    "tailwind-scrollbar": "^3.1.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

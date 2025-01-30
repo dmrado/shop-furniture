@@ -3,6 +3,10 @@ import {useCallback, useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import Link from "next/link";
+import { Disclosure, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import PersonalDataAgreement from "@/components/site/PersonalDataAgreement";
+import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
 
 export const InputField = ({label, type, value, onChange, required = true}) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -64,10 +68,20 @@ export const Success = () => {
 export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void}) => {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
+    // fixme ???
     const [agreed, setAgreed] = useState(false)
     const [captchaValue, setCaptchaValue] = useState<string | null>(null)
 
-    // для показа сообщения пользователь об успехе перед закрытиекм модального окна
+    // для аккордеона согласия на обработку перс данных
+    const [isAgreed, setIsAgreed] = useState(false);
+    const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+
+    const handleCheckboxChange = () => {
+        setIsAgreed(!isAgreed);
+        if (isAccordionOpen) setIsAccordionOpen(false); // Закрываем блок
+    };
+
+    // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна
     const [success, setSuccess] = useState(false)
     const [isClosing, setIsClosing] = useState(false);
     const handleClose = useCallback(() => {
@@ -114,6 +128,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-8">
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputField
                                 label="Имя"
@@ -129,64 +144,91 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             />
                         </div>
 
-                        <div className="flex flex-col space-y-4">
-                            <div className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    checked={agreed}
-                                    onChange={(e) => setAgreed(e.target.checked)}
-                                    className="h-5 w-5 rounded border-gray-300 text-indigo-600
-                    focus:ring-indigo-500 focus:ring-offset-0 transition-colors"
-                                />
-                                {/*todo сделать возврат на страницу `product/${id}`после ознакомления с политиками и согласием на обр. перс. донн.*/}
-                                <label className="ml-3 text-sm text-gray-700">
-                                    Я согласен на обработку персональных данных в соответствие с &nbsp;
-                                    <Link href="/policy" className="text-indigo-600 hover:text-indigo-500
-                    underline decoration-dashed underline-offset-4">
-                                        политикой обработки персональных данных
-                                    </Link>
-                                </label>
-                            </div>
-                        </div>
+                        {/* Accordion section */}
+                        <Disclosure>
+                            {({ open }) => (
+                                <>
+                                    <Disclosure.Button
+                                        className="flex w-full justify-between rounded-lg bg-gray-50 px-4 py-3 text-left text-sm font-medium hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
+                                        <div className="w-full">
+                                            <h1 className="text-center w-full text-lg font-bold text-gray-700">
+                                            Ознакомиться с политикой обработки персональных данных
+                                            </h1>
+                                        </div>
+                                            <ChevronDownIcon
+                                                className={`${
+                                                    open ? 'rotate-180 transform' : ''
+                                                } h-5 w-5 text-gray-500 transition-transform`}
+                                            />
+                                    </Disclosure.Button>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-end
-              space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+                                    <Transition
+                                        enter="transition duration-100 ease-out"
+                                        enterFrom="transform scale-95 opacity-0"
+                                        enterTo="transform scale-100 opacity-100"
+                                        leave="transition duration-75 ease-out"
+                                        leaveFrom="transform scale-100 opacity-100"
+                                        leaveTo="transform scale-95 opacity-0"
+                                    >
+                                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                                            {/* Здесь текст политики */}
+                                            <ConfidentialPolicy/>
+                                            {/* Agreement checkbox */}
+                                            <div className="flex items-start mt-6">
+                                                <div className="flex items-center h-5">
+                                                    <input
+                                                        id="agreement"
+                                                        type="checkbox"
+                                                        checked={agreed}
+                                                        onChange={(e) => setAgreed(e.target.checked)}
+                                                        className="w-4 h-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
+                                                    />
+                                                </div>
+                                                <label htmlFor="agreement" className="ml-3 text-sm text-gray-700">
+                                                    Я согласен на обработку персональных данных в соответствии с настоящей политикой согласно Федеральному закону от 27.07.2006 № 152-ФЗ «О персональных данных».
+                                                </label>
+                                            </div>
+
+                                        </Disclosure.Panel>
+                                    </Transition>
+                                </>
+                            )}
+                        </Disclosure>
+
+
+                        {/* Buttons section */}
+                        <div className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+
                             {/*todo remove <!>*/}
                             {!success && <Success/>}
 
                             <button
                                 type="button"
-                                onClick={onClose}
-                                className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2
-                  border-gray-300 text-gray-700 hover:bg-gray-50
-                  active:bg-gray-100 transition-colors duration-200"
+                                onClick={() => {
+                                    onClose()
+                                    setAgreed(false)
+                                }}
+                                className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
                             >
                                 Отмена
                             </button>
+
                             <button
                                 type="button"
-                                onClick={handleClose}
+                                onClick={() => {/* handle submit */}}
                                 disabled={isClosing || !agreed}
                                 className={`
-                                        w-full sm:w-auto px-6 py-2.5 rounded-lg
-                                        transition-all duration-200
-                                        ${agreed
-                                    ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`
+                                    w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
+                                    ${agreed 
+                                      ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    }`
                                 }
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}
                             </button>
                         </div>
                     </form>
-
-                    {/*<span className="flex justify-end text-sm text-gray-500 text-center sm:text-right">*/}
-                    {/*     Нажимая кнопку, вы соглашаетесь с условиями &nbsp;*/}
-                    {/*    <Link href={'/policy'} className="text-indigo-600 hover:text-indigo-500*/}
-                    {/*underline decoration-dashed underline-offset-4">*/}
-                    {/*        политики обработки персональных данных*/}
-                    {/*    </Link>*/}
-                    {/*</span>*/}
                 </div>
             </div>
         </div>
