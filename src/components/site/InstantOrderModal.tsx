@@ -1,12 +1,13 @@
 'use client'
-import {useCallback, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import Link from "next/link";
-import { Disclosure, Transition } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import PersonalDataAgreement from "@/components/site/PersonalDataAgreement";
+import {Disclosure, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
+import {updateUserAgreementAction} from "@/actions/userActions";
+import Success from "@/components/Success";
 
 export const InputField = ({label, type, value, onChange, required = true}) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -53,36 +54,37 @@ export const InputField = ({label, type, value, onChange, required = true}) => {
     );
 };
 
-export const Success = () => {
-    return (
-        <div
-            className="w-full max-w-sm mx-auto flex items-center justify-center px-4 py-2 bg-green-50 rounded-lg border border-green-200">
-      <span className="text-green-700 text-md font-medium flex items-center">
-        <span className="mr-2">✨</span>
-        Заявка успешно отправлена
-      </span>
-        </div>
-    );
-};
-
-export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void}) => {
+export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) => {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
     // fixme ???
-    const [agreed, setAgreed] = useState(false)
     const [captchaValue, setCaptchaValue] = useState<string | null>(null)
 
     // для аккордеона согласия на обработку перс данных
-    const [isAgreed, setIsAgreed] = useState(false);
-    const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-
-    const handleCheckboxChange = () => {
-        setIsAgreed(!isAgreed);
-        if (isAccordionOpen) setIsAccordionOpen(false); // Закрываем блок
-    };
+    // хранит состояние самого чекбокса
+    const [agreed, setAgreed] = useState(false)
+    // передает состояние согласия на обработку перс данных в БД через server action
+    const [isAgreed, setIsAgreed] = useState<boolean>(false);
+    // управляет закрытием Disclosure с политикой
+    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
+    const disclosureButtonRef = useRef<HTMLButtonElement>(null);
+    const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        // todo put real userId
+        const userId = 1
+        const newCheckedState = e.target.checked
+        e.preventDefault()
+        await updateUserAgreementAction(userId, newCheckedState)
+        setAgreed(newCheckedState)
+        setIsAgreed(newCheckedState)
+        if (newCheckedState && disclosureButtonRef.current) {
+            disclosureButtonRef.current.click();
+        }
+        //  todo выстроить логику checked если пользователь хочет купить другой товар мгновенно - должно быть checked, но при оформлении зщаказа на обычной странице еще раз отметить согласие? и сделать весь этот Disclosure переиспользуемым
+    }
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна
     const [success, setSuccess] = useState(false)
+    // в момент отправки меняет надпись на кнопке
     const [isClosing, setIsClosing] = useState(false);
     const handleClose = useCallback(() => {
         setIsClosing(true);
@@ -105,16 +107,17 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
             return
         }
 
-        try {
-            const success = await nodeMailerInstantOrder({name, phone, captchaValue})
-            if (success) {
-                setSuccess(true)
-            }
-            alert('Заявка успешно отправлена, ожидайте звонка для оформления закза!')
-            onClose()
-        } catch (error) {
-            alert('Произошла ошибка при отправке заявки')
+        // try {
+        // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
+        const success = await nodeMailerInstantOrder({name, phone, captchaValue})
+        if (success) {
+            setSuccess(true)
         }
+        alert('Заявка успешно отправлена, ожидайте звонка для оформления закза!')
+        onClose()
+        // } catch (error) {
+        //     alert('Произошла ошибка при отправке заявки')
+        // }
     }
 
     if (!isOpen) return null
@@ -145,21 +148,27 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                         </div>
 
                         {/* Accordion section */}
-                        <Disclosure>
-                            {({ open }) => (
+                        <Disclosure
+                            as="div"
+                            open={isDisclosureOpen}
+                            onChange={setIsDisclosureOpen}
+                        >
+                            {({open}) => (
                                 <>
                                     <Disclosure.Button
+                                        ref={disclosureButtonRef}
+                                        type="button"
                                         className="flex w-full justify-between rounded-lg bg-gray-50 px-4 py-3 text-left text-sm font-medium hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75">
                                         <div className="w-full">
                                             <h1 className="text-center w-full text-lg font-bold text-gray-700">
-                                            Ознакомиться с политикой обработки персональных данных
+                                                Ознакомиться с политикой обработки персональных данных
                                             </h1>
                                         </div>
-                                            <ChevronDownIcon
-                                                className={`${
-                                                    open ? 'rotate-180 transform' : ''
-                                                } h-5 w-5 text-gray-500 transition-transform`}
-                                            />
+                                        <ChevronDownIcon
+                                            className={`${
+                                                open ? 'rotate-180 transform' : ''
+                                            } h-5 w-5 text-gray-500 transition-transform`}
+                                        />
                                     </Disclosure.Button>
 
                                     <Transition
@@ -171,8 +180,10 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                                         leaveTo="transform scale-95 opacity-0"
                                     >
                                         <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+
                                             {/* Здесь текст политики */}
                                             <ConfidentialPolicy/>
+
                                             {/* Agreement checkbox */}
                                             <div className="flex items-start mt-6">
                                                 <div className="flex items-center h-5">
@@ -180,12 +191,14 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                                                         id="agreement"
                                                         type="checkbox"
                                                         checked={agreed}
-                                                        onChange={(e) => setAgreed(e.target.checked)}
+                                                        onChange={handleCheckboxChange}
                                                         className="w-4 h-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                     />
                                                 </div>
                                                 <label htmlFor="agreement" className="ml-3 text-sm text-gray-700">
-                                                    Я согласен на обработку персональных данных в соответствии с настоящей политикой согласно Федеральному закону от 27.07.2006 № 152-ФЗ «О персональных данных».
+                                                    Я согласен на обработку персональных данных в соответствии с
+                                                    настоящей политикой согласно Федеральному закону от 27.07.2006 №
+                                                    152-ФЗ «О персональных данных».
                                                 </label>
                                             </div>
 
@@ -195,34 +208,40 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             )}
                         </Disclosure>
 
-
                         {/* Buttons section */}
-                        <div className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-
+                        <div
+                            className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+                            <div className="flex justify-center">
+                                <ReCAPTCHA
+                                    sitekey="BLA_BLA_BLA"
+                                    // sitekey={process.env.RECAPTCHA_SERVER_SECRET}
+                                    onChange={(value) => setCaptchaValue(value)}
+                                />
+                            </div>
                             {/*todo remove <!>*/}
-                            {!success && <Success/>}
+                            {success && <Success/>}
 
                             <button
                                 type="button"
                                 onClick={() => {
                                     onClose()
                                     setAgreed(false)
+                                    setIsDisclosureOpen(false)
                                 }}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
                             >
                                 Отмена
                             </button>
-
+                            {/*todo переписать? функционал с disabled={!agreed} на получение состояния agreed из БД серверным экшеном*/}
                             <button
                                 type="button"
-                                onClick={() => {/* handle submit */}}
                                 disabled={isClosing || !agreed}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
-                                    ${agreed 
-                                      ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                    }`
+                                    ${agreed
+                                    ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                }`
                                 }
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}

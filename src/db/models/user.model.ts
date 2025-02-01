@@ -10,6 +10,8 @@ export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAt
     declare fatherName: string
     declare canContact: boolean
     declare isActive: boolean
+    declare isAgreed: boolean
+    declare agreementDate: Date
     declare addresses?: InferAttributes<AddressModel>[]
 }
 
@@ -45,6 +47,15 @@ UserModel.init(
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
+        isAgreed: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
+        agreementDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        }
     },
     {
         sequelize,
