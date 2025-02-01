@@ -1,5 +1,5 @@
 'use client'
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import Link from "next/link";
@@ -64,12 +64,19 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     // для аккордеона согласия на обработку перс данных
     // хранит состояние самого чекбокса
     const [agreed, setAgreed] = useState(false)
+
+    // стейт для состояния согласия на обработку перс данных
+    const [agreedFromDB, setAgreedFromDB] = useState(false)
+
     // передает состояние согласия на обработку перс данных в БД через server action
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
+
     // управляет закрытием Disclosure с политикой
     const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
+
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null);
+
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo put real userId
         const userId = 1
@@ -83,7 +90,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                 disclosureButtonRef.current.click();
             }
         }
-        //  todo выстроить логику checked если пользователь хочет купить другой товар мгновенно - должно быть checked, но при оформлении заказа на обычной страницах order и profile должно быть свое отметить согласие? у меня же здесь нет user-a!!! он покупает без регистрации
+        //  todo выстроить логику checked если пользователь хочет купить другой товар мгновенно - должно быть checked, но при оформлении заказа на обычной страницах order и profile должно быть свое "отметить согласие" для этого использовать useEffect? у меня же здесь нет user-a!!! он покупает без регистрации добавить email для последующей регистрации через гугл и яндекс
     }
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна
@@ -99,10 +106,24 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
         return () => clearTimeout(timeoutId);
     }, [onClose]);
 
+    //  todo проверяем начальное состояние согласия на обработку перс данных не работает
+    useEffect(() => {
+        const checkAgreedStatus = async () => {
+            const userId = 1
+            const result = await isAgreedFromModelAction(userId)
+            setAgreedFromDB(!!result)
+        }
+        // todo разобрать void
+        void checkAgreedStatus()
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (isClosing || !agreed || !isAgreedFromModelAction) return;
+        const userId = 1
+        const resultAgreed = await isAgreedFromModelAction(userId)
+        setAgreedFromDB(!!resultAgreed)
+        //todo !isAgreedFromModelAction не работает получение состояния agreed из БД серверным экшеном
+        if (isClosing || !agreed || !agreedFromDB) return
         if (!captchaValue) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
@@ -185,21 +206,10 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                             <button
                                 type="submit"
-                                // onClick={e => handleSubmit(e)}
-                                // disabled={isClosing || !agreed}
-                                // disabled={isClosing || agreed || !isAgreedFromModelAction}
-
-                                // todo переписать вот так? функционал с disabled={!agreed} на получение состояния agreed из БД серверным экшеном тогда Disclosure легко перенести в отдельный компонент
-                                onClick={e => {
-                                    if (isClosing || !isAgreedFromModelAction) return
-                                    handleSubmit(e)
-                                }}
-                                disabled={isClosing || !agreed || !isAgreedFromModelAction}
-
-
+                                onClick={e => {handleSubmit(e)}}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
-                                    ${agreed
+                                    ${agreed && agreedFromDB
                                     ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
                                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                 }`
