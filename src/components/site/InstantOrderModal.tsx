@@ -56,6 +56,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
     // обработчик основной формы отправки мгновенного заказа
     // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
+    //todo сделать валидацию полей формы как положено и  сохранение в джойновую модель юзер и адрес
     const handleSubmit = async () => {
         setIsClosing(true)
         const userId = 1

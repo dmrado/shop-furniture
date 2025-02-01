@@ -29,7 +29,7 @@ const Agreement = ({
         }
         // todo разобрать void
         checkAgreedStatus()
-    }, [])
+    }, [agreed])
 
 
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
