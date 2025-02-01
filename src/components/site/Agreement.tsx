@@ -1,16 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Disclosure, Transition} from "@headlessui/react";
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
 
-// todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled "Отправить"
+// todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled кнопки "Отправить". Как Использовать здесь handleCheckboxChange если от него в родительском компоненте зависит disabled кнопка "Отправить" или нет
 const Agreement = ({
-                       isDisclosureOpen,
-                       setIsDisclosureOpen,
                        disclosureButtonRef,
                        agreed,
                        handleCheckboxChange
                    }) => {
+
+    // управляет закрытием Disclosure с политикой
+    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
+
+
     return (
         <Disclosure
             as="div"

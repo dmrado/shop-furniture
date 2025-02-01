@@ -2,12 +2,8 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
-import Link from "next/link";
-import {Disclosure, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/24/outline';
-import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
 import {isAgreedFromModelAction, updateUserAgreementAction} from "@/actions/userActions";
-import Success from "@/components/Success";
+import Success from "@/components/site/Success";
 import Agreement from "@/components/site/Agreement";
 
 export const InputField = ({label, type, value, onChange, required = true}) => {
@@ -22,32 +18,15 @@ export const InputField = ({label, type, value, onChange, required = true}) => {
                 required={required}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                className={`
-                    peer
-                    w-full
-                    h-12
-                    px-4
-                    pt-4
-                    border-2
-                    rounded-lg
-                    bg-transparent
-                    outline-none
-                    transition-all
+                className={`peer w-full h-12 px-4 pt-4 border-2 rounded-lg bg-transparent outline-none transition-all
                     ${isFocused ? 'border-indigo-600' : 'border-gray-300'}
                     ${value ? 'pt-4' : ''}
-                    focus:pt-4
-                    focus:border-indigo-600
-                `}
+                    focus:pt-4 focus:border-indigo-600`}
             />
             <label
-                className={`
-                    absolute
-                    left-4
-                    transition-all
-                    pointer-events-none
+                className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
-                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`
-                }
+                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
                 {label}
             </label>
@@ -63,22 +42,37 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
     // для аккордеона согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [agreed, setAgreed] = useState(false)
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     // стейт для состояния согласия на обработку перс данных
-    const [agreedFromDB, setAgreedFromDB] = useState(false)
+    const [agreedFromDB, setAgreedFromDB] = useState<boolean>(false)
 
     // передает состояние согласия на обработку перс данных в БД через server action
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
 
-    // управляет закрытием Disclosure с политикой
-    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
-
-    // для корректной работы @headlessui/react
+    // для корректной работы @headlessui/react todo постараться перенести в Agreement
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null);
 
+    // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
+    const [success, setSuccess] = useState<boolean>(false)
+
+    // в момент отправки меняет надпись на кнопке
+    const [isClosing, setIsClosing] = useState<boolean>(false);
+
+    //  todo проверяем начальное состояние согласия на обработку перс данных не работает сразу, но без него срабатывает после второго нажатия на Отправить да и с ним тоже
+    useEffect(() => {
+        const checkAgreedStatus = async () => {
+            const userId = 1
+            const result = await isAgreedFromModelAction(userId)
+            console.log('result', result)
+            setAgreedFromDB(!!result)
+        }
+        // todo разобрать void
+        void checkAgreedStatus()
+    }, [])
+
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo put real userId
+        // todo put real userId и произвести регистрацию пользователя
         const userId = 1
         const newCheckedState = e.target.checked
         e.preventDefault()
@@ -90,13 +84,10 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                 disclosureButtonRef.current.click();
             }
         }
-        //  todo выстроить логику checked если пользователь хочет купить другой товар мгновенно - должно быть checked, но при оформлении заказа на обычной страницах order и profile должно быть свое "отметить согласие" для этого использовать useEffect? у меня же здесь нет user-a!!! он покупает без регистрации добавить email для последующей регистрации через гугл и яндекс
+        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
     }
 
-    // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна
-    const [success, setSuccess] = useState(false)
-    // в момент отправки меняет надпись на кнопке
-    const [isClosing, setIsClosing] = useState(false);
+// функция в момент отправки меняет надпись на кнопке и закрывает модальное окно onClose() из пропсов через 2 сек за это врекмя показывается компонент Success
     const handleClose = useCallback(() => {
         setIsClosing(true);
         const timeoutId = setTimeout(() => {
@@ -106,24 +97,19 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
         return () => clearTimeout(timeoutId);
     }, [onClose]);
 
-    //  todo проверяем начальное состояние согласия на обработку перс данных не работает
-    useEffect(() => {
-        const checkAgreedStatus = async () => {
-            const userId = 1
-            const result = await isAgreedFromModelAction(userId)
-            setAgreedFromDB(!!result)
-        }
-        // todo разобрать void
-        void checkAgreedStatus()
-    }, [])
-
+    // обработчик основной формы отправки мгновенного заказа
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         const userId = 1
         const resultAgreed = await isAgreedFromModelAction(userId)
+        console.log('resultAgreed', resultAgreed)
         setAgreedFromDB(!!resultAgreed)
-        //todo !isAgreedFromModelAction не работает получение состояния agreed из БД серверным экшеном
-        if (isClosing || !agreed || !agreedFromDB) return
+        //todo !isAgreedFromModelAction НЕ работает получение состояния agreed из БД серверным экшеном и завсист только от !agreed
+        if (isClosing || !agreed || !agreedFromDB) {
+            onClose()
+            handleClose()
+            return
+        }
         if (!captchaValue) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
@@ -133,17 +119,13 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
             return
         }
 
-        // try {
         // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
         const success = await nodeMailerInstantOrder({name, phone, captchaValue})
         if (success) {
             setSuccess(true)
         }
         alert('Заявка успешно отправлена, ожидайте звонка для оформления закза!')
-        onClose()
-        // } catch (error) {
-        //     alert('Произошла ошибка при отправке заявки')
-        // }
+
     }
 
     if (!isOpen) return null
@@ -176,9 +158,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                         {/* Accordion section */}
                         <Agreement agreed={agreed}
                                    disclosureButtonRef={disclosureButtonRef}
-                                   handleCheckboxChange={handleCheckboxChange}
-                                   isDisclosureOpen={isDisclosureOpen}
-                                   setIsDisclosureOpen={setIsDisclosureOpen}/>
+                                   handleCheckboxChange={handleCheckboxChange}/>
                         {/* Buttons section */}
                         <div
                             className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
@@ -189,7 +169,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                                     onChange={(value) => setCaptchaValue(value)}
                                 />
                             </div>
-                            {/*todo remove <!>*/}
+
                             {success && <Success/>}
 
                             <button
@@ -197,7 +177,6 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                                 onClick={() => {
                                     onClose()
                                     setAgreed(false)
-                                    setIsDisclosureOpen(false)
                                 }}
                                 className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
                             >
@@ -206,7 +185,10 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                             <button
                                 type="submit"
-                                onClick={e => {handleSubmit(e)}}
+                                disabled={undefined}
+                                onClick={e => {
+                                    handleSubmit(e)
+                                }}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed && agreedFromDB
