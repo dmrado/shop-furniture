@@ -1,8 +1,8 @@
 'use client'
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
-import {isAgreedFromModelAction, updateUserAgreementAction} from "@/actions/userActions";
+import {isAgreedFromModelAction} from "@/actions/userActions";
 import Success from "@/components/site/Success";
 import Agreement from "@/components/site/Agreement";
 
@@ -41,7 +41,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     const [captchaValue, setCaptchaValue] = useState<string | null>(null)
 
     // для аккордеона согласия на обработку перс данных
-    // хранит состояние самого чекбокса
+    // хранит состояние самого чекбокса при нажатии впервые
     const [agreed, setAgreed] = useState<boolean>(false)
 
     // стейт для состояния согласия на обработку перс данных
@@ -50,81 +50,46 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     // передает состояние согласия на обработку перс данных в БД через server action
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
 
-    // для корректной работы @headlessui/react todo постараться перенести в Agreement
-    const disclosureButtonRef = useRef<HTMLButtonElement | null>(null);
-
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
     const [success, setSuccess] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [isClosing, setIsClosing] = useState<boolean>(false);
+    const [isClosing, setIsClosing] = useState<boolean>(false)
 
-    //  todo проверяем начальное состояние согласия на обработку перс данных не работает сразу, но без него срабатывает после второго нажатия на Отправить да и с ним тоже
+    //  todo проверяем состояние согласия на обработку перс данных НЕ работает в этом родительском компоненте должен активировать кнупку Отправить
     useEffect(() => {
         const checkAgreedStatus = async () => {
             const userId = 1
             const result = await isAgreedFromModelAction(userId)
-            console.log('result', result)
+            console.log('result from DB:', result)
             setAgreedFromDB(!!result)
+            setAgreed(!!result)
         }
         // todo разобрать void
         void checkAgreedStatus()
     }, [])
 
-    const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo put real userId и произвести регистрацию пользователя
-        const userId = 1
-        const newCheckedState = e.target.checked
-        e.preventDefault()
-        await updateUserAgreementAction(userId, newCheckedState)
-        setAgreed(newCheckedState)
-        setIsAgreed(newCheckedState)
-        if (newCheckedState && disclosureButtonRef.current) {
-            if (disclosureButtonRef.current) {
-                disclosureButtonRef.current.click();
-            }
-        }
-        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
-    }
-
-// функция в момент отправки меняет надпись на кнопке и закрывает модальное окно onClose() из пропсов через 2 сек за это врекмя показывается компонент Success
-    const handleClose = useCallback(() => {
-        setIsClosing(true);
-        const timeoutId = setTimeout(() => {
-            onClose();
-            setIsClosing(false);
-        }, 2000);
-        return () => clearTimeout(timeoutId);
-    }, [onClose]);
-
     // обработчик основной формы отправки мгновенного заказа
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
+    const handleSubmit = async () => {
+        setIsClosing(true)
         const userId = 1
-        const resultAgreed = await isAgreedFromModelAction(userId)
-        console.log('resultAgreed', resultAgreed)
-        setAgreedFromDB(!!resultAgreed)
-        //todo !isAgreedFromModelAction НЕ работает получение состояния agreed из БД серверным экшеном и завсист только от !agreed
-        if (isClosing || !agreed || !agreedFromDB) {
-            onClose()
-            handleClose()
-            return
-        }
+
         if (!captchaValue) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
         }
-        if (!agreed) {
+
+        if (!agreed || !agreedFromDB) {
             alert('Необходимо согласие на обработку персональных данных')
             return
         }
 
-        // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
         const success = await nodeMailerInstantOrder({name, phone, captchaValue})
         if (success) {
             setSuccess(true)
+            alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
         }
-        alert('Заявка успешно отправлена, ожидайте звонка для оформления закза!')
 
     }
 
@@ -156,9 +121,13 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                         </div>
 
                         {/* Accordion section */}
-                        <Agreement agreed={agreed}
-                                   disclosureButtonRef={disclosureButtonRef}
-                                   handleCheckboxChange={handleCheckboxChange}/>
+                        <Agreement
+                            setAgreed={setAgreed}
+                            setIsAgreed={setIsAgreed}
+                            agreed={agreed}
+                            // disclosureButtonRef={disclosureButtonRef}
+                            // handleCheckboxChange={handleCheckboxChange}
+                        />
                         {/* Buttons section */}
                         <div
                             className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
@@ -185,17 +154,15 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                             <button
                                 type="submit"
-                                disabled={undefined}
-                                onClick={e => {
-                                    handleSubmit(e)
-                                }}
+                                disabled={!agreed}
+                                onClick={handleSubmit}
                                 className={`
-                                    w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
-                                    ${agreed && agreedFromDB
-                                    ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                }`
-                                }
+                                    w - full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
+                                    ${agreed || agreedFromDB
+                                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    }
+                                `}
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}
                             </button>

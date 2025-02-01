@@ -8,17 +8,23 @@ export const updateUserAgreementAction = async (userId: number, isAgreed) => {
         {
             isAgreed,
             agreementDate: isAgreed ? new Date() : null
-        }  as Partial<InferAttributes<UserModel>>,
+        } as Partial<InferAttributes<UserModel>>,
         {
-            where: { id: userId }
+            where: {id: userId}
         }
     )
 }
 
-export const isAgreedFromModelAction = async (userId): Promise<boolean | undefined> => {
+export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     const result = await UserModel.findOne({
-        where: { id: userId }
+        where: {id: userId}
     })
-    return result?.isAgreed
-}
 
+    console.log('result', result)
+
+    if (!result) {
+        return false // Если пользователь не найден
+    }
+
+    return result.isAgreed === 1 // Вернет true если isAgreed === 1, false в противном случае
+}

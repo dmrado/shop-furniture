@@ -1,18 +1,38 @@
-import React, {useState} from 'react';
+'use client'
+import React, {useRef, useState} from 'react';
 import {Disclosure, Transition} from "@headlessui/react";
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
+import {updateUserAgreementAction} from "@/actions/userActions";
 
 // todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled кнопки "Отправить". Как Использовать здесь handleCheckboxChange если от него в родительском компоненте зависит disabled кнопка "Отправить" или нет
 const Agreement = ({
-                       disclosureButtonRef,
+                       setAgreed,
+                       setIsAgreed,
                        agreed,
-                       handleCheckboxChange
                    }) => {
 
     // управляет закрытием Disclosure с политикой
-    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
+    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false)
 
+    // для корректной работы @headlessui/react
+    const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
+
+
+    const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        // todo put real userId и произвести регистрацию пользователя
+        const userId = 1
+        const newCheckedState = e.target.checked
+        e.preventDefault()
+        await updateUserAgreementAction(userId, newCheckedState)
+        setAgreed(newCheckedState)
+        setIsAgreed(newCheckedState)
+        // если установлена галочка в чекбокс, закрываем Disclosure
+        if (newCheckedState && disclosureButtonRef.current) {
+                disclosureButtonRef.current.click()
+        }
+        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
+    }
 
     return (
         <Disclosure
