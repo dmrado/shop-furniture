@@ -19,12 +19,9 @@ export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     const result = await UserModel.findOne({
         where: {id: userId}
     })
-
-    console.log('result', result)
-
+    console.log('result in a isAgreedFromModelAction', result)
     if (!result) {
         return false // Если пользователь не найден
     }
-
-    return result.isAgreed === 1 // Вернет true если isAgreed === 1, false в противном случае
+    return result.isAgreed // Вернет true если isAgreed === 1, false в противном случае
 }

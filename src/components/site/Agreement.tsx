@@ -1,14 +1,14 @@
 'use client'
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Disclosure, Transition} from "@headlessui/react";
 import {ChevronDownIcon} from "@heroicons/react/24/outline";
 import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
-import {updateUserAgreementAction} from "@/actions/userActions";
+import {isAgreedFromModelAction, updateUserAgreementAction} from "@/actions/userActions";
 
 // todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled кнопки "Отправить". Как Использовать здесь handleCheckboxChange если от него в родительском компоненте зависит disabled кнопка "Отправить" или нет
 const Agreement = ({
+                       setAgreedFromDB,
                        setAgreed,
-                       setIsAgreed,
                        agreed,
                    }) => {
 
@@ -18,6 +18,19 @@ const Agreement = ({
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
 
+    // проверяем состояние согласия на обработку перс данных
+    useEffect(() => {
+        const checkAgreedStatus = async () => {
+            const userId = 1
+            const result = await isAgreedFromModelAction(userId)
+            console.log('result from DB:', result)
+            setAgreedFromDB(result)//todo не работает отправился в родительский компонент делать кнопку Отправить активной
+            setAgreed(result)
+        }
+        // todo разобрать void
+        checkAgreedStatus()
+    }, [])
+
 
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo put real userId и произвести регистрацию пользователя
@@ -25,11 +38,11 @@ const Agreement = ({
         const newCheckedState = e.target.checked
         e.preventDefault()
         await updateUserAgreementAction(userId, newCheckedState)
-        setAgreed(newCheckedState)
-        setIsAgreed(newCheckedState)
+        setAgreed(newCheckedState)  // устанавливает состояние самого чекбокса при нажатии
+        // setIsAgreed(newCheckedState)
         // если установлена галочка в чекбокс, закрываем Disclosure
         if (newCheckedState && disclosureButtonRef.current) {
-                disclosureButtonRef.current.click()
+            disclosureButtonRef.current.click()
         }
         //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
     }

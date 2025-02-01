@@ -47,27 +47,12 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     // стейт для состояния согласия на обработку перс данных
     const [agreedFromDB, setAgreedFromDB] = useState<boolean>(false)
 
-    // передает состояние согласия на обработку перс данных в БД через server action
-    const [isAgreed, setIsAgreed] = useState<boolean>(false);
-
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
     const [success, setSuccess] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
     const [isClosing, setIsClosing] = useState<boolean>(false)
 
-    //  todo проверяем состояние согласия на обработку перс данных НЕ работает в этом родительском компоненте должен активировать кнупку Отправить
-    useEffect(() => {
-        const checkAgreedStatus = async () => {
-            const userId = 1
-            const result = await isAgreedFromModelAction(userId)
-            console.log('result from DB:', result)
-            setAgreedFromDB(!!result)
-            setAgreed(!!result)
-        }
-        // todo разобрать void
-        void checkAgreedStatus()
-    }, [])
 
     // обработчик основной формы отправки мгновенного заказа
     // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
@@ -90,7 +75,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
             setSuccess(true)
             alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
         }
-
+        setIsClosing(false)
     }
 
     if (!isOpen) return null
@@ -122,11 +107,9 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                         {/* Accordion section */}
                         <Agreement
+                            setAgreedFromDB={setAgreedFromDB}
                             setAgreed={setAgreed}
-                            setIsAgreed={setIsAgreed}
                             agreed={agreed}
-                            // disclosureButtonRef={disclosureButtonRef}
-                            // handleCheckboxChange={handleCheckboxChange}
                         />
                         {/* Buttons section */}
                         <div
@@ -154,7 +137,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                             <button
                                 type="submit"
-                                disabled={!agreed}
+                                disabled={!agreed && !agreedFromDB}
                                 onClick={handleSubmit}
                                 className={`
                                     w - full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
