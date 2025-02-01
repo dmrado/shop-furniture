@@ -12,5 +12,13 @@ export const updateUserAgreementAction = async (userId: number, isAgreed) => {
         {
             where: { id: userId }
         }
-    );
-};
+    )
+}
+
+export const isAgreedFromModelAction = async (userId): Promise<boolean | undefined> => {
+    const result = await UserModel.findOne({
+        where: { id: userId }
+    })
+    return result?.isAgreed
+}
+

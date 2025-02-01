@@ -6,7 +6,7 @@ import Link from "next/link";
 import {Disclosure, Transition} from '@headlessui/react';
 import {ChevronDownIcon} from '@heroicons/react/24/outline';
 import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
-import {updateUserAgreementAction} from "@/actions/userActions";
+import {isAgreedFromModelAction, updateUserAgreementAction} from "@/actions/userActions";
 import Success from "@/components/Success";
 
 export const InputField = ({label, type, value, onChange, required = true}) => {
@@ -67,7 +67,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     const [isAgreed, setIsAgreed] = useState<boolean>(false);
     // управляет закрытием Disclosure с политикой
     const [isDisclosureOpen, setIsDisclosureOpen] = useState(false);
-    const disclosureButtonRef = useRef<HTMLButtonElement>(null);
+    const disclosureButtonRef = useRef<HTMLButtonElement | null>(null);
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo put real userId
         const userId = 1
@@ -77,7 +77,9 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
         setAgreed(newCheckedState)
         setIsAgreed(newCheckedState)
         if (newCheckedState && disclosureButtonRef.current) {
-            disclosureButtonRef.current.click();
+            if (disclosureButtonRef.current) {
+                disclosureButtonRef.current.click();
+            }
         }
         //  todo выстроить логику checked если пользователь хочет купить другой товар мгновенно - должно быть checked, но при оформлении зщаказа на обычной странице еще раз отметить согласие? и сделать весь этот Disclosure переиспользуемым
     }
@@ -98,6 +100,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (isClosing || !agreed || !isAgreedFromModelAction) return;
         if (!captchaValue) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
@@ -232,11 +235,21 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             >
                                 Отмена
                             </button>
-                            {/*todo переписать? функционал с disabled={!agreed} на получение состояния agreed из БД серверным экшеном*/}
+
                             <button
                                 type="submit"
-                                onClick={e => handleSubmit(e)}
-                                disabled={isClosing || !agreed}
+                                // onClick={e => handleSubmit(e)}
+                                // disabled={isClosing || !agreed}
+                                // disabled={isClosing || agreed || !isAgreedFromModelAction}
+
+                                // todo переписать вот так? функционал с disabled={!agreed} на получение состояния agreed из БД серверным экшеном
+                                onClick={e => {
+                                    if (isClosing || !isAgreedFromModelAction) return
+                                    handleSubmit(e)
+                                }}
+                                disabled={isClosing || !agreed || !isAgreedFromModelAction}
+
+
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
