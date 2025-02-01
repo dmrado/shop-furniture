@@ -130,7 +130,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                         Мгновенное оформление заказа
                     </h2>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
+                    <form className="space-y-8">
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputField
@@ -234,7 +234,8 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             </button>
                             {/*todo переписать? функционал с disabled={!agreed} на получение состояния agreed из БД серверным экшеном*/}
                             <button
-                                type="button"
+                                type="submit"
+                                onClick={e => handleSubmit(e)}
                                 disabled={isClosing || !agreed}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
