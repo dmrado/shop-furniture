@@ -40,7 +40,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     // fixme ???
     const [captchaValue, setCaptchaValue] = useState<string | null>(null)
 
-    // для аккордеона согласия на обработку перс данных
+    // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса при нажатии впервые
     const [agreed, setAgreed] = useState<boolean>(false)
 
@@ -141,7 +141,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                                 disabled={!agreed && !agreedFromDB}
                                 onClick={handleSubmit}
                                 className={`
-                                    w - full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
+                                    w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed || agreedFromDB
                                         ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
                                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -150,6 +150,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}
                             </button>
+                        {/*    todo  {isClosing ? 'Отправка...' : 'Отправить'} не корректно работает отправился в родительский компонент делать кнопку Отправить активной*/}
                         </div>
                     </form>
                 </div>

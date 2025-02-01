@@ -24,7 +24,7 @@ const Agreement = ({
             const userId = 1
             const result = await isAgreedFromModelAction(userId)
             console.log('result from DB:', result)
-            setAgreedFromDB(result)//todo не работает отправился в родительский компонент делать кнопку Отправить активной
+            setAgreedFromDB(result)
             setAgreed(result)
         }
         // todo разобрать void
