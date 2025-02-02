@@ -1,5 +1,13 @@
 'use server'
 
+// todo: 1. Сделать нодемейлер независимой функцией, которая принимает тему письма, адреса, тело и все
+// 2. Сделать "квикОрдерЭкшн", которая -
+//      - проверяет капчу (см пример в некст14)
+//      - сохраняет пользователя
+//      - сохраняет заказ.
+//      - отправляет письмо
+// это должно быть 4 разных функции которые собраны в квикОрдерЭкшн
+
 import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
@@ -19,11 +27,11 @@ type SendMailProps = {
     phone: string,
     captchaValue: string
 }
-export const nodeMailerInstantOrder = async ({name, phone, captchaValue}: SendMailProps) => {
+export const nodeMailerInstantOrder = async ({ name, phone, captchaValue }: SendMailProps) => {
     // Проверка капчи
     const captchaResponse = await fetch(
         `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_CLIENT_SECRET}&response=${captchaValue}`,
-        {method: 'POST'}
+        { method: 'POST' }
     )
     const captchaData = await captchaResponse.json()
 
