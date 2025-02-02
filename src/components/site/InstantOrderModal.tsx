@@ -40,7 +40,7 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
     const [ captchaValue, setCaptchaValue ] = useState<string | null>(null)
 
     // для Disclosure согласия на обработку перс данных
-    // хранит состояние самого чекбокса при нажатии впервые
+    // хранит состояние самого чекбокса
     const [ agreed, setAgreed ] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
