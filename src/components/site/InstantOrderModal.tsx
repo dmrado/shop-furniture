@@ -1,13 +1,12 @@
 'use client'
-import {useEffect, useState} from 'react'
+import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
-import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
-import {isAgreedFromModelAction} from "@/actions/userActions";
-import Success from "@/components/site/Success";
-import Agreement from "@/components/site/Agreement";
+import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import Success from '@/components/site/Success'
+import Agreement from '@/components/site/Agreement'
 
-export const InputField = ({label, type, value, onChange, required = true}) => {
-    const [isFocused, setIsFocused] = useState(false);
+export const InputField = ({ label, type, value, onChange, required = true }) => {
+    const [ isFocused, setIsFocused ] = useState(false)
 
     return (
         <div className="relative">
@@ -31,28 +30,24 @@ export const InputField = ({label, type, value, onChange, required = true}) => {
                 {label}
             </label>
         </div>
-    );
-};
+    )
+}
 
-export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) => {
-    const [name, setName] = useState('')
-    const [phone, setPhone] = useState('')
+export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+    const [ name, setName ] = useState('')
+    const [ phone, setPhone ] = useState('')
     // fixme ???
-    const [captchaValue, setCaptchaValue] = useState<string | null>(null)
+    const [ captchaValue, setCaptchaValue ] = useState<string | null>(null)
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса при нажатии впервые
-    const [agreed, setAgreed] = useState<boolean>(false)
-
-    // стейт для состояния согласия на обработку перс данных
-    const [agreedFromDB, setAgreedFromDB] = useState<boolean>(false)
+    const [ agreed, setAgreed ] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [success, setSuccess] = useState<boolean>(false)
+    const [ success, setSuccess ] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [isClosing, setIsClosing] = useState<boolean>(false)
-
+    const [ isClosing, setIsClosing ] = useState<boolean>(false)
 
     // обработчик основной формы отправки мгновенного заказа
     // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
@@ -66,17 +61,18 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
             return
         }
 
-        if (!agreed || !agreedFromDB) {
+        if (!agreed) {
             alert('Необходимо согласие на обработку персональных данных')
             return
         }
 
-        const success = await nodeMailerInstantOrder({name, phone, captchaValue})
+        const success = await nodeMailerInstantOrder({ name, phone, captchaValue })
         if (success) {
             setSuccess(true)
             alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
         }
         setIsClosing(false)
+        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
     }
 
     if (!isOpen) return null
@@ -108,7 +104,6 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                         {/* Accordion section */}
                         <Agreement
-                            setAgreedFromDB={setAgreedFromDB}
                             setAgreed={setAgreed}
                             agreed={agreed}
                         />
@@ -138,19 +133,19 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
                             <button
                                 type="submit"
-                                disabled={!agreed && !agreedFromDB}
+                                disabled={!agreed}
                                 onClick={handleSubmit}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
-                                    ${agreed || agreedFromDB
-                                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                    }
+                                    ${agreed
+            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        }
                                 `}
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}
                             </button>
-                        {/*    todo  {isClosing ? 'Отправка...' : 'Отправить'} не корректно работает отправился в родительский компонент делать кнопку Отправить активной*/}
+                            {/*    todo  {isClosing ? 'Отправка...' : 'Отправить'} не корректно работает отправился в родительский компонент делать кнопку Отправить активной*/}
                         </div>
                     </form>
                 </div>

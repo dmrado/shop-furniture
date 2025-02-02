@@ -1,19 +1,20 @@
 'use client'
-import React, {useEffect, useRef, useState} from 'react';
-import {Disclosure, Transition} from "@headlessui/react";
-import {ChevronDownIcon} from "@heroicons/react/24/outline";
-import ConfidentialPolicy from "@/components/site/ConfidentialPolicy";
-import {isAgreedFromModelAction, updateUserAgreementAction} from "@/actions/userActions";
+import React, { useEffect, useRef } from 'react'
+import { Disclosure, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import ConfidentialPolicy from '@/components/site/ConfidentialPolicy'
+import { isAgreedFromModelAction, updateUserAgreementAction } from '@/actions/userActions'
+
+type Props = {
+    setAgreed: (value: boolean) => void,
+    agreed: boolean,
+}
 
 // todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled кнопки "Отправить". Как Использовать здесь handleCheckboxChange если от него в родительском компоненте зависит disabled кнопка "Отправить" или нет
 const Agreement = ({
-                       setAgreedFromDB,
-                       setAgreed,
-                       agreed,
-                   }) => {
-
-    // управляет закрытием Disclosure с политикой
-    const [isDisclosureOpen, setIsDisclosureOpen] = useState(false)
+    setAgreed,
+    agreed,
+}: Props) => {
 
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -24,13 +25,10 @@ const Agreement = ({
             const userId = 1
             const result = await isAgreedFromModelAction(userId)
             console.log('result from DB:', result)
-            setAgreedFromDB(result)
             setAgreed(result)
         }
-        // todo разобрать void
-        checkAgreedStatus()
-    }, [agreed])
-
+        void checkAgreedStatus()
+    }, [])
 
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo put real userId и произвести регистрацию пользователя
@@ -38,8 +36,7 @@ const Agreement = ({
         const newCheckedState = e.target.checked
         e.preventDefault()
         await updateUserAgreementAction(userId, newCheckedState)
-        setAgreed(newCheckedState)  // устанавливает состояние самого чекбокса при нажатии
-        // setIsAgreed(newCheckedState)
+        setAgreed(newCheckedState) // устанавливает состояние самого чекбокса при нажатии
         // если установлена галочка в чекбокс, закрываем Disclosure
         if (newCheckedState && disclosureButtonRef.current) {
             disclosureButtonRef.current.click()
@@ -48,12 +45,8 @@ const Agreement = ({
     }
 
     return (
-        <Disclosure
-            as="div"
-            open={isDisclosureOpen}
-            onChange={setIsDisclosureOpen}
-        >
-            {({open}) => (
+        <Disclosure>
+            {({ open }) => (
                 <>
                     <Disclosure.Button
                         ref={disclosureButtonRef}
@@ -108,7 +101,7 @@ const Agreement = ({
             )}
         </Disclosure>
 
-    );
-};
+    )
+}
 
-export default Agreement;
+export default Agreement
