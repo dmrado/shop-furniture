@@ -1,13 +1,13 @@
 'use client'
 import { useState } from 'react'
-import ReCAPTCHA from 'react-google-recaptcha'
 import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
+import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 
 export const InputField = ({ label, type, value, onChange, required = true }) => {
     const [ isFocused, setIsFocused ] = useState(false)
-
+    // todo: make autocomplete
     return (
         <div className="relative">
             <input
@@ -15,6 +15,7 @@ export const InputField = ({ label, type, value, onChange, required = true }) =>
                 value={value}
                 onChange={onChange}
                 required={required}
+                autoComplete={'tel'}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 className={`peer w-full h-12 px-4 pt-4 border-2 rounded-lg bg-transparent outline-none transition-all
@@ -37,7 +38,7 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
     const [ name, setName ] = useState('')
     const [ phone, setPhone ] = useState('')
     // fixme ???
-    const [ captchaValue, setCaptchaValue ] = useState<string | null>(null)
+    const [ captchaToken, setCaptchaToken ] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
@@ -56,7 +57,7 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
         setIsClosing(true)
         const userId = 1
 
-        if (!captchaValue) {
+        if (!captchaToken) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
         }
@@ -66,7 +67,7 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
             return
         }
 
-        const success = await nodeMailerInstantOrder({ name, phone, captchaValue })
+        const success = await nodeMailerInstantOrder({ name, phone, captchaValue: captchaToken })
         if (success) {
             setSuccess(true)
             alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
@@ -96,10 +97,11 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
                             />
                             <InputField
                                 label="Телефон"
-                                type="tel"
+                                type="phone"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                             />
+                            <input hidden value={captchaToken}/>
                         </div>
 
                         {/* Accordion section */}
@@ -111,11 +113,9 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
                         <div
                             className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
                             <div className="flex justify-center">
-                                <ReCAPTCHA
-                                    sitekey="BLA_BLA_BLA"
-                                    // sitekey={process.env.RECAPTCHA_SERVER_SECRET}
-                                    onChange={(value) => setCaptchaValue(value)}
-                                />
+                                <GoogleCaptcha onTokenChange={(token) => {
+                                    setCaptchaToken(token)
+                                }}/>
                             </div>
 
                             {success && <Success/>}
