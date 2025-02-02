@@ -37,7 +37,6 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
 
     return <>
         <Agreement
-            setAgreedFromDB={setAgreedFromDB}
             setAgreed={setAgreed}
             agreed={agreed}
         />
