@@ -27,32 +27,28 @@ type UserProfileProps = {
 }
 const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может бчть уникальный адрес из массива адресов доставки корпоративного юзера
+    
     // для Disclosure согласия на обработку перс данных
-    // хранит состояние самого чекбокса при нажатии впервые
-    const [agreed, setAgreed] = useState<boolean>(false)
-
     // стейт для состояния согласия на обработку перс данных
-    const [agreedFromDB, setAgreedFromDB] = useState<boolean>(false)
-
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     return <>
         <Agreement
             setAgreed={setAgreed}
             agreed={agreed}
         />
-        {agreed && agreedFromDB &&
+        {agreed &&
             <div className="p-8 mx-auto max-w-6xl">
                 <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>
 
                 <div className="flex items-center mb-8">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
                         <Image
-                            // width={1000}
-                            // height={760}
+                            width={1000}
+                            height={760}
                             className="hidden md:block"
                             alt="Screenshots of the dashboard project showing desktop version"
-
-                            // src={user.photo}
+                            src={user.photo}
                             // alt={user.name}
                             layout="fill"
                             objectFit="cover"/>

@@ -145,7 +145,6 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}
                             </button>
-                            {/*    todo  {isClosing ? 'Отправка...' : 'Отправить'} не корректно работает отправился в родительский компонент делать кнопку Отправить активной*/}
                         </div>
                     </form>
                 </div>
