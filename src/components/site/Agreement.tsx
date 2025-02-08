@@ -10,11 +10,7 @@ type Props = {
     agreed: boolean,
 }
 
-// todo возможно и чекбокс согласия сюда передать, так как от него теперь не зависит disabled кнопки "Отправить". Как Использовать здесь handleCheckboxChange если от него в родительском компоненте зависит disabled кнопка "Отправить" или нет
-const Agreement = ({
-    setAgreed,
-    agreed,
-}: Props) => {
+const Agreement = ({ setAgreed, agreed }: Props) => {
 
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -41,7 +37,6 @@ const Agreement = ({
         if (newCheckedState && disclosureButtonRef.current) {
             disclosureButtonRef.current.click()
         }
-        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
     }
 
     return (

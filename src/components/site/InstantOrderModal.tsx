@@ -1,12 +1,17 @@
 'use client'
-import { useState } from 'react'
-import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import {useState} from 'react'
+import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
+import {createInstantUserAction} from "@/actions/userActions";
+import {ValidationError} from "sequelize";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
 
-export const InputField = ({ label, type, value, onChange, required = true }) => {
-    const [ isFocused, setIsFocused ] = useState(false)
+export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
+    const [isFocused, setIsFocused] = useState(false)
     // todo: make autocomplete
     return (
         <div className="relative">
@@ -15,7 +20,9 @@ export const InputField = ({ label, type, value, onChange, required = true }) =>
                 value={value}
                 onChange={onChange}
                 required={required}
-                autoComplete={'tel'}
+                autoComplete={autoComplete}
+                name={name}
+                id={id}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 className={`peer w-full h-12 px-4 pt-4 border-2 rounded-lg bg-transparent outline-none transition-all
@@ -23,8 +30,8 @@ export const InputField = ({ label, type, value, onChange, required = true }) =>
                     ${value ? 'pt-4' : ''}
                     focus:pt-4 focus:border-indigo-600`}
             />
-            <label
-                className={`absolute left-4 transition-all pointer-events-none
+            <label htmlFor={id}
+                   className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -33,27 +40,51 @@ export const InputField = ({ label, type, value, onChange, required = true }) =>
         </div>
     )
 }
-
-export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const [ name, setName ] = useState('')
-    const [ phone, setPhone ] = useState('')
+//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На этой форме user с упрощенной регистрацией покупает без подтверждения регистрации
+export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) => {
+    const [name, setName] = useState('')
+    const [phone, setPhone] = useState('')
     // fixme ???
-    const [ captchaToken, setCaptchaToken ] = useState<string>('')
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [ agreed, setAgreed ] = useState<boolean>(false)
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [ success, setSuccess ] = useState<boolean>(false)
+    const [success, setSuccess] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [ isClosing, setIsClosing ] = useState<boolean>(false)
+    const [isClosing, setIsClosing] = useState<boolean>(false)
 
     // обработчик основной формы отправки мгновенного заказа
     // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
-    //todo сделать валидацию полей формы как положено и  сохранение в джойновую модель юзер и адрес
-    const handleSubmit = async () => {
+
+    //+++++++++++++++++++start validation++++++++++++++++++++++++
+    // todo сделать универсальный cleanFormData с условиями очистки в зависимости откуда или что пришло в пропсах
+
+    class ValidationError extends Error {
+        constructor(message: string) {
+            super(message);
+            this.name = 'ValidationError';
+        }
+    }
+
+    const cleanInstantFormData = (formData: FormData) => {
+        const name = formData.get('name')
+        const phone = formData.get('phone')
+        if (typeof name !== 'string' || typeof phone !== 'string') {
+            throw new ValidationError('Filedata in text fields')
+        }
+        if (!name && !phone) {
+            throw new ValidationError('Все обязательные поля должны быть заполнены')
+        }
+        return {name, phone}
+    }
+
+    //+++++++++++++++++++finish validation+++++++++++++++++++++
+
+    const handleSubmit = async (formData: FormData) => {
         setIsClosing(true)
         const userId = 1
 
@@ -67,13 +98,17 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
             return
         }
 
-        const success = await nodeMailerInstantOrder({ name, phone, captchaValue: captchaToken })
-        if (success) {
+        // store to DB
+        const {name, phone} = cleanInstantFormData(formData)
+        await createInstantUserAction({name, phone})
+
+        // todo send by mail remove  captchaValue: captchaToken to separate function
+        const successMail = await nodeMailerInstantOrder({name, phone, captchaValue: captchaToken})
+        if (successMail) {
             setSuccess(true)
             alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
         }
         setIsClosing(false)
-        //  todo пользователь хочет купить товар мгновенно, он отмечает checked, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На страницах order и profile должен быть свой функционал "отметить согласие", для этого везде использовать useEffect? на это й форме user с упрощенной регистрацией покупает без подтверждения регистрации
     }
 
     if (!isOpen) return null
@@ -90,16 +125,26 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputField
-                                label="Имя"
-                                type="text"
+                                name="name"
                                 value={name}
+
+                                label="Имя"
+                                id="given-name"
+                                autoComplete="given-name"
+                                autocomplete="on"
+                                type="text"
                                 onChange={(e) => setName(e.target.value)}
                             />
                             <InputField
-                                label="Телефон"
-                                type="phone"
+                                name="phone"
                                 value={phone}
+
+                                label="Телефон"
+                                id="tel"
+                                autoComplete="tel"
+                                type="tel"
                                 onChange={(e) => setPhone(e.target.value)}
+                                pattern="[0-9]*"
                             />
                             <input hidden value={captchaToken}/>
                         </div>
@@ -138,9 +183,9 @@ export const InstantOrderModal = ({ isOpen, onClose }: { isOpen: boolean; onClos
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-        }
+                                    ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                }
                                 `}
                             >
                                 {isClosing ? 'Отправка...' : 'Отправить'}

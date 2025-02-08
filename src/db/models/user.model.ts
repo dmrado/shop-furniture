@@ -1,6 +1,6 @@
-import { sequelize } from '../connection'
-import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize'
-import { AddressModel } from '@/db/models'
+import {sequelize} from '../connection'
+import {DataTypes, Model, InferAttributes, InferCreationAttributes} from 'sequelize'
+import {AddressModel} from '@/db/models'
 
 export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
     declare id: number
@@ -24,7 +24,7 @@ UserModel.init(
         },
         email: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: true,
             unique: true
         },
         name: {
@@ -33,18 +33,20 @@ UserModel.init(
         },
         surName: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: true,
         },
         fatherName: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: true,
         },
         canContact: {
             type: DataTypes.BOOLEAN,
-            allowNull: false,
+            defaultValue: true,
+            allowNull: true,
         },
         isActive: {
             type: DataTypes.BOOLEAN,
+            defaultValue: true,
             allowNull: false,
         },
         isAgreed: {
