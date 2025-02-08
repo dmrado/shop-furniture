@@ -1,11 +1,10 @@
 'use client'
-import {useState} from 'react'
+import React, {FormEvent, useState} from 'react'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import {createInstantUserAction} from "@/actions/userActions";
-import {ValidationError} from "sequelize";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
 import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
@@ -40,7 +39,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
         </div>
     )
 }
-//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На этой форме user с упрощенной регистрацией покупает без подтверждения регистрации
+//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На этой форме user с упрощенной регистрацией делает заказ без подтверждения регистрации
 export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) => {
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -58,8 +57,6 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     const [isClosing, setIsClosing] = useState<boolean>(false)
 
     // обработчик основной формы отправки мгновенного заказа
-    // todo заменить отправку captchaValue на проверку в nodeMailerInstantOrder-е на наш функционал
-
     //+++++++++++++++++++start validation++++++++++++++++++++++++
     // todo сделать универсальный cleanFormData с условиями очистки в зависимости откуда или что пришло в пропсах
 
@@ -70,7 +67,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
         }
     }
 
-    const cleanInstantFormData = (formData: FormData) => {
+    const cleanInstantFormData = (formData) => {
         const name = formData.get('name')
         const phone = formData.get('phone')
         if (typeof name !== 'string' || typeof phone !== 'string') {
@@ -84,31 +81,57 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
 
     //+++++++++++++++++++finish validation+++++++++++++++++++++
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const form = e.target
+        if (!form) return
+        const formData = new FormData(form)
+
+        const {name, phone} = cleanInstantFormData(formData)
+
         setIsClosing(true)
-        const userId = 1
 
         if (!captchaToken) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
         }
-
         if (!agreed) {
             alert('Необходимо согласие на обработку персональных данных')
             return
         }
 
-        // store to DB
-        const {name, phone} = cleanInstantFormData(formData)
-        await createInstantUserAction({name, phone})
-
-        // todo send by mail remove  captchaValue: captchaToken to separate function
-        const successMail = await nodeMailerInstantOrder({name, phone, captchaValue: captchaToken})
-        if (successMail) {
-            setSuccess(true)
-            alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
+        // параллельная отправка почты и сохранения в БД
+        try {
+            const [mailSuccess, dbResult] = await Promise.all([
+                nodeMailerInstantOrder({name, phone}),
+                createInstantUserAction({name, phone})
+            ]);
+            if (mailSuccess) {
+                setSuccess(true);
+                alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!');
+                // todo не чистится форма
+                setName('')
+                setPhone('')
+                // setCaptchaToken('');
+            } else {
+                alert('Возникла проблема при отправке заявки. Пожалуйста, попробуйте позже.');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при обработке заявки. Пожалуйста, попробуйте позже.');
         }
-        setIsClosing(false)
+
+        // send by mail independently
+        // const successMail = await nodeMailerInstantOrder({name, phone})
+        // if (successMail) {
+        //     setSuccess(true)
+        //     alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
+        // }
+        // store to DB
+        // const result = await createInstantUserAction({name, phone})
+        // console.log('newInstantUser from InstantOrderModal', result)
+         setIsClosing(false)
     }
 
     if (!isOpen) return null
@@ -121,7 +144,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                         Мгновенное оформление заказа
                     </h2>
 
-                    <form className="space-y-8">
+                    <form className="space-y-8" onSubmit={handleSubmit}>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <InputField
@@ -179,7 +202,6 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
                             <button
                                 type="submit"
                                 disabled={!agreed}
-                                onClick={handleSubmit}
                                 className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed

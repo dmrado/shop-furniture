@@ -3,9 +3,9 @@ import type {Metadata} from "next"
 import localFont from "next/font/local"
 import '../db/models'
 import "./globals.css"
-import Link from "next/link"
 import {CartProvider} from '@/components/cart/CartContext'
 import Header from "@/components/site/Header"
+import Script from "next/script";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -35,6 +35,10 @@ export default function RootLayout({
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+        <Script
+            src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_CLIENT_KEY}`}
+                strategy="beforeInteractive"
+                />
        <CartProvider>
             <Header/>
             <main className="pt-[137px] ">

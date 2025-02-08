@@ -1,7 +1,5 @@
 import ReCAPTCHA from 'react-google-recaptcha'
 
-const GOOGLE_RECAPTCHA_CLIENT_KEY = '6LeLOkgpAAAAAMP0GZre1UiAWepWg52rKPXPWXiZ'
-
 type Props = {
     onTokenChange: (token: string) => void
 }
@@ -13,10 +11,12 @@ const GoogleCaptcha = ({ onTokenChange }: Props) => {
         }
         onTokenChange(token)
     }
-
+    if (!process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_CLIENT_KEY) {
+        throw new Error('RECAPTCHA_CLIENT_KEY is not defined')
+    }
     return (
         <ReCAPTCHA
-            sitekey={GOOGLE_RECAPTCHA_CLIENT_KEY}
+            sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_CLIENT_KEY}
             onChange={onChange}
         />
     )
