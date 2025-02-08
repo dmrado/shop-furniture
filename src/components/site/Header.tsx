@@ -89,69 +89,67 @@ const Header = () => {
     }
 
     const NavLeft = () => {
-        return (
-            <>
-                {/* Десктопное меню */}
-                <nav className="hidden md:flex">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            href="#"
-                            className="relative group"
-                            onMouseEnter={() => handleMouseEnter(item.name)}
-                            onMouseLeave={handleMouseLeave}
-                        >
+        return <>
+            {/* Десктопное меню */}
+            <nav className="hidden md:flex">
+                {navItems.map((item) => (
+                    <Link
+                        key={item.name}
+                        href="#"
+                        className="relative group"
+                        onMouseEnter={() => handleMouseEnter(item.name)}
+                        onMouseLeave={handleMouseLeave}
+                    >
                         <span className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
                             {item.name}
                         </span>
-                            {hoveredItem === item.name && (
-                                <div
-                                    className="absolute left-0 mt-0 w-48 bg-[#222] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    {item.subItems.map((subItem) => (
-                                        <Link
-                                            key={subItem}
-                                            href={`/${subItem.toLowerCase()}`}
-                                            className="block p-4 text-white hover:text-[#E99C28]"
-                                        >
-                                            {subItem}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </Link>
-                    ))}
-                </nav>
+                        {hoveredItem === item.name && (
+                            <div
+                                className="absolute left-0 mt-0 w-48 bg-[#222] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                {item.subItems.map((subItem) => (
+                                    <Link
+                                        key={subItem}
+                                        href={`/${subItem.toLowerCase()}`}
+                                        className="block p-4 text-white hover:text-[#E99C28]"
+                                    >
+                                        {subItem}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </Link>
+                ))}
+            </nav>
 
-                {/* Мобильное меню */}
-                <nav className="md:hidden text-center">
-                    {navItems.map((item) => (
-                        <div key={item.name} className="w-full">
-                            <Link
-                                href="#"
-                                onClick={() => handleMenuClick(item.name)}
-                                className="block w-full p-4 text-white hover:text-[#E99C28] transition-colors duration-200 text-center"
-                            >
-                                {item.name}
-                            </Link>
-                            {activeMenuItem === item.name && (
-                                <div className="py-2 bg-[#222] text-white">
-                                    {item.subItems.map((subItem) => (
-                                        <Link
-                                            key={subItem}
-                                            href={`/${subItem.toLowerCase()}`}
-                                            onClick={closeMenu}
-                                            className="block py-2 hover:text-[#E99C28]"
-                                        >
-                                            {subItem}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </nav>
-            </>
-        )
+            {/* Мобильное меню */}
+            <nav className="md:hidden text-center">
+                {navItems.map((item) => (
+                    <div key={item.name} className="w-full">
+                        <Link
+                            href="#"
+                            onClick={() => handleMenuClick(item.name)}
+                            className="block w-full p-4 text-white hover:text-[#E99C28] transition-colors duration-200 text-center"
+                        >
+                            {item.name}
+                        </Link>
+                        {activeMenuItem === item.name && (
+                            <div className="py-2 bg-[#222] text-white">
+                                {item.subItems.map((subItem) => (
+                                    <Link
+                                        key={subItem}
+                                        href={`/${subItem.toLowerCase()}`}
+                                        onClick={closeMenu}
+                                        className="block py-2 hover:text-[#E99C28]"
+                                    >
+                                        {subItem}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </nav>
+        </>
     }
 
     const NavStick = () => {
@@ -159,10 +157,10 @@ const Header = () => {
             <div className="hidden md:block w-px h-8 bg-[#E99C28] ml-9 mr-10"></div>
         </>
     }
-    const NavRight = ({className}) => {
+    const NavRight = () => {
         return <>
             {/*fixme не работает отдельный отступ для первого элемента*/}
-            <div className={`flex items-center text-white md:flex-row ${className}
+            <div className={`flex items-center text-white md:flex-row flex-col
              gap-4 [&>a:first-child]:mt-0
             sm:gap-4 sm:[&>a:first-child]:mt-0
             md:gap-5 md:[&>a:first-child]:mt-0
@@ -321,10 +319,11 @@ const Header = () => {
 
                     {/* Mobile Menu */}
                     {isOpen && (
-                        <div className="flex flex-col items-center absolute top-[137px] left-0 w-full shadow-md md:hidden bg-[#171613]">
-                                <NavIcons/>
-                                <NavLeft/>
-                                <NavRight className="flex flex-col items-center space-y-3 mt-4"/>
+                        <div
+                            className="flex flex-col items-center absolute top-[137px] left-0 w-full shadow-md md:hidden bg-[#171613]">
+                            <NavIcons/>
+                            <NavLeft/>
+                            <NavRight/>
                         </div>
                     )}
                 </div>
