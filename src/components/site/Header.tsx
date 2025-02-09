@@ -35,7 +35,8 @@ const Header = () => {
     const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
-    const navItems = [
+    // todo переделать ссылки на реальные
+        const navItems = [
         {name: "Каталог", subItems: ["Мебель", "Декор", "Текстиль"]},
         {name: "Кухни", subItems: ["Модульные кухни", "Аксессуары"]},
         {name: "Свет", subItems: ["Люстры", "Торшеры", "Бра"]},
@@ -43,6 +44,7 @@ const Header = () => {
         {name: "Декор", subItems: ["Картины", "Зеркала"]},
     ];
 
+    // todo сделать функцию закрытия по клику вне выпадающего меню
     // функция закрытия мобильного меню в планшетной и мобильной версии
     const closeMenu = () => {
         if (window.innerWidth < 768) {
@@ -91,7 +93,7 @@ const Header = () => {
     const NavLeft = () => {
         return <>
             {/* Десктопное меню */}
-            <nav className="hidden md:flex">
+            <nav className="hidden md:flex ml-4">
                 {navItems.map((item) => (
                     <Link
                         key={item.name}
@@ -100,7 +102,7 @@ const Header = () => {
                         onMouseEnter={() => handleMouseEnter(item.name)}
                         onMouseLeave={handleMouseLeave}
                     >
-                        <span className="p-4 text-white hover:text-[#E99C28] transition-colors duration-200">
+                        <span className="p-3 text-white hover:text-[#E99C28] transition-colors duration-200">
                             {item.name}
                         </span>
                         {hoveredItem === item.name && (
@@ -128,12 +130,12 @@ const Header = () => {
                         <Link
                             href="#"
                             onClick={() => handleMenuClick(item.name)}
-                            className="block w-full p-4 text-white hover:text-[#E99C28] transition-colors duration-200 text-center"
+                            className="block w-full p-3 text-white hover:text-[#E99C28] transition-colors duration-200 text-center"
                         >
                             {item.name}
                         </Link>
                         {activeMenuItem === item.name && (
-                            <div className="py-2 bg-[#222] text-white">
+                            <div className="py-1.5 bg-[#222] text-white">
                                 {item.subItems.map((subItem) => (
                                     <Link
                                         key={subItem}

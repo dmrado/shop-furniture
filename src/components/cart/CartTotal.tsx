@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CartTotalAmount from "@/components/cart/CartTotalAmount";
 import { useCartContext } from "@/components/cart/CartContext";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -81,7 +82,7 @@ const CartTotal = () => {
             {/*todo селать прверку для подсчета только выбранных*/}
             {selectedTotalAmount > 0 && (
               <div className="flex justify-between">
-                <span>Выбрано на сумму:</span>
+                <span>Выбрано на сумму:&nbsp;</span>
                 <span>{selectedTotalAmount.toFixed(2)}</span>
               </div>
             )}
@@ -138,25 +139,36 @@ const CartTotal = () => {
 
         <div className="mt-6 text-right">
           <div className="text-2xl text-green-600 font-bold">
-            Итого:  <CartTotalAmount /> ₽
+            Итого: <CartTotalAmount/> ₽
           </div>
           <div className="flex justify-end font-bold">
             <span>Общая сумма:&nbsp;</span>
             <span>{isLoading ? "..." : totalOldPrice.toFixed(2)}</span>
           </div>
           {totalDiscountPercent > 0 && (
-            <div className="text-sm text-red-600 font-bold">
-              - {isLoading ? "..." : totalDiscountPercent.toFixed(2)} %
-            </div>
+              <div className="text-sm text-red-600 font-bold">
+                - {isLoading ? "..." : totalDiscountPercent.toFixed(2)} %
+              </div>
           )}
           {totalDiscount > 0 && (
-            <div className="text-sm text-red-600 font-bold">
-              Скидка: {isLoading ? "..." : totalDiscount.toFixed(2)} ₽
-            </div>
+              <div className="text-sm text-red-600 font-bold">
+                Скидка: {isLoading ? "..." : totalDiscount.toFixed(2)} ₽
+              </div>
           )}
           <div className="text-sm text-gray-600 mt-1">
-            Количество товаров: {isLoading ? "..." : count}
+            Товарных позиций: {isLoading ? "..." : count}
           </div>
+
+          <button className="w-2xl bg-indigo-600 text-white mt-1.5 py-3 px-4 rounded-xl font-medium
+                    transition-all duration-300 transform
+                    hover:bg-indigo-700 hover:shadow-lg
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                    active:scale-[0.98]">
+            <Link href='/order'>
+            Оформить доставку
+            </Link>
+          </button>
+
         </div>
       </div>
     </>

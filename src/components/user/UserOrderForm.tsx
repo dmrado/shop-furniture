@@ -1,15 +1,19 @@
 'use client'
-import React from 'react'
+import React, {useState} from 'react'
 import Link from 'next/link'
 import { Address } from '@/db/types/interfaces'
 import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
 import { UserProfile } from '@/app/order/page'
+import {NewAddressModal} from "@/components/user/NewAddressModal";
 
 type Props = {
     user: UserProfile
 }
 
 const UserOrderForm = ({ user }: Props) => {
+    // for NewAddressModal
+    const [isOpenModal, setIsOpenModal] = useState(true)
+
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},
             д.${address.home} ${address.corps ? `, корп.${address.corps}` : ''} ${address.appart ? `, кв.${address.appart}` : ''}`
@@ -40,14 +44,22 @@ const UserOrderForm = ({ user }: Props) => {
                         ))}
                     </select>
                 </div>
-                <Link href={'/profile'}>
-                    <button
-                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Добавить адрес
-                    </button>
-                </Link>
 
-                <div className="mb-4">
+                {isOpenModal && <NewAddressModal
+                        isOpen={isOpenModal}
+                        onClose={() => setIsOpenModal(false)}/>
+                }
+
+                {/*<Link href={'/profile'} className="flex flex-col max-w-sm">*/}
+                    <button
+                        onClick={() => setIsOpenModal(true)}
+                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                        Добавить новый адрес
+                    </button>
+                {/*</Link>*/}
+                <span className="p-2">Нажмите для добавления адреса, которого нет в выпадающем списке</span>
+
+                <div className="my-4">
                     <label className="block mb-1">Комментарий к заказу:</label>
                     <textarea
                         name="comment"
