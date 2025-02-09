@@ -135,7 +135,7 @@ export const InstantOrderModal = ({isOpen, onClose}: { isOpen: boolean; onClose:
     }
 
     if (!isOpen) return null
-
+    // fixme? проверить как работает  setAgreed(false)
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl w-full max-w-4xl shadow-2xl">

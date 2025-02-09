@@ -4,6 +4,8 @@ import {userAddressFormAction} from '@/actions/user/userAddressFormAction'
 import {User as UserInterface} from '@/db/types/interfaces'
 import GoogleCaptcha from "@/components/site/GoogleCaptcha";
 import Agreement from "@/components/site/Agreement";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
     const [isFocused, setIsFocused] = useState(false)
@@ -35,12 +37,13 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
         </div>
     </>
 }
-// todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на opder page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
+// todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
 const UserAddressForm = (
     {onClose}
     // {user}: UserInterface
 ) => {
 
+    // todo с UserProfile он прийдет с объектом юзера, a с UserOrderForm через NewAddressModal может и с юзером и без юзера, обработать
     // if (!user) {
     //     return <div>Loading...</div>
     // }
@@ -117,40 +120,37 @@ const UserAddressForm = (
         isMain: false // добавляем начальное значение
     });
 
-//Обрабатывает checkbox isMain
-
-
+//собирает в стейт deliveryAddress значения полей из формы
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, type, checked} = e.target;
+        const {name, value, type, checked} = e.target
         setDeliveryAddress(prevState => ({
             ...prevState,
             [name]: type === 'checkbox' ? checked : value
         }));
     };
 
-    // const handleIsMainCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const {name, value, type, checked} = e.target;
-    //     setDeliveryAddress(prev => ({
-    //         ...prev,
-    //         [name]: type === 'checkbox' ? checked : value
-    //     }));
-    // };
-    //
-    // // собирает из полей формы все name и value
-    // const handleChange = (e) => {
-    //     e.preventDefault()
-    //     const {name, value} = e.target
-    //     setDeliveryAddress((prevState) => ({
-    //         ...prevState,
-    //         [name]: value
-    //     }))
-    // }
-
     // вызывает server-action для отправки данных из формы очистки и записи
-    const onSubmit = (e, deliveryAddress: FormData) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log('Адрес доставки:', deliveryAddress)
-        userAddressFormAction(deliveryAddress)
+            if (!captchaToken) {
+                alert('Пожалуйста, подтвердите, что вы не робот')
+                return
+            }
+            if (!agreed) {
+                alert('Необходимо согласие на обработку персональных данных')
+                return
+            }
+
+        try {
+            setIsClosing(true);
+            console.log('Адрес доставки:', deliveryAddress);
+            await userAddressFormAction(deliveryAddress);
+        } catch (error) {
+            console.error('Ошибка при отправке формы:', error);
+        } finally {
+            setIsClosing(false);
+            // todo очистить форму
+        }
     }
 
     return <>
@@ -286,9 +286,32 @@ const UserAddressForm = (
                 className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
 
                 <div className="flex justify-center">
-                    <GoogleCaptcha onTokenChange={(token) => {
-                        setCaptchaToken(token)
-                    }}/>
+                    <GoogleCaptcha
+                        onTokenChange={(token) => {
+                            setCaptchaToken(token)
+                        }}
+                        onError={(error) => {
+                            console.error('Captcha error:', error);
+                            toast.error('Проверку на человека не прошли, простите', {
+                                position: "top-center",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                            });
+                        }}
+                    />
+                    {process.env.NODE_ENV === 'development' && (
+                        <button
+                            onClick={() => {
+                                toast.error('Проверку на человека не прошли, простите');
+                            }}
+                            className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
+                        >
+                            Тест ошибки капчи
+                        </button>
+                    )}
                 </div>
 
                 <button
@@ -315,11 +338,6 @@ const UserAddressForm = (
                     {isClosing ? 'Отправка...' : 'Отправить'}
                 </button>
             </div>
-            {/*<button*/}
-            {/*    type="submit"*/}
-            {/*    className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">*/}
-            {/*    Сохранить*/}
-            {/*</button>*/}
         </form>
     </>
 }

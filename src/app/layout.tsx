@@ -6,6 +6,7 @@ import "./globals.css"
 import {CartProvider} from '@/components/cart/CartContext'
 import Header from "@/components/site/Header"
 import Script from "next/script";
+import {ToastContainer} from "react-toastify";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -41,6 +42,7 @@ export default function RootLayout({
                 />
        <CartProvider>
             <Header/>
+           <ToastContainer />
             <main className="pt-[137px] ">
                 {children}
             </main>
