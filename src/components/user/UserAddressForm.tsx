@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
-import { User as UserInterface } from '@/db/types/interfaces'
+// import { User as UserInterface } from '@/db/types/interfaces'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import Agreement from '@/components/site/Agreement'
 import { toast } from 'react-toastify'
@@ -130,8 +130,8 @@ const UserAddressForm = (
     }
 
     // вызывает server-action для отправки данных из формы очистки и записи
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const onSubmit = async (formData: FormData) => {
+        console.log('onSubmit', formData)
         if (!captchaToken) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
@@ -144,7 +144,7 @@ const UserAddressForm = (
         try {
             setIsClosing(true)
             console.log('Адрес доставки:', deliveryAddress)
-            await userAddressFormAction(deliveryAddress)
+            await userAddressFormAction(formData)
         } catch (error) {
             console.error('Ошибка при отправке формы:', error)
         } finally {
@@ -155,7 +155,7 @@ const UserAddressForm = (
 
     return <>
         {/* Форма ввода адреса доставки */}
-        <form onSubmit={onSubmit}>
+        <form action={onSubmit}>
             <div className="grid gap-4">
 
                 <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
@@ -216,6 +216,7 @@ const UserAddressForm = (
                             name="corps"
                             value={deliveryAddress.corps}
                             onChange={handleChange}
+                            required={false}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
@@ -231,7 +232,7 @@ const UserAddressForm = (
                             name="appart"
                             value={deliveryAddress.appart}
                             onChange={handleChange}
-                            required
+                            required={false}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"

@@ -1,14 +1,14 @@
 'use server'
-import {redirect} from 'next/navigation'
-import {ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH} from '@/app/constants.ts'
-import {AddressModel, UserModel} from "@/db/models"
-import {sanitizeAndTruncate} from "@/actions/sanitizer";
-import {InferAttributes, InferCreationAttributes} from "sequelize";
+import { redirect } from 'next/navigation'
+import { ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH } from '@/app/constants.ts'
+import { AddressModel, UserModel } from '@/db/models'
+import { sanitizeAndTruncate } from '@/actions/sanitizer'
+import { InferAttributes, InferCreationAttributes } from 'sequelize'
 
 class ValidationError extends Error {
     constructor(message: string) {
-        super(message);
-        this.name = 'ValidationError';
+        super(message)
+        this.name = 'ValidationError'
     }
 }
 
@@ -25,10 +25,10 @@ type UserDeliveryAddress = {
 }
 
 const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
-    const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
-    const userId = Number(deliveryAddress.get('userId')) // обязательное поле
+    // const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
+    const userId = Number(deliveryAddress.get('userId') ?? '1') // обязательное поле
     const phone = deliveryAddress.get('phone')
-    const email = deliveryAddress.get('email')
+    // const email = deliveryAddress.get('email')
     const city = deliveryAddress.get('city')
     const street = deliveryAddress.get('street')
     const home = deliveryAddress.get('home')
@@ -37,7 +37,7 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
     const isMain = Boolean(deliveryAddress.get('isMain'))
     if (
         typeof phone !== 'string' ||
-        typeof email !== 'string' ||
+        // typeof email !== 'string' ||
         typeof city !== 'string' ||
         typeof street !== 'string' ||
         typeof home !== 'string' ||
@@ -49,8 +49,8 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
     if (!phone ||
         !city ||
         !street ||
-        !home ||
-        !appart
+        !home //||
+        // !appart
     ) {
         throw new ValidationError('Все поля обязательны')
     }
@@ -62,7 +62,7 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
         throw new ValidationError('Данные не корректны')
     }
     return <UserDeliveryAddress>{
-        id,
+        // id,
         userId,
         phone,
         city,
@@ -75,9 +75,10 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
 }
 
 export const userAddressFormAction = async (deliveryAddress: FormData) => {
+    console.warn('userAddressFormAction', deliveryAddress)
     try {
         const {
-            id,
+            // id,
             userId,
             phone,
             city,
@@ -87,14 +88,14 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
             appart,
             isMain
         } = cleanFormData(deliveryAddress)
-
-        const previewPhoneNumber = sanitizeAndTruncate(phone, 50);
-        const previewCity = sanitizeAndTruncate(city);
-        const previewStreet = sanitizeAndTruncate(street);
+        console.warn('userAddressFormAction', userId, phone, city, street, home, corps)
+        const previewPhoneNumber = sanitizeAndTruncate(phone, 50)
+        const previewCity = sanitizeAndTruncate(city)
+        const previewStreet = sanitizeAndTruncate(street)
 
         const existingAddress: AddressModel | null = await AddressModel.findOne({
             where: {
-                id,
+                // id,
                 userId,
                 phone: previewPhoneNumber,
                 city: previewCity,
@@ -106,21 +107,21 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
             }
         })
         if (existingAddress) {
-            return {error: 'Такой адрес уже существует'}
+            return { error: 'Такой адрес уже существует' }
         }
 
         const newAddress: InferCreationAttributes<AddressModel> = await AddressModel.create({
-                id,
-                userId,
-                phone: previewPhoneNumber,
-                city: previewCity,
-                street: previewStreet,
-                home,
-                corps,
-                appart,
-                isMain
+            // id,
+            userId,
+            phone: previewPhoneNumber,
+            city: previewCity,
+            street: previewStreet,
+            home,
+            corps,
+            appart,
+            isMain
         })
-        return {success: true, address: newAddress}
+        return { success: true, address: newAddress }
 
     } catch (err) {
         console.error('Error on handleForm:  ', err)

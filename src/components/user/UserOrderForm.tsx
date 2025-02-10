@@ -27,6 +27,10 @@ const UserOrderForm = ({ user }: Props) => {
     return (
         <div className="max-w-6xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-6">Оформление заказа</h2>
+            {isOpenModal && <NewAddressModal
+                isOpen={isOpenModal}
+                onClose={() => setIsOpenModal(false)}/>
+            }
             {user.name} {mainAddress?.phone} {user.email}
             <form action={handleSubmit}>
                 <div className="mb-4">
@@ -44,11 +48,6 @@ const UserOrderForm = ({ user }: Props) => {
                         ))}
                     </select>
                 </div>
-
-                {isOpenModal && <NewAddressModal
-                    isOpen={isOpenModal}
-                    onClose={() => setIsOpenModal(false)}/>
-                }
 
                 {/*<Link href={'/profile'} className="flex flex-col max-w-sm">*/}
                 <button

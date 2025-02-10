@@ -1,17 +1,17 @@
-import {sequelize} from '../connection'
-import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { Address } from '../types/interfaces'
 
 export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> implements Address {
-    declare id: number;
-    declare userId: number;
-    declare phone: string;
-    declare city: string;
-    declare street: string;
-    declare home: string;
-    declare corps: string;
-    declare appart: string;
-    declare isMain: boolean;
+    declare id: CreationOptional<number>
+    declare userId: number
+    declare phone: string
+    declare city: string
+    declare street: string
+    declare home: string
+    declare corps: string
+    declare appart: string
+    declare isMain: boolean
 }
 
 AddressModel.init(
