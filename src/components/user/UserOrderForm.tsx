@@ -12,7 +12,7 @@ type Props = {
 
 const UserOrderForm = ({ user }: Props) => {
     // for NewAddressModal
-    const [ isOpenModal, setIsOpenModal ] = useState(true)
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
 
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},

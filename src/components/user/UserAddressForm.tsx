@@ -1,14 +1,15 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
+import React, {useEffect, useState} from 'react'
+import {userAddressFormAction} from '@/actions/user/userAddressFormAction'
 // import { User as UserInterface } from '@/db/types/interfaces'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import Agreement from '@/components/site/Agreement'
-import { toast } from 'react-toastify'
+import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Success from "@/components/site/Success";
 
-export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
-    const [ isFocused, setIsFocused ] = useState(false)
+export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
+    const [isFocused, setIsFocused] = useState(false)
     // todo: make autocomplete
     return <>
         <div className="relative">
@@ -28,7 +29,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
                     focus:pt-4 focus:border-indigo-600`}
             />
             <label htmlFor={id}
-                className={`absolute left-4 transition-all pointer-events-none
+                   className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -39,7 +40,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
 const UserAddressForm = (
-    { onClose }
+    {onClose}
     // {user}: UserInterface
 ) => {
 
@@ -50,12 +51,15 @@ const UserAddressForm = (
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [ agreed, setAgreed ] = useState<boolean>(false)
+    const [agreed, setAgreed] = useState<boolean>(false)
 
-    const [ captchaToken, setCaptchaToken ] = useState<string>('')
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     // в момент отправки меняет надпись на кнопке кнопка в этом верхнем копоненте
-    const [ isClosing, setIsClosing ] = useState<boolean>(false)
+    const [isClosing, setIsClosing] = useState<boolean>(false)
+
+    //для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
+    const [success, setSuccess] = useState<boolean>(false)
 
     // Состояние для сохранения в БД адреса доставки адреса доставки
     // todo этот стейт использовать для обработчика кнопки Редактировать на странице Profile куда передать модальное окно с этой формой
@@ -110,7 +114,7 @@ const UserAddressForm = (
         isMain: boolean; // добавляем поле
     }
 
-    const [ deliveryAddress, setDeliveryAddress ] = useState<DeliveryAddress>({
+    const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
         phone: '',
         city: '',
         street: '',
@@ -120,9 +124,10 @@ const UserAddressForm = (
         isMain: false // добавляем начальное значение
     })
 
+    //todo переписать на нативную валидацию полей пормы с использованием хука useFormState
     //собирает в стейт deliveryAddress значения полей из формы
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target
+        const {name, value, type, checked} = e.target
         setDeliveryAddress(prevState => ({
             ...prevState,
             [name]: type === 'checkbox' ? checked : value
@@ -149,6 +154,9 @@ const UserAddressForm = (
             console.error('Ошибка при отправке формы:', error)
         } finally {
             setIsClosing(false)
+            setSuccess(true)
+            setTimeout(() => {onClose()}, 2000) // а то success не видно
+            // onClose()
             // todo очистить форму
         }
     }
@@ -284,7 +292,7 @@ const UserAddressForm = (
             {/* Buttons section */}
             <div
                 className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-
+                {success && <Success/>}
                 <div className="flex justify-center">
                     <GoogleCaptcha
                         onTokenChange={(token) => {
@@ -330,9 +338,9 @@ const UserAddressForm = (
                     className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-}
+                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }
                                 `}
                 >
                     {isClosing ? 'Отправка...' : 'Отправить'}

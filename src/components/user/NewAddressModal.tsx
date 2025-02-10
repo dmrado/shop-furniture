@@ -14,9 +14,6 @@ import UserAddressForm from "@/components/user/UserAddressForm";
 export const NewAddressModal = ({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) => {
     // fixme ???
 
-    // // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [success, setSuccess] = useState<boolean>(false)
-
     // обработчик основной формы сохранения новго адреса
     //+++++++++++++++++++start validation++++++++++++++++++++++++
 

@@ -32,6 +32,9 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
     // стейт для состояния согласия на обработку перс данных
     const [agreed, setAgreed] = useState<boolean>(false)
 
+    // for NewAddressModal
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
+
     return <>
         <Agreement
             setAgreed={setAgreed}
@@ -64,7 +67,7 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
 
                 {/*todo а странице profile получить адреса из модели orders и реализовать условие ниже*/}
                 {/* Список адресов доставки */}
-                <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
+                <div className="my-8 bg-white p-4 rounded-lg shadow-md">
                     <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
                     {!user.addresses || user.addresses?.length === 0 ? (
                         <p>Нет зарегистрированных адресов доставки</p>
@@ -94,7 +97,7 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
                         </>
                     )}
                 </div>
-                <UserAddressForm user={user}/>
+                <UserAddressForm user={user} onClose={() => setIsOpenModal(false)}/>
                 <UserOrdersHistory previousOrders={previousOrders}/>
             </div>
         }
