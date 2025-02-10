@@ -1,14 +1,14 @@
 'use client'
-import React, {useEffect, useState} from 'react'
-import {userAddressFormAction} from '@/actions/user/userAddressFormAction'
-import {User as UserInterface} from '@/db/types/interfaces'
-import GoogleCaptcha from "@/components/site/GoogleCaptcha";
-import Agreement from "@/components/site/Agreement";
+import React, { useEffect, useState } from 'react'
+import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
+import { User as UserInterface } from '@/db/types/interfaces'
+import GoogleCaptcha from '@/components/site/GoogleCaptcha'
+import Agreement from '@/components/site/Agreement'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
-    const [isFocused, setIsFocused] = useState(false)
+export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
+    const [ isFocused, setIsFocused ] = useState(false)
     // todo: make autocomplete
     return <>
         <div className="relative">
@@ -28,7 +28,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
                     focus:pt-4 focus:border-indigo-600`}
             />
             <label htmlFor={id}
-                   className={`absolute left-4 transition-all pointer-events-none
+                className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -39,7 +39,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
 const UserAddressForm = (
-    {onClose}
+    { onClose }
     // {user}: UserInterface
 ) => {
 
@@ -50,12 +50,12 @@ const UserAddressForm = (
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [agreed, setAgreed] = useState<boolean>(false)
+    const [ agreed, setAgreed ] = useState<boolean>(false)
 
-    const [captchaToken, setCaptchaToken] = useState<string>('')
+    const [ captchaToken, setCaptchaToken ] = useState<string>('')
 
     // в момент отправки меняет надпись на кнопке кнопка в этом верхнем копоненте
-    const [isClosing, setIsClosing] = useState<boolean>(false)
+    const [ isClosing, setIsClosing ] = useState<boolean>(false)
 
     // Состояние для сохранения в БД адреса доставки адреса доставки
     // todo этот стейт использовать для обработчика кнопки Редактировать на странице Profile куда передать модальное окно с этой формой
@@ -110,7 +110,7 @@ const UserAddressForm = (
         isMain: boolean; // добавляем поле
     }
 
-    const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
+    const [ deliveryAddress, setDeliveryAddress ] = useState<DeliveryAddress>({
         phone: '',
         city: '',
         street: '',
@@ -118,37 +118,37 @@ const UserAddressForm = (
         corps: '',
         appart: '',
         isMain: false // добавляем начальное значение
-    });
+    })
 
-//собирает в стейт deliveryAddress значения полей из формы
+    //собирает в стейт deliveryAddress значения полей из формы
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, type, checked} = e.target
+        const { name, value, type, checked } = e.target
         setDeliveryAddress(prevState => ({
             ...prevState,
             [name]: type === 'checkbox' ? checked : value
-        }));
-    };
+        }))
+    }
 
     // вызывает server-action для отправки данных из формы очистки и записи
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-            if (!captchaToken) {
-                alert('Пожалуйста, подтвердите, что вы не робот')
-                return
-            }
-            if (!agreed) {
-                alert('Необходимо согласие на обработку персональных данных')
-                return
-            }
+        if (!captchaToken) {
+            alert('Пожалуйста, подтвердите, что вы не робот')
+            return
+        }
+        if (!agreed) {
+            alert('Необходимо согласие на обработку персональных данных')
+            return
+        }
 
         try {
-            setIsClosing(true);
-            console.log('Адрес доставки:', deliveryAddress);
-            await userAddressFormAction(deliveryAddress);
+            setIsClosing(true)
+            console.log('Адрес доставки:', deliveryAddress)
+            await userAddressFormAction(deliveryAddress)
         } catch (error) {
-            console.error('Ошибка при отправке формы:', error);
+            console.error('Ошибка при отправке формы:', error)
         } finally {
-            setIsClosing(false);
+            setIsClosing(false)
             // todo очистить форму
         }
     }
@@ -257,7 +257,6 @@ const UserAddressForm = (
                     </div>
                 </div>
 
-
             </div>
 
             <div className="mb-4">
@@ -273,7 +272,7 @@ const UserAddressForm = (
                 </label>
             </div>
 
-            <input hidden value={captchaToken}/>
+            <input hidden readOnly value={captchaToken}/>
 
             {/* Accordion section */}
             <Agreement
@@ -291,21 +290,21 @@ const UserAddressForm = (
                             setCaptchaToken(token)
                         }}
                         onError={(error) => {
-                            console.error('Captcha error:', error);
+                            console.error('Captcha error:', error)
                             toast.error('Проверку на человека не прошли, простите', {
-                                position: "top-center",
+                                position: 'top-center',
                                 autoClose: 3000,
                                 hideProgressBar: false,
                                 closeOnClick: true,
                                 pauseOnHover: true,
                                 draggable: true,
-                            });
+                            })
                         }}
                     />
                     {process.env.NODE_ENV === 'development' && (
                         <button
                             onClick={() => {
-                                toast.error('Проверку на человека не прошли, простите');
+                                toast.error('Проверку на человека не прошли, простите')
                             }}
                             className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
                         >
@@ -330,9 +329,9 @@ const UserAddressForm = (
                     className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }
+        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+}
                                 `}
                 >
                     {isClosing ? 'Отправка...' : 'Отправить'}

@@ -1,10 +1,10 @@
 'use client'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { Address } from '@/db/types/interfaces'
 import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
 import { UserProfile } from '@/app/order/page'
-import {NewAddressModal} from "@/components/user/NewAddressModal";
+import { NewAddressModal } from '@/components/user/NewAddressModal'
 
 type Props = {
     user: UserProfile
@@ -12,7 +12,7 @@ type Props = {
 
 const UserOrderForm = ({ user }: Props) => {
     // for NewAddressModal
-    const [isOpenModal, setIsOpenModal] = useState(true)
+    const [ isOpenModal, setIsOpenModal ] = useState(true)
 
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},
@@ -46,16 +46,17 @@ const UserOrderForm = ({ user }: Props) => {
                 </div>
 
                 {isOpenModal && <NewAddressModal
-                        isOpen={isOpenModal}
-                        onClose={() => setIsOpenModal(false)}/>
+                    isOpen={isOpenModal}
+                    onClose={() => setIsOpenModal(false)}/>
                 }
 
                 {/*<Link href={'/profile'} className="flex flex-col max-w-sm">*/}
-                    <button
-                        onClick={() => setIsOpenModal(true)}
-                        className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                <button
+                    type="button"
+                    onClick={() => setIsOpenModal(true)}
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
                         Добавить новый адрес
-                    </button>
+                </button>
                 {/*</Link>*/}
                 <span className="p-2">Нажмите для добавления адреса, которого нет в выпадающем списке</span>
 
