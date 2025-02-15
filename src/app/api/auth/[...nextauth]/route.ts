@@ -28,7 +28,15 @@ const handler = NextAuth({
             console.warn('session trigger', trigger)
             return new Promise<DefaultSession>(resolve => {
                 // resolve({
-                //   user: { name: 'XX', email: 'xx@yy.ru', image: null },
+                // user: {
+                // ...session.user,
+                //         id: user.id,
+                //         isActive: user.isActive,
+                //         isAgreed: user.isAgreed,
+                //         surName: user.surName,
+                //         fatherName: user.fatherName,
+                //         canContact: user.canContact
+                // }
                 //   expires: '' })
                 resolve(session)
             })

@@ -1,4 +1,4 @@
-import {Adapter,} from "next-auth/adapters"
+import {Adapter, AdapterUser, } from "next-auth/adapters"
 import {AddressModel, UserModel} from '@/db/models'
 
 export function AuthAdapter(): Adapter {
@@ -35,24 +35,24 @@ export function AuthAdapter(): Adapter {
         },
 
         // Обязательный метод для OAuth
-        // async getUserByAccount({providerAccountId, provider}) {
-        //     const account = await UserModel.findOne({
-        //         where: {
-        //             provider,
-        //             providerAccountId
-        //         }
-        //     })
-        //     return account ? account.toJSON() : null
-        // },
+        async getUserByAccount({providerAccountId, provider}) {
+            const account = await UserModel.findOne({
+                where: {
+                    provider,
+                    providerAccountId
+                }
+            })
+            return account ? account.toJSON() : null
+        },
 
         // Обязательный метод для связывания аккаунта с пользователем
-        // async linkAccount(account) {
-        //     await UserModel.update(
-        //         {provider: account.provider, providerAccountId: account.providerAccountId},
-        //         {where: {id: account.userId}}
-        //     )
-        //     return account
-        // },
+        async linkAccount(account) {
+            await UserModel.update(
+                {provider: account.provider, providerAccountId: account.providerAccountId},
+                {where: {id: account.userId}}
+            )
+            return account
+        },
 
         // Остальные обязательные методы
         // async updateUser(user) {

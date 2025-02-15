@@ -18,7 +18,7 @@ const ProfilePage = async () => {
         return redirect('/api/auth/signin')
     }
 
-    const email = session.user.email
+    const email: string = session.user.email
 
     // Пытаемся найти пользователя через AuthAdapter по email из сессии
     const existingUser = await AuthAdapter().getUserByEmail(email)
@@ -28,7 +28,6 @@ const ProfilePage = async () => {
         const newUser = await AuthAdapter().createUser({
             email: session.user.email,
             name: session.user.name || '',
-            emailVerified: null
         })
 
              // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
