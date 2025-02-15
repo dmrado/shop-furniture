@@ -3,6 +3,7 @@ import NextAuth, { DefaultSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import YandexProvider from 'next-auth/providers/yandex'
 import {Awaitable} from "next-auth/src/core/types";
+import {AuthAdapter} from "@/app/api/AuthAdapter";
 // todo: no sense to have this constant separately
 const handler = NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
@@ -80,6 +81,7 @@ const handler = NextAuth({
         // }
         // })
     ],
+    adapter: AuthAdapter(),
     //пример приватного роута
     // pages: {
     //    signIn: '/signin'

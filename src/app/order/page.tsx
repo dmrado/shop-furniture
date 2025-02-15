@@ -4,6 +4,9 @@ import { UserModel } from '@/db/models'
 import { AddressModel } from '@/db/models'
 import { InferAttributes } from 'sequelize'
 
+// // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
+// // const deliveryAddress = userAddress[n]
+
 export interface UserProfile extends InferAttributes<UserModel> {
     addresses: InferAttributes<AddressModel>[]
 }

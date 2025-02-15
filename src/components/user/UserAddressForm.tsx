@@ -15,7 +15,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
         <div className="relative">
             <input
                 type={type}
-                value={value}
+                defaultValue={value}
                 onChange={onChange}
                 required={required}
                 autoComplete={autoComplete}
@@ -31,7 +31,8 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
             <label htmlFor={id}
                    className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
-                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
+                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}
+                    ${value && !isFocused ? '' : ''}`}
             >
                 {label}
             </label>
@@ -114,25 +115,25 @@ const UserAddressForm = (
         isMain: boolean; // добавляем поле
     }
 
-    const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
-        phone: '',
-        city: '',
-        street: '',
-        home: '',
-        corps: '',
-        appart: '',
-        isMain: false // добавляем начальное значение
-    })
+    // const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
+    //     phone: '',
+    //     city: '',
+    //     street: '',
+    //     home: '',
+    //     corps: '',
+    //     appart: '',
+    //     isMain: false // добавляем начальное значение
+    // })
 
     //todo переписать на нативную валидацию полей пормы с использованием хука useFormState
     //собирает в стейт deliveryAddress значения полей из формы
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, type, checked} = e.target
-        setDeliveryAddress(prevState => ({
-            ...prevState,
-            [name]: type === 'checkbox' ? checked : value
-        }))
-    }
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const {name, value, type, checked} = e.target
+    //     setDeliveryAddress(prevState => ({
+    //         ...prevState,
+    //         [name]: type === 'checkbox' ? checked : value
+    //     }))
+    // }
 
     // вызывает server-action для отправки данных из формы очистки и записи
     const onSubmit = async (formData: FormData) => {
@@ -148,7 +149,7 @@ const UserAddressForm = (
 
         try {
             setIsClosing(true)
-            console.log('Адрес доставки:', deliveryAddress)
+            console.log('Адрес доставки:', formData)
             await userAddressFormAction(formData)
         } catch (error) {
             console.error('Ошибка при отправке формы:', error)
@@ -173,8 +174,8 @@ const UserAddressForm = (
                             label="Город"
                             type="text"
                             name="city"
-                            value={deliveryAddress.city}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
@@ -188,8 +189,8 @@ const UserAddressForm = (
                             label="Улица"
                             type="text"
                             name="street"
-                            value={deliveryAddress.street}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
@@ -206,8 +207,8 @@ const UserAddressForm = (
                             label="Дом"
                             type="text"
                             name="home"
-                            value={deliveryAddress.home}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
@@ -222,8 +223,8 @@ const UserAddressForm = (
                             label="Корпус"
                             type="text"
                             name="corps"
-                            value={deliveryAddress.corps}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             required={false}
                             // id="given-name"
                             // autoComplete="given-name"
@@ -238,8 +239,8 @@ const UserAddressForm = (
                             label="Квартира"
                             type="text"
                             name="appart"
-                            value={deliveryAddress.appart}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             required={false}
                             // id="given-name"
                             // autoComplete="given-name"
@@ -254,8 +255,8 @@ const UserAddressForm = (
                             label="Телефон"
                             type="tel"
                             name="phone"
-                            value={deliveryAddress.phone}
-                            onChange={handleChange}
+                            defaultValue=""
+                            // onChange={handleChange}
                             id="tel"
                             autoComplete="tel"
                             autocomplete="on"
@@ -273,8 +274,8 @@ const UserAddressForm = (
                     <input
                         type="checkbox"
                         name="isMain"
-                        checked={deliveryAddress.isMain}
-                        onChange={handleChange}
+                        defaultChecked=""
+                        // onChange={handleChange}
                         className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-400"
                     />
                     <span className="text-gray-700">Сделать основным</span>
