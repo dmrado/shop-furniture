@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
-import {User} from "@/db/types/interfaces";
 import Agreement from "@/components/site/Agreement";
+import {UserModel} from "@/db/models";
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -22,7 +22,7 @@ import Agreement from "@/components/site/Agreement";
 // }
 
 type UserProfileProps = {
-    user: User;
+    user: UserModel;
     previousOrders: any;
 }
 const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
@@ -43,7 +43,13 @@ const UserProfile = ({ user, previousOrders }: UserProfileProps) => {
         {agreed &&
             <div className="p-8 mx-auto max-w-6xl">
                 <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>
-
+                <Link href={'/api/auth/signout'}>
+                <button
+                    type="button"
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    Выйти
+                </button>
+                </Link>
                 <div className="flex items-center mb-8">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
                         <Image
