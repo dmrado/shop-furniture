@@ -13,12 +13,12 @@ import CartY from "@/components/site/img/CartY.svg";
 import ProfileY from "@/components/site/img/ProfileY.svg";
 import CartTotal from "@/components/cart/CartTotal";
 import CartTotalAmount from "@/components/cart/CartTotalAmount";
+import {getServerSession} from "next-auth";
+import {isSessionExpired} from "@/actions/isSessionExpired";
+import {redirect} from "next/navigation";
 
-const Header = () => {
+const Header = ({session}) => {
 
-    // if (!session || !isAdmin(session) || isSessionExpired(session)) {
-    //     return redirect('/api/auth/signin')
-    // }
     // для мобильного меню
     const [isOpen, setIsOpen] = useState(false)
 
@@ -36,7 +36,7 @@ const Header = () => {
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
     // todo переделать ссылки на реальные
-        const navItems = [
+    const navItems = [
         {name: "Каталог", subItems: ["Мебель", "Декор", "Текстиль"]},
         {name: "Кухни", subItems: ["Модульные кухни", "Аксессуары"]},
         {name: "Свет", subItems: ["Люстры", "Торшеры", "Бра"]},
@@ -240,22 +240,38 @@ const Header = () => {
                 </Link>
 
                 <div className="ml-12">
-                    {/*todo add session*/}
-                    <Link
-                        href={true ? "/profile" : '/api/auth/signin'}
-                        onClick={closeMenu}
-                        onMouseEnter={() => setProfileIcon(ProfileY)}
-                        onMouseLeave={() => setProfileIcon(Profile)}
-                        className="flex items-center"
-                    >
-                        <Image
-                            src={profileIcon}
-                            alt="Профиль"
-                            width={25}
-                            height={25}
-                            className="w-6 h-6 transform-none"
-                        />
-                    </Link>
+                    {!session &&
+                        <Link
+                            href={'/api/auth/signin'}
+                            onClick={closeMenu}
+                            onMouseEnter={() => setProfileIcon(ProfileY)}
+                            onMouseLeave={() => setProfileIcon(Profile)}
+                            className="flex items-center"
+                        >
+                            <Image
+                                src={profileIcon}
+                                alt="Профиль"
+                                width={25}
+                                height={25}
+                                className="w-6 h-6 transform-none"
+                            />
+                        </Link>}
+                    {session &&
+                        <Link
+                            href={"/profile"}
+                            onClick={closeMenu}
+                            onMouseEnter={() => setProfileIcon(ProfileY)}
+                            onMouseLeave={() => setProfileIcon(Profile)}
+                            className="flex items-center"
+                        >
+                            <Image
+                                src={profileIcon}
+                                alt="Профиль"
+                                width={25}
+                                height={25}
+                                className="w-6 h-6 transform-none"
+                            />
+                        </Link>}
                 </div>
             </div>
         </>

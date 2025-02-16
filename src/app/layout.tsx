@@ -7,6 +7,9 @@ import {CartProvider} from '@/components/cart/CartContext'
 import Header from "@/components/site/Header"
 import Script from "next/script";
 import {ToastContainer} from "react-toastify";
+import {getServerSession} from "next-auth";
+import {isSessionExpired} from "@/actions/isSessionExpired";
+import {redirect} from "next/navigation";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -30,6 +33,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     console.warn('app.layout')
+    // todo async await блокирует сайт, перебрасывая  на авторизацию
+    const session = getServerSession()
+    if (!session || isSessionExpired(session)) {
+        return redirect('/api/auth/signin')
+    }
 
     return (
         <html lang="en">
@@ -41,7 +49,7 @@ export default function RootLayout({
                 strategy="beforeInteractive"
                 />
        <CartProvider>
-            <Header/>
+            <Header session={session}/>
            <ToastContainer />
             <main className="pt-[137px] ">
                 {children}
