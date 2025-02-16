@@ -137,7 +137,14 @@ const UserAddressForm = (
 
     // вызывает server-action для отправки данных из формы очистки и записи
     const onSubmit = async (formData: FormData) => {
-        console.log('onSubmit', formData)
+
+        const phone = formData.get('phone')
+        const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/
+
+        if(!phone || !phoneRegex.test(phone)){
+            alert('Пожалуйста, введите корректный номер телефона')
+            return
+        }
         if (!captchaToken) {
             alert('Пожалуйста, подтвердите, что вы не робот')
             return
