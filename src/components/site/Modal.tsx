@@ -1,5 +1,5 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import {Dialog, Transition} from '@headlessui/react'
+import {Fragment} from 'react'
 
 interface ModalProps {
     isOpen: boolean
@@ -7,10 +7,10 @@ interface ModalProps {
     children: React.ReactNode
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({isOpen, onClose, children}: ModalProps) {
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={onClose}>
+            <Dialog as="div" className="relative z-50" open={isOpen} onClose={onClose}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -20,7 +20,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm"/>
                 </Transition.Child>
 
                 <div className="fixed inset-0 overflow-y-auto">
@@ -34,7 +34,8 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-4xl transform rounded-xl bg-white p-8 shadow-2xl transition-all">
+                            <Dialog.Panel
+                                className="w-full max-w-4xl transform rounded-xl bg-white p-8 shadow-2xl transition-all">
                                 {children}
                             </Dialog.Panel>
                         </Transition.Child>

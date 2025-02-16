@@ -31,8 +31,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
             <label htmlFor={id}
                    className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
-                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}
-                    ${value && !isFocused ? '' : ''}`}
+                    ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
                 {label}
             </label>
@@ -187,7 +186,6 @@ const UserAddressForm = (
                             // autoComplete="given-name"
                             // autocomplete="on"
                             required
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                     <div className="mb-4">
@@ -202,7 +200,6 @@ const UserAddressForm = (
                             // autoComplete="given-name"
                             // autocomplete="on"
                             required
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                 </div>
@@ -220,7 +217,6 @@ const UserAddressForm = (
                             // autoComplete="given-name"
                             // autocomplete="on"
                             required
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
 
@@ -236,7 +232,6 @@ const UserAddressForm = (
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
 
@@ -252,7 +247,6 @@ const UserAddressForm = (
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
 
@@ -269,7 +263,6 @@ const UserAddressForm = (
                             autocomplete="on"
                             required
                             pattern="[0-9]*"
-                            className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                 </div>
@@ -283,7 +276,6 @@ const UserAddressForm = (
                         name="isMain"
                         defaultChecked=""
                         // onChange={handleChange}
-                        className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-400"
                     />
                     <span className="text-gray-700">Сделать основным</span>
                 </label>
