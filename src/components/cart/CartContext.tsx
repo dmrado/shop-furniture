@@ -9,7 +9,7 @@ import {
 } from 'react'
 import {
     CartRow,
-    getCart,
+    getCartAction,
     deleteCartRowAction,
     deleteSelectedCartRowsAction,
     updateQuantityAction,
@@ -78,7 +78,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchCart = async () => {
             setIsLoading(true)
-            const rows = await getCart()
+            const rows = await getCartAction()
             setCartRows(rows)
             setIsLoading(false)
             setSelectedItems(rows.map(row => row.id))

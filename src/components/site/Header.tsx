@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
 import Heart from "@/components/site/img/Heart.svg";
 import Cart from "@/components/site/img/Cart.svg";
@@ -17,7 +17,7 @@ import {getServerSession} from "next-auth";
 import {isSessionExpired} from "@/actions/isSessionExpired";
 import {redirect} from "next/navigation";
 
-const Header = ({session}) => {
+const Header = () => {
 
     // для мобильного меню
     const [isOpen, setIsOpen] = useState(false)
@@ -34,6 +34,19 @@ const Header = ({session}) => {
     // для аккордеона в мобильном меню
     const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+    const [session, setSession] = useState(null)
+
+    // useEffect(() => {
+    //     const handleSession = async () => {
+    //         const session = await getServerSession()
+    //         if (!session || isSessionExpired(session)) {
+    //             setSession(null)
+    //         }
+    //         setSession(session)
+    //     }
+    //     handleSession()
+    // }, [])
 
     // todo переделать ссылки на реальные
     const navItems = [

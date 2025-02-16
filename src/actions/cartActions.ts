@@ -75,7 +75,7 @@ const mapCartRow = (cart: CartModel): CartRow => {
 }
 
 // fixme: use real userId
-export async function getCart(userId: number = 1): Promise<CartRow[]> {
+export async function getCartAction(userId: number = 1): Promise<CartRow[]> {
     const {rows} = await CartModel.findAndCountAll({
         include: CART_INCLUDE,
         where: {userId}
@@ -155,5 +155,5 @@ export const addProductToCartAction = async (productId: number, quantity: number
             userId,
         })
     }
-    return getCart(userId)
+    return getCartAction(userId)
 }

@@ -33,11 +33,6 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     console.warn('app.layout')
-    // todo async await блокирует сайт, перебрасывая  на авторизацию
-    const session = getServerSession()
-    if (!session || isSessionExpired(session)) {
-        return redirect('/api/auth/signin')
-    }
 
     return (
         <html lang="en">
@@ -49,7 +44,7 @@ export default function RootLayout({
                 strategy="beforeInteractive"
                 />
        <CartProvider>
-            <Header session={session}/>
+            <Header/>
            <ToastContainer />
             <main className="pt-[137px] ">
                 {children}

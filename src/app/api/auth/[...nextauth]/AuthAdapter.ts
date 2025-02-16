@@ -1,29 +1,36 @@
-import {Adapter, AdapterUser, } from "next-auth/adapters"
+import {Adapter, AdapterUser, AdapterAccount, AdapterSession } from "next-auth/adapters"
 import {AddressModel, UserModel} from '@/db/models'
 
 export function AuthAdapter(): Adapter {
     return {
-        async createUser(user) {
+       createUser:  async (user) => {
             const newUser = await UserModel.create({
+                agreementDate: new Date(),
                 email: user.email,
                 name: user.name || '',
                 isActive: true,
                 isAgreed: false,
                 surName: '',
                 fatherName: '',
-                canContact: true
+                canContact: true,
+                // provider: user.provider,
+                // providerAccountId: user.providerAccountId
             })
+            // todo если в БД появятся секретные данные то сделать выборочный return
             return newUser.toJSON()
         },
 
-        async getUser(id) {
-            const user = await UserModel.findByPk(parseInt(id))
-            if (!user) return null
-
+        getUser: async (id) => {
+            const user = await UserModel.findByPk(parseInt(id), {
+                include: [{
+                    model: AddressModel,
+                    as: 'addresses'
+                }]
+            })
             return user ? user.toJSON() : null
         },
 
-        async getUserByEmail(email) {
+        getUserByEmail: async (email) => {
             const user = await UserModel.findOne({
                 where: {email},
                 include: [{
@@ -35,7 +42,7 @@ export function AuthAdapter(): Adapter {
         },
 
         // Обязательный метод для OAuth
-        async getUserByAccount({providerAccountId, provider}) {
+        getUserByAccount: async ({providerAccountId, provider}) => {
             const account = await UserModel.findOne({
                 where: {
                     provider,
@@ -46,7 +53,7 @@ export function AuthAdapter(): Adapter {
         },
 
         // Обязательный метод для связывания аккаунта с пользователем
-        async linkAccount(account) {
+        linkAccount: async (account) => {
             await UserModel.update(
                 {provider: account.provider, providerAccountId: account.providerAccountId},
                 {where: {id: account.userId}}
@@ -63,9 +70,10 @@ export function AuthAdapter(): Adapter {
         // async createSession(session) {
         //     return session
         // },
-        // async getSessionAndUser(sessionToken) {
-        //     return null
-        // },
+        getSessionAndUser: async (sessionToken) => {
+           console.log('sessionToken', sessionToken)
+            return null
+        },
         // async updateSession(session) {
         //     return session
         // },

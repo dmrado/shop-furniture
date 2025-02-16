@@ -1,9 +1,10 @@
 import {sequelize} from '../connection'
-import {DataTypes, Model, InferAttributes, InferCreationAttributes} from 'sequelize'
+import {DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional} from 'sequelize'
 import {AddressModel} from '@/db/models'
 
 export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
-    declare id: number
+    //todo проверить нуэен ли знак  ?
+    declare id?: CreationOptional<number>
     declare email: string
     declare name: string
     declare surName: string
@@ -12,6 +13,8 @@ export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAt
     declare isActive: boolean
     declare isAgreed: boolean
     declare agreementDate: Date
+    declare provider: string
+    declare providerAccountId: string
     declare addresses?: InferAttributes<AddressModel>[]
 }
 
@@ -57,10 +60,18 @@ UserModel.init(
         agreementDate: {
             type: DataTypes.DATE,
             allowNull: true
+        },
+        provider: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        providerAccountId: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     },
     {
         sequelize,
-        tableName: 'users',
+        tableName: 'ourusers',
     }
 )
