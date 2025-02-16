@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 import { isSessionExpired } from '@/actions/isSessionExpired.ts'
 import {AuthAdapter} from "@/app/api/auth/[...nextauth]/AuthAdapter";
 import {previousOrders} from "@/components/mockData";
+import React from "react";
 
 //todo хистори - это отфильтровано за период в Orders
 //todo создать модель для избранного "с сердечком"
@@ -26,20 +27,21 @@ const ProfilePage = async () => {
     // Если пользователь не найден в базе, создаем нового через AuthAdapter
     if (!existingUser) {
         const newUser = await AuthAdapter().createUser({
-            email: session.user.email,
-            name: session.user.name || '',
-        })
+                email: session.user.email,
+                name: session.user.name || '',
+            })
 
-             // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
+            // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
 
-             return <>
-                <UserProfile user={newUser} previousOrders={previousOrders}/>
-            </>
+            // todo отрендерить компонент или модал с открытой формой регистрации с полями photo name fatherName surName email
+        return <>
+            <UserProfile user={newUser} previousOrders={previousOrders}/>
+        </>
     }
 
     return <>
-            <UserProfile user={existingUser} previousOrders={previousOrders}/>
-        </>
+        <UserProfile user={existingUser} previousOrders={previousOrders}/>
+    </>
 }
 
 export default ProfilePage
