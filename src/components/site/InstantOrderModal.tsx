@@ -1,6 +1,7 @@
 'use client'
-import React, {FormEvent, useState} from 'react'
+import React, {FormEvent, useState, Fragment} from 'react'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
+import { Dialog, Transition } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
@@ -9,6 +10,12 @@ import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
 import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
 
+
+interface ModalProps {
+    isOpen: boolean
+    onClose: () => void
+    children: React.ReactNode
+}
 export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
     const [isFocused, setIsFocused] = useState(false)
     // todo: make autocomplete
