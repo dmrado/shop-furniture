@@ -1,5 +1,5 @@
 'use client'
-import React, {FormEvent, useState, Fragment} from 'react'
+import React, { useState, Fragment} from 'react'
 import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 import {Dialog, Transition} from '@headlessui/react'
 import Success from '@/components/site/Success'
@@ -75,7 +75,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
 
         const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/
 
-        if(!phone || !phoneRegex.test(phone)){
+        if(!phone || !phoneRegex.test(phone.toString())){
             alert('Пожалуйста, введите корректный номер телефона')
             // return
         }
@@ -127,7 +127,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
 
     if (!isOpen) return null
     // fixme? проверить как работает  setAgreed(false)
-    return (
+    return <>
         <Modal isOpen={isOpen} onClose={onClose}>
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Мгновенное оформление заказа
@@ -139,7 +139,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                     <InputField
                         name="name"
                         defaultValue=""
-                        label="Имя"
+                        label="Имя*"
                         id="given-name"
                         autoComplete="given-name"
                         autocomplete="on"
@@ -148,7 +148,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                     <InputField
                         name="phone"
                         defaultValue=""
-                        label="Телефон"
+                        label="Телефон*"
                         id="tel"
                         autoComplete="tel"
                         type="tel"
@@ -201,5 +201,5 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                 </div>
             </form>
         </Modal>
-    )
+   </>
 }

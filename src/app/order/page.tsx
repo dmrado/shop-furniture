@@ -12,7 +12,7 @@ export interface UserProfile extends InferAttributes<UserModel> {
 }
 
 const OrderPage = async () => {
-    //todo получить id пользователя
+    //todo дублировать сессию и AuthAdapter из ProfilePage
     const userData = await UserModel.findOne({
         where: {
             id: 1

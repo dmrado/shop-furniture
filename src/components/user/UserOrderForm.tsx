@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { Address } from '@/db/types/interfaces'
 import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
 import { UserProfile } from '@/app/order/page'
-import { NewAddressModal } from '@/components/user/NewAddressModal'
+import Agreement from "@/components/site/Agreement";
+import UserAddressForm from "@/components/user/UserAddressForm";
 
 type Props = {
     user: UserProfile
@@ -13,6 +14,9 @@ type Props = {
 const UserOrderForm = ({ user }: Props) => {
     // for NewAddressModal
     const [ isOpenModal, setIsOpenModal ] = useState(false)
+
+    // для Disclosure согласия на обработку перс данных
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},
@@ -27,7 +31,7 @@ const UserOrderForm = ({ user }: Props) => {
     return (
         <div className="max-w-6xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-6">Оформление заказа</h2>
-            {isOpenModal && <NewAddressModal
+            {isOpenModal && <UserAddressForm
                 isOpen={isOpenModal}
                 onClose={() => setIsOpenModal(false)}/>
             }
@@ -127,6 +131,12 @@ const UserOrderForm = ({ user }: Props) => {
                     />
 
                 </div>
+                {/*todo подработать функционал кнопки по согласию*/}
+                <Agreement
+                    setAgreed={setAgreed}
+                    agreed={agreed}
+                />
+
                 <button
                     type="submit"
                     className="bg-blue-500 text-white p-2 rounded-md transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">

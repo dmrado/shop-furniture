@@ -1,12 +1,15 @@
 'use client'
 import React, {useEffect, useState} from 'react'
 import {userAddressFormAction} from '@/actions/user/userAddressFormAction'
-// import { User as UserInterface } from '@/db/types/interfaces'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
+import {Dialog, Transition} from '@headlessui/react'
 import Agreement from '@/components/site/Agreement'
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from "@/components/site/Success";
+import Modal from "@/components/site/Modal";
+
+//пользователь хочет оформить заказ, но адреса нет в списке, для добавления нового адреса открываем модальное окно и сохраняем адрес в БД и добавляем в заказ
 
 export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
     const [isFocused, setIsFocused] = useState(false)
@@ -39,8 +42,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = (
-    {onClose}
+const UserAddressForm = ({isOpen, onClose}
     // {user}: UserInterface
 ) => {
 
@@ -140,7 +142,7 @@ const UserAddressForm = (
         const phone = formData.get('phone')
         const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/
 
-        if(!phone || !phoneRegex.test(phone)){
+        if(!phone || !phoneRegex.test(phone.toString())){
             alert('Пожалуйста, введите корректный номер телефона')
             return
         }
@@ -170,6 +172,10 @@ const UserAddressForm = (
 
     return <>
         {/* Форма ввода адреса доставки */}
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
+                Добавление нового адреса
+            </Dialog.Title>
         <form action={onSubmit}>
             <div className="grid gap-4">
 
@@ -177,7 +183,7 @@ const UserAddressForm = (
                     <div className="mb-4">
                         {/*<label className="block mb-1">Город:</label>*/}
                         <InputField
-                            label="Город"
+                            label="Город*"
                             type="text"
                             name="city"
                             defaultValue=""
@@ -191,7 +197,7 @@ const UserAddressForm = (
                     <div className="mb-4">
                         {/*<label className="block mb-1">Улица:</label>*/}
                         <InputField
-                            label="Улица"
+                            label="Улица*"
                             type="text"
                             name="street"
                             defaultValue=""
@@ -208,7 +214,7 @@ const UserAddressForm = (
                     <div className="mb-4">
                         {/*<label className="block mb-1">Дом:</label>*/}
                         <InputField
-                            label="Дом"
+                            label="Дом*"
                             type="text"
                             name="home"
                             defaultValue=""
@@ -253,7 +259,7 @@ const UserAddressForm = (
                     <div className="mb-4">
                         {/*<label className="block mb-1">Телефон:</label>*/}
                         <InputField
-                            label="Телефон"
+                            label="Телефон*"
                             type="tel"
                             name="phone"
                             defaultValue=""
@@ -347,6 +353,7 @@ const UserAddressForm = (
                 </button>
             </div>
         </form>
+        </Modal>
     </>
 }
 
