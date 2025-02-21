@@ -1,19 +1,19 @@
 import React from 'react'
 import UserOrderForm from '@/components/user/UserOrderForm'
-import { UserModel } from '@/db/models'
+import { OuruserModel } from '@/db/models'
 import { AddressModel } from '@/db/models'
 import { InferAttributes } from 'sequelize'
 
 // // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
 // // const deliveryAddress = userAddress[n]
 
-export interface UserProfile extends InferAttributes<UserModel> {
+export interface UserProfile extends InferAttributes<OuruserModel> {
     addresses: InferAttributes<AddressModel>[]
 }
 
 const OrderPage = async () => {
     //todo дублировать сессию и AuthAdapter из ProfilePage
-    const userData = await UserModel.findOne({
+    const userData = await OuruserModel.findOne({
         where: {
             id: 1
         },

@@ -1,15 +1,22 @@
-import NextAuth, { DefaultSession } from 'next-auth'
+import NextAuth, {DefaultSession} from 'next-auth'
 // import { authConfig } from '../../../auth.ts'
 import GoogleProvider from 'next-auth/providers/google'
 import YandexProvider from 'next-auth/providers/yandex'
-import {Awaitable} from "next-auth/src/core/types";
-// import {AuthAdapter} from "@/app/api/auth/[...nextauth]/AuthAdapter";
 import SequelizeAdapter from "@auth/sequelize-adapter"
 import {sequelize} from "@/db/connection";
 
 // todo: no sense to have this constant separately
 const handler = NextAuth({
-    adapter: SequelizeAdapter(sequelize),
+    adapter: SequelizeAdapter(sequelize, {
+        timestamps: true, // важно!
+        models: {
+            User: sequelize.define('User', {
+                // определения полей как выше
+            }, {
+                timestamps: true // важно!
+            })
+        }
+    }),
     secret: process.env.NEXTAUTH_SECRET,
     session: {strategy: "jwt"},
     // callbacks: {
@@ -32,35 +39,35 @@ const handler = NextAuth({
     //         console.warn('session trigger', trigger)
     //         return new Promise<DefaultSession>(resolve => {
     //             // resolve({
-                // user: {
-                // ...session.user,
-                //         id: user.id,
-                //         isActive: user.isActive,
-                //         isAgreed: user.isAgreed,
-                //         surName: user.surName,
-                //         fatherName: user.fatherName,
-                //         canContact: user.canContact
-                // }
-                //   expires: '' })
-            //     resolve(session)
-            // })
-        // },
-        // async redirect ({url,  baseUrl}) {
-        //     console.warn('redirect url', url)
-        //     console.warn('redirect baseUrl', baseUrl)
-        //
-        //     return baseUrl
-        // },
-        // async jwt({token, user, account, profile, trigger, isNewUser, session}){
-        //     console.warn('jwt session', session)
-        //     console.warn('jwt token', token)
-        //     console.warn('jwt user', user)
-        //     console.warn('jwt isNewUser', isNewUser)
-        //     console.warn('jwt trigger', trigger)
-        //     console.warn('jwt profile', profile)
-        //     console.warn('jwt account', account)
-        //     return {email: user.email, grandmother: 'Galina'}
-        // }
+    // user: {
+    // ...session.user,
+    //         id: user.id,
+    //         isActive: user.isActive,
+    //         isAgreed: user.isAgreed,
+    //         surName: user.surName,
+    //         fatherName: user.fatherName,
+    //         canContact: user.canContact
+    // }
+    //   expires: '' })
+    //     resolve(session)
+    // })
+    // },
+    // async redirect ({url,  baseUrl}) {
+    //     console.warn('redirect url', url)
+    //     console.warn('redirect baseUrl', baseUrl)
+    //
+    //     return baseUrl
+    // },
+    // async jwt({token, user, account, profile, trigger, isNewUser, session}){
+    //     console.warn('jwt session', session)
+    //     console.warn('jwt token', token)
+    //     console.warn('jwt user', user)
+    //     console.warn('jwt isNewUser', isNewUser)
+    //     console.warn('jwt trigger', trigger)
+    //     console.warn('jwt profile', profile)
+    //     console.warn('jwt account', account)
+    //     return {email: user.email, grandmother: 'Galina'}
+    // }
     // },
     providers: [
         GoogleProvider({
@@ -77,7 +84,7 @@ const handler = NextAuth({
         YandexProvider({
             clientId: process.env.YANDEX_CLIENT_ID ?? '',
             clientSecret: process.env.YANDEX_CLIENT_SECRET ?? ''
-        })
+        }),
         // Credentials({
         // credentials: {
         //    email: { label: 'email', type: 'email', required: true },
@@ -94,11 +101,40 @@ const handler = NextAuth({
         // }
         // })
     ],
-
-    //пример приватного роута
-    // pages: {
-    //    signIn: '/signin'
-    // }
+    // todo Добавьте настройки для cookies в конфигурацию NextAuth иначе: TypeError: State cookie was missing.
+    //  name: 'OAuthCallbackError',
+    //     code: undefined
+    //   },
+    //   providerId: 'google',
+    //   message: 'State cookie was missing.'
+    cookies: {
+        sessionToken: {
+            name: 'next-auth.session-token',
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === 'production'
+            }
+        },
+        callbackUrl: {
+            name: 'next-auth.callback-url',
+            options: {
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === 'production'
+            }
+        },
+        csrfToken: {
+            name: 'next-auth.csrf-token',
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === 'production'
+            }
+        }
+    }
 })
 
-export { handler as GET, handler as POST }
+export {handler as GET, handler as POST}

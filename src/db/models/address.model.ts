@@ -1,10 +1,9 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { Address } from '../types/interfaces'
 
-export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> implements Address {
+export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> {
     declare id: CreationOptional<number>
-    declare userId: number
+    declare userId: string
     declare phone: string
     declare city: string
     declare street: string
@@ -22,10 +21,10 @@ AddressModel.init(
             primaryKey: true,
         },
         userId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID, // Если id в таблице users тоже UUID
             allowNull: false,
             references: {
-                model: 'ourusers',
+                model: 'users',
                 key: 'id'
             }
         },

@@ -1,9 +1,9 @@
-import {sequelize} from '../connection'
-import {DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { Color } from '../types/interfaces'
 
-export class ColorModel extends Model<InferAttributes<ColorModel>, InferCreationAttributes<ColorModel>> implements Color {
-    declare id: number;
+export class ColorModel extends Model<InferAttributes<ColorModel>, InferCreationAttributes<ColorModel>> {
+    declare id: CreationOptional<number>;
     declare isActive: boolean;
     declare colorCode: string;
 }

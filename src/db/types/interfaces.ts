@@ -1,17 +1,5 @@
 // types/interfaces.ts
 
-export interface Address {
-    id: number;
-    userId: number;
-    phone: string;
-    city: string;
-    street: string;
-    home: string;
-    corps: string;
-    appart: string;
-    isMain: boolean;
-}
-
 export interface Color {
     id: number;
     isActive: boolean;

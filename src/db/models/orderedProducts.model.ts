@@ -1,10 +1,10 @@
-import {sequelize} from '../connection'
-import { DataTypes, Model, InferAttributes, InferCreationAttributes  } from 'sequelize'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { OrderedProducts } from '../types/interfaces'
 // import {OrderModel} from "@/db/models";
 
-export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>>  implements OrderedProducts {
-    declare id: number;
+export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>>{
+    declare id: CreationOptional<number>;
     declare orderId: number;
     declare product: number;
     declare quantity: number;

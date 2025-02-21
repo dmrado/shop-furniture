@@ -1,9 +1,9 @@
 import { sequelize } from '../connection'
-import { DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { StockModel } from '@/db/models'
 
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
-    declare id: number
+    declare id: CreationOptional<number>
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
     declare isNew: boolean
     declare articul: string

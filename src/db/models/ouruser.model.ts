@@ -1,9 +1,9 @@
-import {sequelize} from '../connection'
-import {DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional} from 'sequelize'
-import {AddressModel} from '@/db/models'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {UserModel} from "@/db/models/users.model";
 
-export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
-    //todo проверить нуэен ли знак  ?
+export class OuruserModel extends Model<InferAttributes<OuruserModel>, InferCreationAttributes<OuruserModel>> {
+    //todo проверить нужен ли знак  ?
     declare id?: CreationOptional<number>
     declare email: string
     declare name: string
@@ -15,10 +15,10 @@ export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAt
     declare agreementDate: Date
     declare provider: string
     declare providerAccountId: string
-    declare addresses?: InferAttributes<AddressModel>[]
+    declare user?: UserModel   // Добавляем связь с UserModel
 }
 
-UserModel.init(
+OuruserModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -27,8 +27,8 @@ UserModel.init(
         },
         email: {
             type: DataTypes.STRING(128),
-            allowNull: true,
-            unique: true
+            allowNull: false,
+            unique: true,
         },
         name: {
             type: DataTypes.STRING(128),

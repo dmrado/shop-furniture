@@ -1,5 +1,5 @@
 import UserProfile from '@/components/user/UserProfile'
-import {UserModel, AddressModel} from '@/db/models'
+import {OuruserModel, AddressModel} from '@/db/models'
 import {getServerSession} from "next-auth";
 import {redirect} from "next/navigation";
 import { isSessionExpired } from '@/actions/isSessionExpired.ts'

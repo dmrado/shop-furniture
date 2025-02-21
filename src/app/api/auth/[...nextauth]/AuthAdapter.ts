@@ -1,10 +1,10 @@
 import {Adapter, AdapterUser, AdapterAccount, AdapterSession } from "next-auth/adapters"
-import {AddressModel, UserModel} from '@/db/models'
+import {AddressModel, OuruserModel} from '@/db/models'
 
 export function AuthAdapter(): Adapter {
     return {
        createUser:  async (user) => {
-            const newUser = await UserModel.create({
+            const newUser = await OuruserModel.create({
                 agreementDate: new Date(),
                 email: user.email,
                 name: user.name || '',
@@ -21,7 +21,7 @@ export function AuthAdapter(): Adapter {
         },
 
         getUser: async (id) => {
-            const user = await UserModel.findByPk(parseInt(id), {
+            const user = await OuruserModel.findByPk(parseInt(id), {
                 include: [{
                     model: AddressModel,
                     as: 'addresses'
@@ -31,7 +31,7 @@ export function AuthAdapter(): Adapter {
         },
 
         getUserByEmail: async (email) => {
-            const user = await UserModel.findOne({
+            const user = await OuruserModel.findOne({
                 where: {email},
                 include: [{
                     model: AddressModel,
@@ -43,7 +43,7 @@ export function AuthAdapter(): Adapter {
 
         // Обязательный метод для OAuth
         getUserByAccount: async ({providerAccountId, provider}) => {
-            const account = await UserModel.findOne({
+            const account = await OuruserModel.findOne({
                 where: {
                     provider,
                     providerAccountId
@@ -54,7 +54,7 @@ export function AuthAdapter(): Adapter {
 
         // Обязательный метод для связывания аккаунта с пользователем
         linkAccount: async (account) => {
-            await UserModel.update(
+            await OuruserModel.update(
                 {provider: account.provider, providerAccountId: account.providerAccountId},
                 {where: {id: account.userId}}
             )

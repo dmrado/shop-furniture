@@ -1,7 +1,7 @@
 'use server'
 import { redirect } from 'next/navigation'
 import { ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH } from '@/app/constants.ts'
-import { AddressModel, UserModel } from '@/db/models'
+import { AddressModel, OuruserModel } from '@/db/models'
 import { sanitizeAndTruncate } from '@/actions/sanitizer'
 import { InferAttributes, InferCreationAttributes } from 'sequelize'
 
