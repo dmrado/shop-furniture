@@ -2,6 +2,7 @@ import {sequelize} from '../connection'
 import {DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional} from 'sequelize'
 import {UserModel} from "@/db/models/users.model";
 export class SessionModel extends Model<InferAttributes<SessionModel>, InferCreationAttributes<SessionModel>> {
+
     declare id?: string
     declare expires: Date;
     declare session_token: string;
@@ -16,22 +17,13 @@ SessionModel.init(
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
-        expires: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
+        expires: { type: DataTypes.DATE, allowNull: false },
         session_token: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING,
+            unique: "session_token",
             allowNull: false,
         },
-        user_id: {
-            type: DataTypes.UUID, // Если id в таблице users тоже UUID
-            allowNull: true,
-            references: {
-                model: 'users',
-                key: 'id'
-            }
-        }
+        userId: { type: DataTypes.UUID },
     },
     {
         sequelize,

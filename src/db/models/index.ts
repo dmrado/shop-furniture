@@ -87,8 +87,6 @@ UserModel.hasOne(OuruserModel, {
     as: 'ourUser' // Алиас для связи
 })
 
-
-
 //файл подключен в root layout
 export {
     CartModel,

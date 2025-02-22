@@ -1,5 +1,5 @@
-import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {sequelize} from '../connection'
+import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
 
 export class AccountModel extends Model<InferAttributes<AccountModel>, InferCreationAttributes<AccountModel>> {
 
@@ -24,54 +24,17 @@ AccountModel.init(
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
-        type: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        provider: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        provider_account_id: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        refresh_token: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-        },
-        access_token: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-        },
-        expires_at: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        token_type: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-        },
-        scope: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-        },
-        id_token: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        session_state: {
-            type: DataTypes.STRING(255),
-            allowNull: true,
-        },
-        user_id: {
-            type: DataTypes.UUID, // Если id в таблице users тоже UUID
-            allowNull: true,
-            references: {
-                model: 'users',
-                key: 'id'
-            }
-        }
+        type: {type: DataTypes.STRING, allowNull: false},
+        provider: {type: DataTypes.STRING, allowNull: false},
+        provider_account_id: {type: DataTypes.STRING, allowNull: false},
+        refresh_token: {type: DataTypes.STRING},
+        access_token: {type: DataTypes.STRING},
+        expires_at: {type: DataTypes.INTEGER},
+        token_type: {type: DataTypes.STRING},
+        scope: {type: DataTypes.STRING},
+        id_token: {type: DataTypes.TEXT},
+        session_state: {type: DataTypes.STRING},
+        userId: {type: DataTypes.UUID},
     },
     {
         sequelize,
