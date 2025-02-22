@@ -66,14 +66,14 @@ export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAt
     }
 }
 // todo либо отойти от типа из SequelizeAdapter, либо сделать автоинкрементным связанное поле id из 'ourUser', а не email что тоже не факт что пройдет. Проблема что гугл провайдер присылает не число а  type: DataTypes.UUID, или строку, которую нельзя автоинкрементить.
+
 UserModel.init(
     {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
+            // autoIncrement: true,
             defaultValue: DataTypes.UUIDV4,
-            // charset: 'utf8mb4',
-            // collate: 'utf8mb4_bin'
         },
         name: {
             type: DataTypes.STRING(128),
