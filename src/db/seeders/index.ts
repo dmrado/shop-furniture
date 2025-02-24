@@ -11,9 +11,9 @@ async function runSeeders() {
 
         // Запуск сидеров
         await Promise.all([
-            seedColors(),
+            // seedColors(),
             seedProducts(),
-            seedAddresses(),
+            // seedAddresses(),
             // seedUsers()
         ])
 
