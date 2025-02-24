@@ -1,6 +1,8 @@
 'use server'
-import {CartModel, ProductModel} from '@/db/models'
-import {InferAttributes, Op} from 'sequelize'
+import { CartModel, ProductModel } from '@/db/models'
+import { InferAttributes, Op } from 'sequelize'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 export type CartRow =
     Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
@@ -75,16 +77,20 @@ const mapCartRow = (cart: CartModel): CartRow => {
 }
 
 // fixme: use real userId
-export async function getCartAction(userId: number = 1): Promise<CartRow[]> {
-    const {rows} = await CartModel.findAndCountAll({
+export async function getCartAction(): Promise<CartRow[]> {
+    const session = await getServerSession(authOptions)
+    console.log('Cart Session', session)
+    const userId = session.user.id
+
+    const { rows } = await CartModel.findAndCountAll({
         include: CART_INCLUDE,
-        where: {userId}
+        where: { userId }
     })
 
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({id, newQuantity, userId = 1}: {
+export const updateQuantityAction = async ({ id, newQuantity, userId = 1 }: {
     id: number,
     newQuantity: number,
     userId?: number
@@ -94,17 +100,17 @@ export const updateQuantityAction = async ({id, newQuantity, userId = 1}: {
 
     if (newQuantity <= 1) {
         await CartModel.update(
-            {quantity: 1},
-            {where: {id}}
+            { quantity: 1 },
+            { where: { id } }
         )
     } else {
         await CartModel.update(
-            {quantity: newQuantity},
-            {where: {id}}
+            { quantity: newQuantity },
+            { where: { id } }
         )
     }
 
-    const updatedCart = await CartModel.findAll({where: {userId}, include: CART_INCLUDE})
+    const updatedCart = await CartModel.findAll({ where: { userId }, include: CART_INCLUDE })
     if (!updatedCart.length) {
         throw new Error('updated cart not found')
     }
@@ -136,7 +142,9 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
 }
 
 // fixme: use real userId
-export const addProductToCartAction = async (productId: number, quantity: number, userId = 1): Promise<CartRow[]> => {
+export const addProductToCartAction = async (productId: number, quantity: number): Promise<CartRow[]> => {
+    const session = await getServerSession(authOptions)
+    const userId = session?.user?.id
     const existingCartItem = await CartModel.findOne({
         where: {
             productId,

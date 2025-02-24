@@ -15,6 +15,7 @@ import {
     updateQuantityAction,
 } from '@/actions/cartActions'
 import { addProductToCartAction } from '@/actions/cartActions'
+import { useSession } from 'next-auth/react'
 
 const CartContext = createContext({
     finalAmount: 0,
@@ -42,6 +43,8 @@ const CartContext = createContext({
 })
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+    // const session = useSession()
+    // console.log('session', session)
     const [ cartRows, setCartRows ] = useState<CartRow[]>([])
     const [ isLoading, setIsLoading ] = useState(false)
     // todo стейты для чекбокса выбора товаров в корзине
@@ -54,14 +57,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             if (prev.includes(id)) {
                 return prev.filter(newId => newId !== id)
             } else {
-                return [...prev, id]
+                return [ ...prev, id ]
             }
         })
     }, [])
 
     //  Функции для выбора/сброса всех элементов корзины
     const selectAll = useCallback(() => {
-        const allIds = [...cartRows.map((row) => row.id)]
+        const allIds = [ ...cartRows.map((row) => row.id) ]
         setSelectedItems(allIds)
     }, [ cartRows ])
 

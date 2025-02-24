@@ -24,7 +24,7 @@ AddressModel.init(
             type: DataTypes.UUID, // Если id в таблице users тоже UUID
             allowNull: false,
             references: {
-                model: 'users',
+                model: 'auth_users',
                 key: 'id'
             }
         },

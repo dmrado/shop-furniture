@@ -1,74 +1,74 @@
-import NextAuth, {DefaultSession} from 'next-auth'
+import NextAuth, { AuthOptions, DefaultSession } from 'next-auth'
 // import { authConfig } from '../../../auth.ts'
 import GoogleProvider from 'next-auth/providers/google'
 import YandexProvider from 'next-auth/providers/yandex'
-import SequelizeAdapter from "@auth/sequelize-adapter"
-import {sequelize} from "@/db/connection";
+import SequelizeAdapter, { models } from '@auth/sequelize-adapter'
+import { sequelize } from '@/db/connection'
+import { AuthUser } from '@/db/models/users.model'
 
 // todo: no sense to have this constant separately
-const handler = NextAuth({
-    adapter: SequelizeAdapter(sequelize, {
-        timestamps: true, // важно!
-        models: {
-            User: sequelize.define('User', {
-                // определения полей как выше
-            }, {
-                timestamps: true // важно!
-            })
+export const authOptions: AuthOptions = {
+    adapter: SequelizeAdapter(sequelize,
+        {
+            // timestamps: true, // важно!
+            models: {
+                User: AuthUser,
+                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_account' }),
+                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_token' }),
+                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_session' })
+            }
         }
-    }),
+    ),
     secret: process.env.NEXTAUTH_SECRET,
-    session: {strategy: "jwt"},
-    // callbacks: {
-    //     async signIn({ account, profile , user, email, credentials}) {
-    //         console.warn('signIn account', account)
-    //         console.warn('signIn profile', profile)
-    //         console.warn('signIn user', user)
-    //         console.warn('signIn email', email)
-    //         console.warn('signIn credentials', credentials)
-    //         if (account && account.provider === 'google') {
-    //             return true
-    //         }
-    //         return true // Do different verification for other providers that don't have `email_verified`
-    //     },
-    //     async session({ session, token, user, newSession, trigger }) {
-    //         console.warn('session session', session)
-    //         console.warn('session token', token)
-    //         console.warn('session user', user)
-    //         console.warn('session newSession', newSession)
-    //         console.warn('session trigger', trigger)
-    //         return new Promise<DefaultSession>(resolve => {
-    //             // resolve({
-    // user: {
-    // ...session.user,
-    //         id: user.id,
-    //         isActive: user.isActive,
-    //         isAgreed: user.isAgreed,
-    //         surName: user.surName,
-    //         fatherName: user.fatherName,
-    //         canContact: user.canContact
-    // }
-    //   expires: '' })
-    //     resolve(session)
-    // })
-    // },
-    // async redirect ({url,  baseUrl}) {
-    //     console.warn('redirect url', url)
-    //     console.warn('redirect baseUrl', baseUrl)
-    //
-    //     return baseUrl
-    // },
-    // async jwt({token, user, account, profile, trigger, isNewUser, session}){
-    //     console.warn('jwt session', session)
-    //     console.warn('jwt token', token)
-    //     console.warn('jwt user', user)
-    //     console.warn('jwt isNewUser', isNewUser)
-    //     console.warn('jwt trigger', trigger)
-    //     console.warn('jwt profile', profile)
-    //     console.warn('jwt account', account)
-    //     return {email: user.email, grandmother: 'Galina'}
-    // }
-    // },
+    session: { strategy: 'jwt' },
+    callbacks: {
+        async signIn({ account, profile, user, email, credentials }) {
+            console.warn('signIn account', account)
+            console.warn('signIn profile', profile)
+            console.warn('signIn user', user)
+            console.warn('signIn email', email)
+            console.warn('signIn credentials', credentials)
+            if (account && account.provider === 'google') {
+                return true
+            }
+            return true // Do different verification for other providers that don't have `email_verified`
+        },
+        async session({ session, token, user, newSession, trigger }) {
+            console.warn('session session', session)
+            console.warn('session token', token)
+            console.warn('session user', user)
+            console.warn('session newSession', newSession)
+            console.warn('session trigger', trigger)
+            return {
+                ...session,
+                user: {
+                    email: token.email,
+                    id: token.sub,
+                    name: token.name,
+                    picture: token.picture,
+                },
+
+            }
+        },
+        async redirect ({ url, baseUrl }) {
+            console.warn('redirect url', url)
+            console.warn('redirect baseUrl', baseUrl)
+
+            return baseUrl
+        },
+        async jwt({ token, user, account, profile, trigger, isNewUser, session }) {
+            console.warn('jwt session', session)
+            console.warn('jwt token', token)
+            console.warn('jwt user', user)
+            console.warn('jwt isNewUser', isNewUser)
+            console.warn('jwt trigger', trigger)
+            console.warn('jwt profile', profile)
+            console.warn('jwt account', account)
+            return {
+                ...token,
+            }
+        }
+    },
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -107,34 +107,36 @@ const handler = NextAuth({
     //   },
     //   providerId: 'google',
     //   message: 'State cookie was missing.'
-    cookies: {
-        sessionToken: {
-            name: 'next-auth.session-token',
-            options: {
-                httpOnly: true,
-                sameSite: 'lax',
-                path: '/',
-                secure: process.env.NODE_ENV === 'production'
-            }
-        },
-        callbackUrl: {
-            name: 'next-auth.callback-url',
-            options: {
-                sameSite: 'lax',
-                path: '/',
-                secure: process.env.NODE_ENV === 'production'
-            }
-        },
-        csrfToken: {
-            name: 'next-auth.csrf-token',
-            options: {
-                httpOnly: true,
-                sameSite: 'lax',
-                path: '/',
-                secure: process.env.NODE_ENV === 'production'
-            }
-        }
-    }
-})
+    // cookies: {
+    //     sessionToken: {
+    //         name: 'next-auth.session-token',
+    //         options: {
+    //             httpOnly: true,
+    //             sameSite: 'lax',
+    //             path: '/',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         }
+    //     },
+    //     callbackUrl: {
+    //         name: 'next-auth.callback-url',
+    //         options: {
+    //             sameSite: 'lax',
+    //             path: '/',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         }
+    //     },
+    //     csrfToken: {
+    //         name: 'next-auth.csrf-token',
+    //         options: {
+    //             httpOnly: true,
+    //             sameSite: 'lax',
+    //             path: '/',
+    //             secure: process.env.NODE_ENV === 'production'
+    //         }
+    //     }
+    // }
+}
 
-export {handler as GET, handler as POST}
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }

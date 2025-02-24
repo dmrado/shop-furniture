@@ -1,9 +1,10 @@
-import {Adapter, AdapterUser, AdapterAccount, AdapterSession } from "next-auth/adapters"
-import {AddressModel, OuruserModel} from '@/db/models'
+import { Adapter, AdapterUser, AdapterAccount, AdapterSession } from 'next-auth/adapters'
+import { AddressModel, OuruserModel } from '@/db/models'
+import { AuthUser } from '@/db/models/users.model'
 
 export function AuthAdapter(): Adapter {
     return {
-       createUser:  async (user) => {
+        createUser: async (user) => {
             const newUser = await OuruserModel.create({
                 agreementDate: new Date(),
                 email: user.email,
@@ -32,7 +33,7 @@ export function AuthAdapter(): Adapter {
 
         getUserByEmail: async (email) => {
             const user = await OuruserModel.findOne({
-                where: {email},
+                where: { email },
                 include: [{
                     model: AddressModel,
                     as: 'addresses'
@@ -42,7 +43,7 @@ export function AuthAdapter(): Adapter {
         },
 
         // Обязательный метод для OAuth
-        getUserByAccount: async ({providerAccountId, provider}) => {
+        getUserByAccount: async ({ providerAccountId, provider }) => {
             const account = await OuruserModel.findOne({
                 where: {
                     provider,
@@ -55,8 +56,8 @@ export function AuthAdapter(): Adapter {
         // Обязательный метод для связывания аккаунта с пользователем
         linkAccount: async (account) => {
             await OuruserModel.update(
-                {provider: account.provider, providerAccountId: account.providerAccountId},
-                {where: {id: account.userId}}
+                { provider: account.provider, providerAccountId: account.providerAccountId },
+                { where: { id: account.userId } }
             )
             return account
         },
@@ -71,7 +72,7 @@ export function AuthAdapter(): Adapter {
         //     return session
         // },
         getSessionAndUser: async (sessionToken) => {
-           console.log('sessionToken', sessionToken)
+            console.log('sessionToken', sessionToken)
             return null
         },
         // async updateSession(session) {

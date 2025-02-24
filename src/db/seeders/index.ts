@@ -14,7 +14,7 @@ async function runSeeders() {
             seedColors(),
             seedProducts(),
             seedAddresses(),
-            seedUsers()
+            // seedUsers()
         ])
 
         console.log('All seeds completed successfully')

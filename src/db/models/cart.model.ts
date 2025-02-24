@@ -1,7 +1,7 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { ProductModel } from '@/db/models'
-import {UserModel} from "@/db/models/users.model"
+import { UserModel } from '@/db/models/users.model'
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
     declare id: CreationOptional<number>
@@ -39,7 +39,7 @@ CartModel.init(
             type: DataTypes.UUID, // Если id в таблице users тоже UUID
             allowNull: false,
             references: {
-                model: 'users',
+                model: 'auth_users',
                 key: 'id'
             }
         },
