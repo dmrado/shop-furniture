@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Image from "next/image";
 import Arrow from "@/components/site/img/Arrow.svg";
 import sampleImage from "@/components/site/img/sample-carousel.svg";
@@ -9,16 +9,29 @@ import Link from "next/link";
 const Carousel: React.FC = () => {
     const images = [sampleImage, sampleImage2, sampleImage3, sampleImage];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [nextImageIndex, setNextImageIndex] = useState(1);
     const [isAnimating, setIsAnimating] = useState(false); // Для управления анимацией
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-
+    const [isNextImageAppearing, setNextImageAppearing] = useState(false);
+    const [isCurrentImageFading, setIsCurrentImageFading] = useState(false);
     // Функция для смены изображения
     const changeImage = (index: number) => {
+        setNextImageIndex(index);// Устанавливаем следующий индекс
+
         setIsAnimating(true); // Начинаем анимацию
+        setNextImageAppearing(true);
+
+        setTimeout(() => {
+            setIsCurrentImageFading(true);
+        }, 200); // Длительность анимации
+
         setTimeout(() => {
             setCurrentImageIndex(index); // Обновляем изображение после анимации
-            setIsAnimating(false); // Снимаем флаг анимации
-        }, 500); // Длительность анимации
+            setNextImageIndex((index + 1) % images.length);
+            setIsAnimating(false);  // Снимаем флаг анимации
+            setNextImageAppearing(false);
+            setIsCurrentImageFading(false);
+        }, 500);
     };
 
     // Автоматическая смена изображения
@@ -46,8 +59,8 @@ const Carousel: React.FC = () => {
         <div className="relative w-full h-[700px] overflow-hidden">
             {/* Текущая картинка */}
             <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                    isAnimating ? "opacity-0" : "opacity-100"
+                className={`absolute inset-0 transition-opacity duration-100 ${
+                    isCurrentImageFading ? "opacity-0" : "opacity-100"
                 }`}
             >
                 <Image
@@ -59,10 +72,26 @@ const Carousel: React.FC = () => {
                 />
             </div>
 
+            {/* Следующая картинка */}
+            <div
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                    isNextImageAppearing ? "opacity-100" : "opacity-0"
+                }`}
+            >
+                <Image
+                    src={images[nextImageIndex]}
+                    alt={`Карусель ${nextImageIndex + 1}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="w-full h-full"
+                />
+            </div>
+
             {/* Полупрозрачная плашка */}
-            <div className="absolute left-[68px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-8 max-w-[589px] h-[265px]">
+            <div
+                className="absolute left-[68px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-8 max-w-[589px] h-[265px]">
                 <h1 className="text-4xl mb-4 font-semibold mt-7">
-                    Новая коллекция диванов <br />
+                    Новая коллекция диванов <br/>
                     со скидкой 10%
                 </h1>
                 <Link href='/products'>
