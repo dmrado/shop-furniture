@@ -7,34 +7,35 @@ import sampleImage3 from "@/components/site/img/sample-carousel3.jpg";
 import Link from "next/link";
 
 const Carousel: React.FC = () => {
-    const images = [sampleImage, sampleImage2, sampleImage3, sampleImage];
+    const images = [sampleImage, sampleImage2, sampleImage3];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [nextImageIndex, setNextImageIndex] = useState(1);
-    const [isAnimating, setIsAnimating] = useState(false); // Для управления анимацией
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const [isNextImageAppearing, setNextImageAppearing] = useState(false);
+    const [isNextImageAppearing, setIsNextImageAppearing] = useState(false);
     const [isCurrentImageFading, setIsCurrentImageFading] = useState(false);
+
+
     // Функция для смены изображения
     const changeImage = (index: number) => {
         setNextImageIndex(index);// Устанавливаем следующий индекс
 
-        setIsAnimating(true); // Начинаем анимацию
-        setNextImageAppearing(true);
+        setIsNextImageAppearing(true); //следующая "opacity-100"
 
-        setTimeout(() => {
-            setIsCurrentImageFading(true);
-        }, 200); // Длительность анимации
+        // setTimeout(() => {
+            setIsCurrentImageFading(true); //текущая "opacity-0"
+        // }, 200); // Длительность анимации
 
         setTimeout(() => {
             setCurrentImageIndex(index); // Обновляем изображение после анимации
             setNextImageIndex((index + 1) % images.length);
-            setIsAnimating(false);  // Снимаем флаг анимации
-            setNextImageAppearing(false);
-            setIsCurrentImageFading(false);
+
         }, 500);
+
+        setIsNextImageAppearing(false);
+        setIsCurrentImageFading(false);
     };
 
-    // Автоматическая смена изображения
+    // Автоматическая смена изображения Если индекс меньше длины массива, получаем сам индекс
     useEffect(() => {
         const cycleImages = () => {
             const nextIndex = (currentImageIndex + 1) % images.length;
@@ -59,7 +60,7 @@ const Carousel: React.FC = () => {
         <div className="relative w-full h-[700px] overflow-hidden">
             {/* Текущая картинка */}
             <div
-                className={`absolute inset-0 transition-opacity duration-100 ${
+                className={`absolute inset-0 transition-opacity duration-1000 ${
                     isCurrentImageFading ? "opacity-0" : "opacity-100"
                 }`}
             >
@@ -74,7 +75,7 @@ const Carousel: React.FC = () => {
 
             {/* Следующая картинка */}
             <div
-                className={`absolute inset-0 transition-opacity duration-300 ${
+                className={`absolute inset-0 transition-opacity duration-1000 ${
                     isNextImageAppearing ? "opacity-100" : "opacity-0"
                 }`}
             >
