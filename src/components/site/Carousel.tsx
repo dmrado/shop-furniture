@@ -11,28 +11,21 @@ const Carousel: React.FC = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [nextImageIndex, setNextImageIndex] = useState(1);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const [isNextImageAppearing, setIsNextImageAppearing] = useState(false);
-    const [isCurrentImageFading, setIsCurrentImageFading] = useState(false);
-
+    const [isAnimate, setIsAnimate] = useState(false)
 
     // Функция для смены изображения
     const changeImage = (index: number) => {
         setNextImageIndex(index);// Устанавливаем следующий индекс
 
-        setIsNextImageAppearing(true); //следующая "opacity-100"
-
-        // setTimeout(() => {
-            setIsCurrentImageFading(true); //текущая "opacity-0"
-        // }, 200); // Длительность анимации
+        setIsAnimate(true); //NextImage "opacity-100", CurrentImage "opacity-0"
 
         setTimeout(() => {
             setCurrentImageIndex(index); // Обновляем изображение после анимации
             setNextImageIndex((index + 1) % images.length);
 
         }, 500);
+        setIsAnimate(false);
 
-        setIsNextImageAppearing(false);
-        setIsCurrentImageFading(false);
     };
 
     // Автоматическая смена изображения Если индекс меньше длины массива, получаем сам индекс
@@ -61,7 +54,7 @@ const Carousel: React.FC = () => {
             {/* Текущая картинка */}
             <div
                 className={`absolute inset-0 transition-opacity duration-1000 ${
-                    isCurrentImageFading ? "opacity-0" : "opacity-100"
+                    isAnimate ? "opacity-0" : "opacity-100"
                 }`}
             >
                 <Image
@@ -76,7 +69,7 @@ const Carousel: React.FC = () => {
             {/* Следующая картинка */}
             <div
                 className={`absolute inset-0 transition-opacity duration-1000 ${
-                    isNextImageAppearing ? "opacity-100" : "opacity-0"
+                    isAnimate ? "opacity-100" : "opacity-0"
                 }`}
             >
                 <Image
