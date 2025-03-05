@@ -1,3 +1,4 @@
+'use client'
 import React, {useState, useEffect, useRef} from "react";
 import Image from "next/image";
 import Arrow from "@/components/site/img/Arrow.svg";
@@ -15,11 +16,11 @@ const Carousel: React.FC = () => {
 
     // Функция для смены изображения
     const changeImage = (index: number) => {
-        setNextImageIndex(index);// Устанавливаем следующий индекс
 
         setIsAnimate(true); //NextImage "opacity-100", CurrentImage "opacity-0"
 
         setTimeout(() => {
+            setNextImageIndex(index);// Устанавливаем следующий индекс
             setCurrentImageIndex(index); // Обновляем изображение после анимации
             setNextImageIndex((index + 1) % images.length);
 
