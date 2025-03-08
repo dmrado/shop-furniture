@@ -5,6 +5,9 @@ import YandexProvider from 'next-auth/providers/yandex'
 import SequelizeAdapter, { models } from '@auth/sequelize-adapter'
 import { sequelize } from '@/db/connection'
 import { AuthUser } from '@/db/models/users.model'
+import {AccountModel, SessionModel} from "@/db/models";
+import {VerificationToken} from "@auth/sequelize-adapter/models";
+import {VerificationTokenModel} from "@/db/models/verificationtoken.model";
 
 // todo: no sense to have this constant separately
 export const authOptions: AuthOptions = {
@@ -13,6 +16,9 @@ export const authOptions: AuthOptions = {
             // timestamps: true, // важно!
             models: {
                 User: AuthUser,
+                // Account: AccountModel,
+                // VerificationToken: VerificationTokenModel,
+                // Session: SessionModel
                 Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_account' }),
                 VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_token' }),
                 Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_session' })

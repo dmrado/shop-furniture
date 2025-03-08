@@ -25,12 +25,12 @@ const registeredModels = [
     OrderedProductsModel,
     OrderModel,
     StockModel,
-    OuruserModel,
     CartModel,
-    SessionModel,
-    AccountModel,
-    AuthUser,
-    VerificationTokenModel ]
+    // SessionModel,
+    // AccountModel,
+    // AuthUser,
+    // VerificationTokenModel,
+    OuruserModel]
 const runDbSync = async () => {
     console.log('Syncing DB schema for: ', registeredModels.map(m => m.name).join(', '))
     await sequelize.sync({ alter: true, })
