@@ -38,6 +38,6 @@ AccountModel.init(
     },
     {
         sequelize,
-        tableName: 'accounts',
+        tableName: 'auth_accounts',
     }
 );

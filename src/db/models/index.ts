@@ -9,6 +9,7 @@ import { CartModel } from '@/db/models/cart.model'
 import { SessionModel } from '@/db/models/sessions.model'
 import { AccountModel } from '@/db/models/accounts.model'
 import { AuthUser } from '@/db/models/users.model'
+import {OuruserModel} from "@/db/models/ouruser.model";
 // import {UserModel} from "@/db/models/users.model";
 
 // Установка связей
@@ -54,6 +55,11 @@ AuthUser.hasMany(AddressModel, {
     as: 'addresses', // Алиас для связи
 })
 
+AuthUser.hasOne(OuruserModel, {
+    // sourceKey: 'id',
+    foreignKey: 'userId',
+    as: 'ourUser', // Алиас для связи
+})
 // Связи для Sessions
 // SessionModel.belongsTo(UserModel, {
 //     foreignKey: 'user_id',
@@ -95,7 +101,7 @@ export {
     OrderedProductsModel,
     OrderModel,
     StockModel,
-    // OuruserModel,
+    OuruserModel,
     AccountModel,
     SessionModel
 }

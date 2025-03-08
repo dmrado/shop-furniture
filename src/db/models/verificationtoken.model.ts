@@ -15,6 +15,6 @@ VerificationTokenModel.init(
     },
     {
         sequelize,
-        tableName: 'verification_tokens',
+        tableName: 'auth_verification_tokens',
     }
 )

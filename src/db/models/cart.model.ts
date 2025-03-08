@@ -1,7 +1,7 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { ProductModel } from '@/db/models'
-import { UserModel } from '@/db/models/users.model'
+import { AuthUser } from '@/db/models/users.model'
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
     declare id: CreationOptional<number>
@@ -10,7 +10,7 @@ export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAt
     declare userId: string
     declare discount: CreationOptional<number | null>
     declare product?: InferAttributes<ProductModel>
-    declare user?: UserModel
+    declare user?: AuthUser
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
 }

@@ -2,23 +2,16 @@ import { sequelize } from '@/db/connection'
 // import { models } from '@auth/sequelize-adapter'
 // import { DataTypes, Model } from 'sequelize'
 
-export {}
+// export {}
 // import { sequelize } from '../connection'
 import {
     CreationOptional,
     DataTypes,
-    // HasManyCreateAssociationMixin,
-    // HasManyGetAssociationsMixin,
-    // HasOneGetAssociationMixin,
     InferAttributes,
     InferCreationAttributes,
     Model
 } from 'sequelize'
-// import { CartModel } from '@/db/models'
-// import { AddressModel } from '@/db/models'
-// import { SessionModel } from '@/db/models'
-// import { AccountModel } from '@/db/models'
-// import { OuruserModel } from '@/db/models'
+import {OuruserModel} from "@/db/models/ouruser.model";
 
 export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttributes<AuthUser>> {
 
@@ -29,7 +22,7 @@ export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttr
     declare image?: string | null
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
-    // declare ourUser?: OuruserModel // Добавляем связь с OuruserModel
+    declare ourUser?: OuruserModel // Добавляем связь с OuruserModel
 
     // Определение типов для связей
     // declare addresses?: InferAttributes<AddressModel>[]
