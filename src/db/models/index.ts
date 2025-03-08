@@ -65,11 +65,11 @@ AuthUser.hasOne(OuruserModel, {
 
 OuruserModel.belongsTo(AuthUser, {
     foreignKey: 'authUserId', // То же имя внешнего ключа в таблице ouruser
-    as: 'user',       // Алиас для доступа к связанному пользователю в AuthUser
+    as: 'authUser',       // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'   // Поле в AuthUser, на которое ссылается внешний ключ
 });
 
-
+//todo так как при входе через разных провайдеров каждый раз создается запись и в AuthUser и в AccountModel, то видимо нужна связь один-к-одному
 AuthUser.hasMany(AccountModel, {
     foreignKey: 'userId', // Это поле в таблице accounts
     as: 'accounts',
@@ -78,7 +78,7 @@ AuthUser.hasMany(AccountModel, {
 
 AccountModel.belongsTo(AuthUser, {
     foreignKey: 'userId', // Это должно соответствовать полю в таблице accounts
-    as: 'user',
+    as: 'authUser', // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'
 });
 
