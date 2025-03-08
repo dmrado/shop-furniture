@@ -15,6 +15,7 @@ export class AccountModel extends Model<InferAttributes<AccountModel>, InferCrea
     declare id_token: string | null;
     declare session_state: string | null;
     declare userId: string;
+    declare AuthUserId: string;
 }
 
 AccountModel.init(
@@ -40,7 +41,9 @@ AccountModel.init(
                 model: 'auth_users',
                 key: 'id'
             }},
+        AuthUserId: { type: DataTypes.UUID}
     },
+
     {
         sequelize,
         tableName: 'auth_accounts',
