@@ -19,9 +19,9 @@ export const authOptions: AuthOptions = {
                 // Account: AccountModel,
                 // VerificationToken: VerificationTokenModel,
                 // Session: SessionModel
-                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_account' }),
-                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_token' }),
-                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_session' })
+                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_accounts' }),
+                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_tokens' }),
+                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_sessions' })
             }
         }
     ),

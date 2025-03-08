@@ -44,6 +44,7 @@ CartModel.belongsTo(AuthUser, {
     foreignKey: 'userId',
     as: 'user'
 })
+
 // Связи для Users
 AddressModel.belongsTo(AuthUser, {
     // targetKey: 'id',
@@ -55,11 +56,32 @@ AuthUser.hasMany(AddressModel, {
     as: 'addresses', // Алиас для связи
 })
 
+
 AuthUser.hasOne(OuruserModel, {
     // sourceKey: 'id',
-    foreignKey: 'userId',
-    as: 'ourUser', // Алиас для связи
+    foreignKey: 'authUserId',
+    as: 'ourUser', // Алиас для связи с OuruserModel
 })
+
+OuruserModel.belongsTo(AuthUser, {
+    foreignKey: 'authUserId', // То же имя внешнего ключа в таблице ouruser
+    as: 'user',       // Алиас для доступа к связанному пользователю в AuthUser
+    targetKey: 'id'   // Поле в AuthUser, на которое ссылается внешний ключ
+});
+
+
+AuthUser.hasMany(AccountModel, {
+    foreignKey: 'userId', // Это поле в таблице accounts
+    as: 'accounts',
+    sourceKey: 'id'
+});
+
+AccountModel.belongsTo(AuthUser, {
+    foreignKey: 'userId', // Это должно соответствовать полю в таблице accounts
+    as: 'user',
+    targetKey: 'id'
+});
+
 // Связи для Sessions
 // SessionModel.belongsTo(UserModel, {
 //     foreignKey: 'user_id',
@@ -80,17 +102,6 @@ AuthUser.hasOne(OuruserModel, {
 //     as: 'accounts'
 // })
 
-// Связи между user и ouruser
-// OuruserModel.belongsTo(UserModel, {
-//     foreignKey: 'email',
-//     targetKey: 'email', // указываем, что связь идет по полю email
-//     as: 'user'
-// })
-// UserModel.hasOne(OuruserModel, {
-//     foreignKey: 'email',
-//     sourceKey: 'email', // указываем, что связь идет по полю email
-//     as: 'ourUser' // Алиас для связи
-// })
 
 //файл подключен в root layout
 export {

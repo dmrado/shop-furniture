@@ -28,7 +28,7 @@ const registeredModels = [
     CartModel,
     // SessionModel,
     // AccountModel,
-    // AuthUser,
+    AuthUser,
     // VerificationTokenModel,
     OuruserModel]
 const runDbSync = async () => {

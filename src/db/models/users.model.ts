@@ -1,8 +1,6 @@
 import { sequelize } from '@/db/connection'
 // import { models } from '@auth/sequelize-adapter'
 // import { DataTypes, Model } from 'sequelize'
-
-// export {}
 // import { sequelize } from '../connection'
 import {
     CreationOptional,
@@ -23,16 +21,7 @@ export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttr
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
     declare ourUser?: OuruserModel // Добавляем связь с OuruserModel
-
-    // Определение типов для связей
-    // declare addresses?: InferAttributes<AddressModel>[]
-    // declare getSessions: HasManyGetAssociationsMixin<SessionModel>;
-    // declare getAccounts: HasManyGetAssociationsMixin<AccountModel>;
-    // declare getOuruser: HasOneGetAssociationMixin<OuruserModel>;
-    // declare createAddress: HasManyCreateAssociationMixin<AddressModel>;
-
 }
-// todo либо отойти от типа из SequelizeAdapter, либо сделать автоинкрементным связанное поле id из 'ourUser', а не email что тоже не факт что пройдет. Проблема что гугл провайдер присылает не число а  type: DataTypes.UUID, или строку, которую нельзя автоинкрементить.
 
 AuthUser.init(
     {
