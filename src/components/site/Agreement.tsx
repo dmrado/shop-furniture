@@ -1,16 +1,17 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
-import { Disclosure, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import React, {useEffect, useRef} from 'react'
+import {Disclosure, Transition} from '@headlessui/react'
+import {ChevronDownIcon} from '@heroicons/react/24/outline'
 import ConfidentialPolicy from '@/components/site/ConfidentialPolicy'
-import { isAgreedFromModelAction, updateUserAgreementAction } from '@/actions/userActions'
+import {isAgreedFromModelAction, updateUserAgreementAction} from '@/actions/userActions'
 
 type Props = {
     setAgreed: (value: boolean) => void,
     agreed: boolean,
+    userId?: string
 }
 
-const Agreement = ({ setAgreed, agreed }: Props) => {
+const Agreement = ({setAgreed, agreed, userId}: Props) => {
 
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -18,20 +19,19 @@ const Agreement = ({ setAgreed, agreed }: Props) => {
     // проверяем состояние согласия на обработку перс данных
     useEffect(() => {
         const checkAgreedStatus = async () => {
-            const userId = 1
             const result = await isAgreedFromModelAction(userId)
             console.log('result from DB:', result)
             setAgreed(result)
         }
         void checkAgreedStatus()
     }, [])
-
+    // покупка без регистрации и без сохранения isAgreed в БД
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo put real userId и произвести регистрацию пользователя
-        const userId = 1
         const newCheckedState = e.target.checked
         e.preventDefault()
-        await updateUserAgreementAction(userId, newCheckedState)
+        if (userId) {
+            await updateUserAgreementAction(userId, newCheckedState)
+        }
         setAgreed(newCheckedState) // устанавливает состояние самого чекбокса при нажатии
         // если установлена галочка в чекбокс, закрываем Disclosure
         if (newCheckedState && disclosureButtonRef.current) {
@@ -41,7 +41,7 @@ const Agreement = ({ setAgreed, agreed }: Props) => {
 
     return (
         <Disclosure>
-            {({ open }) => (
+            {({open}) => (
                 <>
                     <Disclosure.Button
                         ref={disclosureButtonRef}

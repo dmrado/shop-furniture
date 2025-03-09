@@ -11,7 +11,9 @@ import {
 } from 'sequelize'
 import {ProfileModel} from "@/db/models/profile.model";
 
-export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttributes<AuthUser>> {
+export interface AuthUser extends InferAttributes<AuthUserModel> {}
+
+export class AuthUserModel extends Model<InferAttributes<AuthUserModel>, InferCreationAttributes<AuthUserModel>> {
 
     declare id: CreationOptional<string> // Изменено с number на string
     declare name?: string | null
@@ -23,7 +25,7 @@ export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttr
     declare ourUser?: ProfileModel // Добавляем связь с OuruserModel
 }
 
-AuthUser.init(
+AuthUserModel.init(
     {
         id: {
             type: DataTypes.UUID,

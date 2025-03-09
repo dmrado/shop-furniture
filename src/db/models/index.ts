@@ -7,7 +7,7 @@ import { StockModel } from '@/db/models/stock.model'
 import { CartModel } from '@/db/models/cart.model'
 import { SessionModel } from '@/db/models/sessions.model'
 import { AccountModel } from '@/db/models/accounts.model'
-import { AuthUser } from '@/db/models/users.model'
+import { AuthUserModel } from '@/db/models/users.model'
 import {ProfileModel} from "@/db/models/profile.model";
 
 // Установка связей
@@ -42,29 +42,29 @@ CartModel.belongsTo(ProductModel, {
 })
 
 
-CartModel.belongsTo(AuthUser, {
+CartModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId',
     as: 'user'
 })
 
 
-AddressModel.belongsTo(AuthUser, {
+AddressModel.belongsTo(AuthUserModel, {
     // targetKey: 'id',
     foreignKey: 'userId',
 })
-AuthUser.hasMany(AddressModel, {
+AuthUserModel.hasMany(AddressModel, {
     // sourceKey: 'id',
     foreignKey: 'userId',
     as: 'addresses', // Алиас для связи
 })
 
 
-AuthUser.hasOne(ProfileModel, {
+AuthUserModel.hasOne(ProfileModel, {
     foreignKey: 'userId', // Это поле в таблице ourusers, в accounts требует sequelize adapter
     as: 'profiles', // Алиас для связи с OuruserModel
     sourceKey: 'id'
 })
-ProfileModel.belongsTo(AuthUser, {
+ProfileModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId', // То же имя внешнего ключа в таблице ouruser
     as: 'profiles',       // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'   // Поле в AuthUser, на которое ссылается внешний ключ
@@ -72,12 +72,12 @@ ProfileModel.belongsTo(AuthUser, {
 
 
 //так как при входе через разных провайдеров каждый раз создается запись и в AuthUser и в AccountModel, то выбрана связь один-к-одному
-AuthUser.hasOne(AccountModel, {
+AuthUserModel.hasOne(AccountModel, {
     foreignKey: 'userId', // Это поле в таблице accounts
     as: 'accounts',
     sourceKey: 'id'
 });
-AccountModel.belongsTo(AuthUser, {
+AccountModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId', // Это должно соответствовать полю в таблице accounts
     as: 'authUser', // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'
@@ -117,5 +117,5 @@ export {
     ProfileModel,
     AccountModel,
     SessionModel,
-    AuthUser
+    AuthUserModel
 }

@@ -1,17 +1,20 @@
 'use client'
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { Address } from '@/db/types/interfaces'
 import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
-import { UserProfile } from '@/app/order/page'
 import Agreement from "@/components/site/Agreement";
 import UserAddressForm from "@/components/user/UserAddressForm";
+import {Profile} from "@/db/models/profile.model";
+import {AuthUser} from "@/db/models/users.model";
+import {Address} from "@/db/models/address.model";
 
 type Props = {
-    user: UserProfile
+    addresses: Address[]
+    profile: Profile | null
+    user: AuthUser
 }
 
-const UserOrderForm = ({ user }: Props) => {
+const UserOrderForm = ({ user, addresses, profile }: Props) => {
     // for NewAddressModal
     const [ isOpenModal, setIsOpenModal ] = useState(false)
 
@@ -22,7 +25,7 @@ const UserOrderForm = ({ user }: Props) => {
         return `${address.city}, ${address.street},
             д.${address.home} ${address.corps ? `, корп.${address.corps}` : ''} ${address.appart ? `, кв.${address.appart}` : ''}`
     }
-    const mainAddress = user.addresses.find(addr => addr.isMain)
+    const mainAddress = addresses.find(addr => addr.isMain)
 
     const handleSubmit = async (formData: FormData) => {
         await handleOrderToDB(formData)
@@ -32,8 +35,10 @@ const UserOrderForm = ({ user }: Props) => {
         <div className="max-w-6xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-6">Оформление заказа</h2>
             {isOpenModal && <UserAddressForm
+                user={user}
                 isOpen={isOpenModal}
-                onClose={() => setIsOpenModal(false)}/>
+                onClose={() => setIsOpenModal(false)
+            }/>
             }
             {user.name} {mainAddress?.phone} {user.email}
             <form action={handleSubmit}>
@@ -45,7 +50,7 @@ const UserOrderForm = ({ user }: Props) => {
                         required
                         className="border border-gray-300 p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                        {user.addresses.map((address: Address) => (
+                        {addresses.map((address: Address) => (
                             <option key={address.id} value={address.id}>
                                 {formatAddress(address)}
                             </option>
@@ -135,6 +140,7 @@ const UserOrderForm = ({ user }: Props) => {
                 <Agreement
                     setAgreed={setAgreed}
                     agreed={agreed}
+                    userId={user.id}
                 />
 
                 <button

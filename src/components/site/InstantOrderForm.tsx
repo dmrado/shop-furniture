@@ -161,6 +161,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                 <Agreement
                     setAgreed={setAgreed}
                     agreed={agreed}
+                    userId={user.id}
                 />
                 {/* Buttons section */}
                 <div

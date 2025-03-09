@@ -1,7 +1,10 @@
 // export {}
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import {AuthUser} from "@/db/models/users.model";
+import {AuthUserModel} from "@/db/models/users.model";
+import {AddressModel} from "@/db/models/address.model";
+
+export interface Profile extends InferAttributes<ProfileModel> {}
 
 export class ProfileModel extends Model<InferAttributes<ProfileModel>, InferCreationAttributes<ProfileModel>> {
     //todo проверить нужен ли знак  ?
@@ -14,7 +17,7 @@ export class ProfileModel extends Model<InferAttributes<ProfileModel>, InferCrea
     declare isActive: boolean
     declare isAgreed: boolean
     declare agreementDate: Date
-    declare user?: AuthUser   // Добавляем связь с UserModel
+    declare user?: AuthUserModel   // Добавляем связь с UserModel
 }
 
 ProfileModel.init(
@@ -34,7 +37,7 @@ ProfileModel.init(
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: true,
         },
         surName: {
             type: DataTypes.STRING(128),
@@ -52,7 +55,7 @@ ProfileModel.init(
         isActive: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-            allowNull: false,
+            allowNull: true,
         },
         isAgreed: {
             type: DataTypes.BOOLEAN,

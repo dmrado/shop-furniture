@@ -4,7 +4,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import YandexProvider from 'next-auth/providers/yandex'
 import SequelizeAdapter, {models} from '@auth/sequelize-adapter'
 import {sequelize} from '@/db/connection'
-import {AuthUser} from '@/db/models/users.model'
+import {AuthUserModel} from '@/db/models/users.model'
 import {AccountModel, AddressModel, ProfileModel, SessionModel, CartModel} from "@/db/models";
 import {VerificationToken} from "@auth/sequelize-adapter/models";
 import {VerificationTokenModel} from "@/db/models/verificationtoken.model";
@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
         {
             // timestamps: true, // важно!
             models: {
-                User: AuthUser,
+                User: AuthUserModel,
                 // Account: AccountModel,
                 // VerificationToken: VerificationTokenModel,
                 // Session: SessionModel

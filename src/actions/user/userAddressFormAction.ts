@@ -4,6 +4,8 @@ import { ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH } from '@/app/constants.ts'
 import { AddressModel, ProfileModel } from '@/db/models'
 import { sanitizeAndTruncate } from '@/actions/sanitizer'
 import { InferAttributes, InferCreationAttributes } from 'sequelize'
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 class ValidationError extends Error {
     constructor(message: string) {
@@ -26,7 +28,6 @@ type UserDeliveryAddress = {
 
 const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
     // const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
-    const userId = Number(deliveryAddress.get('userId') ?? '1') // обязательное поле
     const phone = deliveryAddress.get('phone')
     // const email = deliveryAddress.get('email')
     const city = deliveryAddress.get('city')
@@ -63,7 +64,6 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
     }
     return <UserDeliveryAddress>{
         // id,
-        userId,
         phone,
         city,
         street,
@@ -76,10 +76,11 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
 
 export const userAddressFormAction = async (deliveryAddress: FormData) => {
     console.warn('userAddressFormAction', deliveryAddress)
+    const session = await getServerSession(authOptions)
+    const userId = session.user.id
     try {
         const {
             // id,
-            userId,
             phone,
             city,
             street,
@@ -128,6 +129,6 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
         if (err instanceof ValidationError) {
             return redirect('/api/error/?code=400&message=VALIDATION_ERROR')
         }
-        return redirect('/api/error/?code=500&message=SERVER_ERROR')
+        // return redirect('/api/error/?code=500&message=SERVER_ERROR')
     }
 }

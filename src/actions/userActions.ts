@@ -6,20 +6,34 @@ import {InferAttributes, InferCreationAttributes} from "sequelize";
 
 // Функция обновления состояния согласия на обработку персональных данных
 export const updateUserAgreementAction = async (userId: string, isAgreed) => {
-    return await ProfileModel.update(
-        {
-            isAgreed,
-            agreementDate: isAgreed ? new Date() : null
-        } as Partial<InferAttributes<ProfileModel>>,
-        {
-            where: {id: userId}
-        }
-    )
+
+    const profile = await ProfileModel.findOne({
+        where: {userId}
+    })
+
+    if (profile) {
+        await ProfileModel.update(
+            {
+                isAgreed,
+                agreementDate: isAgreed ? new Date() : null
+            },
+            {
+                where: {userId}
+            }
+        )
+        return
+    }
+    await ProfileModel.create({
+        userId,
+        isAgreed,
+        isActive: true,
+        agreementDate: isAgreed ? new Date() : null
+    })
 }
 
 export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     const result = await ProfileModel.findOne({
-        where: {id: userId}
+        where: {userId}
     })
     // console.log('result in a isAgreedFromModelAction', result)
     if (!result) {
@@ -40,7 +54,7 @@ export const createInstantUserAction = async ({name, phone}: {
         include: [{
             model: AddressModel,
             as: 'addresses',
-            where: { phone: phone }
+            where: {phone: phone}
         }]
     })
     if (existingUser) {

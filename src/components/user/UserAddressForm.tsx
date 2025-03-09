@@ -42,7 +42,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = ({isOpen, onClose}
+const UserAddressForm = ({user, isOpen, onClose}
     // {user}: UserInterface
 ) => {
 
@@ -293,6 +293,7 @@ const UserAddressForm = ({isOpen, onClose}
             <Agreement
                 setAgreed={setAgreed}
                 agreed={agreed}
+                userId={user.id}
             />
 
             {/* Buttons section */}
