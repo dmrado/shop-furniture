@@ -73,7 +73,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
         const name = formData.get('name')
         const phone = formData.get('phone')
 
-        const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/
+        const phoneRegex = /^\+?[\d\s\(\)\-\.]{5,20}$/
 
         if(!phone || !phoneRegex.test(phone.toString())){
             alert('Пожалуйста, введите корректный номер телефона')

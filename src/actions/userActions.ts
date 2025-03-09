@@ -5,7 +5,7 @@ import {InferAttributes, InferCreationAttributes} from "sequelize";
 // здесь все обращения к модели User
 
 // Функция обновления состояния согласия на обработку персональных данных
-export const updateUserAgreementAction = async (userId: number, isAgreed) => {
+export const updateUserAgreementAction = async (userId: string, isAgreed) => {
     return await OuruserModel.update(
         {
             isAgreed,

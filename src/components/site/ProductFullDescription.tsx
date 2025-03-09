@@ -6,6 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import {Product} from "@/actions/productActions"
 import UserAddressForm from "@/components/user/UserAddressForm";
+import {InstantOrderForm} from "@/components/site/InstantOrderForm";
 
 const ProductFullDescription = ({product}: { product: Product }) => {
     const {addProductToCart} = useCartContext()
@@ -143,7 +144,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                                         Добавить в корзину
                                     </button>
                                 </Link>
-                                <UserAddressForm isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}/>
+                                <InstantOrderForm isOpen={isOpenModal} onClose={() => setIsOpenModal(false)}/>
                                 <button
                                     onClick={() => setIsOpenModal(true)}
                                     className="w-full sm:w-60 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">

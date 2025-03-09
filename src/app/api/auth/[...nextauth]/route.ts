@@ -1,11 +1,11 @@
-import NextAuth, { AuthOptions, DefaultSession } from 'next-auth'
+import NextAuth, {AuthOptions, DefaultSession} from 'next-auth'
 // import { authConfig } from '../../../auth.ts'
 import GoogleProvider from 'next-auth/providers/google'
 import YandexProvider from 'next-auth/providers/yandex'
-import SequelizeAdapter, { models } from '@auth/sequelize-adapter'
-import { sequelize } from '@/db/connection'
-import { AuthUser } from '@/db/models/users.model'
-import {AccountModel, SessionModel} from "@/db/models";
+import SequelizeAdapter, {models} from '@auth/sequelize-adapter'
+import {sequelize} from '@/db/connection'
+import {AuthUser} from '@/db/models/users.model'
+import {AccountModel, AddressModel, OuruserModel, SessionModel, CartModel} from "@/db/models";
 import {VerificationToken} from "@auth/sequelize-adapter/models";
 import {VerificationTokenModel} from "@/db/models/verificationtoken.model";
 
@@ -19,16 +19,16 @@ export const authOptions: AuthOptions = {
                 // Account: AccountModel,
                 // VerificationToken: VerificationTokenModel,
                 // Session: SessionModel
-                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_accounts' }),
-                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_tokens' }),
-                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_sessions' })
+                Account: sequelize.define('AuthAccount', {...models.Account}, {tableName: 'auth_accounts'}),
+                VerificationToken: sequelize.define('AuthVerificationToken', {...models.VerificationToken}, {tableName: 'auth_verification_tokens'}),
+                Session: sequelize.define('AuthSession', {...models.Session}, {tableName: 'auth_sessions'})
             }
         }
     ),
     secret: process.env.NEXTAUTH_SECRET,
-    session: { strategy: 'jwt' },
+    session: {strategy: 'jwt'},
     callbacks: {
-        async signIn({ account, profile, user, email, credentials }) {
+        async signIn({account, profile, user, email, credentials}) {
             console.warn('signIn account', account)
             console.warn('signIn profile', profile)
             console.warn('signIn user', user)
@@ -39,7 +39,7 @@ export const authOptions: AuthOptions = {
             }
             return true // Do different verification for other providers that don't have `email_verified`
         },
-        async session({ session, token, user, newSession, trigger }) {
+        async session({session, token, user, newSession, trigger}) {
             console.warn('session session', session)
             console.warn('session token', token)
             console.warn('session user', user)
@@ -53,16 +53,28 @@ export const authOptions: AuthOptions = {
                     name: token.name,
                     picture: token.picture,
                 },
-
+                include: [
+                    {
+                        model: AddressModel,
+                        as: 'addresses'
+                    },
+                    {
+                        model: OuruserModel,
+                        as: 'ourUser'
+                    },
+                    {
+                        model: CartModel,
+                        as: 'cart'
+                    }]
             }
         },
-        async redirect ({ url, baseUrl }) {
+        async redirect({url, baseUrl}) {
             console.warn('redirect url', url)
             console.warn('redirect baseUrl', baseUrl)
 
             return baseUrl
         },
-        async jwt({ token, user, account, profile, trigger, isNewUser, session }) {
+        async jwt({token, user, account, profile, trigger, isNewUser, session}) {
             console.warn('jwt session', session)
             console.warn('jwt token', token)
             console.warn('jwt user', user)
@@ -145,4 +157,4 @@ export const authOptions: AuthOptions = {
 
 const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+export {handler as GET, handler as POST}
