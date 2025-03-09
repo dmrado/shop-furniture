@@ -1,4 +1,4 @@
-import { OuruserModel } from '@/db/models/ouruser.model'
+import { ProfileModel } from '@/db/models/profile.model'
 
 export const seedUsers = async (): Promise<void> => {
   try {
@@ -29,8 +29,8 @@ export const seedUsers = async (): Promise<void> => {
       }
     ];
 
-    await OuruserModel.destroy({ where: {} });
-    await OuruserModel.bulkCreate(users);
+    await ProfileModel.destroy({ where: {} });
+    await ProfileModel.bulkCreate(users);
 
     console.log('Users seeded successfully');
   } catch (error) {

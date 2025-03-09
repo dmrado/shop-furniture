@@ -9,7 +9,7 @@ import {
     InferCreationAttributes,
     Model
 } from 'sequelize'
-import {OuruserModel} from "@/db/models/ouruser.model";
+import {ProfileModel} from "@/db/models/profile.model";
 
 export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttributes<AuthUser>> {
 
@@ -20,7 +20,7 @@ export class AuthUser extends Model<InferAttributes<AuthUser>, InferCreationAttr
     declare image?: string | null
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
-    declare ourUser?: OuruserModel // Добавляем связь с OuruserModel
+    declare ourUser?: ProfileModel // Добавляем связь с OuruserModel
 }
 
 AuthUser.init(

@@ -5,7 +5,7 @@ import YandexProvider from 'next-auth/providers/yandex'
 import SequelizeAdapter, {models} from '@auth/sequelize-adapter'
 import {sequelize} from '@/db/connection'
 import {AuthUser} from '@/db/models/users.model'
-import {AccountModel, AddressModel, OuruserModel, SessionModel, CartModel} from "@/db/models";
+import {AccountModel, AddressModel, ProfileModel, SessionModel, CartModel} from "@/db/models";
 import {VerificationToken} from "@auth/sequelize-adapter/models";
 import {VerificationTokenModel} from "@/db/models/verificationtoken.model";
 
@@ -59,7 +59,7 @@ export const authOptions: AuthOptions = {
                         as: 'addresses'
                     },
                     {
-                        model: OuruserModel,
+                        model: ProfileModel,
                         as: 'ourUser'
                     },
                     {

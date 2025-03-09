@@ -1,16 +1,16 @@
 'use server'
-import {AddressModel, OuruserModel} from "@/db/models";
+import {AddressModel, ProfileModel} from "@/db/models";
 import {InferAttributes, InferCreationAttributes} from "sequelize";
 
 // здесь все обращения к модели User
 
 // Функция обновления состояния согласия на обработку персональных данных
 export const updateUserAgreementAction = async (userId: string, isAgreed) => {
-    return await OuruserModel.update(
+    return await ProfileModel.update(
         {
             isAgreed,
             agreementDate: isAgreed ? new Date() : null
-        } as Partial<InferAttributes<OuruserModel>>,
+        } as Partial<InferAttributes<ProfileModel>>,
         {
             where: {id: userId}
         }
@@ -18,7 +18,7 @@ export const updateUserAgreementAction = async (userId: string, isAgreed) => {
 }
 
 export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
-    const result = await OuruserModel.findOne({
+    const result = await ProfileModel.findOne({
         where: {id: userId}
     })
     // console.log('result in a isAgreedFromModelAction', result)
@@ -31,12 +31,12 @@ export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
 
 // сохраняет упрощенного юзера из InstantOrderModal - быстрый заказ
 export const createInstantUserAction = async ({name, phone}: {
-    name: InferAttributes<OuruserModel> | string,
+    name: InferAttributes<ProfileModel> | string,
     phone: InferAttributes<AddressModel> | string
 }) => {
 
     // Сначала проверяем, существует ли пользователь с таким телефоном
-    const existingUser = await OuruserModel.findOne({
+    const existingUser = await ProfileModel.findOne({
         include: [{
             model: AddressModel,
             as: 'addresses',
@@ -51,7 +51,7 @@ export const createInstantUserAction = async ({name, phone}: {
         };
     }
 
-    const instantUser: InferCreationAttributes<OuruserModel> = await OuruserModel.create({
+    const instantUser: InferCreationAttributes<ProfileModel> = await ProfileModel.create({
         name: name,
         isActive: true,
         canContact: true,
@@ -73,7 +73,7 @@ export const createInstantUserAction = async ({name, phone}: {
         isMain: true,
     })
 
-    const newInstantUser = await OuruserModel.findOne({
+    const newInstantUser = await ProfileModel.findOne({
         include: [{
             model: AddressModel,
             as: 'addresses',

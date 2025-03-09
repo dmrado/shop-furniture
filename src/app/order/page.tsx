@@ -1,32 +1,39 @@
 import React from 'react'
 import UserOrderForm from '@/components/user/UserOrderForm'
-import { OuruserModel } from '@/db/models'
+import { ProfileModel } from '@/db/models'
 import { AddressModel } from '@/db/models'
 import { InferAttributes } from 'sequelize'
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {AuthUser} from "@/db/models/users.model";
 
 // // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
 // // const deliveryAddress = userAddress[n]
 
-export interface UserProfile extends InferAttributes<OuruserModel> {
+export interface UserProfile extends InferAttributes<ProfileModel> {
     addresses: InferAttributes<AddressModel>[]
 }
 
 const OrderPage = async () => {
-    //todo дублировать сессию и AuthAdapter из ProfilePage
-    const userData = await OuruserModel.findOne({
+    const session = await getServerSession(authOptions)
+    console.log('Order Session', session)
+    const userId = session.user.id
+
+    const addresses = await AddressModel.findAll({
         where: {
-            id: 1
+            id: userId
         },
-        include: [{
-            model: AddressModel,
-            attributes: [ 'id', 'phone', 'city', 'street', 'home', 'corps', 'appart', 'isMain' ],
-            as: 'addresses' // используем тот же алиас, что указали при определении связи
-        },
-            //todo сделать модель телефонов юзеру
-        ]
     })
 
-    if(!userData || !userData.addresses) {
+    const profile = await ProfileModel.findOne({
+        where: {
+            id: userId
+        },
+    })
+
+    const user = session.user
+
+    if(!addresses) {
         throw new Error('Invalid DB response')
     }
 

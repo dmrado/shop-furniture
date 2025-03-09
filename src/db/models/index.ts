@@ -4,13 +4,11 @@ import { ProductModel } from '@/db/models/product.model'
 import { OrderedProductsModel } from '@/db/models/orderedProducts.model'
 import { OrderModel } from '@/db/models/order.model'
 import { StockModel } from '@/db/models/stock.model'
-// import {OuruserModel} from '@/db/models/ouruser.model'
 import { CartModel } from '@/db/models/cart.model'
 import { SessionModel } from '@/db/models/sessions.model'
 import { AccountModel } from '@/db/models/accounts.model'
 import { AuthUser } from '@/db/models/users.model'
-import {OuruserModel} from "@/db/models/ouruser.model";
-// import {UserModel} from "@/db/models/users.model";
+import {ProfileModel} from "@/db/models/profile.model";
 
 // Установка связей
 ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -61,14 +59,14 @@ AuthUser.hasMany(AddressModel, {
 })
 
 
-AuthUser.hasOne(OuruserModel, {
+AuthUser.hasOne(ProfileModel, {
     foreignKey: 'userId', // Это поле в таблице ourusers, в accounts требует sequelize adapter
-    as: 'ourUser', // Алиас для связи с OuruserModel
+    as: 'profiles', // Алиас для связи с OuruserModel
     sourceKey: 'id'
 })
-OuruserModel.belongsTo(AuthUser, {
+ProfileModel.belongsTo(AuthUser, {
     foreignKey: 'userId', // То же имя внешнего ключа в таблице ouruser
-    as: 'authUser',       // Алиас для доступа к связанному пользователю в AuthUser
+    as: 'profiles',       // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'   // Поле в AuthUser, на которое ссылается внешний ключ
 });
 
@@ -116,7 +114,8 @@ export {
     OrderedProductsModel,
     OrderModel,
     StockModel,
-    OuruserModel,
+    ProfileModel,
     AccountModel,
-    SessionModel
+    SessionModel,
+    AuthUser
 }

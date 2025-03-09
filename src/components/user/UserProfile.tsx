@@ -5,7 +5,7 @@ import Link from 'next/link'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import Agreement from "@/components/site/Agreement";
-import {OuruserModel} from "@/db/models";
+import {ProfileModel} from "@/db/models";
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -22,7 +22,7 @@ import {OuruserModel} from "@/db/models";
 // }
 
 type UserProfileProps = {
-    user: OuruserModel;
+    user: ProfileModel;
     previousOrders: any;
 }
 const UserProfile = ({ user, previousOrders }: UserProfileProps) => {

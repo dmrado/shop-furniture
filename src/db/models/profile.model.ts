@@ -3,11 +3,10 @@ import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import {AuthUser} from "@/db/models/users.model";
 
-export class OuruserModel extends Model<InferAttributes<OuruserModel>, InferCreationAttributes<OuruserModel>> {
+export class ProfileModel extends Model<InferAttributes<ProfileModel>, InferCreationAttributes<ProfileModel>> {
     //todo проверить нужен ли знак  ?
     declare id?: CreationOptional<number>
     declare userId: string
-    declare email: string
     declare name: string
     declare surName: string
     declare fatherName: string
@@ -18,7 +17,7 @@ export class OuruserModel extends Model<InferAttributes<OuruserModel>, InferCrea
     declare user?: AuthUser   // Добавляем связь с UserModel
 }
 
-OuruserModel.init(
+ProfileModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -32,11 +31,6 @@ OuruserModel.init(
                 model: 'auth_users',
                 key: 'id'
             }
-        },
-        email: {
-            type: DataTypes.STRING(128),
-            allowNull: false,
-            unique: true,
         },
         name: {
             type: DataTypes.STRING(128),
@@ -72,6 +66,6 @@ OuruserModel.init(
     },
     {
         sequelize,
-        tableName: 'ourusers',
+        tableName: 'profiles',
     }
 )
