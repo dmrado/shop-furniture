@@ -19,7 +19,7 @@ const CartRow = ({ cartRow }: Props) => {
     const { updateQuantity, deleteCartRow, selectedItems, toggleSelection } = useCartContext()
     const [ isUpdating, setIsUpdating ] = useState(false)
 
-    console.log('>>>> this is one product on UserCart', cartRow)
+    console.log('>>>> this is one product on the Cart', cartRow)
 
     return (
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-4 mx-6 gap-4 border border-gray-100 hover:border-gray-200">

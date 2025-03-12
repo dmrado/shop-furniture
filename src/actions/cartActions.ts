@@ -3,6 +3,7 @@ import { CartModel, ProductModel } from '@/db/models'
 import { InferAttributes, Op } from 'sequelize'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import {redirect} from "next/navigation";
 
 export type CartRow =
     Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
@@ -76,10 +77,13 @@ const mapCartRow = (cart: CartModel): CartRow => {
     }
 }
 
-// fixme: use real userId
+// fixme: почему то при заходе на http://127.0.0.1:3000/ сразу ломится за Cart и соотв логиниться CartContext useEffect 84 строка
 export async function getCartAction(): Promise<CartRow[]> {
     const session = await getServerSession(authOptions)
     console.log('Cart Session', session)
+    if (!session || !session.user) {
+        redirect('/api/auth/signin')
+    }
     const userId = session.user.id
 
     const { rows } = await CartModel.findAndCountAll({
@@ -90,14 +94,19 @@ export async function getCartAction(): Promise<CartRow[]> {
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({ id, newQuantity, userId = 1 }: {
+export const updateQuantityAction = async ({ id, newQuantity}: {
     id: number,
     newQuantity: number,
     userId?: number
 }):
     Promise<CartRow[]> => {
     // await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
-
+    const session = await getServerSession(authOptions)
+    console.log('Cart Session', session)
+    if (!session || !session.user) {
+        redirect('/api/auth/signin')
+    }
+    const userId = session.user.id
     if (newQuantity <= 1) {
         await CartModel.update(
             { quantity: 1 },
@@ -141,10 +150,13 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
     }
 }
 
-// fixme: use real userId
 export const addProductToCartAction = async (productId: number, quantity: number): Promise<CartRow[]> => {
     const session = await getServerSession(authOptions)
-    const userId = session?.user?.id
+    console.log('Cart Session', session)
+    if (!session || !session.user) {
+        redirect('/api/auth/signin')
+    }
+    const userId = session.user.id
     const existingCartItem = await CartModel.findOne({
         where: {
             productId,

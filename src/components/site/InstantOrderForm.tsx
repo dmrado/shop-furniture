@@ -41,7 +41,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
         </div>
     )
 }
-//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему заводится строка в модели user, далее админ заводит полные данные во время звонка. На этой форме user с упрощенной регистрацией делает заказ без подтверждения регистрации
+//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему НЕ заводится строка в модели user. На этой форме визитер делает заказ без регистрации, данные отправляются только через nodeMailerInstantOrder админу. Структура офрмления мгновенного заказа подразумевает активацию кногпки "Отправить" только в случае согласия с политикой.
 export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
     isOpen: boolean;
     onClose: () => void;
@@ -99,7 +99,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
             setIsClosing(true)
             const [mailSuccess, dbResult] = await Promise.all([
                 nodeMailerInstantOrder({name, phone}),
-                createInstantUserAction({name, phone})
+                // createInstantUserAction({name, phone}) //заглушка функции, ее можно будет активировать если захотим в будущем все же делать упрощенную регистрацию
             ])
             if (mailSuccess) {
                 setSuccess(true)
@@ -112,7 +112,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
             console.error('Ошибка:', error)
             alert('Произошла ошибка при обработке заявки. Пожалуйста, попробуйте позже.')
         }
-
+        // это дублирующий варинат блока try выше последовательной отправки письма и сохраненипыя в БД, не проверял какой работает лучше.
         // send by mail independently
         // const successMail = await nodeMailerInstantOrder({name, phone})
         // if (successMail) {
@@ -161,7 +161,6 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                 <Agreement
                     setAgreed={setAgreed}
                     agreed={agreed}
-                    userId={user.id}
                 />
                 {/* Buttons section */}
                 <div

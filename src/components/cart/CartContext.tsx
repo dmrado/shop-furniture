@@ -73,9 +73,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     // Функция для подсчета общей суммы только выбранных товаров
+    //todo need check что переменная cartRows не инициализирована или равна undefined к моменту выполнения этого кода. Ошибка возникает еще до того, как код доходит до обращения к item.product.new_price. Проверьте, где и как инициализируется переменная cartRows. Возможно, вы пытаетесь использовать её до того, как данные загружены с сервера или до инициализации состояния. Если вы используете асинхронную загрузку данных, убедитесь, что вы обрабатываете начальное состояние, когда данные еще не загружены.
     const selectedTotalAmount = cartRows
+        ? cartRows
         .filter((row) => selectedItems.includes(row.id))
         .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0)
+        : 0
 
     // Функция получения содержимого корзины
     useEffect(() => {
@@ -84,7 +87,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             const rows = await getCartAction()
             setCartRows(rows)
             setIsLoading(false)
-            setSelectedItems(rows.map(row => row.id))
+            //todo need check <?> below
+            setSelectedItems(rows?.map(row => row.id))
             console.log('rows', rows)
         }
         fetchCart()
@@ -128,14 +132,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
 
     // Расчет общей скидки в процентах
-    const totalOldPrice = cartRows.reduce(
+    //todo need check
+    const totalOldPrice = cartRows ?
+        cartRows.reduce(
         (sum, item) => sum + item.product.old_price * item.quantity,
         0
-    )
-    const totalNewPrice = cartRows.reduce(
+    ): 0
+    const totalNewPrice = cartRows ? cartRows.reduce(
         (sum, item) => sum + item.product.new_price * item.quantity,
         0
-    )
+    ) : 0
 
     const totalDiscount = totalOldPrice - totalNewPrice
 
@@ -148,7 +154,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         totalDiscount,
         finalAmount,
         totalDiscountPercent,
-        count: cartRows.length,
+        //todo need check <?> below
+        count: cartRows?.length,
         cartRows,
         addProductToCart,
         updateQuantity,

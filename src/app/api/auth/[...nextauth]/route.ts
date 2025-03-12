@@ -10,6 +10,8 @@ import {VerificationToken} from "@auth/sequelize-adapter/models";
 import {VerificationTokenModel} from "@/db/models/verificationtoken.model";
 
 // todo: no sense to have this constant separately
+
+//todo добавить isSessionExpired(session) или он зашит в JWT
 export const authOptions: AuthOptions = {
     adapter: SequelizeAdapter(sequelize,
         {
