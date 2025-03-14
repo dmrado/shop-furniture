@@ -1,24 +1,22 @@
 import React from 'react'
 import UserOrderForm from '@/components/user/UserOrderForm'
-import {ProfileModel} from '@/db/models'
-import {AddressModel} from '@/db/models'
-import {InferAttributes} from 'sequelize'
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import {AuthUserModel} from "@/db/models/users.model";
-import {redirect} from "next/navigation";
+import { ProfileModel } from '@/db/models'
+import { AddressModel } from '@/db/models'
+import { InferAttributes } from 'sequelize'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { AuthUserModel } from '@/db/models/users.model'
+import { redirect } from 'next/navigation'
 
 // // const deliveryDate = toLocaleDateString('ru-RU', Date.now())
 // // const deliveryAddress = userAddress[n]
-
-
 
 const OrderPage = async () => {
     const session = await getServerSession(authOptions)
     if (!session) {
         redirect('api/auth/signin?backURL=order')
     }
-    //todo redirect URL from google редиректит туда гже ты находился
+    //todo redirect URL from google редиректит туда где ты находился
 
     console.log('Order Session', session)
     const userId = session.user.id

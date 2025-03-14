@@ -99,9 +99,8 @@ const CartItemSkeleton = () => {
 export default function Loading() {
     return (
         <div className="container mx-auto py-6">
-            <CartItemSkeleton/>
-            <CartItemSkeleton/>
-            <CartItemSkeleton/>
+            {[ 0, 1, 2 ].map(index => <CartItemSkeleton key={index} widthVariant={index} />
+            )}
         </div>
     )
 }

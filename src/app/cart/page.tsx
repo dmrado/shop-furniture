@@ -7,10 +7,10 @@ import { redirect } from 'next/navigation'
 const CartPage = async () => {
     const session = await getServerSession(authOptions)
     console.log('Cart Session', session)
-    // if (!session || !session.user) {
-    //     redirect('/api/auth/signin')
-    // }
-    // const userId = session.user.id //в корзине не передаем на бекенд
+    if (!session || !session.user) {
+        redirect('/api/auth/signin')
+    }
+    // const userId = session.user.id //не передаем на бекенд отсюда, там свой механизм
 
     // if (!session || !isAdmin(session) || isSessionExpired(session)) {
     //     return redirect('/api/auth/signin')

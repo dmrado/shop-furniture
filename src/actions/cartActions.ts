@@ -3,7 +3,7 @@ import { CartModel, ProductModel } from '@/db/models'
 import { InferAttributes, Op } from 'sequelize'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import {redirect} from "next/navigation";
+import { redirect } from 'next/navigation'
 
 export type CartRow =
     Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
@@ -95,7 +95,7 @@ export async function getCartAction(): Promise<CartRow[]> {
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({ id, newQuantity}: {
+export const updateQuantityAction = async ({ id, newQuantity }: {
     id: number,
     newQuantity: number,
     userId?: number
