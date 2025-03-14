@@ -81,6 +81,7 @@ const mapCartRow = (cart: CartModel): CartRow => {
 export async function getCartAction(): Promise<CartRow[]> {
     const session = await getServerSession(authOptions)
     console.log('Cart Session', session)
+
     if (!session || !session.user) {
         redirect('/api/auth/signin')
     }
