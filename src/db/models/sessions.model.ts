@@ -5,8 +5,8 @@ export class SessionModel extends Model<InferAttributes<SessionModel>, InferCrea
 
     declare id?: string
     declare expires: Date
-    declare session_token: string
-    declare user_id: string | null
+    declare sessionToken: string
+    declare userId: string | null
     declare user?: AuthUserModel
 }
 
@@ -18,7 +18,7 @@ SessionModel.init(
             primaryKey: true,
         },
         expires: { type: DataTypes.DATE, allowNull: false },
-        session_token: {
+        sessionToken: {
             type: DataTypes.STRING,
             unique: 'session_token',
             allowNull: false,
