@@ -1,9 +1,9 @@
 'use client'
-import React, {useEffect, useRef} from 'react'
-import {Disclosure, Transition} from '@headlessui/react'
-import {ChevronDownIcon} from '@heroicons/react/24/outline'
+import React, { useEffect, useRef } from 'react'
+import { Disclosure, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import ConfidentialPolicy from '@/components/site/ConfidentialPolicy'
-import {isAgreedFromModelAction, updateUserAgreementAction} from '@/actions/userActions'
+import { isAgreedFromModelAction, updateUserAgreementAction } from '@/actions/userActions'
 
 type Props = {
     setAgreed: (value: boolean) => void,
@@ -11,17 +11,20 @@ type Props = {
     userId?: string
 }
 
-const Agreement = ({setAgreed, agreed, userId}: Props) => {
+const Agreement = ({ setAgreed, agreed, userId }: Props) => {
 
     // для корректной работы @headlessui/react
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
 
     // проверяем состояние согласия на обработку перс данных
+    // для InstantOrderForm userId не нужен, решили что оставляем на фронтенде, что б не регистрировать юзера: Там кнопка кликабельна только если чекбокс отмечен checked. Но для UserOrderForm требуется оставить сохранение состояния sAgreed по userId
     useEffect(() => {
         const checkAgreedStatus = async () => {
-            const result = await isAgreedFromModelAction(userId)
-            console.log('result from DB:', result)
-            setAgreed(result)
+            if(userId) {
+                const result = await isAgreedFromModelAction(userId)
+                console.log('result from DB:', result)
+                setAgreed(result)
+            }
         }
         void checkAgreedStatus()
     }, [])
@@ -41,7 +44,7 @@ const Agreement = ({setAgreed, agreed, userId}: Props) => {
 
     return (
         <Disclosure>
-            {({open}) => (
+            {({ open }) => (
                 <>
                     <Disclosure.Button
                         ref={disclosureButtonRef}

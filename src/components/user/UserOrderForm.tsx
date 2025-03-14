@@ -2,11 +2,11 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
-import Agreement from "@/components/site/Agreement";
-import UserAddressForm from "@/components/user/UserAddressForm";
-import {Profile} from "@/db/models/profile.model";
-import {AuthUser} from "@/db/models/users.model";
-import {Address} from "@/db/models/address.model";
+import Agreement from '@/components/site/Agreement'
+import UserAddressForm from '@/components/user/UserAddressForm'
+import { Profile } from '@/db/models/profile.model'
+import { AuthUser } from '@/db/models/users.model'
+import { Address } from '@/db/models/address.model'
 
 type Props = {
     addresses: Address[]
@@ -19,7 +19,7 @@ const UserOrderForm = ({ user, addresses, profile }: Props) => {
     const [ isOpenModal, setIsOpenModal ] = useState(false)
 
     // для Disclosure согласия на обработку перс данных
-    const [agreed, setAgreed] = useState<boolean>(false)
+    const [ agreed, setAgreed ] = useState<boolean>(false)
 
     const formatAddress = (address: Address) => {
         return `${address.city}, ${address.street},
@@ -38,7 +38,7 @@ const UserOrderForm = ({ user, addresses, profile }: Props) => {
                 user={user}
                 isOpen={isOpenModal}
                 onClose={() => setIsOpenModal(false)
-            }/>
+                }/>
             }
             {user.name} {mainAddress?.phone} {user.email}
             <form action={handleSubmit}>

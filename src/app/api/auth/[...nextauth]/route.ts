@@ -4,7 +4,8 @@ import YandexProvider from 'next-auth/providers/yandex'
 import SequelizeAdapter, { models } from '@auth/sequelize-adapter'
 import { sequelize } from '@/db/connection'
 import { AuthUserModel } from '@/db/models/users.model'
-import { AccountModel, AddressModel, ProfileModel, SessionModel, CartModel, VerificationTokenModel } from '@/db/models'
+import { AccountModel, AddressModel, ProfileModel, SessionModel, CartModel,  } from '@/db/models'
+// import { VerificationTokenModel } from '@/db/models'
 
 // todo: no sense to have this constant separately
 
@@ -15,19 +16,21 @@ export const authOptions: AuthOptions = {
             // timestamps: true, // важно!
             models: {
                 User: AuthUserModel,
-                Account: AccountModel,
-                VerificationToken: VerificationTokenModel,
-                Session: SessionModel
-                // Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_accounts' }),
-                // VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_tokens' }),
-                // Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_sessions' })
+                // Account: AccountModel,
+                // VerificationToken: VerificationTokenModel,
+                // Session: SessionModel
+                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_accounts' }),
+                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_tokens' }),
+                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_sessions' })
             }
         }
     ),
     secret: process.env.NEXTAUTH_SECRET,
-    // session: {strategy: 'jwt'},
+    session: {strategy: 'jwt'},
+
     //fixme  Вы используете tableName: 'auth_sessions', но NextAuth по умолчанию ищет таблицу sessions
-    session: { strategy: 'database' },
+    // session: { strategy: 'database' },
+
     callbacks: {
         async signIn({ account, profile, user, email, credentials }) {
             console.warn('signIn account', account)
