@@ -57,19 +57,19 @@ export const authOptions: AuthOptions = {
                     name: token.name,
                     picture: token.picture,
                 },
-                include: [
-                    {
-                        model: AddressModel,
-                        as: 'addresses'
-                    },
-                    {
-                        model: ProfileModel,
-                        as: 'profile'
-                    },
-                    {
-                        model: CartModel,
-                        as: 'cart'
-                    }]
+                // include: [
+                //     {
+                //         model: AddressModel,
+                //         as: 'addresses'
+                //     },
+                //     {
+                //         model: ProfileModel,
+                //         as: 'profile'
+                //     },
+                //     {
+                //         model: CartModel,
+                //         as: 'cart'
+                //     }]
             }
         },
         async redirect({ url, baseUrl }) {

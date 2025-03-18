@@ -17,17 +17,17 @@ const Agreement = ({ setAgreed, agreed, userId }: Props) => {
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
 
     // проверяем состояние согласия на обработку перс данных
-    // для InstantOrderForm userId не нужен, решили что оставляем на фронтенде, что б не регистрировать юзера: Там кнопка кликабельна только если чекбокс отмечен checked. Но для UserOrderForm требуется оставить сохранение состояния sAgreed по userId
-    useEffect(() => {
-        const checkAgreedStatus = async () => {
-            if(userId) {
-                const result = await isAgreedFromModelAction(userId)
-                console.log('result from DB:', result)
-                setAgreed(result)
-            }
-        }
-        void checkAgreedStatus()
-    }, [])
+    // useEffect(() => {
+    //     const checkAgreedStatus = async () => {
+    //         if(userId) {
+    //             const result = await isAgreedFromModelAction(userId)
+    //             console.log('result from DB:', result)
+    //             setAgreed(result)
+    //         }
+    //     }
+    //     void checkAgreedStatus()
+    // }, [])
+
     // покупка без регистрации и без сохранения isAgreed в БД
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newCheckedState = e.target.checked
@@ -63,6 +63,7 @@ const Agreement = ({ setAgreed, agreed, userId }: Props) => {
                     </Disclosure.Button>
 
                     <Transition
+                        show={open}
                         enter="transition duration-100 ease-out"
                         enterFrom="transform scale-95 opacity-0"
                         enterTo="transform scale-100 opacity-100"

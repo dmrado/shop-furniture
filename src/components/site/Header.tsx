@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
 import Heart from '@/components/site/img/Heart.svg'
 import Cart from '@/components/site/img/Cart.svg'
@@ -11,31 +11,31 @@ import Phone from '@/components/site/img/Phone.svg'
 import HeartY from '@/components/site/img/HeartY.svg'
 import CartY from '@/components/site/img/CartY.svg'
 import ProfileY from '@/components/site/img/ProfileY.svg'
-import CartTotal from '@/components/cart/CartTotal'
+// import CartTotal from '@/components/cart/CartTotal'
 import CartTotalAmount from '@/components/cart/CartTotalAmount'
-import { getServerSession } from 'next-auth'
-import { isSessionExpired } from '@/actions/isSessionExpired'
-import { redirect } from 'next/navigation'
+// import { getServerSession } from 'next-auth'
+// import { isSessionExpired } from '@/actions/isSessionExpired'
+// import { redirect } from 'next/navigation'
 
 const Header = () => {
 
     // для мобильного меню
-    const [ isOpen, setIsOpen ] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     // для изменения поведения svg-иконок
-    const [ heartIcon, setHeartIcon ] = useState(Heart)
-    const [ cartIcon, setCartIcon ] = useState(Cart)
-    const [ profileIcon, setProfileIcon ] = useState(Profile)
+    const [heartIcon, setHeartIcon] = useState(Heart)
+    const [cartIcon, setCartIcon] = useState(Cart)
+    const [profileIcon, setProfileIcon] = useState(Profile)
 
     // для подменю в десктопном меню
-    const [ activeMenu, setActiveMenu ] = useState<string | null>(null)
-    const [ menuTimer, setMenuTimer ] = useState<NodeJS.Timeout | null>(null)
+    const [activeMenu, setActiveMenu] = useState<string | null>(null)
+    const [menuTimer, setMenuTimer] = useState<NodeJS.Timeout | null>(null)
 
     // для аккордеона в мобильном меню
-    const [ activeMenuItem, setActiveMenuItem ] = useState<string | null>(null)
-    const [ hoveredItem, setHoveredItem ] = useState<string | null>(null)
+    const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null)
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
-    const [ session, setSession ] = useState(null)
+    // const [ session, setSession ] = useState(null)
 
     // useEffect(() => {
     //     const handleSession = async () => {
@@ -50,11 +50,11 @@ const Header = () => {
 
     // todo переделать ссылки на реальные
     const navItems = [
-        { name: 'Каталог', subItems: [ 'Мебель', 'Декор', 'Текстиль' ] },
-        { name: 'Кухни', subItems: [ 'Модульные кухни', 'Аксессуары' ] },
-        { name: 'Свет', subItems: [ 'Люстры', 'Торшеры', 'Бра' ] },
-        { name: 'Диваны', subItems: [ 'Кожаные', 'Тканевые' ] },
-        { name: 'Декор', subItems: [ 'Картины', 'Зеркала' ] },
+        {name: 'Каталог', subItems: ['Мебель', 'Декор', 'Текстиль']},
+        {name: 'Кухни', subItems: ['Модульные кухни', 'Аксессуары']},
+        {name: 'Свет', subItems: ['Люстры', 'Торшеры', 'Бра']},
+        {name: 'Диваны', subItems: ['Кожаные', 'Тканевые']},
+        {name: 'Декор', subItems: ['Картины', 'Зеркала']},
     ]
 
     // todo сделать функцию закрытия по клику вне выпадающего меню
@@ -204,7 +204,7 @@ const Header = () => {
 
             <button
                 className="my-4 flex items-center justify-center text-white border border-[#E99C28] hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer"
-                style={{ width: 258, height: 46 }}
+                style={{width: 258, height: 46}}
                 onClick={closeMenu}
             >
                 <Image src={Phone} width={15} height={15} className="mr-2.5"/>
@@ -251,38 +251,39 @@ const Header = () => {
                 </Link>
 
                 <div className="ml-12">
-                    {!session &&
-                        <Link
-                            href={'/api/auth/signin'}
-                            onClick={closeMenu}
-                            onMouseEnter={() => setProfileIcon(ProfileY)}
-                            onMouseLeave={() => setProfileIcon(Profile)}
-                            className="flex items-center"
-                        >
-                            <Image
-                                src={profileIcon}
-                                alt="Профиль"
-                                width={25}
-                                height={25}
-                                className="w-6 h-6 transform-none"
-                            />
-                        </Link>}
-                    {session &&
-                        <Link
-                            href={'/profile'}
-                            onClick={closeMenu}
-                            onMouseEnter={() => setProfileIcon(ProfileY)}
-                            onMouseLeave={() => setProfileIcon(Profile)}
-                            className="flex items-center"
-                        >
-                            <Image
-                                src={profileIcon}
-                                alt="Профиль"
-                                width={25}
-                                height={25}
-                                className="w-6 h-6 transform-none"
-                            />
-                        </Link>}
+                    {/*{!session &&*/}
+                    {/*    <Link*/}
+                    {/*        href={'/api/auth/signin'}*/}
+                    {/*        onClick={closeMenu}*/}
+                    {/*        onMouseEnter={() => setProfileIcon(ProfileY)}*/}
+                    {/*        onMouseLeave={() => setProfileIcon(Profile)}*/}
+                    {/*        className="flex items-center"*/}
+                    {/*    >*/}
+                    {/*        <Image*/}
+                    {/*            src={profileIcon}*/}
+                    {/*            alt="Профиль"*/}
+                    {/*            width={25}*/}
+                    {/*            height={25}*/}
+                    {/*            className="w-6 h-6 transform-none"*/}
+                    {/*        />*/}
+                    {/*    </Link>}*/}
+                    {/*{session &&*/}
+                    <Link
+                        href={'/profile'}
+                        onClick={closeMenu}
+                        onMouseEnter={() => setProfileIcon(ProfileY)}
+                        onMouseLeave={() => setProfileIcon(Profile)}
+                        className="flex items-center"
+                    >
+                        <Image
+                            src={profileIcon}
+                            alt="Профиль"
+                            width={25}
+                            height={25}
+                            className="w-6 h-6 transform-none"
+                        />
+                    </Link>
+                    {/*}*/}
                 </div>
             </div>
         </>
@@ -368,20 +369,20 @@ const NavSocials = () => {
             <ul className="flex items-center list-none p-0 m-0 absolute -translate-y-[110%] gap-1.5">
                 <li className="flex justify-center items-center m-0 mr-0 bg-white w-[47px] h-[47px] rounded-full">
                     <Link className="flex justify-center items-center m-0 menu__link mr-5" target="_blank"
-                        href="https://t.me/+79146520955">
+                          href="https://t.me/+79146520955">
                         {/*<i className="fa-brands fa-telegram" />*/}
 
                     </Link>
                 </li>
                 <li className="mr-0 bg-white w-[47px] h-[47px] rounded-full">
                     <Link className="menu__link" target="_blank"
-                        href="https://api.whatsapp.com/send/?phone=79242693005">
+                          href="https://api.whatsapp.com/send/?phone=79242693005">
                         {/*<i className="fa-brands fa-square-whatsapp" />*/}
                     </Link>
                 </li>
                 <li className="mr-0 bg-white w-[47px] h-[47px] rounded-full">
                     <Link className="menu__link" target="_blank"
-                        href="https://www.youtube.com/@Stranger-pilgrim">
+                          href="https://www.youtube.com/@Stranger-pilgrim">
                         {/*<i className="fa-brands fa-square-youtube"></i>*/}
                     </Link>
                 </li>

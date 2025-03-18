@@ -152,7 +152,9 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
 }
 
 export const addProductToCartAction = async (productId: number, quantity: number): Promise<CartRow[]> => {
+
     const session = await getServerSession(authOptions)
+
     console.log('Cart Session', session)
     if (!session || !session.user) {
         redirect('/api/auth/signin')

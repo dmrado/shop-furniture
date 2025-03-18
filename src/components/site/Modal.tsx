@@ -1,5 +1,5 @@
-import {Dialog, Transition} from '@headlessui/react'
-import {Fragment} from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { Fragment } from 'react'
 
 interface ModalProps {
     isOpen: boolean
@@ -7,7 +7,7 @@ interface ModalProps {
     children: React.ReactNode
 }
 
-export default function Modal({isOpen, onClose, children}: ModalProps) {
+export default function Modal({ isOpen, onClose, children }: ModalProps) {
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-50" open={isOpen} onClose={onClose}>

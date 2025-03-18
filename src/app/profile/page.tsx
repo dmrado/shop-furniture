@@ -1,11 +1,11 @@
 import UserProfile from '@/components/user/UserProfile'
-import {ProfileModel, AddressModel} from '@/db/models'
-import {getServerSession} from "next-auth";
-import {redirect} from "next/navigation";
+import { ProfileModel, AddressModel } from '@/db/models'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 import { isSessionExpired } from '@/actions/isSessionExpired.ts'
-import {AuthAdapter} from "@/app/api/auth/[...nextauth]/AuthAdapter";
-import {previousOrders} from "@/components/mockData";
-import React from "react";
+import { previousOrders } from '@/components/mockData'
+import React from 'react'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 //todo хистори - это отфильтровано за период в Orders
 //todo создать модель для избранного "с сердечком"
@@ -14,33 +14,58 @@ import React from "react";
 //ВНИМАНИЕ! в AuthAdapter при создании нового юзера из гугл/яндекс аккаунта стоит isAgreed: false, поэтому при входе на эту в компоненте UserProfile сразу на входе стоит ознакомление и подтверждение ознакомления с политикой обработки персональных данных
 
 const ProfilePage = async () => {
-    const session = await getServerSession()
+
+    const session = await getServerSession(authOptions)
+
     if (!session || isSessionExpired(session)) {
         return redirect('/api/auth/signin')
     }
+    console.log('session', session.user)
 
-    const email: string = session.user.email
+    const profile = await ProfileModel.findOne({
+        where: {
+            userId: session.user.id
+        }
+    })
 
-    // Пытаемся найти пользователя через AuthAdapter по email из сессии
-    const existingUser = await AuthAdapter().getUserByEmail(email)
+    //todo запрос адресов
+    const addresses = await AddressModel.findOne({
+        where: {
+            userId: session.user?.id
+        }
+    })
+    console.log('addresses from profile page', addresses)
 
-    // Если пользователь не найден в базе, создаем нового через AuthAdapter
-    if (!existingUser) {
-        const newUser = await AuthAdapter().createUser({
-                email: session.user.email,
-                name: session.user.name || '',
-            })
-
-            // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
-
-            // todo отрендерить компонент или модал с открытой формой регистрации с полями photo name fatherName surName email
-        return <>
-            <UserProfile user={newUser} previousOrders={previousOrders}/>
-        </>
+    const user = {
+        email: session.user.email,
+        photo: session.user.photo,
+        name: profile?.name ?? session.user.name.split(' ')[0],
+        // surName: profile.surName ?? session.user.name.split(' ')[1],
+        surName: '',
+        fatherName: profile?.fatherName ?? '',
+        isAgreed: profile?.isAgreed ?? false
     }
 
+    // Пытаемся найти пользователя через AuthAdapter по email из сессии
+    // const existingUser = await AuthAdapter().getUserByEmail(email)
+
+    // Если пользователь не найден в базе, создаем нового через AuthAdapter
+    // if (!existingUser) {
+    //     const newUser = await AuthAdapter().createUser({
+    //         email: session.user.email,
+    //         name: session.user.name || '',
+    //     })
+
+    // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
+
+    // todo отрендерить компонент или модал с открытой формой регистрации с полями photo name fatherName surName email
+    //     return <>
+    //         <UserProfile user={newUser} previousOrders={previousOrders}/>
+    //     </>
+    // }
+
     return <>
-        <UserProfile user={existingUser} previousOrders={previousOrders}/>
+        <UserProfile user={user} addresses={addresses} previousOrders={previousOrders}/>
     </>
 }
 

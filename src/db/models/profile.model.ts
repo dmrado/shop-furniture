@@ -1,8 +1,8 @@
 // export {}
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import {AuthUserModel} from "@/db/models/users.model";
-import {AddressModel} from "@/db/models/address.model";
+import { AuthUserModel } from '@/db/models/users.model'
+import { AddressModel } from '@/db/models/address.model'
 
 export interface Profile extends InferAttributes<ProfileModel> {}
 
@@ -17,7 +17,7 @@ export class ProfileModel extends Model<InferAttributes<ProfileModel>, InferCrea
     declare isActive: boolean
     declare isAgreed: boolean
     declare agreementDate: Date
-    declare user?: AuthUserModel   // Добавляем связь с UserModel
+    declare user?: AuthUserModel // Добавляем связь с UserModel
 }
 
 ProfileModel.init(
