@@ -42,9 +42,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = ({ user, isOpen, onClose }
-    // {user}: UserInterface
-) => {
+const UserAddressForm = ({ user, isOpen, onClose }) => {
 
     // todo с UserProfile он прийдет с объектом юзера, a с UserOrderForm через NewAddressModal может и с юзером и без юзера, обработать
     // if (!user) {
@@ -290,11 +288,11 @@ const UserAddressForm = ({ user, isOpen, onClose }
                 <input hidden readOnly value={captchaToken}/>
 
                 {/* Accordion section */}
-                <Agreement
-                    setAgreed={setAgreed}
-                    agreed={agreed}
-                    userId={user.id}
-                />
+                {/*<Agreement*/}
+                {/*    setAgreed={setAgreed}*/}
+                {/*    agreed={agreed}*/}
+                {/*    userId={user.id}*/}
+                {/*/>*/}
 
                 {/* Buttons section */}
                 <div

@@ -1,18 +1,18 @@
 'use client'
-import React, { useState, Fragment} from 'react'
-import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
-import {Dialog, Transition} from '@headlessui/react'
+import React, { useState, Fragment } from 'react'
+import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import { Dialog, Transition } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
-import {createInstantUserAction} from "@/actions/userActions";
-import {Simulate} from "react-dom/test-utils";
+import { createInstantUserAction } from '@/actions/userActions'
+import { Simulate } from 'react-dom/test-utils'
 import error = Simulate.error;
-import {handleOrderToDB} from "@/actions/user/handleOrderToDB";
-import Modal from "@/components/site/Modal";
+import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
+import Modal from '@/components/site/Modal'
 
-export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
-    const [isFocused, setIsFocused] = useState(false)
+export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
+    const [ isFocused, setIsFocused ] = useState(false)
     // todo: make autocomplete
     return (
         <div className="relative">
@@ -32,7 +32,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
                     focus:pt-4 focus:border-indigo-600`}
             />
             <label htmlFor={id}
-                   className={`absolute left-4 transition-all pointer-events-none
+                className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -42,29 +42,29 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     )
 }
 //пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему НЕ заводится строка в модели user. На этой форме визитер делает заказ без регистрации, данные отправляются только через nodeMailerInstantOrder админу. Структура офрмления мгновенного заказа подразумевает активацию кногпки "Отправить" только в случае согласия с политикой.
-export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
+export const InstantOrderForm = ({ isOpen, onClose, setIsOpen }: {
     isOpen: boolean;
     onClose: () => void;
     setIsOpen: () => void
 }) => {
 
-    const [captchaToken, setCaptchaToken] = useState<string>('')
+    const [ captchaToken, setCaptchaToken ] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [agreed, setAgreed] = useState<boolean>(false)
+    const [ agreed, setAgreed ] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [success, setSuccess] = useState<boolean>(false)
+    const [ success, setSuccess ] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [isClosing, setIsClosing] = useState<boolean>(false)
+    const [ isClosing, setIsClosing ] = useState<boolean>(false)
 
     //+++++++start validation формы отправки мгновенного заказа+++++
     class ValidationError extends Error {
         constructor(message: string) {
-            super(message);
-            this.name = 'ValidationError';
+            super(message)
+            this.name = 'ValidationError'
         }
     }
 
@@ -75,7 +75,7 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
 
         const phoneRegex = /^\+?[\d\s\(\)\-\.]{5,20}$/
 
-        if(!phone || !phoneRegex.test(phone.toString())){
+        if(!phone || !phoneRegex.test(phone.toString())) {
             alert('Пожалуйста, введите корректный номер телефона')
             // return
         }
@@ -97,8 +97,8 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
         // параллельная отправка почты и сохранения в БД
         try {
             setIsClosing(true)
-            const [mailSuccess, dbResult] = await Promise.all([
-                nodeMailerInstantOrder({name, phone}),
+            const [ mailSuccess, dbResult ] = await Promise.all([
+                nodeMailerInstantOrder({ name, phone }),
                 // createInstantUserAction({name, phone}) //заглушка функции, ее можно будет активировать если захотим в будущем все же делать упрощенную регистрацию
             ])
             if (mailSuccess) {
@@ -191,9 +191,9 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                         className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-                            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        }
+        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+}
                                 `}
                     >
                         {isClosing ? 'Отправка...' : 'Отправить'}
@@ -201,5 +201,5 @@ export const InstantOrderForm = ({isOpen, onClose, setIsOpen}: {
                 </div>
             </form>
         </Modal>
-   </>
+    </>
 }

@@ -1,13 +1,13 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import Agreement from '@/components/site/Agreement'
-import {ProfileModel} from '@/db/models'
-import {Profile} from '@/db/models/profile.model'
-import {Address} from '@/db/models/address.model'
+import { ProfileModel } from '@/db/models'
+import { Profile } from '@/db/models/profile.model'
+import { Address } from '@/db/models/address.model'
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -31,15 +31,15 @@ type UserProfileProps = {
     previousOrders: any
     addresses: Address[]
 }
-const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
+const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может быть уникальный адрес из массива адресов доставки корпоративного юзера
 
     // для Disclosure согласия на обработку перс данных
     // стейт для состояния согласия на обработку перс данных
-    const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
+    const [ agreed, setAgreed ] = useState<boolean>(user.isAgreed)
 
     // for NewAddressModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
 
     return <>
         {/*<Agreement*/}
@@ -92,12 +92,12 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                                 //      onSubmit={hideAlertForm}
                                 // /> :
                                 <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">
-                                        <span>  {item.city},<br/>
-                                            {item.street},
+                                    <span>  {item.city},<br/>
+                                        {item.street},
                                                 дом {item.home},
                                                 корпус {item.corps},
                                                 квартира {item.appart},
-                                            <br/> Телефон: {item.phone}</span>
+                                        <br/> Телефон: {item.phone}</span>
                                     <button
                                         className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
                                         Редактировать
@@ -108,7 +108,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                     </>
                 )}
             </div>
-            <UserAddressForm user={user} onClose={() => setIsOpenModal(false)}/>
+            {/*<UserAddressForm user={user} onClose={() => setIsOpenModal(false)}/>*/}
             <UserOrdersHistory previousOrders={previousOrders}/>
         </div>
         {/*}*/}

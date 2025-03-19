@@ -30,8 +30,8 @@ const Agreement = ({ setAgreed, agreed, userId }: Props) => {
 
     // покупка без регистрации и без сохранения isAgreed в БД
     const handleCheckboxChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newCheckedState = e.target.checked
         e.preventDefault()
+        const newCheckedState = e.target.checked
         if (userId) {
             await updateUserAgreementAction(userId, newCheckedState)
         }
@@ -41,7 +41,6 @@ const Agreement = ({ setAgreed, agreed, userId }: Props) => {
             disclosureButtonRef.current.click()
         }
     }
-
     return (
         <Disclosure>
             {({ open }) => (
@@ -63,7 +62,7 @@ const Agreement = ({ setAgreed, agreed, userId }: Props) => {
                     </Disclosure.Button>
 
                     <Transition
-                        show={open}
+                        show={false}
                         enter="transition duration-100 ease-out"
                         enterFrom="transform scale-95 opacity-0"
                         enterTo="transform scale-100 opacity-100"
