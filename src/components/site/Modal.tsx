@@ -7,10 +7,11 @@ interface ModalProps {
     children: React.ReactNode
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
-    return (
-        <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" open={isOpen} onClose={onClose}>
+export default function Modal({ isOpenModal, onClose, children }: ModalProps) {
+
+    return <>
+        <Transition appear show={isOpenModal} as={Fragment}>
+            <Dialog as="div" className="relative z-50" open={isOpenModal} onClose={onClose}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -43,5 +44,5 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
                 </div>
             </Dialog>
         </Transition>
-    )
+    </>
 }

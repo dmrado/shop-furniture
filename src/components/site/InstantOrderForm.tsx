@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, Fragment } from 'react'
 import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
@@ -42,7 +42,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     )
 }
 //пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему НЕ заводится строка в модели user. На этой форме визитер делает заказ без регистрации, данные отправляются только через nodeMailerInstantOrder админу. Структура офрмления мгновенного заказа подразумевает активацию кногпки "Отправить" только в случае согласия с политикой.
-export const InstantOrderForm = ({ isOpen, onClose, setIsOpen }: {
+export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
     isOpen: boolean;
     onClose: () => void;
     setIsOpen: () => void
@@ -125,10 +125,10 @@ export const InstantOrderForm = ({ isOpen, onClose, setIsOpen }: {
         setIsClosing(false)
     }
 
-    if (!isOpen) return null
+    if (!isOpenModal) return null
     // fixme? проверить как работает  setAgreed(false)
     return <>
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpenModsl={isOpenModal} onClose={onClose}>
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Мгновенное оформление заказа
             </Dialog.Title>

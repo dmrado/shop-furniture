@@ -100,4 +100,4 @@ const ConfidentialPolicy = () => {
     )
 }
 
-export default ConfidentialPolicy;
+export default ConfidentialPolicy

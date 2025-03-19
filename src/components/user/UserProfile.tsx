@@ -5,7 +5,6 @@ import Link from 'next/link'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import Agreement from '@/components/site/Agreement'
-import { ProfileModel } from '@/db/models'
 import { Profile } from '@/db/models/profile.model'
 import { Address } from '@/db/models/address.model'
 
@@ -24,7 +23,7 @@ import { Address } from '@/db/models/address.model'
 // }
 
 type UserProfileProps = {
-    user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed'> & {
+    user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
         email: string
         photo: string
     },
@@ -42,11 +41,12 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
     const [ isOpenModal, setIsOpenModal ] = useState(false)
 
     return <>
-        {/*<Agreement*/}
-        {/*    setAgreed={setAgreed}*/}
-        {/*    agreed={agreed}*/}
-        {/*/>*/}
-        {/*{agreed &&*/}
+        <Agreement
+            setAgreed={setAgreed}
+            agreed={agreed}
+            userId={user.id}
+        />
+        {agreed &&
         <div className="p-8 mx-auto max-w-6xl">
             <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>
             <Link href={'/api/auth/signout'}>
@@ -108,10 +108,10 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                     </>
                 )}
             </div>
-            {/*<UserAddressForm user={user} onClose={() => setIsOpenModal(false)}/>*/}
+            <UserAddressForm user={user} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
             <UserOrdersHistory previousOrders={previousOrders}/>
         </div>
-        {/*}*/}
+        }
     </>
 }
 
