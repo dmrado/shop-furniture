@@ -40,20 +40,23 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
     // for NewAddressModal
     const [ isOpenModal, setIsOpenModal ] = useState(false)
 
+    // для полукчения editId редактируемого адреса
+    const [updatingId, setUpdatingId] = useState(null)
+
     return <>
-        <Agreement
-            setAgreed={setAgreed}
-            agreed={agreed}
-            userId={user.id}
-        />
-        {agreed &&
+        {/*<Agreement*/}
+        {/*    setAgreed={setAgreed}*/}
+        {/*    agreed={agreed}*/}
+        {/*    userId={user.id}*/}
+        {/*/>*/}
+        {/*{agreed &&*/}
         <div className="p-8 mx-auto max-w-6xl">
             <h1 className="text-2xl font-bold mb-6">Личный кабинет</h1>
             <Link href={'/api/auth/signout'}>
                 <button
                     type="button"
                     className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                    Выйти
+                        Выйти
                 </button>
             </Link>
             <div className="flex items-center mb-8">
@@ -79,28 +82,43 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
             {/*todo а странице profile получить адреса из модели orders и реализовать условие ниже*/}
             {/* Список адресов доставки */}
             <div className="my-8 bg-white p-4 rounded-lg shadow-md">
+                <button
+                    type="button"
+                    onClick={() => setIsOpenModal(true)}
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                        Добавить новый адрес
+                </button>
+                {/*todo после изменения Transition-component v1.7 на transition-attribute 2.1 пофиксить Редактировать*/}
                 <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
-                {addresses?.length === 0 ? (
+                {!addresses ? (
                     <p>Нет зарегистрированных адресов доставки</p>
                 ) : (
                     <>
                         <ul className="mb-4">
-                            {addresses?.map(item => (
-                                // products.addressId
-                                //     === editId
-                                //    ? <UserAddressForm key={products.id} id={products.id} fullNameReceiver={products.fullNameReceiver} postalCode={products.postalCode} city={products.city} street={products.street} phoneNumber={products.phoneNumber}
-                                //      onSubmit={hideAlertForm}
-                                // /> :
-                                <li key={item.id} className="flex justify-between mb-2 border-b border-gray-200">
-                                    <span>  {item.city},<br/>
-                                        {item.street},
-                                                дом {item.home},
-                                                корпус {item.corps},
-                                                квартира {item.appart},
-                                        <br/> Телефон: {item.phone}</span>
-                                    <button
+                            {addresses.map(address => (
+                                address.id === updatingId ?
+                                    <UserAddressForm key={address.id}
+                                        id={address.id}
+                                        phone={address.phone}
+                                        city={address.city}
+                                        street={address.street}
+                                        home={address.home}
+                                        corps={address.corps}
+                                        appart={address.appart}
+                                        isMain={address.isMain}
+                                        onSubmit={() => {}}
+                                    /> :
+                                <li key={address.id}
+                                    className="flex justify-between mb-2 border-b border-gray-200">
+                                    <span>  {address.city},<br/>
+                                        {address.street},
+                                                дом {address.home},
+                                                корпус {address.corps},
+                                                квартира {address.appart},
+                                        <br/> Телефон: {address.phone}</span>
+                                    <button onClick={() => setUpdatingId(address.id)}
                                         className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
-                                        Редактировать
+                                            Редактировать
                                     </button>
                                 </li>
                             ))}
@@ -111,7 +129,7 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
             <UserAddressForm user={user} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
             <UserOrdersHistory previousOrders={previousOrders}/>
         </div>
-        }
+        {/*}*/}
     </>
 }
 

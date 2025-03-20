@@ -29,11 +29,24 @@ const ProfilePage = async () => {
     })
 
     //todo запрос адресов
-    const addresses = await AddressModel.findOne({
+    const result = await AddressModel.findAll({
         where: {
-            userId: session.user?.id
+            userId: session.user.id
         }
     })
+
+    const addresses = result.map(item => ({
+        id: item.id,
+        city: item.city,
+        phone: item.phone,
+        street: item.street,
+        home: item.home,
+        corps: item.corps,
+        appart: item.appart,
+        userId: item.userId,
+        isMain: item.isMain
+    }))
+
     console.log('addresses from profile page', addresses)
 
     const user = {
@@ -46,23 +59,7 @@ const ProfilePage = async () => {
         isAgreed: profile?.isAgreed ?? false
     }
 
-    // Пытаемся найти пользователя через AuthAdapter по email из сессии
-    // const existingUser = await AuthAdapter().getUserByEmail(email)
-
-    // Если пользователь не найден в базе, создаем нового через AuthAdapter
-    // if (!existingUser) {
-    //     const newUser = await AuthAdapter().createUser({
-    //         email: session.user.email,
-    //         name: session.user.name || '',
-    //     })
-
-    // todo ?надо ли еще раз полуить юзера из AuthAdapter().getUser({id})
-
-    // todo отрендерить компонент или модал с открытой формой регистрации с полями photo name fatherName surName email
-    //     return <>
-    //         <UserProfile user={newUser} previousOrders={previousOrders}/>
-    //     </>
-    // }
+    //todo Если пользователь не найден в базе, создаем нового?
 
     return <>
         <UserProfile user={user} addresses={addresses} previousOrders={previousOrders}/>
