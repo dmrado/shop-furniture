@@ -128,7 +128,7 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
     if (!isOpenModal) return null
     // fixme? проверить как работает  setAgreed(false)
     return <>
-        <Modal isOpenModsl={isOpenModal} onClose={onClose}>
+        <Modal isOpenModal={isOpenModal} onClose={onClose}>
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Мгновенное оформление заказа
             </Dialog.Title>
