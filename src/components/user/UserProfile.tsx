@@ -35,7 +35,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
 
     // для Disclosure согласия на обработку перс данных
     // стейт для состояния согласия на обработку перс данных
-    const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
+    // const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
 
     // for NewAddressModal
     const [isOpenModal, setIsOpenModal] = useState(false)

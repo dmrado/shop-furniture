@@ -1,11 +1,12 @@
 import UserProfile from '@/components/user/UserProfile'
-import { ProfileModel, AddressModel } from '@/db/models'
-import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
-import { isSessionExpired } from '@/actions/isSessionExpired.ts'
-import { previousOrders } from '@/components/mockData'
+import {ProfileModel, AddressModel} from '@/db/models'
+import {getServerSession} from 'next-auth'
+import {redirect} from 'next/navigation'
+import {isSessionExpired} from '@/actions/isSessionExpired.ts'
+import {previousOrders} from '@/components/mockData'
 import React from 'react'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import {authOptions} from '@/app/api/auth/[...nextauth]/route'
+import {updateUserAgreementAction} from '@/actions/userActions'
 
 //todo хистори - это отфильтровано за период в Orders
 //todo создать модель для избранного "с сердечком"
@@ -14,20 +15,24 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 //ВНИМАНИЕ! в AuthAdapter при создании нового юзера из гугл/яндекс аккаунта стоит isAgreed: false, поэтому при входе на эту в компоненте UserProfile сразу на входе стоит ознакомление и подтверждение ознакомления с политикой обработки персональных данных
 
 const ProfilePage = async () => {
-
+    // При переходе после авторизации или регистрации через провайдра
     const session = await getServerSession(authOptions)
 
     if (!session || isSessionExpired(session)) {
         return redirect('/api/auth/signin')
     }
     console.log('session', session.user)
-    console.log('>>>>>>> isAgreed', session.user.isAgreed)
 
     const profile = await ProfileModel.findOne({
         where: {
             userId: session.user.id
         }
     })
+    //Если нет профайла создаем и точка, потому что он авторизовался через провайдера и у нас есть что записать в профайл
+    if (!profile) {
+        await updateUserAgreementAction(session.user.id, false)
+    }
+    console.log('>>>>>>> profile.isAgreed', profile?.isAgreed)
 
     //todo запрос адресов
     const result = await AddressModel.findAll({
@@ -50,20 +55,20 @@ const ProfilePage = async () => {
 
     console.log('addresses from profile page', addresses)
 
-    const user = {
-        email: session.user.email,
-        photo: session.user.photo,
-        name: profile?.name ?? session.user.name.split(' ')[0],
-        // surName: profile.surName ?? session.user.name.split(' ')[1],
-        surName: '',
-        fatherName: profile?.fatherName ?? '',
-        isAgreed: profile?.isAgreed ?? false
-    }
+    // const user = {
+    //     email: session.user.email,
+    //     photo: session.user.photo,
+    //     name: profile?.name ?? session.user.name.split(' ')[0],
+    //     // surName: profile.surName ?? session.user.name.split(' ')[1],
+    //     surName: '',
+    //     fatherName: profile?.fatherName ?? '',
+    //     isAgreed: profile?.isAgreed ?? false
+    // }
 
-    //todo Если пользователь не найден в базе, создаем нового?
+    //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго
 
     return <>
-        <UserProfile user={user} addresses={addresses} previousOrders={previousOrders}/>
+        <UserProfile user={session.user} addresses={addresses} previousOrders={previousOrders}/>
     </>
 }
 
