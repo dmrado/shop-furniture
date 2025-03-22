@@ -130,7 +130,7 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
     return <>
         <Modal isOpenModal={isOpenModal} onClose={onClose}>
 
-            <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
+            <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
                 Мгновенное оформление заказа
             </Dialog.Title>
             <Description className='mb-8'>Оформим заказ без регистрации, информация будет отправлена менеджеру, он

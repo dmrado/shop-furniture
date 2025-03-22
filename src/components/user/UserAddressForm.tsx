@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import { Dialog } from '@headlessui/react'
@@ -140,7 +140,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
         const phone = formData.get('phone')
         const phoneRegex = /^\+?[\d\s\(\)\-\.]{5,20}$/
 
-        if(!phone || !phoneRegex.test(phone.toString())) {
+        if (!phone || !phoneRegex.test(phone.toString())) {
             alert('Пожалуйста, введите корректный номер телефона')
             return
         }
@@ -162,7 +162,9 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
         } finally {
             setIsClosing(false)
             setSuccess(true)
-            setTimeout(() => {onClose()}, 2000) // а то success не видно
+            setTimeout(() => {
+                onClose()
+            }, 2000) // а то success не видно
             // onClose()
             // todo очистить форму
         }
@@ -172,103 +174,103 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
         {/* Форма ввода адреса доставки */}
         <Modal onClose={onClose} isOpenModal={isOpenModal}>
 
-            <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
+            <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
                 Добавление нового адреса
             </Dialog.Title>
-            <form action={onSubmit} className="px-24 md:px-4 text-xs md:text-sm">
-                    <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Город:</label>*/}
-                            <InputField
-                                label="Город*"
-                                type="text"
-                                name="city"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                // id="given-name"
-                                // autoComplete="given-name"
-                                // autocomplete="on"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Улица:</label>*/}
-                            <InputField
-                                label="Улица*"
-                                type="text"
-                                name="street"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                // id="given-name"
-                                // autoComplete="given-name"
-                                // autocomplete="on"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Дом:</label>*/}
-                            <InputField
-                                label="Дом*"
-                                type="text"
-                                name="home"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                // id="given-name"
-                                // autoComplete="given-name"
-                                // autocomplete="on"
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Корпус:</label>*/}
-                            <InputField
-                                label="Корпус"
-                                type="text"
-                                name="corps"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                required={false}
+            <form action={onSubmit} className="w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-1  gap-x-6 gap-y-4">
+                    <div className="mb-4">
+                        {/*<label className="block mb-1">Город:</label>*/}
+                        <InputField
+                            label="Город*"
+                            type="text"
+                            name="city"
+                            defaultValue=""
+                            // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Квартира:</label>*/}
-                            <InputField
-                                label="Квартира"
-                                type="text"
-                                name="appart"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                required={false}
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        {/*<label className="block mb-1">Улица:</label>*/}
+                        <InputField
+                            label="Улица*"
+                            type="text"
+                            name="street"
+                            defaultValue=""
+                            // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            {/*<label className="block mb-1">Телефон:</label>*/}
-                            <InputField
-                                label="Телефон*"
-                                type="tel"
-                                name="phone"
-                                defaultValue=""
-                                // onChange={handleChange}
-                                id="tel"
-                                autoComplete="tel"
-                                autocomplete="on"
-                                required
-                                pattern="[0-9]*"
-                            />
-                        </div>
+                            required
+                        />
                     </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 ">
+                    <div className="mb-4">
+                        {/*<label className="block mb-1">Дом:</label>*/}
+                        <InputField
+                            label="Дом*"
+                            type="text"
+                            name="home"
+                            defaultValue=""
+                            // onChange={handleChange}
+                            // id="given-name"
+                            // autoComplete="given-name"
+                            // autocomplete="on"
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        {/*<label className="block mb-1">Корпус:</label>*/}
+                        <InputField
+                            label="Корпус"
+                            type="text"
+                            name="corps"
+                            defaultValue=""
+                            // onChange={handleChange}
+                            required={false}
+                            // id="given-name"
+                            // autoComplete="given-name"
+                            // autocomplete="on"
+                        />
+                    </div>
+
+                    <div className="mb-4 ">
+                        {/*<label className="block mb-1">Квартира:</label>*/}
+                        <InputField
+                            label="Квартира"
+                            type="text"
+                            name="appart"
+                            defaultValue=""
+                            // onChange={handleChange}
+                            required={false}
+                            // id="given-name"
+                            // autoComplete="given-name"
+                            // autocomplete="on"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        {/*<label className="block mb-1">Телефон:</label>*/}
+                        <InputField
+                            label="Телефон*"
+                            type="tel"
+                            name="phone"
+                            defaultValue=""
+                            // onChange={handleChange}
+                            id="tel"
+                            autoComplete="tel"
+                            autocomplete="on"
+                            required
+                            pattern="[0-9]*"
+                        />
+                    </div>
+                </div>
 
                 <div className="mb-4">
                     <label className="flex items-center justify-center cursor-pointer">
@@ -276,7 +278,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                             type="checkbox"
                             name="isMain"
                             defaultChecked=""
-                        // onChange={handleChange}
+                            // onChange={handleChange}
                         />
                         <span className="text-gray-700">Сделать основным</span>
                     </label>
@@ -321,7 +323,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                                 }}
                                 className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
                             >
-                            Тест ошибки капчи
+                                Тест ошибки капчи
                             </button>
                         )}
                     </div>
@@ -334,7 +336,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                         }}
                         className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
                     >
-                    Отмена
+                        Отмена
                     </button>
 
                     <button

@@ -1,12 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import Agreement from '@/components/site/Agreement'
-import { Profile } from '@/db/models/profile.model'
-import { Address } from '@/db/models/address.model'
+import {Profile} from '@/db/models/profile.model'
+import {Address} from '@/db/models/address.model'
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -30,18 +30,22 @@ type UserProfileProps = {
     previousOrders: any
     addresses: Address[]
 }
-const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
+const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может быть уникальный адрес из массива адресов доставки корпоративного юзера
 
     // для Disclosure согласия на обработку перс данных
     // стейт для состояния согласия на обработку перс данных
-    const [ agreed, setAgreed ] = useState<boolean>(user.isAgreed)
+    const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
 
     // for NewAddressModal
-    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
 
     // для полукчения editId редактируемого адреса
     const [updatingId, setUpdatingId] = useState(null)
+
+    useEffect(() => {
+
+    }, [addresses]);
 
     return <>
         {/*<Agreement*/}
@@ -56,7 +60,7 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                 <button
                     type="button"
                     className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Выйти
+                    Выйти
                 </button>
             </Link>
             <div className="flex items-center mb-8">
@@ -86,7 +90,7 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                     type="button"
                     onClick={() => setIsOpenModal(true)}
                     className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
-                        Добавить новый адрес
+                    Добавить новый адрес
                 </button>
                 {/*todo после изменения Transition-component v1.7 на transition-attribute 2.1 пофиксить Редактировать*/}
                 <h2 className="text-xl font-semibold mb-4">Ваши адреса</h2>
@@ -98,29 +102,30 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                             {addresses.map(address => (
                                 address.id === updatingId ?
                                     <UserAddressForm key={address.id}
-                                        id={address.id}
-                                        phone={address.phone}
-                                        city={address.city}
-                                        street={address.street}
-                                        home={address.home}
-                                        corps={address.corps}
-                                        appart={address.appart}
-                                        isMain={address.isMain}
-                                        onSubmit={() => {}}
+                                                     id={address.id}
+                                                     phone={address.phone}
+                                                     city={address.city}
+                                                     street={address.street}
+                                                     home={address.home}
+                                                     corps={address.corps}
+                                                     appart={address.appart}
+                                                     isMain={address.isMain}
+                                                     onSubmit={() => {
+                                                     }}
                                     /> :
-                                <li key={address.id}
-                                    className="flex justify-between mb-2 border-b border-gray-200">
+                                    <li key={address.id}
+                                        className="flex justify-between mb-2 border-b border-gray-200">
                                     <span>  {address.city},<br/>
                                         {address.street},
                                                 дом {address.home},
                                                 корпус {address.corps},
                                                 квартира {address.appart},
                                         <br/> Телефон: {address.phone}</span>
-                                    <button onClick={() => setUpdatingId(address.id)}
-                                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
+                                        <button onClick={() => setUpdatingId(address.id)}
+                                                className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
                                             Редактировать
-                                    </button>
-                                </li>
+                                        </button>
+                                    </li>
                             ))}
                         </ul>
                     </>

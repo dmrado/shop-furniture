@@ -21,6 +21,7 @@ const ProfilePage = async () => {
         return redirect('/api/auth/signin')
     }
     console.log('session', session.user)
+    console.log('>>>>>>> isAgreed', session.user.isAgreed)
 
     const profile = await ProfileModel.findOne({
         where: {
