@@ -6,7 +6,8 @@ import {isSessionExpired} from '@/actions/isSessionExpired.ts'
 import {previousOrders} from '@/components/mockData'
 import React from 'react'
 import {authOptions} from '@/app/api/auth/[...nextauth]/route'
-import {updateUserAgreementAction} from '@/actions/userActions'
+import {createUserProfileAction, updateUserAgreementAction} from '@/actions/userActions'
+import {revalidatePath} from "next/cache";
 
 //todo хистори - это отфильтровано за период в Orders
 //todo создать модель для избранного "с сердечком"
@@ -28,11 +29,14 @@ const ProfilePage = async () => {
             userId: session.user.id
         }
     })
-    //Если нет профайла создаем и точка, потому что он авторизовался через провайдера и у нас есть что записать в профайл
+
     if (!profile) {
-        await updateUserAgreementAction(session.user.id, false)
+        await createUserProfileAction(session.user.id)
+        revalidatePath('/profile')
+        redirect('/profile')
     }
-    console.log('>>>>>>> profile.isAgreed', profile?.isAgreed)
+
+    console.log('>>>>>>> >>>>>>>>>  profileUser после преобразования', profile)
 
     //todo запрос адресов
     const result = await AddressModel.findAll({
@@ -55,20 +59,21 @@ const ProfilePage = async () => {
 
     console.log('addresses from profile page', addresses)
 
-    // const user = {
-    //     email: session.user.email,
-    //     photo: session.user.photo,
-    //     name: profile?.name ?? session.user.name.split(' ')[0],
-    //     // surName: profile.surName ?? session.user.name.split(' ')[1],
-    //     surName: '',
-    //     fatherName: profile?.fatherName ?? '',
-    //     isAgreed: profile?.isAgreed ?? false
-    // }
+    const user = {
+        id: session.user.id,
+        email: session.user.email,
+        photo: session.user.photo,
+        name: profile?.name ?? session.user.name.split(' ')[0],
+        // surName: profileUser.surName ?? session.user.name.split(' ')[1],
+        surName: profile.surName || '',
+        fatherName: profile?.fatherName ?? '',
+        isAgreed: profile?.isAgreed ?? false
+    }
 
-    //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго
+    //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго, ног тогда как изменить Розового зайку на нормалоьное имя для счет-фактуры
 
     return <>
-        <UserProfile user={session.user} addresses={addresses} previousOrders={previousOrders}/>
+        <UserProfile user={user} addresses={addresses} previousOrders={previousOrders}/>
     </>
 }
 

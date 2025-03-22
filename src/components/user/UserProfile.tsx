@@ -1,12 +1,12 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Profile } from '@/db/models/profile.model'
+import { Address } from '@/db/models/address.model'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
-import Agreement from '@/components/site/Agreement'
-import {Profile} from '@/db/models/profile.model'
-import {Address} from '@/db/models/address.model'
+import {UserNameForm} from "@/components/user/UserNameForm"
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -23,14 +23,14 @@ import {Address} from '@/db/models/address.model'
 // }
 
 type UserProfileProps = {
-    user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
+    user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id' > & {
         email: string
         photo: string
     },
     previousOrders: any
     addresses: Address[]
 }
-const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
+const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может быть уникальный адрес из массива адресов доставки корпоративного юзера
 
     // для Disclosure согласия на обработку перс данных
@@ -38,14 +38,17 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
     // const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
 
     // for NewAddressModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
+
+    // для изменения Розового зайки на ФИО
+    const [ isOpenNameModal, setIsOpenNameModal ] = useState(false)
 
     // для полукчения editId редактируемого адреса
-    const [updatingId, setUpdatingId] = useState(null)
+    const [ updatingId, setUpdatingId ] = useState(null)
 
     useEffect(() => {
 
-    }, [addresses]);
+    }, [ addresses, user.name ])
 
     return <>
         {/*<Agreement*/}
@@ -69,13 +72,13 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                         width={1000}
                         height={760}
                         className="hidden md:block"
-                        alt="Screenshots of the dashboard project showing desktop version"
                         src={user.photo}
-                        // alt={user.name}
-                        layout="fill"
+                        alt={user.name}
+                        // layout="fill"
                         objectFit="cover"/>
                 </div>
                 <div>
+                    {/*todo Здесь у нас Розовый зайка, добавить функционал изменения имени в ProfileModel, тогда с page передавать и profile.user, и session.user"*/}
                     <h2 className="text-xl">{user.name}</h2>
                     <p className="text-gray-600">{user.fatherName}</p>
                     <p className="text-gray-600">{user.surName}</p>
@@ -83,6 +86,21 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                 </div>
             </div>
 
+            <div className="relative group">
+                <button
+                    type="button"
+                    onClick={() => {
+                        setIsOpenNameModal(true)
+                    }
+                }
+                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    {`Я не ${user.name}`}
+                </button>
+                <div
+                    className="absolute bottom-full mb-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 bg-gray-800 text-white px-2 py-1 rounded text-sm whitespace-nowrap">
+                    {`Изменить ${user.name} на ФИО`}
+                </div>
+            </div>
             {/*todo а странице profile получить адреса из модели orders и реализовать условие ниже*/}
             {/* Список адресов доставки */}
             <div className="my-8 bg-white p-4 rounded-lg shadow-md">
@@ -100,27 +118,27 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                     <>
                         <ul className="mb-4">
                             {addresses.map(address => (
-                                address.id === updatingId ?
-                                    <UserAddressForm key={address.id}
-                                                     id={address.id}
-                                                     phone={address.phone}
-                                                     city={address.city}
-                                                     street={address.street}
-                                                     home={address.home}
-                                                     corps={address.corps}
-                                                     appart={address.appart}
-                                                     isMain={address.isMain}
-                                                     onSubmit={() => {
-                                                     }}
-                                    /> :
+                                // address.id === updatingId ?
+                                //     <UserAddressForm key={address.id}
+                                //                      id={address.id}
+                                //                      phone={address.phone}
+                                //                      city={address.city}
+                                //                      street={address.street}
+                                //                      home={address.home}
+                                //                      corps={address.corps}
+                                //                      appart={address.appart}
+                                //                      isMain={address.isMain}
+                                //                      onSubmit={() => {
+                                //                      }}
+                                //     /> :
                                     <li key={address.id}
                                         className="flex justify-between mb-2 border-b border-gray-200">
-                                    <span>  {address.city},<br/>
-                                        {address.street},
+                                        <span>  {address.city},<br/>
+                                            {address.street},
                                                 дом {address.home},
                                                 корпус {address.corps},
                                                 квартира {address.appart},
-                                        <br/> Телефон: {address.phone}</span>
+                                            <br/> Телефон: {address.phone}</span>
                                         <button onClick={() => setUpdatingId(address.id)}
                                                 className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 h-10">
                                             Редактировать
@@ -132,6 +150,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                 )}
             </div>
             <UserAddressForm user={user} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
+            <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
             <UserOrdersHistory previousOrders={previousOrders}/>
         </div>
         {/*}*/}

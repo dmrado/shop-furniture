@@ -1,18 +1,16 @@
 'use client'
-import React, { useState, Fragment } from 'react'
-import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
-import { Description, Dialog } from '@headlessui/react'
+import React, {useState, Fragment} from 'react'
+import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
+import {Description, Dialog} from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
-import { createInstantUserAction } from '@/actions/userActions'
-import { Simulate } from 'react-dom/test-utils'
-import error = Simulate.error;
-import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
+import {updateUserNameAction} from '@/actions/userActions'
 import Modal from '@/components/site/Modal'
+import {Profile} from '@/db/models/profile.model'
 
-export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
-    const [ isFocused, setIsFocused ] = useState(false)
+export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
+    const [isFocused, setIsFocused] = useState(false)
     // todo: make autocomplete
     return (
         <div className="relative">
@@ -32,7 +30,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
                     focus:pt-4 focus:border-indigo-600`}
             />
             <label htmlFor={id}
-                className={`absolute left-4 transition-all pointer-events-none
+                   className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -41,23 +39,27 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
         </div>
     )
 }
-//пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему НЕ заводится строка в модели user. На этой форме визитер делает заказ без регистрации, данные отправляются только через nodeMailerInstantOrder админу. Структура офрмления мгновенного заказа подразумевает активацию кногпки "Отправить" только в случае согласия с политикой.
-export const InstantOrderForm = ({ isOpenModal, onClose }: {
-    isOpen: boolean;
+//пользователь хочет изменить имя в провайдере на ФИО.
+export const UserNameForm = ({user, isOpenModal, onClose}: {
+    user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
+        email: string
+        photo: string
+    }
+    isOpenModal: boolean;
     onClose: () => void;
 }) => {
 
-    const [ captchaToken, setCaptchaToken ] = useState<string>('')
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [ agreed, setAgreed ] = useState<boolean>(false)
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [ success, setSuccess ] = useState<boolean>(false)
+    const [success, setSuccess] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [ isClosing, setIsClosing ] = useState<boolean>(false)
+    const [isClosing, setIsClosing] = useState<boolean>(false)
 
     //+++++++start validation формы отправки мгновенного заказа+++++
     class ValidationError extends Error {
@@ -70,18 +72,13 @@ export const InstantOrderForm = ({ isOpenModal, onClose }: {
     const onSubmit = async (formData: FormData) => {
 
         const name = formData.get('name')
-        const phone = formData.get('phone')
+        const fatherName = formData.get('fatherName')
+        const surName = formData.get('surName')
 
-        const phoneRegex = /^\+?[\d\s\(\)\-\.]{5,20}$/
-
-        if (!phone || !phoneRegex.test(phone.toString())) {
-            alert('Пожалуйста, введите корректный номер телефона')
-            // return
-        }
-        if (typeof name !== 'string' || typeof phone !== 'string') {
+        if (typeof name !== 'string' || typeof fatherName !== 'string' || typeof surName !== 'string') {
             throw new ValidationError('Filedata in text fields')
         }
-        if (!name && !phone) {
+        if (!name || !fatherName || !surName) {
             throw new ValidationError('Все обязательные поля должны быть заполнены')
         }
         if (!captchaToken) {
@@ -96,44 +93,39 @@ export const InstantOrderForm = ({ isOpenModal, onClose }: {
         // параллельная отправка почты и сохранения в БД
         try {
             setIsClosing(true)
-            const [ mailSuccess, dbResult ] = await Promise.all([
-                nodeMailerInstantOrder({ name, phone }),
-                // createInstantUserAction({name, phone}) //заглушка функции, ее можно будет активировать если захотим в будущем все же делать упрощенную регистрацию
-            ])
-            if (mailSuccess) {
-                setSuccess(true)
-                alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
-                // setCaptchaToken('');
-            } else {
-                alert('Возникла проблема при отправке заявки. Пожалуйста, попробуйте позже.')
-            }
+            const userId = user.id
+            await updateUserNameAction({ userId, name, fatherName, surName })
         } catch (error) {
             console.error('Ошибка:', error)
-            alert('Произошла ошибка при обработке заявки. Пожалуйста, попробуйте позже.')
+        } finally {
+            setIsClosing(false)
+            setSuccess(true)
+            setTimeout(() => {
+                onClose()
+            }, 2000) // а то success не видно
         }
         // это дублирующий варинат блока try выше последовательной отправки письма и сохраненипыя в БД, не проверял какой работает лучше.
         // send by mail independently
-        // const successMail = await nodeMailerInstantOrder({name, phone})
+        // const successMail = await nodeMailerInstantOrder({name, fatherName, surName})
         // if (successMail) {
         //     setSuccess(true)
         //     alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
         // }
         // store to DB
-        // const result = await createInstantUserAction({name, phone})
+        // const result = await   updateUserNameAction({name, fatherName, surName})
         // console.log('newInstantUser from InstantOrderModal', result)
         setIsClosing(false)
     }
-
+    // fixme а это что делает здесь и на других формах?
     if (!isOpenModal) return null
-    // fixme? проверить как работает  setAgreed(false)
+
     return <>
         <Modal isOpenModal={isOpenModal} onClose={onClose}>
 
             <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
-                Мгновенное оформление заказа
+                Изменение ФИО
             </Dialog.Title>
-            <Description className='mb-8'>Оформим заказ без регистрации, информация будет отправлена менеджеру, он
-                свяжется для оформления доставки и проведения оплаты.</Description>
+            <Description className='mb-8'>Вы измените ваши ФИО в профиле</Description>
             <form className="space-y-8" action={onSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField
@@ -142,17 +134,23 @@ export const InstantOrderForm = ({ isOpenModal, onClose }: {
                         label="Имя*"
                         id="given-name"
                         autoComplete="given-name"
-                        autocomplete="on"
                         type="text"
                     />
                     <InputField
-                        name="phone"
+                        name="fatherName"
                         defaultValue=""
-                        label="Телефон*"
-                        id="tel"
-                        autoComplete="tel"
-                        type="tel"
-                        pattern="[0-9]*"
+                        label="Отчество*"
+                        id="second-name"
+                        autoComplete="additional-name"
+                        type="text"
+                    />
+                    <InputField
+                        name="surName"
+                        defaultValue=""
+                        label="Фамилия*"
+                        id="family-name"
+                        autoComplete="family-name"
+                        type="text"
                     />
                 </div>
 
@@ -162,6 +160,7 @@ export const InstantOrderForm = ({ isOpenModal, onClose }: {
                 <Agreement
                     setAgreed={setAgreed}
                     agreed={agreed}
+                    userId={user.id}
                 />
 
                 {/* Buttons section */}
@@ -209,3 +208,5 @@ export const InstantOrderForm = ({ isOpenModal, onClose }: {
         </Modal>
     </>
 }
+
+export default UserNameForm
