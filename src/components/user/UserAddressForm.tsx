@@ -175,8 +175,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Добавление нового адреса
             </Dialog.Title>
-            <form action={onSubmit}>
-                {/*<div className="grid gap-4">*/}
+            <form action={onSubmit} className="px-24 md:px-4 text-xs md:text-sm">
                     <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="mb-4">
                             {/*<label className="block mb-1">Город:</label>*/}
@@ -270,8 +269,6 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                             />
                         </div>
                     </div>
-
-                {/*</div>*/}
 
                 <div className="mb-4">
                     <label className="flex items-center justify-center cursor-pointer">
