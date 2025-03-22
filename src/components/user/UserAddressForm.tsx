@@ -171,12 +171,12 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
     return <>
         {/* Форма ввода адреса доставки */}
         <Modal onClose={onClose} isOpenModal={isOpenModal}>
+
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Добавление нового адреса
             </Dialog.Title>
             <form action={onSubmit}>
-                <div className="grid gap-4">
-
+                {/*<div className="grid gap-4">*/}
                     <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="mb-4">
                             {/*<label className="block mb-1">Город:</label>*/}
@@ -271,7 +271,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                         </div>
                     </div>
 
-                </div>
+                {/*</div>*/}
 
                 <div className="mb-4">
                     <label className="flex items-center justify-center cursor-pointer">
@@ -297,7 +297,9 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                 {/* Buttons section */}
                 <div
                     className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+
                     {success && <Success/>}
+
                     <div className="flex justify-center">
                         <GoogleCaptcha
                             onTokenChange={(token) => {
@@ -331,6 +333,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                         type="button"
                         onClick={() => {
                             onClose()
+                            setAgreed(false)
                         }}
                         className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
                     >

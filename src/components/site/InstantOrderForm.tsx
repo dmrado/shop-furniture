@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, Fragment } from 'react'
 import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
-import { Dialog } from '@headlessui/react'
+import { Description, Dialog } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
@@ -75,7 +75,7 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
 
         const phoneRegex = /^\+?[\d\s\(\)\-\.]{5,20}$/
 
-        if(!phone || !phoneRegex.test(phone.toString())) {
+        if (!phone || !phoneRegex.test(phone.toString())) {
             alert('Пожалуйста, введите корректный номер телефона')
             // return
         }
@@ -129,12 +129,13 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
     // fixme? проверить как работает  setAgreed(false)
     return <>
         <Modal isOpenModal={isOpenModal} onClose={onClose}>
+
             <Dialog.Title className="text-2xl font-bold mb-8 text-gray-700">
                 Мгновенное оформление заказа
             </Dialog.Title>
-
+            <Description className='mb-8'>Оформим заказ без регистрации, информация будет отправлена менеджеру, он
+                свяжется для оформления доставки и проведения оплаты.</Description>
             <form className="space-y-8" action={onSubmit}>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField
                         name="name"
@@ -154,14 +155,16 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
                         type="tel"
                         pattern="[0-9]*"
                     />
-                    <input hidden value={captchaToken}/>
                 </div>
+
+                <input hidden value={captchaToken}/>
 
                 {/* Accordion section */}
                 <Agreement
                     setAgreed={setAgreed}
                     agreed={agreed}
                 />
+
                 {/* Buttons section */}
                 <div
                     className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
@@ -186,20 +189,24 @@ export const InstantOrderForm = ({ isOpenModal, onClose, setIsOpenModal }: {
 
                     <button
                         type="submit"
-                        onClick={() => setTimeout(() => {onClose()}, 2000)}
                         disabled={!agreed}
+                        onClick={() => setTimeout(() => {
+                            onClose()
+                        }, 2000)}
+
                         className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-}
+                            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        }
                                 `}
                     >
                         {isClosing ? 'Отправка...' : 'Отправить'}
                     </button>
                 </div>
             </form>
+
         </Modal>
     </>
 }
