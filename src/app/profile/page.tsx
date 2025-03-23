@@ -62,7 +62,7 @@ const ProfilePage = async () => {
     const user = {
         id: session.user.id,
         email: session.user.email,
-        photo: session.user.photo,
+        photo: session.user.picture,
         name: profile?.name ?? session.user.name.split(' ')[0],
         // surName: profileUser.surName ?? session.user.name.split(' ')[1],
         surName: profile.surName || '',
