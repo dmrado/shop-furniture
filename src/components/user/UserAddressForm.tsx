@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import { Dialog } from '@headlessui/react'
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from '@/components/site/Success'
 import Modal from '@/components/site/Modal'
+import {getAddressByIdAction} from "@/actions/addressActions";
 
 //пользователь хочет оформить заказ, но адреса нет в списке, для добавления нового адреса открываем модальное окно и сохраняем адрес в БД и добавляем в заказ
 
@@ -42,7 +43,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = ({ user, isOpenModal, onClose }) => {
+const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
 
     // todo с UserProfile он прийдет с объектом юзера, a с UserOrderForm через NewAddressModal может и с юзером и без юзера, обработать
     // if (!user) {
@@ -50,58 +51,47 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
     // }
 
     // для Disclosure согласия на обработку перс данных
-    // хранит состояние самого чекбокса
-    const [ agreed, setAgreed ] = useState<boolean>(false)
-
+    // хранит состояние самого чекбокса от него зависит состояние кнопки родительского компонента
+    const [ agreed, setAgreed ] = useState<boolean>(user?.isAgreed || false)
     const [ captchaToken, setCaptchaToken ] = useState<string>('')
-
     // в момент отправки меняет надпись на кнопке кнопка в этом верхнем копоненте
     const [ isClosing, setIsClosing ] = useState<boolean>(false)
-
     //для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
     const [ success, setSuccess ] = useState<boolean>(false)
+    // для fetchAddress
+    const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
+    const [errorMessage, setErrorMessage] = useState('')
+    const [address, setAddress] = useState(null)
 
-    // Состояние для сохранения в БД адреса доставки адреса доставки
-    // todo этот стейт использовать для обработчика кнопки Редактировать на странице Profile куда передать модальное окно с этой формой
-    // const [deliveryAddress, setDeliveryAddress] = useState({
-    //     id: user?.id || '',
-    //     name: user?.name || '',
-    //     surName: user?.surName || '',
-    //     fatherName: user?.fatherName || '',
-    //     email: user?.email || '',
-    //     isActive: user?.isActive || false,
-    //     canContact: user?.canContact || false,
-    //     city: user?.addresses?.[0]?.city || '',
-    //     phone: user?.addresses?.[0]?.phone || '',
-    //     street: user?.addresses?.[0]?.street || '',
-    //     home: user?.addresses?.[0]?.home || '',
-    //     corps: user?.addresses?.[0]?.corps || '',
-    //     appart: user?.addresses?.[0]?.appart || '',
-    //     userId: user?.addresses?.[0]?.userId || '',
-    //     isMain: user?.addresses?.[0]?.isMain || false
-    // })
-    //
-    // //иначе "Новый адрес доставки" не обновляется внутри формы редактирования после изменения юзера, впрочем юзер здесь будет только один, но не аккуратненко как-то
-    // useEffect(() => {
-    //     setDeliveryAddress({
-    //         id: user?.id || '',
-    //         name: user?.name || '',
-    //         surName: user?.surName || '',
-    //         fatherName: user?.fatherName || '',
-    //         email: user?.email || '',
-    //         isActive: user?.isActive || false,
-    //         canContact: user?.canContact || false,
-    //         city: user?.addresses?.[0]?.city || '',
-    //         phone: user?.addresses?.[0]?.phone || '',
-    //         street: user?.addresses?.[0]?.street || '',
-    //         home: user?.addresses?.[0]?.home || '',
-    //         corps: user?.addresses?.[0]?.corps || '',
-    //         appart: user?.addresses?.[0]?.appart || '',
-    //         userId: user?.addresses?.[0]?.userId || '',
-    //         isMain: user?.addresses?.[0]?.isMain || false
-    //     });
-    // }, [user]); // зависимость от user
-    //
+    // Адресные данные
+    const [userId, setUserId] = useState(address?.userId || '')
+    const [phone, setPhone] = useState(address?.phone || '')
+    const [city, setCity] = useState(address?.city || '')
+    const [street, setStreet] = useState(address?.street || '')
+    const [home, setHome] = useState(address?.home || '')
+    const [corps, setCorps] = useState(address?.corps || '')
+    const [appart, setAppart] = useState(address?.appart || '')
+    const [isMain, setIsMain] = useState(address?.isMain || false)
+
+
+    const fetchAddress = async (updatingAddressId: number) => {
+        try {
+            setStatus('loading')
+            const data = await getAddressByIdAction(updatingAddressId)
+            setAddress(data)
+            setStatus('idle')
+        } catch (error) {
+            console.error('Ошибка при получении адреса:', error)
+            setStatus('error')
+            setErrorMessage('Не удалось загрузить данные адреса')
+        }
+    }
+    useEffect(() => {
+        if (updatingAddressId) {
+            fetchAddress(updatingAddressId)
+        }
+    }, [updatingAddressId])
+
 
     // вариант без предзаполненных полей
     interface DeliveryAddress {
@@ -177,6 +167,31 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
             <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
                 Добавление нового адреса
             </Dialog.Title>
+
+            {status === 'loading' && (
+                <div className="text-center py-4">
+                    <div className="spinner"></div>
+                    <p>Загрузка...</p>
+                </div>
+            )}
+
+            {status === 'success' && (
+                <div className="text-center mb-6 py-4 text-green-600">
+                    <Success props={'Адрес удален'}/>
+                </div>
+            )}
+
+            {status === 'error' && (
+                <div className="text-center py-4 text-red-600">
+                    <p>{errorMessage}</p>
+                    <button
+                        onClick={() => setStatus('idle')}
+                        className="mt-2 px-4 py-2 bg-gray-200 rounded"
+                    >Попробовать снова
+                    </button>
+                </div>
+            )}
+
             <form action={onSubmit} className="w-full">
                 <div className="grid grid-cols-1 lg:grid-cols-1  gap-x-6 gap-y-4">
                     <div className="mb-4">
@@ -185,7 +200,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                             label="Город*"
                             type="text"
                             name="city"
-                            defaultValue=""
+                            defaultValue={city}
                             // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
@@ -199,7 +214,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                             label="Улица*"
                             type="text"
                             name="street"
-                            defaultValue=""
+                            defaultValue={street}
                             // onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
@@ -316,16 +331,16 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                                 })
                             }}
                         />
-                        {process.env.NODE_ENV === 'development' && (
-                            <button
-                                onClick={() => {
-                                    toast.error('Проверку на человека не прошли, простите')
-                                }}
-                                className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
-                            >
-                                Тест ошибки капчи
-                            </button>
-                        )}
+                        {/*{process.env.NODE_ENV === 'development' && (*/}
+                        {/*    <button*/}
+                        {/*        onClick={() => {*/}
+                        {/*            toast.error('Проверку на человека не прошли, простите')*/}
+                        {/*        }}*/}
+                        {/*        className="mt-2 px-4 py-2 bg-red-500 text-white rounded"*/}
+                        {/*    >*/}
+                        {/*        Тест ошибки капчи*/}
+                        {/*    </button>*/}
+                        {/*)}*/}
                     </div>
 
                     <button
