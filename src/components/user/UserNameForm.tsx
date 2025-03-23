@@ -40,7 +40,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     )
 }
 //пользователь хочет изменить имя в провайдере на ФИО.
-export const UserNameForm = ({user, isOpenModal, onClose}: {
+const UserNameForm = ({user, isOpenModal, onClose}: {
     user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
         email: string
         photo: string
@@ -94,7 +94,7 @@ export const UserNameForm = ({user, isOpenModal, onClose}: {
         try {
             setIsClosing(true)
             const userId = user.id
-            await updateUserNameAction({ userId, name, fatherName, surName })
+            await updateUserNameAction({userId, name, fatherName, surName})
         } catch (error) {
             console.error('Ошибка:', error)
         } finally {
@@ -172,7 +172,7 @@ export const UserNameForm = ({user, isOpenModal, onClose}: {
                         }}/>
                     </div>
 
-                    {success && <Success/>}
+                    {success && <Success props={'изменено'}/>}
 
                     <button
                         type="button"

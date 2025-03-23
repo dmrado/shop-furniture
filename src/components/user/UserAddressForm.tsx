@@ -297,7 +297,7 @@ const UserAddressForm = ({ user, isOpenModal, onClose }) => {
                 <div
                     className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
 
-                    {success && <Success/>}
+                    {success && <Success props={'адрес добавлен'}/>}
 
                     <div className="flex justify-center">
                         <GoogleCaptcha

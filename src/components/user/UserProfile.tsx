@@ -6,7 +6,8 @@ import {Profile} from '@/db/models/profile.model'
 import {Address} from '@/db/models/address.model'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
-import {UserNameForm} from "@/components/user/UserNameForm"
+import UserNameForm from "@/components/user/UserNameForm"
+import UserAddressDeleteModal from "@/components/user/UserAddressDeleteModal"
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -43,11 +44,20 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
     // для изменения Розового зайки на ФИО
     const [isOpenNameModal, setIsOpenNameModal] = useState(false)
 
-    // для полукчения editId редактируемого адреса
+    // для удаления адреса
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
+    const [delitingAddressId, setDelitingAddressId] = useState(false)
+
+    // Создаем состояние для хранения адресов
+    const [addressList, setAddressList] = useState(addresses || []);
+
+    // для получения editId редактируемого адреса
     const [updatingId, setUpdatingId] = useState(null)
 
-    useEffect(() => {
-
+    // todo fixme обновление адресов на странице профайла
+    useEffect((id) => {
+        setAddressList(prevAddresses => prevAddresses.filter(address => address.id !== id));
+        setAddressList(addresses || []);
     }, [addresses, user.name])
 
     return <>
@@ -90,10 +100,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
 
                 <button
                     type="button"
-                    onClick={() => {
-                        setIsOpenNameModal(true)
-                    }
-                    }
+                    onClick={() => setIsOpenNameModal(true)}
                     title={`Изменить ${user.name} на ФИО`}
                     className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all"
                 >{`Я не ${user.name}`}</button>
@@ -138,6 +145,8 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                                                 корпус {address.corps},
                                                 квартира {address.appart},
                                             <br/> Телефон: {address.phone}</span>
+
+                                    {/*Address row buttons*/}
                                     <div className="relative group">
                                         <button onClick={() => setUpdatingId(address.id)}
                                                 title='Редактировать адрес'
@@ -148,7 +157,12 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                                         </button>
 
                                         <button
-                                            // onClick={() => deleteAddressRow(address.id)}
+                                            onClick={
+                                                () => {
+                                                    setIsOpenDeleteModal(true)
+                                                    setDelitingAddressId(address.id)
+                                                }
+                                            }
                                             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500"
                                             title='Удалить адрес'
                                         >
@@ -158,7 +172,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                                         </button>
                                     </div>
                                 </li>
-                                ))}
+                            ))}
                         </ul>
                     </>
                 )}
@@ -166,6 +180,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
             <UserAddressForm user={user} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
             <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
             <UserOrdersHistory previousOrders={previousOrders}/>
+            <UserAddressDeleteModal id={delitingAddressId} isOpenModal={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}/>
         </div>
         {/*}*/}
     </>
