@@ -92,7 +92,15 @@ const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
         }
     }, [updatingAddressId])
 
-
+    const handleChange = (e) => {
+        e.preventDefault()
+        const { name, value } = e.target;
+        if (name === 'city') {
+            setCity(value);
+        } else if (name === 'street') {
+            setStreet(value);
+        }
+    };
     // вариант без предзаполненных полей
     interface DeliveryAddress {
         phone: string;
@@ -200,8 +208,8 @@ const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
                             label="Город*"
                             type="text"
                             name="city"
-                            defaultValue={city}
-                            // onChange={handleChange}
+                            value={city} // Используйте value вместо defaultValue
+                            onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
@@ -214,8 +222,8 @@ const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
                             label="Улица*"
                             type="text"
                             name="street"
-                            defaultValue={street}
-                            // onChange={handleChange}
+                            value={street}
+                            onChange={handleChange}
                             // id="given-name"
                             // autoComplete="given-name"
                             // autocomplete="on"
