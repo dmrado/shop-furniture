@@ -39,8 +39,16 @@ const mapAddressRow = (address: AddressModel): AddressRow => {
     };
 };
 
+export const getAddressListAction = async (): Promise<AddressRow[]> => {
+    const result = await AddressModel.findAndCountAll()
+    if (!result || !result.rows || result.rows.length === 0) {
+        return []
+    }
+    // Преобразуем каждый адрес в формат AddressRow
+    return result.rows.map(address => mapAddressRow(address))
+}
 
-export const getAddressById = async (id: number) => {
+export const getAddressByIdAction = async (id: number) => {
     const address = await AddressModel.findByPk(id)
     console.log('>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> address getAddressById', address)
 

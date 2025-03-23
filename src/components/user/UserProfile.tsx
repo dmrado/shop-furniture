@@ -6,8 +6,9 @@ import {Profile} from '@/db/models/profile.model'
 import {Address} from '@/db/models/address.model'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
-import UserNameForm from "@/components/user/UserNameForm"
-import UserAddressDeleteModal from "@/components/user/UserAddressDeleteModal"
+import UserNameForm from '@/components/user/UserNameForm'
+import UserAddressDeleteModal from '@/components/user/UserAddressDeleteModal'
+import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -34,10 +35,6 @@ type UserProfileProps = {
 const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может быть уникальный адрес из массива адресов доставки корпоративного юзера
 
-    // для Disclosure согласия на обработку перс данных
-    // стейт для состояния согласия на обработку перс данных
-    // const [agreed, setAgreed] = useState<boolean>(user.isAgreed)
-
     // for NewAddressModal
     const [isOpenModal, setIsOpenModal] = useState(false)
 
@@ -46,19 +43,23 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
 
     // для удаления адреса
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
-    const [delitingAddressId, setDelitingAddressId] = useState(false)
+    const [deletingAddressId, setDeletingAddressId] = useState<number | null>(null)
 
-    // Создаем состояние для хранения адресов
-    const [addressList, setAddressList] = useState(addresses || []);
+    // Создаем состояние для хранения адресов и функцию изменения их в компоненте UserAddressDeleteModal одновременно с удалением
+    const [addressList, setAddressList] = useState(addresses || [])
+
+    useEffect(() => {
+        setAddressList(addresses || [])
+    }, [addresses])
 
     // для получения editId редактируемого адреса
     const [updatingId, setUpdatingId] = useState(null)
 
-    // todo fixme обновление адресов на странице профайла
-    useEffect((id) => {
-        setAddressList(prevAddresses => prevAddresses.filter(address => address.id !== id));
-        setAddressList(addresses || []);
-    }, [addresses, user.name])
+    // Функция для открытия модального окна удаления
+    const openDeleteModal = (addressId) => {
+        setDeletingAddressId(addressId)
+        setIsOpenDeleteModal(true)
+    }
 
     return <>
         {/*<Agreement*/}
@@ -123,7 +124,7 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                 ) : (
                     <>
                         <ul className="mb-4">
-                            {addresses.map(address => (
+                            {addressList.map(address => (
                                 // address.id === updatingId ?
                                 //     <UserAddressForm key={address.id}
                                 //                      id={address.id}
@@ -139,36 +140,35 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
                                 //     /> :
                                 <li key={address.id}
                                     className="flex justify-between mb-2 border-b border-gray-200">
-                                        <span>  {address.city},<br/>
-                                            {address.street},
+                                    <span>  {address.city},<br/>
+                                        {address.street},
                                                 дом {address.home},
                                                 корпус {address.corps},
                                                 квартира {address.appart},
-                                            <br/> Телефон: {address.phone}</span>
+                                        <br/> Телефон: {address.phone}</span>
 
                                     {/*Address row buttons*/}
                                     <div className="relative group">
                                         <button onClick={() => setUpdatingId(address.id)}
-                                                title='Редактировать адрес'
-                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
-                                         <span role="img" aria-label="edit" className="text-xl">
+                                            title='Редактировать адрес'
+                                            className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
+                                            <span role="img" aria-label="edit" className="text-xl">
                                         ✏️
-                                        </span>
+                                            </span>
                                         </button>
 
                                         <button
                                             onClick={
                                                 () => {
-                                                    setIsOpenDeleteModal(true)
-                                                    setDelitingAddressId(address.id)
+                                                    openDeleteModal(address.id)
                                                 }
                                             }
                                             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500"
                                             title='Удалить адрес'
                                         >
-                                        <span role="img" aria-label="delete" className="text-xl">
+                                            <span role="img" aria-label="delete" className="text-xl">
                                           🗑
-                                        </span>
+                                            </span>
                                         </button>
                                     </div>
                                 </li>
@@ -180,7 +180,12 @@ const UserProfile = ({user, previousOrders, addresses}: UserProfileProps) => {
             <UserAddressForm user={user} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
             <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
             <UserOrdersHistory previousOrders={previousOrders}/>
-            <UserAddressDeleteModal id={delitingAddressId} isOpenModal={isOpenDeleteModal} onClose={() => setIsOpenDeleteModal(false)}/>
+            <UserAddressDeleteModal
+                id={deletingAddressId}
+                setAddressList={setAddressList}
+                isOpenModal={isOpenDeleteModal}
+                onClose={() => setIsOpenDeleteModal(false)}
+            />
         </div>
         {/*}*/}
     </>

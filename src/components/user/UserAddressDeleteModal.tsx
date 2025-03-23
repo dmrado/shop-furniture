@@ -5,32 +5,28 @@ import {Description, Dialog} from '@headlessui/react'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from '@/components/site/Success'
 import Modal from '@/components/site/Modal'
-import {deleteAddressRowAction, getAddressById} from "@/actions/addressActions";
+import {deleteAddressRowAction, getAddressByIdAction, getAddressListAction} from '@/actions/addressActions'
 
 //пользователь хочет удалить адрес
 
-const UserAddressDeleteModal = ({id, setUpdatedAddressRows, isOpenModal, onClose}) => {
-    //для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [success, setSuccess] = useState<boolean>(false)
-    // для показа удаляемого адреса перед удалением
+const UserAddressDeleteModal = ({id, setAddressList, isOpenModal, onClose}) => {
+
+    const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
+    const [errorMessage, setErrorMessage] = useState('')
     const [address, setAddress] = useState(null)
-    // Состояние для отслеживания загрузки
-    const [loading, setLoading] = useState(true)
 
     const fetchAddress = async (id: number) => {
         try {
-            setLoading(true)
-            const data = await getAddressById(id)
-            console.error(' адреса:', data)
+            setStatus('loading')
+            const data = await getAddressByIdAction(id)
             setAddress(data)
+            setStatus('idle')
         } catch (error) {
             console.error('Ошибка при получении адреса:', error)
-        } finally {
-            setLoading(false)
+            setStatus('error')
+            setErrorMessage('Не удалось загрузить данные адреса')
         }
     }
-
-    // В useEffect
     useEffect(() => {
         if (id) {
             fetchAddress(id)
@@ -39,21 +35,22 @@ const UserAddressDeleteModal = ({id, setUpdatedAddressRows, isOpenModal, onClose
 
     // Функция для обработки формы удаления адреса
     const onSubmit = async (formData) => {
-        // Получаем id из формы (можно также использовать id из пропсов)
-        const id = formData.get('id')
+
+        const addressId = formData.get('id')
 
         try {
-            console.log('Удаление адреса с id:', id)
-            // Вызываем server action для удаления адреса
-            await deleteAddressRowAction(id)
-            // Показываем сообщение об успехе
-            setSuccess(true)
-            // Закрываем модальное окно через 2 секунды
+            setStatus('loading')
+            await deleteAddressRowAction(addressId)
+            setAddressList(prevList => prevList.filter(address => address.id !== addressId))
+            setStatus('success')
             setTimeout(() => {
                 onClose()
+                setStatus('idle')
             }, 2000)
         } catch (error) {
             console.error('Ошибка при удалении:', error)
+            setStatus('error')
+            setErrorMessage(error.message || 'Не удалось удалить адрес. Пожалуйста, попробуйте позже.')
         }
     }
 
@@ -63,45 +60,65 @@ const UserAddressDeleteModal = ({id, setUpdatedAddressRows, isOpenModal, onClose
                 Удаление адреса
             </Dialog.Title>
 
-            {loading ? (
-                <p className="text-center">Загрузка данных...</p>
-            ) : (
+            {status === 'loading' && (
+                <div className="text-center py-4">
+                    <div className="spinner"></div>
+                    <p>Загрузка...</p>
+                </div>
+            )}
+
+            {status === 'success' && (
+                <div className="text-center mb-6 py-4 text-green-600">
+                    <Success props={'Адрес удален'}/>
+                </div>
+            )}
+
+            {status === 'error' && (
+                <div className="text-center py-4 text-red-600">
+                    <p>{errorMessage}</p>
+                    <button
+                        onClick={() => setStatus('idle')}
+                        className="mt-2 px-4 py-2 bg-gray-200 rounded"
+                    >Попробовать снова
+                    </button>
+                </div>
+            )}
+
+            {status === 'idle' && (
                 <form action={onSubmit} className="w-full">
 
                     {/* Скрытое поле для передачи id адреса */}
-                    <input type="hidden" name="id" value={id} />
+                    <input type="hidden" name="id" value={id}/>
 
-                    {success ? (
-                        <Success props={'адрес удален'} />
-                    ) : (
-                        <>
-                            <p className="text-center mb-6">
-                                {address && (
-                                    <Description className='mb-8 flex-col'>
-                                        <h3 className='text-red-500 font-bold mb-4'>Вы действительно хотите удалить этот адрес?</h3>
-                                        {`${address.city || ''} ${address.street || ''} ${address.home || ''} ${address.corps || ''} ${address.appart || ''} ${address.phone || ''}`}
-                                    </Description>
-                                )}
-                            </p>
+                    {address && (
+                        <Description className='text-center mb-4 flex-col'>
+                            <span className="mr-2 text-5xl mb-4 inline-block">⚠️</span>
+                            <h3 className='text-red-500 font-bold mb-2'>
 
-                            <div className="flex justify-center space-x-4 mt-6">
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all"
-                                >
-                                    Отмена
-                                </button>
+                                Вы действительно хотите удалить этот адрес?
+                            </h3>
 
-                                <button
-                                    type="submit"
-                                    className="p-2 rounded-md text-red-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all"
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                        </>
+                            <p> {address.city || ''} {address.street || ''} {address.home || ''} {address.corps || ''} {address.appart || ''} </p>
+                            <p> {address.phone || ''}</p>
+                        </Description>
                     )}
+
+                    <div className="flex justify-center space-x-4 mt-6">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all"
+                        >
+                            Отмена
+                        </button>
+
+                        <button
+                            type="submit"
+                            className="p-2 rounded-md text-red-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all"
+                        >
+                            Удалить
+                        </button>
+                    </div>
                 </form>
             )}
         </Modal>
@@ -109,4 +126,3 @@ const UserAddressDeleteModal = ({id, setUpdatedAddressRows, isOpenModal, onClose
 }
 
 export default UserAddressDeleteModal
-
