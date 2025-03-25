@@ -1,5 +1,6 @@
 'use client'
 import Carousel from '@/components/site/Carousel'
+import Image from 'next/image'
 
 const MainPage = () => {
     return <main>
@@ -83,34 +84,43 @@ const MainPage = () => {
                 </div>
             </div>
 
-            {/* Открыть весь каталог */}
-            <div className="text-center mb-12 flex items-center justify-center">
-                {/* Короткая горизонтальная линия до*/}
-                <div className=" w-24 md:w-[295px] xl:w-[590px] border-t border-[#E99C28]"></div>
-                <button className="text-lg text-[#171613] mx-4">Открыть весь каталог</button>
-                {/* Короткая горизонтальная линия после*/}
-                <div className=" w-24 md:w-[295px] xl:w-[590px] border-t border-[#E99C28]"></div>
+            <div className="relative group mb-8">
+
             </div>
 
-
+            {/* Открыть весь каталог */}
+            <div className="flex text-center mb-6 items-center justify-center">
+                <hr className="flex-grow border-1 border-[#E99C28]"></hr>
+                {/* Короткая горизонтальная линия до */}
+                <button className="text-sm w-[300] text-[#171613] mx-4">Открыть весь каталог</button>
+                {/* Короткая горизонтальная линия после */}
+                <hr className="flex-grow border-1 border-[#E99C28]"></hr>
+            </div>
 
             {/* О компании */}
             <div className="flex flex-col md:flex-row mb-8 lg:px-28">
                 <div className="md:w-2/3 pr-8">
                     <h2 className="text-[#E99C28] text-4xl mb-4">DECORO</h2>
                     <p className="text-[#171613] mb-4">
-                        Мы гордимся тем, что <b> сотрудничаем с лучшими дизайнерами и мастерами</b>, которые используют только
+                        Мы гордимся тем, что <b> сотрудничаем с лучшими дизайнерами и мастерами</b>, которые
+                        используют
+                        только
                         высококачественные материалы и современные технологии.
-                        В нашем ассортименте вы найдете эксклюзивные предметы мебели, которые идеально впишутся в любой
+                        В нашем ассортименте вы найдете эксклюзивные предметы мебели, которые идеально впишутся в
+                        любой
                         интерьер — от классического до современного.
-                        <b>Каждая деталь тщательно продумана</b>, чтобы обеспечить не только эстетическое наслаждение, но и
+                        <b> Каждая деталь тщательно продумана</b>, чтобы обеспечить не только эстетическое
+                        наслаждение,
+                        но и
                         максимальный комфорт. <br/>
                         Кроме мебели, мы предлагаем <b>широкий выбор декора</b>: от изысканных светильников
-                        и текстиля до уникальных аксессуаров, которые добавят вашему пространству неповторимый шарм. Мы
+                        и текстиля до уникальных аксессуаров, которые добавят вашему пространству неповторимый шарм.
+                        Мы
                         уверены, что <b>каждый дом заслуживает быть красивым
                         и уютным.</b> <br/>
                         Приглашаем вас посетить наш магазин и открыть для себя мир элитной мебели
-                        и декора, где качество встречается с элегантностью. <b>Создайте свой идеальный интерьер вместе с
+                        и декора, где качество встречается с элегантностью. <b>Создайте свой идеальный интерьер
+                        вместе с
                         нами!</b>
                     </p>
                 </div>
@@ -119,19 +129,32 @@ const MainPage = () => {
                 </div>
             </div>
 
-            <div>
-                {/* Длинная горизонтальная линия до*/}
-                <div className=" w-24 md:w-[690px] xl:w-[1380px] border-t border-[#E99C28]"></div>
-                {/* Бренды */}
-                <div className="flex justify-between items-center mb-12">
-                    <img src="/brands/turri.png" alt="TURRI" className="h-8"/>
-                    <img src="/brands/john-richard.png" alt="JOHN-RICHARD" className="h-8"/>
-                    <img src="/brands/longhi.png" alt="LONGHI" className="h-8"/>
-                    <img src="/brands/misuraemme.png" alt="MisuraEmme" className="h-8"/>
-                    <img src="/brands/aster.png" alt="Aster" className="h-8"/>
+            <div className="relative group mb-8">
+                <div>
+                    {/* Длинная горизонтальная линия до */}
+                    <hr className="w-full border-1 border-[#E99C28]"></hr>
+                    {/* Бренды */}
+                    <div className="flex flex-wrap justify-center my-10 md:my-12 mx-6 lg:mx-10">
+                        <div className='mx-4 my-6 px-4 w-1/2 sm:w-1/3 lg:w-1/6 flex justify-center'>
+                            <Image width={132} height={37} src="/site/brands/turri-1.png" alt="TURRI" className="h-8"/>
+                        </div>
+                        <div className='mx-4 my-6 px-4 w-1/2 sm:w-1/3 lg:w-1/6 flex justify-center'>
+                            <Image width={243} height={42} src="/site/brands/john_richard.png" alt="JOHN-RICHARD" className="h-8"/>
+                        </div>
+                        <div className='mx-4 my-6 px-4 w-1/2 sm:w-1/3 lg:w-1/6 flex justify-center'>
+                            <Image width={152} height={41} src="/site/brands/longhi.png" alt="LONGHI" className="h-8"/>
+                        </div>
+                        <div className='mx-4 my-6 px-4 w-1/2 sm:w-1/3 lg:w-1/6 flex justify-center'>
+                            <Image width={214} height={47} src="/site/brands/misura_svg.png" alt="MisuraEmme" className="h-8"/>
+                        </div>
+                        <div className='mx-4 my-6 px-4 w-1/2 sm:w-1/3 lg:w-1/6 flex justify-center'>
+                            <Image width={168} height={61} src="/site/brands/aster.png" alt="Aster" className="h-8"/>
+                        </div>
+                    </div>
+
+                    {/* Длинная горизонтальная линия после */}
+                    <hr className="w-full border-1 border-[#E99C28]"></hr>
                 </div>
-                {/* Длинная горизонтальная линия после*/}
-                <div className=" w-24 md:w-[690px] xl:w-[1380px] border-t border-[#E99C28]"></div>
             </div>
 
             {/* Нижние карточки */}
@@ -180,7 +203,8 @@ const MainPage = () => {
             {/* Форма обратной связи */}
             <div className="mb-8">
                 <h3 className="text-center text-4xl text-amber-500 font-medium mb-2">Остались вопросы?</h3>
-                <p className="text-center text-gray-600 mb-6">Задайте их нашему менеджеру и получите ответ в течение 15
+                <p className="text-center text-gray-600 mb-6">Задайте их нашему менеджеру и получите ответ в течение
+                    15
                     минут</p>
 
                 <form className="max-w-4xl mx-auto">
