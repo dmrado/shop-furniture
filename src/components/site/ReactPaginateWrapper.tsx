@@ -33,7 +33,7 @@ const ReactPaginateWrapper = ({ pages, currentPage }) => {
             containerClassName={'flex justify-center gap-2 mt-8'}
             pageClassName={'rounded border hover:bg-indigo-50'}
             pageLinkClassName={'px-3 py-1 block'}
-            activeClassName={'bg-indigo-600 text-white'}
+            activeClassName={'bg-[#E99C28] text-white'}
             previousClassName={'rounded border hover:bg-indigo-50'}
             previousLinkClassName={'px-3 py-1 block'}
             nextClassName={'rounded border hover:bg-indigo-50'}

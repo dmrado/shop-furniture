@@ -11,7 +11,7 @@ type Props = {
 
 const ProductsPage = async ({searchParams}: Props) => {
     const page = Number(searchParams?.page) || 1
-    const limit = 3
+    const limit = 5
     const offset = (page - 1) * limit
 
     const {count, products} = await getProducts(offset, limit)
