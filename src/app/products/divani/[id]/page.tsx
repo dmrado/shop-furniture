@@ -2,15 +2,13 @@ import ProductFullDescription from "@/components/site/ProductFullDescription"
 import { getProductBiId } from "@/actions/productActions"
 import {notFound} from "next/navigation"
 
-// todo эта страница перенесена в /divani/[id]/page ее можно удалить вместе с содержащей1 папкой
-
 type Props = {
     params: { id: string }
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
 const ProductPage = async ({params}: Props) => {
-//todo разобрать params или searchParams 
+//todo разобрать params или searchParams
     const id = Number(params.id)
     if (isNaN(id)) {
         return notFound()
