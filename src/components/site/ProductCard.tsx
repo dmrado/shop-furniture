@@ -45,7 +45,7 @@ const ProductCard = ({ product }: { product: ProductListItem }) => {
       </div>
 
       {/* Description */}
-      <div className="relative h-48 p-2 flex flex-col">
+      <div className="relative h-48 p-4 flex flex-col">
         <div className="flex justify-between items-center space-x-2">
           <span className="text-xs text-gray-800 bg-white/80 px-1 rounded">
             <span className="text-amber-500 text-xs mr-1">★</span>В наличии
@@ -53,17 +53,32 @@ const ProductCard = ({ product }: { product: ProductListItem }) => {
 
           {/* Кнопка добавления в избранное */}
           <button
-            className="hover:bg-[#E99C28] text-black p-1 rounded"
-            // onClick={() => toggleFavorite(product.id)}
+              className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
+              onClick={() => {
+                console.log("Added to favorites", product.id);
+                // addToFavorites(product.id);
+              }}
           >
-            <span role="img" aria-label="favorite" className="text-lg">
-              ❤️
-            </span>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor" //Свойство stroke="currentColor" в SVG берет текущий цвет текста из родительского элемента
+            >
+              <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
           </button>
+
         </div>
 
         {/* Prpoduct */}
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/products/divani/${product.id}`}>
           <h3 className="text-lg font-semibold text-gray-900 my-6 group-hover:text-[#E99C28] transition-colors">
             {product.name}
           </h3>
@@ -98,7 +113,7 @@ const ProductCard = ({ product }: { product: ProductListItem }) => {
           <div className="flex items-center space-x-2">
             {/* Кнопка добавления в корзину */}
             <button
-              className="hover:bg-[#E99C28] text-black p-1 rounded"
+              className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
               // onClick={() => addToCart(product.id)}
               onClick={() => {
                 console.log("product.id front", product.id);
