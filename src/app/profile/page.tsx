@@ -1,13 +1,13 @@
 import UserProfile from '@/components/user/UserProfile'
-import {ProfileModel, AddressModel} from '@/db/models'
-import {getServerSession} from 'next-auth'
-import {redirect} from 'next/navigation'
-import {isSessionExpired} from '@/actions/isSessionExpired.ts'
-import {previousOrders} from '@/components/mockData'
+import { ProfileModel, AddressModel } from '@/db/models'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
+import { isSessionExpired } from '@/actions/isSessionExpired.ts'
+import { previousOrders } from '@/components/mockData'
 import React from 'react'
-import {authOptions} from '@/app/api/auth/[...nextauth]/route'
-import {createUserProfileAction, updateUserAgreementAction} from '@/actions/userActions'
-import {revalidatePath} from "next/cache";
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { createUserProfileAction, updateUserAgreementAction } from '@/actions/userActions'
+// import { revalidatePath } from 'next/cache'
 
 //todo хистори - это отфильтровано за период в Orders
 //todo создать модель для избранного "с сердечком"
@@ -48,21 +48,22 @@ const ProfilePage = async () => {
         where: {
             userId: session.user.id
         }
-    })
+    }).then(adList => adList.map(ad => ad.toJSON()))
 
-    const addresses = result.map(item => ({
-        id: item.id,
-        city: item.city,
-        phone: item.phone,
-        street: item.street,
-        home: item.home,
-        corps: item.corps,
-        appart: item.appart,
-        userId: item.userId,
-        isMain: item.isMain
-    }))
+    const addresses = result.map(item => {
+        return {
+            _id: item.id,
+            city: item.city,
+            phone: item.phone,
+            street: item.street,
+            home: item.home,
+            corps: item.corps,
+            appart: item.appart,
+            userId: item.userId,
+            isMain: item.isMain
+        }})
 
-    console.log('addresses from profile page', addresses)
+    // console.log('addresses from profile page', addresses)
 
     const user = {
         id: session.user.id,
@@ -77,7 +78,7 @@ const ProfilePage = async () => {
     //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго, ног тогда как изменить Розового зайку на нормалоьное имя для счет-фактуры
 
     return <>
-        <UserProfile user={user} ad={addresses} previousOrders={previousOrders}/>
+        <UserProfile user={user} ad={[ ...result ]} previousOrders={previousOrders}/>
     </>
 }
 

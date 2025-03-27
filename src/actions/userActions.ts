@@ -1,12 +1,11 @@
 'use server'
-import {AddressModel, ProfileModel} from '@/db/models'
-import {InferAttributes, InferCreationAttributes} from 'sequelize'
+import { AddressModel, ProfileModel } from '@/db/models'
+import { InferAttributes, InferCreationAttributes } from 'sequelize'
 
-import {getServerSession} from 'next-auth'
-import {authOptions} from '@/app/api/auth/[...nextauth]/route'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 // здесь все обращения к модели User
-
 
 // функция получения сессии юзера для всех клиентских компонентов
 export const getCurrentUserAction = async () => {
@@ -14,11 +13,10 @@ export const getCurrentUserAction = async () => {
     return session?.user
 }
 
-
 // для useEffect в Agreement
 export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     const result = await ProfileModel.findOne({
-        where: {userId},
+        where: { userId },
     })
     if (!result) {
         return false // Если пользователь не найден
@@ -26,11 +24,10 @@ export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     return result.isAgreed // Вернет true если isAgreed === 1, false в противном случае
 }
 
-
 // Функция обновления состояния согласия на обработку персональных данных
 export const updateUserAgreementAction = async (userId: string, isAgreed) => {
     const profile = await ProfileModel.findOne({
-        where: {userId},
+        where: { userId },
     })
 
     if (profile) {
@@ -40,7 +37,7 @@ export const updateUserAgreementAction = async (userId: string, isAgreed) => {
                 agreementDate: isAgreed ? new Date() : null,
             },
             {
-                where: {userId},
+                where: { userId },
             }
         )
         return
@@ -54,25 +51,24 @@ export const updateUserAgreementAction = async (userId: string, isAgreed) => {
 }
 
 //создаем нового user-а со страницы profile.page
-export const createUserProfileAction = async ({userId}) => {
+export const createUserProfileAction = async (userId) => {
     const profile = await ProfileModel.findOne({
-        where: {userId}
+        where: { userId }
     })
     return profile?.toJSON()
 }
 
-
 // изменяем Розового зайку на ФИО и ФИО на ФИО сколько угодно раз
-export const updateUserNameAction = async ({userId, name, fatherName, surName}) => {
+export const updateUserNameAction = async ({ userId, name, fatherName, surName }) => {
     // Пусть он хоть 10 раз меняет свои ФИО
-    const [result] = await ProfileModel.update({name, fatherName, surName}, {
-        where: {userId}
+    const [ result ] = await ProfileModel.update({ name, fatherName, surName }, {
+        where: { userId }
     })
     if (result === 0) {
         return false// Если ни одна запись не была обновлена
     }
     const updatedUserName = await ProfileModel.findOne({
-        where: {userId}
+        where: { userId }
     })
 
     if (!updatedUserName) {
@@ -81,9 +77,8 @@ export const updateUserNameAction = async ({userId, name, fatherName, surName}) 
     return updatedUserName.toJSON()
 }
 
-
 // ПОКА ОНА ЗАГЛУШЕНА сохраняет упрощенного юзера из InstantOrderModal - быстрый заказ
-export const createInstantUserAction = async ({name, phone,  }: {
+export const createInstantUserAction = async ({ name, phone, }: {
     name: InferAttributes<ProfileModel> | string;
     phone: InferAttributes<AddressModel> | string;
 }) => {
@@ -93,7 +88,7 @@ export const createInstantUserAction = async ({name, phone,  }: {
             {
                 model: AddressModel,
                 as: 'addresses',
-                where: {phone: phone},
+                where: { phone: phone },
             },
         ],
     })
@@ -134,10 +129,10 @@ export const createInstantUserAction = async ({name, phone,  }: {
             {
                 model: AddressModel,
                 as: 'addresses',
-                attributes: ['phone'],
+                attributes: [ 'phone' ],
             },
         ],
-        where: {id: instantUser.id},
+        where: { id: instantUser.id },
     })
 
     if (!newInstantUser) {

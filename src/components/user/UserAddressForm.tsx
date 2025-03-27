@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 import { Dialog } from '@headlessui/react'
@@ -8,7 +8,9 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from '@/components/site/Success'
 import Modal from '@/components/site/Modal'
-import {getAddressByIdAction} from "@/actions/addressActions";
+import { useRouter } from 'next/navigation'
+
+// import { getAddressByIdAction } from '@/actions/addressActions'
 
 //пользователь хочет оформить заказ, но адреса нет в списке, для добавления нового адреса открываем модальное окно и сохраняем адрес в БД и добавляем в заказ
 
@@ -43,7 +45,8 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClose }) => {
+const UserAddressForm = ({ user, address, isOpenModal, onClose }) => {
+    const router = useRouter()
 
     // todo с UserProfile он прийдет с объектом юзера, a с UserOrderForm через NewAddressModal может и с юзером и без юзера, обработать
     // if (!user) {
@@ -59,21 +62,27 @@ const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClos
     //для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
     const [ success, setSuccess ] = useState<boolean>(false)
     // для fetchAddress
-    const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
-    const [errorMessage, setErrorMessage] = useState('')
+    const [ status, setStatus ] = useState('idle') // 'idle', 'loading', 'success', 'error'
+    const [ errorMessage, setErrorMessage ] = useState('')
 
     // Адресные данные
-    const [userId, setUserId] = useState(address?.userId || '')
-    const [phone, setPhone] = useState(address?.phone || '')
-    const [city, setCity] = useState(address?.city || '')
+    const [ addressId, setAddressId ] = useState(address?.id || null)
+    const [ userId, setUserId ] = useState(address?.userId || '')
+    const [ phone, setPhone ] = useState(address?.phone || '')
+    const [ city, setCity ] = useState(address?.city || '')
     console.log('address', address)
     console.log('city', city)
-    const [street, setStreet] = useState(address?.street || '')
-    const [home, setHome] = useState(address?.home || '')
-    const [corps, setCorps] = useState(address?.corps || '')
-    const [appart, setAppart] = useState(address?.appart || '')
-    const [isMain, setIsMain] = useState(address?.isMain || false)
+    const [ street, setStreet ] = useState(address?.street || '')
+    const [ home, setHome ] = useState(address?.home || '')
+    const [ corps, setCorps ] = useState(address?.corps || '')
+    const [ appart, setAppart ] = useState(address?.appart || '')
+    const [ isMain, setIsMain ] = useState(address?.isMain || false)
 
+    useEffect(() => {
+        setCity(address?.city || '')
+        setStreet(address?.street || '')
+        setAddressId(address?.id || '')
+    }, [ address ])
 
     // const fetchAddress = async (updatingAddressId: number) => {
     //     try {
@@ -95,13 +104,13 @@ const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClos
 
     const handleChange = (e) => {
         e.preventDefault()
-        const { name, value } = e.target;
+        const { name, value } = e.target
         if (name === 'city') {
-            setCity(value);
+            setCity(value)
         } else if (name === 'street') {
-            setStreet(value);
+            setStreet(value)
         }
-    };
+    }
     // вариант без предзаполненных полей
     interface DeliveryAddress {
         phone: string;
@@ -156,6 +165,7 @@ const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClos
             setIsClosing(true)
             console.log('Адрес доставки:', formData)
             await userAddressFormAction(formData)
+            router.refresh()
         } catch (error) {
             console.error('Ошибка при отправке формы:', error)
         } finally {
@@ -202,6 +212,7 @@ const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClos
             )}
 
             <form action={onSubmit} className="w-full">
+                <input type="text" hidden={true} name='id' defaultValue={addressId}/>
                 <div className="grid grid-cols-1 lg:grid-cols-1  gap-x-6 gap-y-4">
                     <div className="mb-4">
                         {/*<label className="block mb-1">Город:</label>*/}

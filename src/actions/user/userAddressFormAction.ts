@@ -4,8 +4,8 @@ import { ADDRESS_MIN_LENGTH, CITY_MIN_LENGTH } from '@/app/constants.ts'
 import { AddressModel, ProfileModel } from '@/db/models'
 import { sanitizeAndTruncate } from '@/actions/sanitizer'
 import { InferAttributes, InferCreationAttributes } from 'sequelize'
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 class ValidationError extends Error {
     constructor(message: string) {
@@ -27,7 +27,7 @@ type UserDeliveryAddress = {
 }
 
 const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
-    // const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
+    const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
     const phone = deliveryAddress.get('phone')
     // const email = deliveryAddress.get('email')
     const city = deliveryAddress.get('city')
@@ -63,7 +63,7 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
         throw new ValidationError('Данные не корректны')
     }
     return <UserDeliveryAddress>{
-        // id,
+        id,
         phone,
         city,
         street,
@@ -80,7 +80,7 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
     const userId = session.user.id
     try {
         const {
-            // id,
+            id,
             phone,
             city,
             street,
@@ -111,18 +111,33 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
             return { error: 'Такой адрес уже существует' }
         }
 
-        const newAddress: InferCreationAttributes<AddressModel> = await AddressModel.create({
-            // id,
-            userId,
-            phone: previewPhoneNumber,
-            city: previewCity,
-            street: previewStreet,
-            home,
-            corps,
-            appart,
-            isMain
-        })
-        return { success: true, address: newAddress }
+        let address: AddressModel | null = null
+        if (id) {
+            await AddressModel.update({
+                phone,
+                city,
+                street,
+                home,
+                corps,
+                appart,
+                isMain
+            }, { where: { id } })
+            address = await AddressModel.findByPk(id)
+        } else {
+            address = await AddressModel.create({
+                // id,
+                userId,
+                phone: previewPhoneNumber,
+                city: previewCity,
+                street: previewStreet,
+                home,
+                corps,
+                appart,
+                isMain
+            })
+        }
+
+        return { success: true, address: address?.toJSON() }
 
     } catch (err) {
         console.error('Error on handleForm:  ', err)
