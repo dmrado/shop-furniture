@@ -43,7 +43,7 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     </>
 }
 // todo user-а все же нужно здесь передать и проверить есть такой в БД или нет. Однако на order page может попасть незарегистрированный пользователь и надо с него получить согласие на обработку перс данных и зарегистрировать
-const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
+const UserAddressForm = ({ user, address, updatingAddressId, isOpenModal, onClose }) => {
 
     // todo с UserProfile он прийдет с объектом юзера, a с UserOrderForm через NewAddressModal может и с юзером и без юзера, обработать
     // if (!user) {
@@ -61,12 +61,13 @@ const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
     // для fetchAddress
     const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
     const [errorMessage, setErrorMessage] = useState('')
-    const [address, setAddress] = useState(null)
 
     // Адресные данные
     const [userId, setUserId] = useState(address?.userId || '')
     const [phone, setPhone] = useState(address?.phone || '')
     const [city, setCity] = useState(address?.city || '')
+    console.log('address', address)
+    console.log('city', city)
     const [street, setStreet] = useState(address?.street || '')
     const [home, setHome] = useState(address?.home || '')
     const [corps, setCorps] = useState(address?.corps || '')
@@ -74,23 +75,23 @@ const UserAddressForm = ({ user, updatingAddressId, isOpenModal, onClose }) => {
     const [isMain, setIsMain] = useState(address?.isMain || false)
 
 
-    const fetchAddress = async (updatingAddressId: number) => {
-        try {
-            setStatus('loading')
-            const data = await getAddressByIdAction(updatingAddressId)
-            setAddress(data)
-            setStatus('idle')
-        } catch (error) {
-            console.error('Ошибка при получении адреса:', error)
-            setStatus('error')
-            setErrorMessage('Не удалось загрузить данные адреса')
-        }
-    }
-    useEffect(() => {
-        if (updatingAddressId) {
-            fetchAddress(updatingAddressId)
-        }
-    }, [updatingAddressId])
+    // const fetchAddress = async (updatingAddressId: number) => {
+    //     try {
+    //         setStatus('loading')
+    //         const data = await getAddressByIdAction(updatingAddressId)
+    //         setAddress(data)
+    //         setStatus('idle')
+    //     } catch (error) {
+    //         console.error('Ошибка при получении адреса:', error)
+    //         setStatus('error')
+    //         setErrorMessage('Не удалось загрузить данные адреса')
+    //     }
+    // }
+    // useEffect(() => {
+    //     if (updatingAddressId) {
+    //         fetchAddress(updatingAddressId)
+    //     }
+    // }, [updatingAddressId])
 
     const handleChange = (e) => {
         e.preventDefault()

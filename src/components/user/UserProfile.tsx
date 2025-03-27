@@ -1,14 +1,14 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Profile } from '@/db/models/profile.model'
-import { Address } from '@/db/models/address.model'
+import {Profile} from '@/db/models/profile.model'
+import {Address} from '@/db/models/address.model'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import UserNameForm from '@/components/user/UserNameForm'
 import UserAddressDeleteModal from '@/components/user/UserAddressDeleteModal'
-import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -32,7 +32,7 @@ type UserProfileProps = {
     previousOrders: any
     addresses: Address[]
 }
-const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
+const UserProfile = ({user, previousOrders, ad}: UserProfileProps) => {
     // todo отправка из корзины собственно заказа и выбранного адреса доставки причем для каждой копии товара может быть уникальный адрес из массива адресов доставки корпоративного юзера
 
     // Пользовательские данные могут понадобиться на UserProfile
@@ -44,28 +44,33 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
     // const [canContact, setCanContact] = useState(user?.canContact || false);
 
     // for NewAddressModal
-    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
     // для изменения Розового зайки на ФИО
-    const [ isOpenNameModal, setIsOpenNameModal ] = useState(false)
+    const [isOpenNameModal, setIsOpenNameModal] = useState(false)
     // для удаления адреса
-    const [ isOpenDeleteModal, setIsOpenDeleteModal ] = useState(false)
-    const [ deletingAddressId, setDeletingAddressId ] = useState<number | null>(null)
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
+    const [deletingAddressId, setDeletingAddressId] = useState<number | null>(null)
     // Создаем состояние для хранения адресов и функцию изменения их в компоненте UserAddressDeleteModal одновременно с удалением
-    const [ addressList, setAddressList ] = useState(addresses || [])
+    const [addressList, setAddressList] = useState(ad)
 
     //fixme
-    useEffect(() => {
-        setAddressList(addresses || [])
-    }, [ addresses, addressList ])
+    // useEffect(() => {
+    //     setAddressList(addresses || [])
+    // }, [ addresses, addressList ])
 
     // для получения updatingId редактируемого адреса
-    const [ updatingAddressId, setUpdatingAddressId ] = useState(null)
+    const [updatingAddressId, setUpdatingAddressId] = useState(null)
 
     // Функция для открытия модального окна удаления
     const openDeleteModal = (addressId) => {
         setDeletingAddressId(addressId)
         setIsOpenDeleteModal(true)
     }
+    const updatingAddress = addressList.find(addr => addr.id = updatingAddressId)
+    console.log('ad-2', ad)
+    console.log('addressList-2', addressList)
+    console.log('updatingAddress', updatingAddress)
+    console.log('updatingAddressId', updatingAddressId)
 
     return <>
         {/*<Agreement*/}
@@ -144,10 +149,11 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                                     <div className="relative group">
                                         <button onClick={() => {
                                             setIsOpenModal(true)
-                                            setUpdatingAddressId(address.id)}
+                                            setUpdatingAddressId(address.id)
                                         }
-                                            title='Редактировать адрес'
-                                            className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
+                                        }
+                                                title='Редактировать адрес'
+                                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
                                             <span role="img" aria-label="edit" className="text-xl">
                                         ✏️
                                             </span>
@@ -173,9 +179,9 @@ const UserProfile = ({ user, previousOrders, addresses }: UserProfileProps) => {
                     </>
                 )}
             </div>
-            <UserAddressForm user={user} updatingAddressId={updatingAddressId} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
+            <UserAddressForm user={user} address={updatingAddress} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
             <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
-            <UserOrdersHistory previousOrders={previousOrders}/>
+            {/*<UserOrdersHistory previousOrders={previousOrders}/>*/}
             <UserAddressDeleteModal
                 id={deletingAddressId}
                 setAddressList={setAddressList}

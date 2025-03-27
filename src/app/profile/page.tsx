@@ -24,7 +24,7 @@ const ProfilePage = async () => {
     }
     console.log('session', session.user)
 
-    const profile = await ProfileModel.findOne({
+    let profile = await ProfileModel.findOne({
         where: {
             userId: session.user.id
         }
@@ -32,8 +32,13 @@ const ProfilePage = async () => {
 
     if (!profile) {
         await createUserProfileAction(session.user.id)
-        revalidatePath('/profile')
-        redirect('/profile')
+        profile = await ProfileModel.findOne({
+            where: {
+                userId: session.user.id
+            }
+        })
+        // revalidatePath('/profile')
+        // redirect('/profile')
     }
 
     console.log('>>>>>>> >>>>>>>>>  profileUser после преобразования', profile)
@@ -64,8 +69,7 @@ const ProfilePage = async () => {
         email: session.user.email,
         photo: session.user.picture,
         name: profile?.name ?? session.user.name.split(' ')[0],
-        // surName: profileUser.surName ?? session.user.name.split(' ')[1],
-        surName: profile.surName || '',
+        surName: profile?.surName ?? session.user.name.split(' ')[1],
         fatherName: profile?.fatherName ?? '',
         isAgreed: profile?.isAgreed ?? false
     }
@@ -73,7 +77,7 @@ const ProfilePage = async () => {
     //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго, ног тогда как изменить Розового зайку на нормалоьное имя для счет-фактуры
 
     return <>
-        <UserProfile user={user} addresses={addresses} previousOrders={previousOrders}/>
+        <UserProfile user={user} ad={addresses} previousOrders={previousOrders}/>
     </>
 }
 
