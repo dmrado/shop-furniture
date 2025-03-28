@@ -3,6 +3,8 @@ import {getProducts} from '@/actions/productActions'
 import ProductCategory from '@/components/site/ProductCategory'
 import React from "react";
 import Breadcrumbs from "@/components/site/Breadcrumbs";
+import InfinityScroll from "@/components/site/InfinityScroll";
+import {getCategories} from "@/actions/categoryActions";
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
@@ -10,60 +12,41 @@ type Props = {
 
 const CatalogPage = async ({searchParams}: Props) => {
     const page = Number(searchParams?.page) || 1
-    const limit = 7
+    const limit = 12
     const offset = (page - 1) * limit
 
-    //todo удалить после создания модели CategoryModel оставлено для верстки
-    const {count, products} = await getProducts(offset, limit)
-
-    //todo раскомментировать после создания модели CategoryModel
-    // const {count, categories} = await getCategory(offset, limit)
+    const {count, categories} = await getCategories(offset, limit)
+    console.log('categories', categories)
+    console.log('count', count)
 
     const totalPages = Math.ceil(count / limit)
 
     //todo создать запрос к модели Грандкатегорий
     return <>
         <div className="p-4">
-        <Breadcrumbs/>
+            <Breadcrumbs/>
         </div>
         <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
-                <h1>Каталог элитной мебели и декора</h1>
+            <h1>Каталог элитной мебели и декора</h1>
         </div>
 
         {/*{!!grandCategories && grandCategories.map(grandCategory => <li key=>{grandCategory.id}*/}
 
-        <div className="container mx-auto my-8">
-            <div className="flex p-4 flex-row items-center mb-6">
-                <div className="text-3xl font-medium">
-                    <h1>Мебель</h1>
-                    {/*<h1>{grandCategory.name}</h1>*/}
+
+            <div className="container mx-auto my-8">
+                <div className="flex p-4 flex-row items-center mb-6">
+                    <div className="text-3xl font-medium">
+                        <h1>Мебель</h1>
+                        {/*<h1>{grandCategory.name}</h1>*/}
+                    </div>
                 </div>
-                {/*<div className="text-xl justify-center">*/}
-                {/*    <ReactPaginateWrapper pages={totalPages} currentPage={page} />*/}
-                {/*</div>*/}
+
+                <InfinityScroll categories={categories}/>
+
             </div>
 
-            <div
-                className="grid p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 scrollbar-hide">
-                {/*todo требуется map продуктов по категориям для этого добавить модель категорий с привязкой один-ко-многим к модели продуктов и обращаться к ней*/}
-                {/*{category.length*/}
-                {/*    ? categories.map(category => (*/}
-                {/*        <ProductCategory category={category} key={category.id}/>))*/}
-                {/*    : <p>Категории из каталога не найдены? </p>*/}
-                {/*}*/}
-                {products.length
-                    ? products.map(product => (
-                        <div className="h-[200px] mb-2" key={product.id}>
-                            <ProductCategory product={product}/>
-                        </div>
-                    ))
-                    : <p>Продукты - Категории не найдены</p>
-                }
-            </div>
-        </div>
         {/*</li>*/}
         )}
     </>
 }
-
 export default CatalogPage

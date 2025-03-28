@@ -1,6 +1,9 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { StockModel } from '@/db/models'
+import {ProfileModel, StockModel} from '@/db/models'
+
+
+export interface Product extends InferAttributes<ProductModel> {}
 
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     declare id: CreationOptional<number>

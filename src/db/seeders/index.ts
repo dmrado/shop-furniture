@@ -3,6 +3,7 @@ import { seedProducts } from '@/db/seeders/product.seeder'
 import { seedColors } from '@/db/seeders/color.seeder'
 import { seedUsers } from '@/db/seeders/user.seeder'
 import { seedAddresses } from './address.seeder'
+import {seedCategories} from '@/db/seeders/category.seeder'
 
 async function runSeeders() {
     try {
@@ -13,6 +14,7 @@ async function runSeeders() {
         await Promise.all([
             seedColors(),
             seedProducts(),
+            seedCategories(),
             // seedAddresses(),
             // seedUsers()
         ])
