@@ -3,30 +3,31 @@ import React, {useEffect, useState} from 'react'
 import {useInView} from 'react-intersection-observer'
 import ProductCategory from '@/components/site/ProductCategory'
 import {CategoryModel} from '@/db/models/category.model'
+import {getCategories} from '@/actions/categoryActions'
 
 //*todo требуется сделать этот компонент динамичной оберткой для каждой категории и вообще для сайта
 
-const InfinityScroll = ({categories}: { initialItems: CategoryModel[] }) => {
-    // const [offset, setOffset] = useState(8)
-    // const [count, setCount] = useState(0)
-    // const [ categories, setCategories ] = useState<CategoryModel[]>(categories)
+const InfinityScroll = ({initialItems}: { initialItems: CategoryModel[] }) => {
+    const [offset, setOffset] = useState(8)
+    const [count, setCount] = useState(0)
+    const [categories, setCategories ] = useState<CategoryModel[]>(initialItems)
     const {ref, inView} = useInView()
 
-    /* const loadMoreProducts = async () => {
+    const loadMoreCategories = async () => {
        //todo в пропсах приходят старые продукты а здесь тащим еще из БД и сливаем два массива, но у нас в пропсах приходят сразу ВСЕ продукты и все это переписать на категории их будет не много так что не надо офсетить и лимитить, а если будет много то сенрверным экшеном здесь добирать еще из БД и далее сливать массивы
-         const { posts: newPosts, count } = await getPosts(offset, NUMBER_OF_POSTS_TO_FETCH)
-         setProducts([ ...products, ...newProducts ])
+         let { categories: newCategories, count } = await getCategories(offset)
+        setCategories([ ...categories, ...newCategories ])
          setOffset(offset + 8)
          setCount(count)
-     }*/
+     }
 
 
-    // useEffect(() => {
-    //     if (inView && products.length !== count) {
-    //         loadMoreProducts()
-    //         //todo обработать ошибку
-    //     }
-    // }, [ inView ])
+    useEffect(() => {
+        if (inView && categories.length !== count) {
+            loadMoreCategories()
+            //todo обработать ошибку
+        }
+    }, [ inView ])
 
 
     return (

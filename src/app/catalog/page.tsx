@@ -41,7 +41,7 @@ const CatalogPage = async ({searchParams}: Props) => {
                     </div>
                 </div>
 
-                <InfinityScroll categories={categories}/>
+                <InfinityScroll initialItems={categories}/>
 
             </div>
 

@@ -1,9 +1,9 @@
+'use server'
 import {CategoryModel} from '@/db/models/category.model'
 
-export const getCategories = async (offset: number, limit: number):
+export const getCategories = async (offset: number):
     Promise<{ count: number, categories }> => {
     const {count, rows} = await CategoryModel.findAndCountAll({
-        limit,
         offset,
     })
 
