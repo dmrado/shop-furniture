@@ -20,8 +20,8 @@ const ProductCategory = ({category}: { category: Category }) => {
             <div className="relative h-52 overflow-hidden bg-gray-50">
                 <Image
                     // src={category.image}
-                    // alt={category.name}
-                    alt={`Picture of the ${category.grandCategory}`}
+                    alt={category.name}
+                    // alt={`Picture of the ${category.name}`}
                     width={260}
                     height={200}
                     // fill

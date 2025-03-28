@@ -13,6 +13,7 @@ export const getCategories = async (offset: number):
             id: row.id,
             name: row.name,
             grandCategory: row.grandCategory,
+            image: row.image
         }))
     }
 }
