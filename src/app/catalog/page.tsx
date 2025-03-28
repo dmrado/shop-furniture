@@ -2,6 +2,7 @@ import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import {getProducts} from '@/actions/productActions'
 import ProductCategory from '@/components/site/ProductCategory'
 import React from "react";
+import Breadcrumbs from "@/components/site/Breadcrumbs";
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
@@ -22,37 +23,44 @@ const CatalogPage = async ({searchParams}: Props) => {
 
     //todo создать запрос к модели Грандкатегорий
     return <>
+        <div className="p-4">
+        <Breadcrumbs/>
+        </div>
+        <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
+                <h1>Каталог элитной мебели и декора</h1>
+        </div>
+
         {/*{!!grandCategories && grandCategories.map(grandCategory => <li key=>{grandCategory.id}*/}
 
-            <div className="container mx-auto my-20">
-                <div className="flex flex-row items-center mb-6">
-                    <div className="text-3xl font-medium">
-                        <h1>Мебель</h1>
-                        {/*<h1>{grandCategory.name}</h1>*/}
-                    </div>
-                    {/*<div className="text-xl justify-center">*/}
-                    {/*    <ReactPaginateWrapper pages={totalPages} currentPage={page} />*/}
-                    {/*</div>*/}
+        <div className="container mx-auto my-8">
+            <div className="flex p-4 flex-row items-center mb-6">
+                <div className="text-3xl font-medium">
+                    <h1>Мебель</h1>
+                    {/*<h1>{grandCategory.name}</h1>*/}
                 </div>
-
-                <div
-                    className="grid p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 scrollbar-hide">
-                    {/*todo требуется map продуктов по категориям для этого добавить модель категорий с привязкой один-ко-многим к модели продуктов и обращаться к ней*/}
-                    {/*{category.length*/}
-                    {/*    ? categories.map(category => (*/}
-                    {/*        <ProductCategory category={category} key={category.id}/>))*/}
-                    {/*    : <p>Категории из каталога не найдены? </p>*/}
-                    {/*}*/}
-                    {products.length
-                        ? products.map(product => (
-                            <div className="h-[200px] mb-2" key={product.id}>
-                                <ProductCategory product={product}/>
-                            </div>
-                        ))
-                        : <p>Продукты - Категории не найдены</p>
-                    }
-                </div>
+                {/*<div className="text-xl justify-center">*/}
+                {/*    <ReactPaginateWrapper pages={totalPages} currentPage={page} />*/}
+                {/*</div>*/}
             </div>
+
+            <div
+                className="grid p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 scrollbar-hide">
+                {/*todo требуется map продуктов по категориям для этого добавить модель категорий с привязкой один-ко-многим к модели продуктов и обращаться к ней*/}
+                {/*{category.length*/}
+                {/*    ? categories.map(category => (*/}
+                {/*        <ProductCategory category={category} key={category.id}/>))*/}
+                {/*    : <p>Категории из каталога не найдены? </p>*/}
+                {/*}*/}
+                {products.length
+                    ? products.map(product => (
+                        <div className="h-[200px] mb-2" key={product.id}>
+                            <ProductCategory product={product}/>
+                        </div>
+                    ))
+                    : <p>Продукты - Категории не найдены</p>
+                }
+            </div>
+        </div>
         {/*</li>*/}
         )}
     </>
