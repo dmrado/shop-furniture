@@ -7,58 +7,58 @@ export async function seedCategories() {
 
         const categories = [
             // Электроника
-            { name: 'Смартфоны', grandCategory: 'Электроника', image: '/images/categories/smartphones.jpg' },
-            { name: 'Ноутбуки', grandCategory: 'Электроника', image: '/images/categories/laptops.jpg' },
-            { name: 'Планшеты', grandCategory: 'Электроника', image: '/images/categories/tablets.jpg' },
-            { name: 'Телевизоры', grandCategory: 'Электроника', image: '/images/categories/tvs.jpg' },
-            { name: 'Аудиосистемы', grandCategory: 'Электроника', image: '/images/categories/audio.jpg' },
-            { name: 'Фотоаппараты', grandCategory: 'Электроника', image: '/images/categories/cameras.jpg' },
-            { name: 'Игровые консоли', grandCategory: 'Электроника', image: '/images/categories/consoles.jpg' },
-            { name: 'Умные часы', grandCategory: 'Электроника', image: '/images/categories/smartwatches.jpg' },
+            { name: 'Смартфоны', grandCategory: 'Электроника', slug: 'smartfoni', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Ноутбуки', grandCategory: 'Электроника', slug: 'notebooks', image: '/modulnyj-divan.jpg' },
+            { name: 'Планшеты', grandCategory: 'Электроника', slug: 'plansheti', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Телевизоры', grandCategory: 'Электроника', slug: 'tv', image: '/modulnyj-divan.jpg' },
+            { name: 'Аудиосистемы', grandCategory: 'Электроника', slug: 'audiosistemi', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Фотоаппараты', grandCategory: 'Электроника', slug: 'fotoapparati', image: '/modulnyj-divan.jpg' },
+            { name: 'Игровые консоли', grandCategory: 'Электроника', slug: 'konsoli', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Умные часы', grandCategory: 'Электроника', slug: 'smartwaches', image: '/modulnyj-divan.jpg' },
 
             // Одежда
-            { name: 'Мужская одежда', grandCategory: 'Одежда', image: '/images/categories/mens_clothing.jpg' },
-            { name: 'Женская одежда', grandCategory: 'Одежда', image: '/images/categories/womens_clothing.jpg' },
-            { name: 'Детская одежда', grandCategory: 'Одежда', image: '/images/categories/kids_clothing.jpg' },
-            { name: 'Спортивная одежда', grandCategory: 'Одежда', image: '/images/categories/sports_clothing.jpg' },
-            { name: 'Верхняя одежда', grandCategory: 'Одежда', image: '/images/categories/outerwear.jpg' },
-            { name: 'Нижнее белье', grandCategory: 'Одежда', image: '/images/categories/underwear.jpg' },
+            { name: 'Мужская одежда', grandCategory: 'Одежда', slug: 'mujskayaodejda', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Женская одежда', grandCategory: 'Одежда', slug: 'jenskayaodejda', image: '/modulnyj-divan.jpg' },
+            { name: 'Детская одежда', grandCategory: 'Одежда', slug: 'detodejda', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Спортивная одежда', grandCategory: 'Одежда', slug: 'sportodejda', image: '/modulnyj-divan.jpg' },
+            { name: 'Верхняя одежда', grandCategory: 'Одежда', slug: 'verhodejda', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Нижнее белье', grandCategory: 'Одежда', slug: 'belio', image: '/modulnyj-divan.jpg' },
 
             // Обувь
-            { name: 'Мужская обувь', grandCategory: 'Обувь', image: '/images/categories/mens_shoes.jpg' },
-            { name: 'Женская обувь', grandCategory: 'Обувь', image: '/images/categories/womens_shoes.jpg' },
-            { name: 'Детская обувь', grandCategory: 'Обувь', image: '/images/categories/kids_shoes.jpg' },
-            { name: 'Спортивная обувь', grandCategory: 'Обувь', image: '/images/categories/sports_shoes.jpg' },
+            { name: 'Мужская обувь', grandCategory: 'Обувь', slug: 'mujobuv', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Женская обувь', grandCategory: 'Обувь',slug: 'jenobuv',  image: '/modulnyj-divan.jpg' },
+            { name: 'Детская обувь', grandCategory: 'Обувь', slug: 'detobuv', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Спортивная обувь', grandCategory: 'Обувь', slug: 'sportobuv', image: '/modulnyj-divan.jpg' },
 
             // Мебель
-            { name: 'Диваны', grandCategory: 'Мебель', image: '/images/categories/sofas.jpg' },
-            { name: 'Кровати', grandCategory: 'Мебель', image: '/images/categories/beds.jpg' },
-            { name: 'Столы', grandCategory: 'Мебель', image: '/images/categories/tables.jpg' },
-            { name: 'Стулья', grandCategory: 'Мебель', image: '/images/categories/chairs.jpg' },
-            { name: 'Шкафы', grandCategory: 'Мебель', image: '/images/categories/wardrobes.jpg' },
-            { name: 'Комоды', grandCategory: 'Мебель', image: '/images/categories/dressers.jpg' },
+            { name: 'Диваны', grandCategory: 'Мебель', slug: 'divani', image: '/modulnyj-divan.jpg' },
+            { name: 'Кровати', grandCategory: 'Мебель', slug: 'krovati', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Столы', grandCategory: 'Мебель', slug: 'stoli', image: '/modulnyj-divan.jpg' },
+            { name: 'Стулья', grandCategory: 'Мебель', slug: 'stulia', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Шкафы', grandCategory: 'Мебель', slug: 'shkafi', image: '/modulnyj-divan.jpg' },
+            { name: 'Комоды', grandCategory: 'Мебель', slug: 'komodi', image: '/kofeinii-stolik-elite.webp' },
 
             // Продукты питания
-            { name: 'Молочные продукты', grandCategory: 'Продукты питания', image: '/images/categories/dairy.jpg' },
-            { name: 'Мясо и птица', grandCategory: 'Продукты питания', image: '/images/categories/meat.jpg' },
-            { name: 'Фрукты и овощи', grandCategory: 'Продукты питания', image: '/images/categories/fruits_vegetables.jpg' },
-            { name: 'Хлебобулочные изделия', grandCategory: 'Продукты питания', image: '/images/categories/bakery.jpg' },
-            { name: 'Напитки', grandCategory: 'Продукты питания', image: '/images/categories/beverages.jpg' },
+            { name: 'Молочные продукты', grandCategory: 'Продукты питания', slug: 'moloko', image: '/modulnyj-divan.jpg' },
+            { name: 'Мясо и птица', grandCategory: 'Продукты питания', slug: 'miaso', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Фрукты и овощи', grandCategory: 'Продукты питания', slug: 'frukti', image: '/modulnyj-divan.jpg' },
+            { name: 'Хлебобулочные изделия', grandCategory: 'Продукты питания', slug: 'hleb', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Напитки', grandCategory: 'Продукты питания', slug: 'napitki', image: '/modulnyj-divan.jpg' },
 
             // Косметика
-            { name: 'Уход за лицом', grandCategory: 'Косметика', image: '/images/categories/face_care.jpg' },
-            { name: 'Уход за телом', grandCategory: 'Косметика', image: '/images/categories/body_care.jpg' },
-            { name: 'Уход за волосами', grandCategory: 'Косметика', image: '/images/categories/hair_care.jpg' },
-            { name: 'Декоративная косметика', grandCategory: 'Косметика', image: '/images/categories/makeup.jpg' },
-            { name: 'Парфюмерия', grandCategory: 'Косметика', image: '/images/categories/perfume.jpg' },
+            { name: 'Уход за лицом', grandCategory: 'Косметика', slug: 'litso', image: '/modulnyj-divan.jpg' },
+            { name: 'Уход за телом', grandCategory: 'Косметика', slug: 'telo', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Уход за волосами', grandCategory: 'Косметика', slug: 'volosi', image: '/modulnyj-divan.jpg' },
+            { name: 'Декоративная косметика', grandCategory: 'Косметика', slug: 'denkosmetik', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Парфюмерия', grandCategory: 'Косметика', slug: 'parfum', image: '/modulnyj-divan.jpg' },
 
             // Спорт и отдых
-            { name: 'Тренажеры', grandCategory: 'Спорт и отдых', image: '/images/categories/fitness_equipment.jpg' },
-            { name: 'Спортивный инвентарь', grandCategory: 'Спорт и отдых', image: '/images/categories/sports_equipment.jpg' },
-            { name: 'Туристическое снаряжение', grandCategory: 'Спорт и отдых', image: '/images/categories/camping.jpg' },
-            { name: 'Велосипеды', grandCategory: 'Спорт и отдых', image: '/images/categories/bicycles.jpg' },
-            { name: 'Товары для рыбалки', grandCategory: 'Спорт и отдых', image: '/images/categories/fishing.jpg' },
-            { name: 'Товары для охоты', grandCategory: 'Спорт и отдых', image: '/images/categories/hunting.jpg' }
+            { name: 'Тренажеры', grandCategory: 'Спорт и отдых', slug: 'trenajeri', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Спортивный инвентарь', grandCategory: 'Спорт и отдых', slug: 'inventar', image: '/modulnyj-divan.jpg' },
+            { name: 'Туристическое снаряжение', grandCategory: 'Спорт и отдых', slug: 'turistich', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Велосипеды', grandCategory: 'Спорт и отдых', slug: 'velosipedi', image: '/modulnyj-divan.jpg' },
+            { name: 'Товары для рыбалки', grandCategory: 'Спорт и отдых', slug: 'ribalka', image: '/kofeinii-stolik-elite.webp' },
+            { name: 'Товары для охоты', grandCategory: 'Спорт и отдых', slug: 'ohota', image: '/modulnyj-divan.jpg' }
         ];
 
         // Создаем записи в базе данных

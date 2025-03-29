@@ -10,6 +10,7 @@ export class CategoryModel extends Model<InferAttributes<CategoryModel>, InferCr
     declare id?: CreationOptional<number>
     declare name: string
     declare grandCategory: string
+    declare slug: string
     declare image: string
     // declare product?: ProductModel // Добавляем связь с UserModel
 }
@@ -26,6 +27,10 @@ CategoryModel.init(
             allowNull: false,
         },
         grandCategory: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
+        },
+        slug: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },

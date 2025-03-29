@@ -9,6 +9,8 @@ import {Category} from "@/db/models/category.model";
 // todo заменить product на category после создания модели CategoryModel
 const ProductCategory = ({category}: { category: Category }) => {
     const [isHovered, setIsHovered] = useState(false)
+    console.log('category from ProductCategory', category)
+    console.log('category SLUG from ProductCategory', category.slug)
 
     return <>
         <div
@@ -19,7 +21,7 @@ const ProductCategory = ({category}: { category: Category }) => {
             {/* Image Container */}
             <div className="relative h-52 overflow-hidden bg-gray-50">
                 <Image
-                    // src={category.image}
+                    src={category.image}
                     // alt={category.name}
                     alt={`Picture of the ${category.name}`}
                     width={260}
@@ -31,7 +33,7 @@ const ProductCategory = ({category}: { category: Category }) => {
                     priority
                 />
                 {/* Category */}
-                <Link href={`/catalog/${category.id}`} className="absolute bottom-2 left-2 w-full p-3">
+                <Link href={`/catalog/${category.slug}/${category.id}`} className="absolute bottom-2 left-2 w-full p-3">
                     <h3 className="text-xl font-semibold text-white group-hover:text-[#E99C28] transition-colors">
                         {category.name}
                     </h3>

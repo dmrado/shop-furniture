@@ -16,7 +16,7 @@ const CatalogPage = async ({searchParams}: Props) => {
     const offset = (page - 1) * limit
 
     const {count, categories} = await getCategories(offset, limit)
-    console.log('categories', categories)
+    console.log('categories from catalog page', categories)
     console.log('count', count)
 
     const totalPages = Math.ceil(count / limit)
