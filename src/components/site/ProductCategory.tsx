@@ -20,8 +20,8 @@ const ProductCategory = ({category}: { category: Category }) => {
             <div className="relative h-52 overflow-hidden bg-gray-50">
                 <Image
                     // src={category.image}
-                    alt={category.name}
-                    // alt={`Picture of the ${category.name}`}
+                    // alt={category.name}
+                    alt={`Picture of the ${category.name}`}
                     width={260}
                     height={200}
                     // fill
@@ -31,7 +31,7 @@ const ProductCategory = ({category}: { category: Category }) => {
                     priority
                 />
                 {/* Category */}
-                <Link href={`/products/divani/${category.id}`} className="absolute bottom-2 left-2 w-full p-3">
+                <Link href={`/catalog/${category.id}`} className="absolute bottom-2 left-2 w-full p-3">
                     <h3 className="text-xl font-semibold text-white group-hover:text-[#E99C28] transition-colors">
                         {category.name}
                     </h3>
