@@ -12,7 +12,7 @@ type Props = {
 
 const CatalogPage = async ({searchParams}: Props) => {
     const page = Number(searchParams?.page) || 1
-    const limit = 12
+    const limit = 1000
     const offset = (page - 1) * limit
 
     const {count, categories} = await getCategories(offset, limit)
@@ -33,20 +33,19 @@ const CatalogPage = async ({searchParams}: Props) => {
         {/*{!!grandCategories && grandCategories.map(grandCategory => <li key=>{grandCategory.id}*/}
 
 
-            <div className="container mx-auto my-8">
-                <div className="flex p-4 flex-row items-center mb-6">
-                    <div className="text-3xl font-medium">
-                        <h1>Мебель</h1>
-                        {/*<h1>{grandCategory.name}</h1>*/}
-                    </div>
+        <div className="container mx-auto my-8">
+            <div className="flex p-4 flex-row items-center mb-6">
+                <div className="text-3xl font-medium">
+                    <h1>Мебель</h1>
+                    {/*<h1>{grandCategory.name}</h1>*/}
                 </div>
-
-                <InfinityScroll initialItems={categories}/>
-
             </div>
 
+            <InfinityScroll initialItems={categories}/>
+
+        </div>
+
         {/*</li>*/}
-        )}
     </>
 }
 export default CatalogPage

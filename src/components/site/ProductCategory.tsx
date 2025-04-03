@@ -33,7 +33,7 @@ const ProductCategory = ({category}: { category: Category }) => {
                     priority
                 />
                 {/* Category */}
-                <Link href={`/catalog/${category.slug}/${category.id}`} className="absolute bottom-2 left-2 w-full p-3">
+                <Link href={`/catalog/${category.slug}`} className="absolute bottom-2 left-2 w-full p-3">
                     <h3 className="text-xl font-semibold text-white group-hover:text-[#E99C28] transition-colors">
                         {category.name}
                     </h3>
