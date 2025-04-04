@@ -62,7 +62,7 @@ export const getFullCategoryTree = async (): Promise<any[]> => {
         }]
     });
 
-    return categories;
+    return categories.map(category => category.toJSON())
 }
 
 //Запасные варианты
