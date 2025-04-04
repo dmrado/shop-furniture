@@ -38,6 +38,17 @@ const ProductCategory = ({category}: { category: Category }) => {
                         {category.name}
                     </h3>
                 </Link>
+
+                {/* Отображаем подкатегории второго уровня, если они есть */}
+                {/*{category.children && category.children.length > 0 && (*/}
+                {/*    <ul>*/}
+                {/*        {category.children.map(subCategory => (*/}
+                {/*            <li key={subCategory.id}>*/}
+                {/*                {subCategory.name}*/}
+                {/*            </li>*/}
+                {/*        ))}*/}
+                {/*    </ul>*/}
+                {/*)}*/}
             </div>
         </div>
     </>

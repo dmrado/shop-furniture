@@ -34,9 +34,9 @@ const InfinityScroll = ({initialItems}: { initialItems: CategoryModel[] }) => {
 
             {/*todo добавить модель категорий привязку один-ко-многим к модели продуктов и обращаться к ней и как-то переделать grandCategory*/}
 
-            {categories.length
-                ? categories.map(category => (
+            {categories.length ? categories.map(category => (
                     <div className="h-[200px] mb-2" key={category.id}>
+                        {/* Передаем категорию первого уровня и её дочерние категории (второго уровня) */}
                         <ProductCategory category={category}/>
                     </div>
                 ))

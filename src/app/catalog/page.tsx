@@ -61,26 +61,28 @@ const CatalogPage = async ({searchParams}: Props) => {
         </div>
 
         <div className="container mx-auto px-4">
-            {/*<CategoryNavigation categories={categoryTree}/>*/}
-
-            {/* Отображение основных категорий и их подкатегорий */}
-            {!!categoryTree && categoryTree.map(mainCategory =>
-                <li key={mainCategory.id}>
-                    <div className="container mx-auto my-8">
-                        <div className="flex p-4 flex-row items-center mb-6">
-                            <div className="text-3xl font-medium">
-                                <h1>{mainCategory.name}</h1>
+            <CategoryNavigation categories={categoryTree}/>
+            <ul>
+                {/* Отображение основных категорий и их подкатегорий */}
+                {!!categoryTree && categoryTree.map(mainCategory =>
+                    <li key={mainCategory.id}>
+                        <div className="container mx-auto my-8">
+                            <div className="flex p-4 flex-row items-center mb-6">
+                                <div className="text-3xl font-medium">
+                                    <h1>{mainCategory.name}</h1>
+                                </div>
                             </div>
+
+                            {mainCategory.children && mainCategory.children.length > 0 && (
+                                <InfinityScroll initialItems={mainCategory.children}/>
+                            )}
+
                         </div>
 
-                        {mainCategory.children && mainCategory.children.length > 0 && (
-                            <InfinityScroll initialItems={mainCategory.children}/>
-                        )}
-
-                    </div>
-
-                </li>)}
+                    </li>)}
+            </ul>
         </div>
+
     </>
 }
 export default CatalogPage
