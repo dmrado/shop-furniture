@@ -6,59 +6,136 @@ export async function seedCategories() {
         await CategoryModel.destroy({ where: {}, truncate: true });
 
         const categories = [
-            // Электроника
-            { name: 'Смартфоны', grandCategory: 'Электроника', slug: 'smartfoni', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Ноутбуки', grandCategory: 'Электроника', slug: 'notebooks', image: '/modulnyj-divan.jpg' },
-            { name: 'Планшеты', grandCategory: 'Электроника', slug: 'plansheti', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Телевизоры', grandCategory: 'Электроника', slug: 'tv', image: '/modulnyj-divan.jpg' },
-            { name: 'Аудиосистемы', grandCategory: 'Электроника', slug: 'audiosistemi', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Фотоаппараты', grandCategory: 'Электроника', slug: 'fotoapparati', image: '/modulnyj-divan.jpg' },
-            { name: 'Игровые консоли', grandCategory: 'Электроника', slug: 'konsoli', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Умные часы', grandCategory: 'Электроника', slug: 'smartwaches', image: '/modulnyj-divan.jpg' },
-
-            // Одежда
-            { name: 'Мужская одежда', grandCategory: 'Одежда', slug: 'mujskayaodejda', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Женская одежда', grandCategory: 'Одежда', slug: 'jenskayaodejda', image: '/modulnyj-divan.jpg' },
-            { name: 'Детская одежда', grandCategory: 'Одежда', slug: 'detodejda', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Спортивная одежда', grandCategory: 'Одежда', slug: 'sportodejda', image: '/modulnyj-divan.jpg' },
-            { name: 'Верхняя одежда', grandCategory: 'Одежда', slug: 'verhodejda', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Нижнее белье', grandCategory: 'Одежда', slug: 'belio', image: '/modulnyj-divan.jpg' },
-
-            // Обувь
-            { name: 'Мужская обувь', grandCategory: 'Обувь', slug: 'mujobuv', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Женская обувь', grandCategory: 'Обувь',slug: 'jenobuv',  image: '/modulnyj-divan.jpg' },
-            { name: 'Детская обувь', grandCategory: 'Обувь', slug: 'detobuv', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Спортивная обувь', grandCategory: 'Обувь', slug: 'sportobuv', image: '/modulnyj-divan.jpg' },
-
-            // Мебель
-            { name: 'Диваны', grandCategory: 'Мебель', slug: 'divani', image: '/modulnyj-divan.jpg' },
-            { name: 'Кровати', grandCategory: 'Мебель', slug: 'krovati', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Столы', grandCategory: 'Мебель', slug: 'stoli', image: '/modulnyj-divan.jpg' },
-            { name: 'Стулья', grandCategory: 'Мебель', slug: 'stulia', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Шкафы', grandCategory: 'Мебель', slug: 'shkafi', image: '/modulnyj-divan.jpg' },
-            { name: 'Комоды', grandCategory: 'Мебель', slug: 'komodi', image: '/kofeinii-stolik-elite.webp' },
-
-            // Продукты питания
-            { name: 'Молочные продукты', grandCategory: 'Продукты питания', slug: 'moloko', image: '/modulnyj-divan.jpg' },
-            { name: 'Мясо и птица', grandCategory: 'Продукты питания', slug: 'miaso', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Фрукты и овощи', grandCategory: 'Продукты питания', slug: 'frukti', image: '/modulnyj-divan.jpg' },
-            { name: 'Хлебобулочные изделия', grandCategory: 'Продукты питания', slug: 'hleb', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Напитки', grandCategory: 'Продукты питания', slug: 'napitki', image: '/modulnyj-divan.jpg' },
-
-            // Косметика
-            { name: 'Уход за лицом', grandCategory: 'Косметика', slug: 'litso', image: '/modulnyj-divan.jpg' },
-            { name: 'Уход за телом', grandCategory: 'Косметика', slug: 'telo', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Уход за волосами', grandCategory: 'Косметика', slug: 'volosi', image: '/modulnyj-divan.jpg' },
-            { name: 'Декоративная косметика', grandCategory: 'Косметика', slug: 'denkosmetik', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Парфюмерия', grandCategory: 'Косметика', slug: 'parfum', image: '/modulnyj-divan.jpg' },
-
-            // Спорт и отдых
-            { name: 'Тренажеры', grandCategory: 'Спорт и отдых', slug: 'trenajeri', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Спортивный инвентарь', grandCategory: 'Спорт и отдых', slug: 'inventar', image: '/modulnyj-divan.jpg' },
-            { name: 'Туристическое снаряжение', grandCategory: 'Спорт и отдых', slug: 'turistich', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Велосипеды', grandCategory: 'Спорт и отдых', slug: 'velosipedi', image: '/modulnyj-divan.jpg' },
-            { name: 'Товары для рыбалки', grandCategory: 'Спорт и отдых', slug: 'ribalka', image: '/kofeinii-stolik-elite.webp' },
-            { name: 'Товары для охоты', grandCategory: 'Спорт и отдых', slug: 'ohota', image: '/modulnyj-divan.jpg' }
+                // Категории первого уровня
+                {
+                    id: 1,
+                    name: 'Электроника',
+                    slug: 'electronics',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: null
+                },
+                {
+                    id: 2,
+                    name: 'Одежда',
+                    slug: 'clothing',
+                    image: '/kofeinii-stolik-elite.webp',
+                    parentId: null
+                },
+                {
+                    id: 3,
+                    name: 'Мебель',
+                    slug: 'furniture',
+                    image: '/slavianskii-shkaf.jpg',
+                    parentId: null
+                },
+                
+                // Категории второго уровня для Электроники
+                {
+                    id: 4,
+                    name: 'Компьютеры',
+                    slug: 'computers',
+                    image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                    parentId: 1
+                },
+                {
+                    id: 5,
+                    name: 'Смартфоны',
+                    slug: 'smartphones',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: 1
+                },
+                {
+                    id: 6,
+                    name: 'Телевизоры',
+                    slug: 'tvs',
+                    image: '/kofeinii-stolik-elite.webp',
+                    parentId: 1
+                },
+                
+                // Категории третьего уровня для Компьютеров
+                {
+                    id: 7,
+                    name: 'Ноутбуки',
+                    slug: 'laptops',
+                    image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                    parentId: 4
+                },
+                {
+                    id: 8,
+                    name: 'Настольные компьютеры',
+                    slug: 'desktops',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: 4
+                },
+                {
+                    id: 9,
+                    name: 'Планшеты',
+                    slug: 'tablets',
+                    image: '/kofeinii-stolik-elite.webp',
+                    parentId: 4
+                },
+                
+                // Категории четвертого уровня для Ноутбуков
+                {
+                    id: 10,
+                    name: 'Игровые ноутбуки',
+                    slug: 'gaming-laptops',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: 7
+                },
+                {
+                    id: 11,
+                    name: 'Бизнес ноутбуки',
+                    slug: 'business-laptops',
+                    image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                    parentId: 7
+                },
+                
+                // Категории второго уровня для Одежды
+                {
+                    id: 12,
+                    name: 'Мужская одежда',
+                    slug: 'mens-clothing',
+                    image: '/kofeinii-stolik-elite.webp',
+                    parentId: 2
+                },
+                {
+                    id: 13,
+                    name: 'Женская одежда',
+                    slug: 'womens-clothing',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: 2
+                },
+                {
+                    id: 14,
+                    name: 'Детская одежда',
+                    slug: 'kids-clothing',
+                    image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                    parentId: 2
+                },
+                
+                // Категории второго уровня для Мебели
+                {
+                    id: 15,
+                    name: 'Мебель для гостиной',
+                    slug: 'living-room',
+                    image: '/kofeinii-stolik-elite.webp',
+                    parentId: 3
+                },
+                {
+                    id: 16,
+                    name: 'Мебель для спальни',
+                    slug: 'bedroom',
+                    image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                    parentId: 3
+                },
+                {
+                    id: 17,
+                    name: 'Кухонная мебель',
+                    slug: 'kitchen',
+                    image: '/modulnyj-divan.jpg',
+                    parentId: 3
+                }
         ];
 
         // Создаем записи в базе данных
