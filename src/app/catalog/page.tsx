@@ -12,14 +12,17 @@ type Props = {
 
 const CatalogPage = async ({searchParams}: Props) => {
     const page = Number(searchParams?.page) || 1
-    const limit = 1000
-    const offset = (page - 1) * limit
 
+    const limitMainCategories = 10
+    const offsetMainCategories = (page - 1) * limitMainCategories
 
-    const {countMainCategories, mainCategories} = await getMainCategories(offset)
+    const {countMainCategories, mainCategories} = await getMainCategories(offsetMainCategories, limitMainCategories)
     console.log('mainCategories from catalog page', mainCategories)
     console.log('countMainCategories', countMainCategories)
 
+
+    const limit = 1000
+    const offset = (page - 1) * limit
 
     const {count, categories} = await getCategories(offset)
     console.log('categories from catalog page', categories)
@@ -36,7 +39,7 @@ const CatalogPage = async ({searchParams}: Props) => {
         </div>
 
         {!!mainCategories && mainCategories.map(mainCategory =>
-            <li key={mainCategories.id}>
+            <li key={mainCategory.id}>
 
                 <div className="container mx-auto my-8">
                     <div className="flex p-4 flex-row items-center mb-6">

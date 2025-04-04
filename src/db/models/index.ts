@@ -9,6 +9,7 @@ import { SessionModel } from '@/db/models/sessions.model'
 import { AccountModel } from '@/db/models/accounts.model'
 import { AuthUserModel } from '@/db/models/users.model'
 import {ProfileModel} from "@/db/models/profile.model";
+import {CategoryModel} from "@/db/models/category.model";
 
 // Установка связей
 ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -81,6 +82,17 @@ AccountModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId', // Это должно соответствовать полю в таблице accounts
     as: 'authUser', // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'
+});
+
+// Для создания самоссылающейся связи
+CategoryModel.belongsTo(CategoryModel, {
+    foreignKey: 'parentId',
+    as: 'parent'
+});
+
+CategoryModel.hasMany(CategoryModel, {
+    foreignKey: 'parentId',
+    as: 'children'
 });
 
 
