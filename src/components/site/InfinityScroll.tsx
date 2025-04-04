@@ -6,7 +6,6 @@ import {CategoryModel} from '@/db/models/category.model'
 import {getCategories} from '@/actions/categoryActions'
 
 //*todo требуется сделать этот компонент динамичной оберткой для каждой категории и вообще для сайта
-
 const InfinityScroll = ({initialItems}: { initialItems: CategoryModel[] }) => {
     const [offset, setOffset] = useState(8)
     const [count, setCount] = useState(0)
