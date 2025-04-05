@@ -1,19 +1,14 @@
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
-import {getProducts} from '@/actions/productActions'
-import ProductCategory from '@/components/site/ProductCategory'
-import React from 'react'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 import InfinityScroll from '@/components/site/InfinityScroll'
-import {getCategories, getFullCategoryTree, getMainCategories} from '@/actions/categoryActions'
-import Link from "next/link";
-import CategoryNavigation from "@/components/site/CategoryNavigation";
+import {getFullCategoryTree} from '@/actions/categoryActions'
+import CategoryNavigation from '@/components/site/CategoryNavigation'
 
 type Props = {
-    params: { slug?: string[] },
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
 }
 
-const CatalogPage = async ({params, searchParams}: Props) => {
+const CatalogPage = async ({searchParams}: Props) => {
 
     // Получаем полное дерево категорий
     const categoryTree = await getFullCategoryTree();
@@ -50,34 +45,9 @@ const CatalogPage = async ({params, searchParams}: Props) => {
     //
     // const totalPages = Math.ceil(count / limit)
 
-    // Получаем ID категории из параметров (если есть)
-    const categoryId = params?.categoryId ? Number(params.categoryId) : null;
-
-    // Если есть ID категории, находим путь к ней
-    let activePath = null;
-    if (categoryId) {
-        // Функция для поиска пути к категории по её ID
-        function findCategoryPath(categories, targetId, path = []) {
-            if (!categories) return null;
-            for (const category of categories) {
-                const newPath = [...path, category];
-                if (category.id === targetId) {
-                    return newPath;
-                }
-                if (category.children) {
-                    const result = findCategoryPath(category.children, targetId, newPath);
-                    if (result) return result;
-                }
-            }
-            return null;
-        }
-        activePath = findCategoryPath(categoryTree, categoryId);
-    }
-
-
     return <>
         <div className="p-4">
-            <Breadcrumbs categories={categoryTree} activePath={activePath}/>
+            {/*<Breadcrumbs categories={categoryTree}/>*/}
             {/*<CategoryNavigation categories={categoryTree}/>*/}
         </div>
         <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
