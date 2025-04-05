@@ -6,16 +6,14 @@ import Breadcrumbs from '@/components/site/Breadcrumbs'
 import InfinityScroll from '@/components/site/InfinityScroll'
 import {getCategories, getFullCategoryTree, getMainCategories} from '@/actions/categoryActions'
 import Link from "next/link";
+import CategoryNavigation from "@/components/site/CategoryNavigation";
 
 type Props = {
+    params: { slug?: string[] },
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
 }
 
-function CategoryNavigation(props: { categories: { subcategories: any }[] }) {
-    return null;
-}
-
-const CatalogPage = async ({searchParams}: Props) => {
+const CatalogPage = async ({params, searchParams}: Props) => {
 
     // Получаем полное дерево категорий
     const categoryTree = await getFullCategoryTree();
@@ -52,16 +50,41 @@ const CatalogPage = async ({searchParams}: Props) => {
     //
     // const totalPages = Math.ceil(count / limit)
 
+    // Получаем ID категории из параметров (если есть)
+    const categoryId = params?.categoryId ? Number(params.categoryId) : null;
+
+    // Если есть ID категории, находим путь к ней
+    let activePath = null;
+    if (categoryId) {
+        // Функция для поиска пути к категории по её ID
+        function findCategoryPath(categories, targetId, path = []) {
+            if (!categories) return null;
+            for (const category of categories) {
+                const newPath = [...path, category];
+                if (category.id === targetId) {
+                    return newPath;
+                }
+                if (category.children) {
+                    const result = findCategoryPath(category.children, targetId, newPath);
+                    if (result) return result;
+                }
+            }
+            return null;
+        }
+        activePath = findCategoryPath(categoryTree, categoryId);
+    }
+
+
     return <>
         <div className="p-4">
-            <Breadcrumbs/>
+            <Breadcrumbs categories={categoryTree} activePath={activePath}/>
+            {/*<CategoryNavigation categories={categoryTree}/>*/}
         </div>
         <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
             <h1>Каталог элитной мебели и декора</h1>
         </div>
 
         <div className="container mx-auto px-4">
-            <CategoryNavigation categories={categoryTree}/>
             <ul>
                 {/* Отображение основных категорий и их подкатегорий */}
                 {!!categoryTree && categoryTree.map(mainCategory =>
