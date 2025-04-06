@@ -1,5 +1,5 @@
 import React from 'react'
-import {getFullCategoryTree} from "@/actions/categoryActions";
+import {getFullCategoryTree, getSubCategoryId} from "@/actions/categoryActions";
 import {getProducts} from "@/actions/productActions";
 import InfinityScroll from "@/components/site/InfinityScroll";
 import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
@@ -11,13 +11,17 @@ type Props = {
 //todo мне нужен универсальный инфинитискролл или оставить пагинацию...
 const SlugPage = async ({params, searchParams}: Props) => {
 
-    const subCategory = params.slug
+    const subCategorySlug = params.slug
+    console.log('>>>>>>>> >>>>> subCategorySlug from SlugPage', subCategorySlug)
+
+    const {subCategoryId} = await getSubCategoryId(subCategorySlug)
+    console.log('++++++++++++++++ subCategoryId from SlugPage', subCategoryId)
 
     const page = Number(searchParams?.page) || 1
     const limit = 16
     const offset = (page - 1) * limit
 
-    const {count, products} = await getProducts(offset, limit)
+    const {count, products} = await getProducts(subCategoryId, offset, limit)
 
     const totalPages = Math.ceil(count / limit)
     console.log('new products from [slug] page', products);
@@ -35,7 +39,7 @@ const SlugPage = async ({params, searchParams}: Props) => {
                         <ProductCard
                             product={product}
                             key={product.id}
-                            subCategory={subCategory}
+                            subCategorySlug={subCategorySlug}
                         />))
                     : <p>Продукты не найдены? </p>
                 }

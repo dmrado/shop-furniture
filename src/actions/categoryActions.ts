@@ -65,6 +65,18 @@ export const getFullCategoryTree = async (): Promise<any[]> => {
     return categories.map(category => category.toJSON())
 }
 
+export const getSubCategoryId = async (subCategorySlug) => {
+    const category = await CategoryModel.findOne({
+        where: {
+            slug: subCategorySlug
+        }
+    });
+
+    return {
+        subCategoryId: category ? category.id : null
+    };
+}
+
 //Запасные варианты
 // Функция для получения подкатегорий по ID родительской категории
 export const getSubcategories = async (parentId: number): Promise<any[]> => {
@@ -95,7 +107,7 @@ export const getSubcategories = async (parentId: number): Promise<any[]> => {
 
 //Функция для получения полного дерева категорий
 export const getCategoryTree = async (): Promise<any[]> => {
-    const mainCategories = await getMainCategories(0, 1000);
+    const mainCategories = await getSubCategories(0, 1000);
 
     const result = [];
 

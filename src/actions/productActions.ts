@@ -15,12 +15,15 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
     return product.toJSON()
 }
 
-export const getProducts = async (offset: number, limit: number):
+export const getProducts = async (subCategoryId, offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
     const {count, rows} = await ProductModel.findAndCountAll({
         limit,
         offset,
-        where: {isActive: true},
+        where: {
+            categoryId: subCategoryId,
+            isActive: true
+        },
         attributes: ['id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew'],
     })
 
