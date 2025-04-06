@@ -1,11 +1,46 @@
 import React from 'react'
+import {getFullCategoryTree} from "@/actions/categoryActions";
+import {getProducts} from "@/actions/productActions";
+import InfinityScroll from "@/components/site/InfinityScroll";
+import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
+import ProductCard from "@/components/site/ProductCard";
 
-//todo подставить сюда всю папку products
-const ProductPage = ({ params }: { params: { slug: string} }) => {
-    return (
-        <div className='flex justify-center text-4xl text-red-700 font-extrabold'>
-            Catalog slug: {params.slug}
-        </div>
-    )
+type Props = {
+    searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
 }
-export default ProductPage
+//todo мне нужен универсальный инфинитискролл или оставить пагинацию...
+const SlugPage = async ({params, searchParams}: Props) => {
+
+    const subCategory = params.slug
+
+    const page = Number(searchParams?.page) || 1
+    const limit = 5
+    const offset = (page - 1) * limit
+
+    const {count, products} = await getProducts(offset, limit)
+
+    const totalPages = Math.ceil(count / limit)
+    console.log('new products from [slug] page', products);
+
+    return <>
+        <div className='flex justify-center text-4xl text-red-700 font-extrabold'>
+            Catalog slug:  &nbsp;<span className="text-green-600">{params.slug}</span>
+        </div>
+        {/*<InfinityScroll initialItems={products}/>*/}
+        <div>
+            <ReactPaginateWrapper pages={totalPages} currentPage={page}/>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {products.length
+                    ? products.map(product => (
+                        <ProductCard
+                            product={product}
+                            key={product.id}
+                            subCategory={subCategory}
+                        />))
+                    : <p>Продукты не найдены? </p>
+                }
+            </div>
+        </div>
+    </>
+}
+export default SlugPage

@@ -2,7 +2,8 @@ import React from 'react'
 import Link from "next/link";
 
 const Breadcrumbs = ({categories}) => {
-    if(!categories) return null
+    // if(!categories) return null
+    if(!categories) return 'Breadcrumbs is not an empty'
     return <>
         {/* Навигационные хлебные крошки */}
         <ul className="space-y-2">
