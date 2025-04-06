@@ -1,12 +1,14 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import {ProfileModel, StockModel} from '@/db/models'
+import {CategoryModel} from "@/db/models/category.model";
 
 
 export interface Product extends InferAttributes<ProductModel> {}
 
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     declare id: CreationOptional<number>
+    declare categoryId: number
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
     declare isNew: boolean
     declare articul: string
@@ -35,6 +37,14 @@ ProductModel.init(
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
+        },
+        categoryId: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // или true, если продукт может не иметь категории
+            references: {
+                model: CategoryModel,
+                key: 'id'
+            }
         },
         isActive: {
             type: DataTypes.BOOLEAN,

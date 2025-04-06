@@ -14,7 +14,7 @@ const SlugPage = async ({params, searchParams}: Props) => {
     const subCategory = params.slug
 
     const page = Number(searchParams?.page) || 1
-    const limit = 5
+    const limit = 16
     const offset = (page - 1) * limit
 
     const {count, products} = await getProducts(offset, limit)

@@ -96,6 +96,36 @@ CategoryModel.hasMany(CategoryModel, {
 });
 
 
+// Связь "один-ко-многим" между категорией и продуктами
+CategoryModel.hasMany(ProductModel, {
+    foreignKey: 'categoryId', // Это поле нужно добавить в ProductModel
+    as: 'products'
+});
+
+// Обратная связь от продукта к категории
+ProductModel.belongsTo(CategoryModel, {
+    foreignKey: 'categoryId',
+    as: 'category'
+});
+
+// Создание промежуточной таблицы для связи многие-ко-многим
+// const ProductCategory = sequelize.define('ProductCategory', {}, { timestamps: false });
+//
+// CategoryModel.belongsToMany(ProductModel, {
+//     through: ProductCategory,
+//     foreignKey: 'categoryId',
+//     otherKey: 'productId',
+//     as: 'products'
+// });
+//
+// ProductModel.belongsToMany(CategoryModel, {
+//     through: ProductCategory,
+//     foreignKey: 'productId',
+//     otherKey: 'categoryId',
+//     as: 'categories'
+// });
+
+
 // Связи для Sessions
 // SessionModel.belongsTo(UserModel, {
 //     foreignKey: 'user_id',
