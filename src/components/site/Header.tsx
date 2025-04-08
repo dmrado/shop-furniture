@@ -50,11 +50,11 @@ const Header = () => {
 
     // todo переделать ссылки на реальные
     const navItems = [
-        { name: 'Каталог', subItems: [ 'Мебель', 'Декор', 'Текстиль' ] },
-        { name: 'Кухни', subItems: [ 'Модульные кухни', 'Аксессуары' ] },
-        { name: 'Свет', subItems: [ 'Люстры', 'Торшеры', 'Бра' ] },
-        { name: 'Диваны', subItems: [ 'Кожаные', 'Тканевые' ] },
-        { name: 'Декор', subItems: [ 'Картины', 'Зеркала' ] },
+        { name: 'Каталог', href: '/catalog', subItems: [ 'Мебель', 'Декор', 'Текстиль' ] },
+        { name: 'Кухни', href: '/catalog/kitchen', subItems: [ 'Модульные кухни', 'Аксессуары' ] },
+        { name: 'Свет', href: '/catalog/smartphones', subItems: [ 'Люстры', 'Торшеры', 'Бра' ] },
+        { name: 'Диваны', href: '/catalog/mens-clothing', subItems: [ 'Кожаные', 'Тканевые' ] },
+        { name: 'Декор', href: '/catalog/computers', subItems: [ 'Картины', 'Зеркала' ] },
     ]
 
     // todo сделать функцию закрытия по клику вне выпадающего меню
@@ -108,7 +108,7 @@ const Header = () => {
                 {navItems.map((item) => (
                     <Link
                         key={item.name}
-                        href="#"
+                        href={item.href}
                         className="relative group"
                         onMouseEnter={() => handleMouseEnter(item.name)}
                         onMouseLeave={handleMouseLeave}

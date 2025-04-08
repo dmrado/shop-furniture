@@ -193,6 +193,48 @@ export async function seedCategories() {
                 image: '/tumbochka-for-slavianskii-shkaf.jpg',
                 parentId: 2
             },
+            {
+                id: 32,
+                name: 'Большая Мужская одежда',
+                slug: 'big-mens-clothing',
+                image: '/kofeinii-stolik-elite.webp',
+                parentId: 2
+            },
+            {
+                id: 33,
+                name: 'Большая Женская одежда',
+                slug: 'big-womens-clothing',
+                image: '/modulnyj-divan.jpg',
+                parentId: 2
+            },
+            {
+                id: 34,
+                name: 'Большая Детская одежда',
+                slug: 'big-kids-clothing',
+                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                parentId: 2
+            },
+            {
+                id: 35,
+                name: 'Кошачья одежда',
+                slug: 'cats-clothing',
+                image: '/kofeinii-stolik-elite.webp',
+                parentId: 2
+            },
+            {
+                id: 36,
+                name: 'Собачья одежда',
+                slug: 'dog-clothing',
+                image: '/modulnyj-divan.jpg',
+                parentId: 2
+            },
+            {
+                id: 37,
+                name: 'Одежда для хомяков',
+                slug: 'hamster-clothing',
+                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                parentId: 2
+            },
 
             // Категории второго уровня для Мебели
             {
@@ -213,6 +255,69 @@ export async function seedCategories() {
                 id: 17,
                 name: 'Кухонная мебель',
                 slug: 'kitchen',
+                image: '/modulnyj-divan.jpg',
+                parentId: 3
+            },
+            {
+                id: 45,
+                name: 'Мега мебель для гостиной',
+                slug: 'mega-living-room',
+                image: '/kofeinii-stolik-elite.webp',
+                parentId: 3
+            },
+            {
+                id: 46,
+                name: 'Мега мебель для спальни',
+                slug: 'mega-bedroom',
+                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                parentId: 3
+            },
+            {
+                id: 47,
+                name: 'Мега Кухонная мебель',
+                slug: 'mega-kitchen',
+                image: '/modulnyj-divan.jpg',
+                parentId: 3
+            },
+            {
+                id: 48,
+                name: 'Мини мебель для гостиной',
+                slug: 'mini-living-room',
+                image: '/kofeinii-stolik-elite.webp',
+                parentId: 3
+            },
+            {
+                id: 49,
+                name: 'Мини мебель для спальни',
+                slug: 'mini-bedroom',
+                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                parentId: 3
+            },
+            {
+                id: 50,
+                name: 'Мини кухонная мебель',
+                slug: 'mini-kitchen',
+                image: '/modulnyj-divan.jpg',
+                parentId: 3
+            },
+            {
+                id: 51,
+                name: 'Не мебель для гостиной',
+                slug: 'no-living-room',
+                image: '/kofeinii-stolik-elite.webp',
+                parentId: 3
+            },
+            {
+                id: 52,
+                name: 'Не мебель для спальни',
+                slug: 'no-bedroom',
+                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                parentId: 3
+            },
+            {
+                id: 53,
+                name: 'Не Кухонная мебель',
+                slug: 'no-kitchen',
                 image: '/modulnyj-divan.jpg',
                 parentId: 3
             }

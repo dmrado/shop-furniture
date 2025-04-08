@@ -3,7 +3,7 @@ import { ProductModel } from '@/db/models/product.model'
 const productSeedData = [
     {
         id: 101,
-        categoryId: 1,
+        categoryId: 4,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -26,7 +26,7 @@ const productSeedData = [
     },
     {
         id: 102,
-        categoryId: 1,
+        categoryId: 4,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -49,7 +49,7 @@ const productSeedData = [
     },
     {
         id: 103,
-        categoryId: 1,
+        categoryId: 4,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -72,7 +72,7 @@ const productSeedData = [
     },
     {
         id: 104,
-        categoryId: 1,
+        categoryId: 4,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -95,7 +95,7 @@ const productSeedData = [
     },
     {
         id: 105,
-        categoryId: 1,
+        categoryId: 4,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -118,7 +118,7 @@ const productSeedData = [
     },
     {
         id: 106,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -141,7 +141,7 @@ const productSeedData = [
     },
     {
         id: 107,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -164,7 +164,7 @@ const productSeedData = [
     },
     {
         id: 108,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -187,7 +187,7 @@ const productSeedData = [
     },
     {
         id: 11,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -210,7 +210,7 @@ const productSeedData = [
     },
     {
         id: 12,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -233,7 +233,7 @@ const productSeedData = [
     },
     {
         id: 13,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -256,7 +256,7 @@ const productSeedData = [
     },
     {
         id: 14,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -279,7 +279,7 @@ const productSeedData = [
     },
     {
         id: 15,
-        categoryId: 1,
+        categoryId: 5,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -302,7 +302,7 @@ const productSeedData = [
     },
     {
         id: 16,
-        categoryId: 1,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -325,7 +325,7 @@ const productSeedData = [
     },
     {
         id: 17,
-        categoryId: 1,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -348,7 +348,7 @@ const productSeedData = [
     },
     {
         id: 18,
-        categoryId: 1,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -371,7 +371,7 @@ const productSeedData = [
     },
     {
         id: 1,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -394,7 +394,7 @@ const productSeedData = [
     },
     {
         id: 2,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -417,7 +417,7 @@ const productSeedData = [
     },
     {
         id: 3,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -440,7 +440,7 @@ const productSeedData = [
     },
     {
         id: 4,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -463,7 +463,7 @@ const productSeedData = [
     },
     {
         id: 5,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -486,7 +486,7 @@ const productSeedData = [
     },
     {
         id: 6,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -509,7 +509,7 @@ const productSeedData = [
     },
     {
         id: 7,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -532,7 +532,7 @@ const productSeedData = [
     },
     {
         id: 8,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -555,7 +555,7 @@ const productSeedData = [
     },
     {
         id: 9,
-        categoryId: 2,
+        categoryId: 12,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -578,7 +578,7 @@ const productSeedData = [
     },
     {
         id: 10,
-        categoryId: 3,
+        categoryId: 15,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -601,7 +601,7 @@ const productSeedData = [
     },
     {
         id: 19,
-        categoryId: 3,
+        categoryId: 15,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -624,7 +624,7 @@ const productSeedData = [
     },
     {
         id: 20,
-        categoryId: 19,
+        categoryId: 15,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -647,7 +647,7 @@ const productSeedData = [
     },
     {
         id: 21,
-        categoryId: 19,
+        categoryId: 15,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -670,7 +670,7 @@ const productSeedData = [
     },
     {
         id: 22,
-        categoryId: 18,
+        categoryId: 15,
         isActive: true,
         isNew: false,
         articul: 'ART002',
@@ -693,7 +693,7 @@ const productSeedData = [
     },
     {
         id: 23,
-        categoryId: 18,
+        categoryId: 15,
         isActive: true,
         isNew: true,
         articul: 'ART001',
@@ -716,7 +716,7 @@ const productSeedData = [
     },
     {
         id: 24,
-        categoryId: 18,
+        categoryId: 15,
         isActive: true,
         isNew: false,
         articul: 'ART002',
