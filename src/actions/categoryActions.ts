@@ -86,6 +86,6 @@ export const getSubCategoryName = async (subCategorySlug) => {
     })
 
     return {
-        subCategoryId: category ? category.name : null
+        subCategoryName: category ? category.name : null
     }
 }

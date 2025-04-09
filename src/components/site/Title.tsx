@@ -6,7 +6,7 @@ const Title = async ({ params }) => {
 
     const subCategorySlug = params.slug
 
-    const { subCategoryId: name } = await getSubCategoryName(subCategorySlug)
+    const { subCategoryName: name } = await getSubCategoryName(subCategorySlug)
 
     // const { subCategoryName } = await getSubCategoryId(params.name)
     console.log('=========== subCategory name from Title', name)
