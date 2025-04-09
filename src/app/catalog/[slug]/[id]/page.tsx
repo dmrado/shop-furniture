@@ -25,10 +25,10 @@ const ProductPage = async ({ params }: Props) => {
     }
 
     return <>
-        <div className='flex justify-center text-4xl text-red-600 font-extrabold'>
-            Product slug &nbsp;<span className="text-green-600">{params.slug}</span>&nbsp;&nbsp;
-            Product id &nbsp;<span className="text-green-600">{params.id}</span>
-        </div>
+        {/*<div className='flex justify-center text-4xl text-red-500 font-extrabold'>*/}
+        {/*    Product slug &nbsp;<span className="text-green-600">{params.slug}</span>&nbsp;&nbsp;*/}
+        {/*    Product id &nbsp;<span className="text-green-600">{params.id}</span>*/}
+        {/*</div>*/}
 
         <ProductFullDescription product={product}/>
     </>

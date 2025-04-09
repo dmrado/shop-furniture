@@ -1,14 +1,14 @@
-"use client";
-import React, {useState} from "react";
-import Image from "next/image";
-import Link from "next/link";
-import {useCartContext} from "@/components/cart/CartContext";
-import {ProductListItem} from "@/actions/productActions";
+'use client'
+import React, { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCartContext } from '@/components/cart/CartContext'
+import { ProductListItem } from '@/actions/productActions'
 
-const ProductCard = ({product, subCategorySlug}: { product: ProductListItem }) => {
-    const {addProductToCart} = useCartContext();
-    const [isHovered, setIsHovered] = useState(false);
-    const discount = (1 - product.new_price / product.old_price) * 100;
+const ProductCard = ({ product, subCategorySlug }: { product: ProductListItem }) => {
+    const { addProductToCart } = useCartContext()
+    const [ isHovered, setIsHovered ] = useState(false)
+    const discount = (1 - product.new_price / product.old_price) * 100
 
     return (
         <div
@@ -37,7 +37,7 @@ const ProductCard = ({product, subCategorySlug}: { product: ProductListItem }) =
                     height={200}
                     // fill
                     className={`w-full h-52 object-cover transform transition-transform duration-700 ${
-                        isHovered ? "scale-110" : "scale-100"
+                        isHovered ? 'scale-110' : 'scale-100'
                     }`}
                     priority
                 />
@@ -46,15 +46,15 @@ const ProductCard = ({product, subCategorySlug}: { product: ProductListItem }) =
             {/* Description */}
             <div className="relative h-48 p-4 flex flex-col">
                 <div className="flex justify-between items-center space-x-2">
-          <span className="text-xs text-gray-800 bg-white/80 px-1 rounded">
-            <span className="text-amber-500 text-xs mr-1">★</span>В наличии
-          </span>
+                    <span className="text-xs text-gray-800 bg-white/80 px-1 rounded">
+                        <span className="text-amber-500 text-xs mr-1">★</span>В наличии
+                    </span>
 
                     {/* Кнопка добавления в избранное */}
                     <button
                         className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
                         onClick={() => {
-                            console.log("Added to favorites", product.id);
+                            console.log('Added to favorites', product.id)
                             // addToFavorites(product.id);
                         }}
                     >
@@ -115,8 +115,8 @@ const ProductCard = ({product, subCategorySlug}: { product: ProductListItem }) =
                             className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
                             // onClick={() => addToCart(product.id)}
                             onClick={() => {
-                                console.log("product.id front", product.id);
-                                addProductToCart(product.id);
+                                console.log('product.id front', product.id)
+                                addProductToCart(product.id)
                             }}
                         >
                             <svg
@@ -146,7 +146,7 @@ const ProductCard = ({product, subCategorySlug}: { product: ProductListItem }) =
             {/*    </div>*/}
             {/*</div>*/}
         </div>
-    );
-};
+    )
+}
 
-export default ProductCard;
+export default ProductCard

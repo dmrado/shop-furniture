@@ -26,10 +26,10 @@ const SlugPage = async ({ params, searchParams }: Props) => {
 
     return (
         <>
-            <div className="flex justify-center text-4xl text-red-700 font-extrabold">
-                Catalog slug: &nbsp;
-                <span className="text-green-600">{params.slug}</span>
-            </div>
+            {/*<div className="flex justify-center text-4xl text-red-500 font-extrabold">*/}
+            {/*    Catalog slug: &nbsp;*/}
+            {/*    <span className="text-green-600">{params.slug}</span>*/}
+            {/*</div>*/}
             {/*<InfinityScroll initialItems={products}/>*/}
             <div>
                 <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

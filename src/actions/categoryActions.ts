@@ -77,3 +77,15 @@ export const getSubcategories = async (parentId: number): Promise<any[]> => {
 
     return result
 }
+
+export const getSubCategoryName = async (subCategorySlug) => {
+    const category = await CategoryModel.findOne({
+        where: {
+            slug: subCategorySlug
+        }
+    })
+
+    return {
+        subCategoryId: category ? category.name : null
+    }
+}
