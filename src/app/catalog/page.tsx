@@ -16,35 +16,6 @@ const CatalogPage = async ({searchParams}: Props) => {
 
     const page = Number(searchParams?.page) || 1
 
-    // const limitMainCategories = 10
-    // const offsetMainCategories = (page - 1) * limitMainCategories
-    //
-    // const {countMainCategories, mainCategories} = await getMainCategories(offsetMainCategories, limitMainCategories)
-    // console.log('mainCategories from catalog page', mainCategories)
-    // console.log('countMainCategories', countMainCategories)
-    //
-    // // Получаем все категории для отображения подкатегорий
-    // const limit = 1000
-    // const offset = (page - 1) * limit
-    //
-    // const {count, categories} = await getCategories(offset)
-    // console.log('categories from catalog page', categories)
-    // console.log('count', count)
-    //
-    // // Находим подкатегории для каждой главной категории
-    // const mainCategoriesWithSubcategories = mainCategories.map(mainCategory => {
-    //     const subcategories = categories.filter(category =>
-    //         category.parentId === mainCategory.id
-    //     );
-    //
-    //     return {
-    //         ...mainCategory,
-    //         subcategories
-    //     };
-    // });
-    //
-    // const totalPages = Math.ceil(count / limit)
-
     return <>
         <div className="p-4">
             {/*<Breadcrumbs categories={categoryTree}/>*/}

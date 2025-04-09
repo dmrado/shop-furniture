@@ -1,21 +1,22 @@
 'use client'
-import { useState } from 'react'
+import {useState} from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import { useCartContext } from '@/components/cart/CartContext'
+import {useCartContext} from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Product } from '@/actions/productActions'
+import {Product} from '@/actions/productActions'
 import UserAddressForm from '@/components/user/UserAddressForm'
-import { InstantOrderForm } from '@/components/site/InstantOrderForm'
+import {InstantOrderForm} from '@/components/site/InstantOrderForm'
+import Modal from "@/components/site/Modal";
 
-const ProductFullDescription = ({ product }: { product: Product }) => {
-    const { addProductToCart } = useCartContext()
-    const [ selectedImage, setSelectedImage ] = useState(0)
-    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
-    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
+const ProductFullDescription = ({product}: { product: Product }) => {
+    const {addProductToCart} = useCartContext()
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
+    const [isCartUpdating, setIsCartUpdating] = useState(false)
 
     // for InstantOrderModal
-    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
 
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
@@ -44,11 +45,12 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     return <>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 ">
                     {/* Галерея изображений */}
                     <div className="space-y-4">
                         <div className="aspect-w-1 aspect-h-1 rounded-xl overflow-hidden">
                             <Image
+
                                 src={product.image}
                                 alt={product.name}
                                 width={500}
@@ -144,7 +146,15 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                         Добавить в корзину
                                     </button>
                                 </Link>
-                                <InstantOrderForm isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
+
+                                <Modal
+                                    isOpenModal={isOpenModal}
+                                    onClose={() => setIsOpenModal(false)}
+                                    title='Мгновенное оформление заказа'
+                                    description='Оформите заказ без регистрации, информация будет отправлена менеджеру, он свяжется для оформления доставки и проведения оплаты.'>
+
+                                    <InstantOrderForm onClose={() => setIsOpenModal(false)}/>
+                                </Modal>
                                 <button
                                     onClick={() => setIsOpenModal(true)}
                                     className="w-full sm:w-60 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">

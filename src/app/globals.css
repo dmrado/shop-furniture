@@ -22,6 +22,14 @@
   scrollbar-width: none;
 }
 
+
+html, body {
+  overflow-x: hidden; /*убирает горизонтальный скролл везде*/
+  width: 100%; /*устанавливает ширину элементов html и body равной 100% от доступной ширины окна браузера.*/
+  position: relative;
+}
+
+
 /*:root {*/
 /*  --background: #ffffff;*/
 /*  --foreground: #171717;*/

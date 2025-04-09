@@ -9,6 +9,7 @@ import UserOrdersHistory from '@/components/user/UserOrdersHistory'
 import UserNameForm from '@/components/user/UserNameForm'
 import UserAddressDeleteModal from '@/components/user/UserAddressDeleteModal'
 import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import Modal from '@/components/site/Modal'
 
 //todo регистрация в личном кабинете, фото юзера получаем из яндекса или гугла
 
@@ -175,7 +176,12 @@ const UserProfile = ({ user, previousOrders, ad }: UserProfileProps) => {
                     </>
                 )}
             </div>
-            <UserAddressForm user={user} address={updatingAddress} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}/>
+            <Modal isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)}
+                title='Добавление нового адреса'
+                description=''>
+
+                <UserAddressForm user={user} address={updatingAddress} onClose={() => setIsOpenModal(false)}/>
+            </Modal>
             <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
             {/*<UserOrdersHistory previousOrders={previousOrders}/>*/}
             {/*<UserAddressDeleteModal*/}

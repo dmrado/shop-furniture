@@ -111,6 +111,7 @@ const UserAddressForm = ({ user, address, isOpenModal, onClose }) => {
             setStreet(value)
         }
     }
+
     // вариант без предзаполненных полей
     interface DeliveryAddress {
         phone: string;
@@ -180,216 +181,208 @@ const UserAddressForm = ({ user, address, isOpenModal, onClose }) => {
     }
 
     return <>
-        {/* Форма ввода адреса доставки */}
-        <Modal onClose={onClose} isOpenModal={isOpenModal}>
+        {status === 'loading' && (
+            <div className="text-center py-4">
+                <div className="spinner"></div>
+                <p>Загрузка...</p>
+            </div>
+        )}
 
-            <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
-                Добавление нового адреса
-            </Dialog.Title>
+        {status === 'success' && (
+            <div className="text-center mb-6 py-4 text-green-600">
+                <Success props={'Адрес удален'}/>
+            </div>
+        )}
 
-            {status === 'loading' && (
-                <div className="text-center py-4">
-                    <div className="spinner"></div>
-                    <p>Загрузка...</p>
+        {status === 'error' && (
+            <div className="text-center py-4 text-red-600">
+                <p>{errorMessage}</p>
+                <button
+                    onClick={() => setStatus('idle')}
+                    className="mt-2 px-4 py-2 bg-gray-200 rounded"
+                >Попробовать снова
+                </button>
+            </div>
+        )}
+
+        <form action={onSubmit}>
+            <input type="text" hidden={true} name='id' defaultValue={addressId}/>
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-6 gap-y-4">
+                <div className="mb-4">
+                    {/*<label className="block mb-1">Город:</label>*/}
+                    <InputField
+                        label="Город*"
+                        type="text"
+                        name="city"
+                        value={city} // Используйте value вместо defaultValue
+                        onChange={handleChange}
+                        // id="given-name"
+                        // autoComplete="given-name"
+                        // autocomplete="on"
+                        required
+                    />
                 </div>
-            )}
-
-            {status === 'success' && (
-                <div className="text-center mb-6 py-4 text-green-600">
-                    <Success props={'Адрес удален'}/>
+                <div className="mb-4">
+                    {/*<label className="block mb-1">Улица:</label>*/}
+                    <InputField
+                        label="Улица*"
+                        type="text"
+                        name="street"
+                        value={street}
+                        onChange={handleChange}
+                        // id="given-name"
+                        // autoComplete="given-name"
+                        // autocomplete="on"
+                        required
+                    />
                 </div>
-            )}
+            </div>
 
-            {status === 'error' && (
-                <div className="text-center py-4 text-red-600">
-                    <p>{errorMessage}</p>
-                    <button
-                        onClick={() => setStatus('idle')}
-                        className="mt-2 px-4 py-2 bg-gray-200 rounded"
-                    >Попробовать снова
-                    </button>
-                </div>
-            )}
-
-            <form action={onSubmit} className="w-full">
-                <input type="text" hidden={true} name='id' defaultValue={addressId}/>
-                <div className="grid grid-cols-1 lg:grid-cols-1  gap-x-6 gap-y-4">
-                    <div className="mb-4">
-                        {/*<label className="block mb-1">Город:</label>*/}
-                        <InputField
-                            label="Город*"
-                            type="text"
-                            name="city"
-                            value={city} // Используйте value вместо defaultValue
-                            onChange={handleChange}
-                            // id="given-name"
-                            // autoComplete="given-name"
-                            // autocomplete="on"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        {/*<label className="block mb-1">Улица:</label>*/}
-                        <InputField
-                            label="Улица*"
-                            type="text"
-                            name="street"
-                            value={street}
-                            onChange={handleChange}
-                            // id="given-name"
-                            // autoComplete="given-name"
-                            // autocomplete="on"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 ">
-                    <div className="mb-4">
-                        {/*<label className="block mb-1">Дом:</label>*/}
-                        <InputField
-                            label="Дом*"
-                            type="text"
-                            name="home"
-                            defaultValue=""
-                            // onChange={handleChange}
-                            // id="given-name"
-                            // autoComplete="given-name"
-                            // autocomplete="on"
-                            required
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        {/*<label className="block mb-1">Корпус:</label>*/}
-                        <InputField
-                            label="Корпус"
-                            type="text"
-                            name="corps"
-                            defaultValue=""
-                            // onChange={handleChange}
-                            required={false}
-                            // id="given-name"
-                            // autoComplete="given-name"
-                            // autocomplete="on"
-                        />
-                    </div>
-
-                    <div className="mb-4 ">
-                        {/*<label className="block mb-1">Квартира:</label>*/}
-                        <InputField
-                            label="Квартира"
-                            type="text"
-                            name="appart"
-                            defaultValue=""
-                            // onChange={handleChange}
-                            required={false}
-                            // id="given-name"
-                            // autoComplete="given-name"
-                            // autocomplete="on"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        {/*<label className="block mb-1">Телефон:</label>*/}
-                        <InputField
-                            label="Телефон*"
-                            type="tel"
-                            name="phone"
-                            defaultValue=""
-                            // onChange={handleChange}
-                            id="tel"
-                            autoComplete="tel"
-                            autocomplete="on"
-                            required
-                            pattern="[0-9]*"
-                        />
-                    </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 ">
+                <div className="mb-4">
+                    {/*<label className="block mb-1">Дом:</label>*/}
+                    <InputField
+                        label="Дом*"
+                        type="text"
+                        name="home"
+                        defaultValue=""
+                        // onChange={handleChange}
+                        // id="given-name"
+                        // autoComplete="given-name"
+                        // autocomplete="on"
+                        required
+                    />
                 </div>
 
                 <div className="mb-4">
-                    <label className="flex items-center justify-center cursor-pointer">
-                        <input
-                            type="checkbox"
-                            name="isMain"
-                            defaultChecked=""
-                            // onChange={handleChange}
-                        />
-                        <span className="text-gray-700">Сделать основным</span>
-                    </label>
+                    {/*<label className="block mb-1">Корпус:</label>*/}
+                    <InputField
+                        label="Корпус"
+                        type="text"
+                        name="corps"
+                        defaultValue=""
+                        // onChange={handleChange}
+                        required={false}
+                        // id="given-name"
+                        // autoComplete="given-name"
+                        // autocomplete="on"
+                    />
                 </div>
 
-                <input hidden readOnly value={captchaToken}/>
+                <div className="mb-4 ">
+                    {/*<label className="block mb-1">Квартира:</label>*/}
+                    <InputField
+                        label="Квартира"
+                        type="text"
+                        name="appart"
+                        defaultValue=""
+                        // onChange={handleChange}
+                        required={false}
+                        // id="given-name"
+                        // autoComplete="given-name"
+                        // autocomplete="on"
+                    />
+                </div>
 
-                {/* Accordion section */}
-                <Agreement
-                    setAgreed={setAgreed}
-                    agreed={agreed}
-                    userId={user.id}
-                />
+                <div className="mb-4">
+                    {/*<label className="block mb-1">Телефон:</label>*/}
+                    <InputField
+                        label="Телефон*"
+                        type="tel"
+                        name="phone"
+                        defaultValue=""
+                        // onChange={handleChange}
+                        id="tel"
+                        autoComplete="tel"
+                        autocomplete="on"
+                        required
+                        pattern="[0-9]*"
+                    />
+                </div>
+            </div>
 
-                {/* Buttons section */}
-                <div
-                    className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+            <div className="mb-4">
+                <label className="flex items-center justify-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        name="isMain"
+                        defaultChecked=""
+                        // onChange={handleChange}
+                    />
+                    <span className="text-gray-700">Сделать основным</span>
+                </label>
+            </div>
 
-                    {success && <Success props={'адрес добавлен'}/>}
+            <input hidden readOnly value={captchaToken}/>
 
-                    <div className="flex justify-center">
-                        <GoogleCaptcha
-                            onTokenChange={(token) => {
-                                setCaptchaToken(token)
-                            }}
-                            onError={(error) => {
-                                console.error('Captcha error:', error)
-                                toast.error('Проверку на человека не прошли, простите', {
-                                    position: 'top-center',
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                })
-                            }}
-                        />
-                        {/*{process.env.NODE_ENV === 'development' && (*/}
-                        {/*    <button*/}
-                        {/*        onClick={() => {*/}
-                        {/*            toast.error('Проверку на человека не прошли, простите')*/}
-                        {/*        }}*/}
-                        {/*        className="mt-2 px-4 py-2 bg-red-500 text-white rounded"*/}
-                        {/*    >*/}
-                        {/*        Тест ошибки капчи*/}
-                        {/*    </button>*/}
-                        {/*)}*/}
-                    </div>
+            {/* Accordion section */}
+            <Agreement
+                setAgreed={setAgreed}
+                agreed={agreed}
+                userId={user.id}
+            />
 
-                    <button
-                        type="button"
-                        onClick={() => {
-                            onClose()
-                            setAgreed(false)
+            {/* Buttons section */}
+            <div
+                className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+
+                {success && <Success props={'адрес добавлен'}/>}
+
+                <div className="flex justify-center">
+                    <GoogleCaptcha
+                        onTokenChange={(token) => {
+                            setCaptchaToken(token)
                         }}
-                        className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
-                    >
-                        Отмена
-                    </button>
+                        onError={(error) => {
+                            console.error('Captcha error:', error)
+                            toast.error('Проверку на человека не прошли, простите', {
+                                position: 'top-center',
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                            })
+                        }}
+                    />
+                    {/*{process.env.NODE_ENV === 'development' && (*/}
+                    {/*    <button*/}
+                    {/*        onClick={() => {*/}
+                    {/*            toast.error('Проверку на человека не прошли, простите')*/}
+                    {/*        }}*/}
+                    {/*        className="mt-2 px-4 py-2 bg-red-500 text-white rounded"*/}
+                    {/*    >*/}
+                    {/*        Тест ошибки капчи*/}
+                    {/*    </button>*/}
+                    {/*)}*/}
+                </div>
 
-                    <button
-                        type="submit"
-                        disabled={!agreed}
-                        className={`
+                <button
+                    type="button"
+                    onClick={() => {
+                        onClose()
+                        setAgreed(false)
+                    }}
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
+                >
+                    Отмена
+                </button>
+
+                <button
+                    type="submit"
+                    disabled={!agreed}
+                    className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
         ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
 }
                                 `}
-                    >
-                        {isClosing ? 'Отправка...' : 'Отправить'}
-                    </button>
-                </div>
-            </form>
-        </Modal>
+                >
+                    {isClosing ? 'Отправка...' : 'Отправить'}
+                </button>
+            </div>
+        </form>
     </>
 }
 

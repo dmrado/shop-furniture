@@ -1,10 +1,9 @@
 'use server'
-import {CategoryModel} from '@/db/models/category.model'
-
+import { CategoryModel } from '@/db/models/category.model'
 
 export const getCategories = async (offset: number):
     Promise<{ count: number, categories }> => {
-    const {count, rows} = await CategoryModel.findAndCountAll({
+    const { count, rows } = await CategoryModel.findAndCountAll({
         offset,
     })
 
@@ -17,31 +16,6 @@ export const getCategories = async (offset: number):
             slug: row.slug,
             image: row.image
         }))
-    }
-}
-
-
-export const getMainCategories = async (offset: number, limit: number): Promise<{
-    count: number,
-    mainCategories: []
-}> => {
-    const {count, rows} = await CategoryModel.findAndCountAll({
-        where: {
-            parentId: null
-        },
-        offset,
-        limit
-    })
-    return {
-        countMainCategories: count,
-        mainCategories: rows.map(row => ({
-                id: row.id,
-                name: row.name,
-                parentId: row.parentId,
-                slug: row.slug,
-                image: row.image
-            })
-        )
     }
 }
 
@@ -60,7 +34,7 @@ export const getFullCategoryTree = async (): Promise<any[]> => {
                 // Можно добавить больше уровней вложенности при необходимости
             }]
         }]
-    });
+    })
 
     return categories.map(category => category.toJSON())
 }
@@ -70,27 +44,26 @@ export const getSubCategoryId = async (subCategorySlug) => {
         where: {
             slug: subCategorySlug
         }
-    });
+    })
 
     return {
         subCategoryId: category ? category.id : null
-    };
+    }
 }
 
-//Запасные варианты
 // Функция для получения подкатегорий по ID родительской категории
 export const getSubcategories = async (parentId: number): Promise<any[]> => {
     const subcategories = await CategoryModel.findAll({
         where: {
             parentId
         }
-    });
+    })
 
     // Рекурсивно получаем подкатегории для каждой подкатегории
-    const result = [];
+    const result = []
 
     for (const subcategory of subcategories) {
-        const children = await getSubcategories(subcategory.id);
+        const children = await getSubcategories(subcategory.id)
 
         result.push({
             id: subcategory.id,
@@ -99,26 +72,8 @@ export const getSubcategories = async (parentId: number): Promise<any[]> => {
             slug: subcategory.slug,
             image: subcategory.image,
             children
-        });
+        })
     }
 
-    return result;
-}
-
-//Функция для получения полного дерева категорий
-export const getCategoryTree = async (): Promise<any[]> => {
-    const mainCategories = await getSubCategories(0, 1000);
-
-    const result = [];
-
-    for (const category of mainCategories.mainCategories) {
-        const children = await getSubcategories(category.id);
-
-        result.push({
-            ...category,
-            children
-        });
-    }
-
-    return result;
+    return result
 }
