@@ -1,24 +1,23 @@
-import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
-import Breadcrumbs from '@/components/site/Breadcrumbs'
 import InfinityScroll from '@/components/site/InfinityScroll'
-import {getFullCategoryTree} from '@/actions/categoryActions'
+import { getFullCategoryTree } from '@/actions/categoryActions'
 import CategoryNavigation from '@/components/site/CategoryNavigation'
+import Breadcrumbs from '@/components/site/Breadcrumbs'
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
 }
 
-const CatalogPage = async ({searchParams}: Props) => {
+const CatalogPage = async ({ searchParams }: Props) => {
 
     // Получаем полное дерево категорий
-    const categoryTree = await getFullCategoryTree();
-    console.log('new categoryTree from catalog page', categoryTree);
+    const categoryTree = await getFullCategoryTree()
+    console.log('new categoryTree from catalog page', categoryTree)
 
     const page = Number(searchParams?.page) || 1
 
     return <>
         <div className="p-4">
-            {/*<Breadcrumbs categories={categoryTree}/>*/}
+            <Breadcrumbs categories={categoryTree}/>
             {/*<CategoryNavigation categories={categoryTree}/>*/}
         </div>
         <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
@@ -50,6 +49,3 @@ const CatalogPage = async ({searchParams}: Props) => {
     </>
 }
 export default CatalogPage
-
-
-

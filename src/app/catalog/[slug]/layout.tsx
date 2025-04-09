@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 // Next.js автоматически передает объект params
 export default function CatalogLayout({children, params}: Readonly<{ children: React.ReactNode }>) {
+    // todo в  <Breadcrumbs/> ередать пропсы
     return (
         <div className="container mx-auto px-4 py-8">
             <Breadcrumbs/>
