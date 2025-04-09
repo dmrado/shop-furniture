@@ -40,7 +40,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     )
 }
 //пользователь хочет изменить имя в провайдере на ФИО.
-const UserNameForm = ({user, isOpenModal, onClose}: {
+const UserNameForm = ({user, onClose}: {
     user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
         email: string
         photo: string
@@ -116,96 +116,86 @@ const UserNameForm = ({user, isOpenModal, onClose}: {
         // console.log('newInstantUser from InstantOrderModal', result)
         setIsClosing(false)
     }
-    // fixme а это что делает здесь и на других формах?
-    if (!isOpenModal) return null
 
     return <>
-        <Modal isOpenModal={isOpenModal} onClose={onClose}>
+        <form className="space-y-8" action={onSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <InputField
+                    name="name"
+                    defaultValue=""
+                    label="Имя*"
+                    id="given-name"
+                    autoComplete="given-name"
+                    type="text"
+                />
+                <InputField
+                    name="fatherName"
+                    defaultValue=""
+                    label="Отчество*"
+                    id="second-name"
+                    autoComplete="additional-name"
+                    type="text"
+                />
+                <InputField
+                    name="surName"
+                    defaultValue=""
+                    label="Фамилия*"
+                    id="family-name"
+                    autoComplete="family-name"
+                    type="text"
+                />
+            </div>
 
-            <Dialog.Title className="text-2xl text-center font-bold mb-8 text-gray-700">
-                Изменение ФИО
-            </Dialog.Title>
-            <Description className='mb-8'>Вы измените ваши ФИО в профиле</Description>
-            <form className="space-y-8" action={onSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputField
-                        name="name"
-                        defaultValue=""
-                        label="Имя*"
-                        id="given-name"
-                        autoComplete="given-name"
-                        type="text"
-                    />
-                    <InputField
-                        name="fatherName"
-                        defaultValue=""
-                        label="Отчество*"
-                        id="second-name"
-                        autoComplete="additional-name"
-                        type="text"
-                    />
-                    <InputField
-                        name="surName"
-                        defaultValue=""
-                        label="Фамилия*"
-                        id="family-name"
-                        autoComplete="family-name"
-                        type="text"
-                    />
+            <input hidden value={captchaToken}/>
+
+            {/* Accordion section */}
+            <Agreement
+                setAgreed={setAgreed}
+                agreed={agreed}
+                userId={user.id}
+            />
+
+            {/* Buttons section */}
+            <div
+                className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+                <div className="flex justify-center">
+                    <GoogleCaptcha onTokenChange={(token) => {
+                        setCaptchaToken(token)
+                    }}/>
                 </div>
 
-                <input hidden value={captchaToken}/>
+                {success && <Success props={'изменено'}/>}
 
-                {/* Accordion section */}
-                <Agreement
-                    setAgreed={setAgreed}
-                    agreed={agreed}
-                    userId={user.id}
-                />
+                <button
+                    type="button"
+                    onClick={() => {
+                        onClose()
+                        setAgreed(false)
+                    }}
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
+                >
+                    Отмена
+                </button>
 
-                {/* Buttons section */}
-                <div
-                    className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-                    <div className="flex justify-center">
-                        <GoogleCaptcha onTokenChange={(token) => {
-                            setCaptchaToken(token)
-                        }}/>
-                    </div>
+                <button
+                    type="submit"
+                    disabled={!agreed}
+                    onClick={() => setTimeout(() => {
+                        onClose()
+                    }, 2000)}
 
-                    {success && <Success props={'изменено'}/>}
-
-                    <button
-                        type="button"
-                        onClick={() => {
-                            onClose()
-                            setAgreed(false)
-                        }}
-                        className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
-                    >
-                        Отмена
-                    </button>
-
-                    <button
-                        type="submit"
-                        disabled={!agreed}
-                        onClick={() => setTimeout(() => {
-                            onClose()
-                        }, 2000)}
-
-                        className={`
+                    className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-                            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        }
+                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }
                                 `}
-                    >
-                        {isClosing ? 'Отправка...' : 'Отправить'}
-                    </button>
-                </div>
-            </form>
-
-        </Modal>
+                >
+                    {isClosing ? 'Отправка...' : 'Отправить'}
+                </button>
+            </div>
+        </form>
     </>
 }
 

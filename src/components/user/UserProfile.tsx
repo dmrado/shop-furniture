@@ -182,7 +182,12 @@ const UserProfile = ({ user, previousOrders, ad }: UserProfileProps) => {
 
                 <UserAddressForm user={user} address={updatingAddress} onClose={() => setIsOpenModal(false)}/>
             </Modal>
-            <UserNameForm user={user} isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}/>
+
+            <Modal isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}
+                   title='Изменение имени пользователя'
+                   description='Если Вы не хотите что бы зарегистрированный никнейм отображался в счет-фактуре, пожалуйста введите верное ФИО'>
+                <UserNameForm user={user} onClose={() => setIsOpenNameModal(false)}/>
+            </Modal>
             {/*<UserOrdersHistory previousOrders={previousOrders}/>*/}
             {/*<UserAddressDeleteModal*/}
             {/*    id={deletingAddressId}*/}
