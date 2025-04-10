@@ -1,8 +1,8 @@
 import React from 'react'
-import type {Metadata} from 'next'
+import type { Metadata } from 'next'
 import SideBar from '@/components/site/SideBar'
 import Title from '@/components/site/Title'
-import Breadcrumbs from "@/components/site/Breadcrumbs";
+import Breadcrumbs from '@/components/site/Breadcrumbs'
 
 export const metadata: Metadata = {
     title: 'Каталог товаров - Decoro',
@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 }
 
 // Next.js автоматически передает объект params
-export default function CatalogLayout({children, params}: Readonly<{ children: React.ReactNode }>) {
+export default function CatalogLayout({ children, params }: Readonly<{ children: React.ReactNode }>) {
     // todo в  <Breadcrumbs/> ередать пропсы
     return (
         <div className="container mx-auto px-4 py-8">
-            <Breadcrumbs/>
+            {/*<Breadcrumbs/>*/}
             <Title params={params}/>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {/* Боковое меню - 1/5 на больших экранах */}

@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from "next/link";
+import Link from 'next/link'
 
 // const Breadcrumbs = ({categories}) => {
 //     // if(!categories) return null
@@ -70,15 +70,15 @@ const Breadcrumbs = ({ categories }) => {
     if (!categories) return 'Breadcrumbs is an empty'
 
     // Рекурсивный компонент для отображения категории любого уровня вложенности
-    const CategoryItem = ({ category, path = '' }) => {
+    const CategoryItem = ({ category }) => {
         // Формируем текущий путь для ссылки
-        const currentPath = path ? `${path}/${category.slug}` : `/catalog/${category.slug}`
+        // const currentPath = path ? `${path}/${category.slug}` : `/catalog/${category.slug}`
 
         return (
             <li key={category.id}>
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
                     {/* Ссылка на текущую категорию */}
-                    <Link href={currentPath} className="hover:text-gray-900">
+                    <Link href={`/catalog/${category.slug}`} className="hover:text-gray-900">
                         {category.name}
                     </Link>
 
@@ -92,7 +92,7 @@ const Breadcrumbs = ({ categories }) => {
                                 <CategoryItem
                                     key={childCategory.id}
                                     category={childCategory}
-                                    path={currentPath}
+                                    // path={currentPath}
                                 />
                             ))}
                         </ul>

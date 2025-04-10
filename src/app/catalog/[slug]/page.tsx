@@ -1,36 +1,39 @@
 import React from 'react'
-import { getSubCategoryId } from '@/actions/categoryActions'
+import { getCategoryChildren, getCategoryId } from '@/actions/categoryActions'
 import { getProducts } from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
+import CategoryScroll from '@/components/site/CategoryScroll'
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
 };
 //todo мне нужен универсальный инфинитискролл или оставить пагинацию...
-const SlugPage = async ({ params, searchParams }: Props) => {
-    const subCategorySlug = params.slug
-    console.log('>>>>>>>> >>>>> subCategorySlug from SlugPage', subCategorySlug)
+const CategoryPage = async ({ params, searchParams }: Props) => {
+    const categorySlug = params.slug
+    console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
-    const { subCategoryId } = await getSubCategoryId(subCategorySlug)
-    console.log('++++++++++++++++ subCategoryId from SlugPage', subCategoryId)
+    const { categoryId } = await getCategoryId(categorySlug)
+    console.log('++++++++++++++++ subCategoryId from SlugPage', categoryId)
 
     const page = Number(searchParams?.page) || 1
     const limit = 16
     const offset = (page - 1) * limit
 
-    const { count, products } = await getProducts(subCategoryId, offset, limit)
+    const { count, products } = await getProducts(categoryId, offset, limit)
+
+    const children = await getCategoryChildren(categoryId)
+
+    if (products.length && children.length) {
+        throw new Error('No mixed categories!!!')
+    }
 
     const totalPages = Math.ceil(count / limit)
     console.log('new products from [slug] page', products)
 
     return (
         <>
-            {/*<div className="flex justify-center text-4xl text-red-500 font-extrabold">*/}
-            {/*    Catalog slug: &nbsp;*/}
-            {/*    <span className="text-green-600">{params.slug}</span>*/}
-            {/*</div>*/}
-            {/*<InfinityScroll initialItems={products}/>*/}
+            <CategoryScroll categories={children}/>
             <div>
                 <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {products.length ? (
@@ -38,7 +41,7 @@ const SlugPage = async ({ params, searchParams }: Props) => {
                             <ProductCard
                                 product={product}
                                 key={product.id}
-                                subCategorySlug={subCategorySlug}
+                                subCategorySlug={categorySlug}
                             />
                         ))
                     ) : (
@@ -50,4 +53,4 @@ const SlugPage = async ({ params, searchParams }: Props) => {
         </>
     )
 }
-export default SlugPage
+export default CategoryPage

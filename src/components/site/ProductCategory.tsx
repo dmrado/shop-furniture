@@ -1,14 +1,14 @@
 'use client'
-import Image from "next/image"
-import Link from "next/link"
-import {useCartContext} from "@/components/cart/CartContext";
-import {useState} from "react";
-import {ProductListItem} from "@/actions/productActions";
-import {Category} from "@/db/models/category.model";
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCartContext } from '@/components/cart/CartContext'
+import { useState } from 'react'
+import { ProductListItem } from '@/actions/productActions'
+import { Category } from '@/db/models/category.model'
 
 // todo заменить product на category после создания модели CategoryModel
-const ProductCategory = ({category}: { category: Category }) => {
-    const [isHovered, setIsHovered] = useState(false)
+const ProductCategory = ({ category }: { category: Category }) => {
+    const [ isHovered, setIsHovered ] = useState(false)
     console.log('category from ProductCategory', category)
     console.log('category SLUG from ProductCategory', category.slug)
 
@@ -28,7 +28,7 @@ const ProductCategory = ({category}: { category: Category }) => {
                     height={200}
                     // fill
                     className={`w-full h-52 object-cover transform transition-transform duration-700 ${
-                        isHovered ? "scale-110" : "scale-100"
+                        isHovered ? 'scale-110' : 'scale-100'
                     }`}
                     priority
                 />
