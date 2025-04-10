@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useCartContext } from '@/components/cart/CartContext'
 import { ProductListItem } from '@/actions/productActions'
 
-const ProductCard = ({ product, subCategorySlug }: { product: ProductListItem }) => {
+const ProductCard = ({ product, categorySlug }: { product: ProductListItem, categorySlug: string }) => {
     const { addProductToCart } = useCartContext()
     const [ isHovered, setIsHovered ] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100
@@ -77,7 +77,7 @@ const ProductCard = ({ product, subCategorySlug }: { product: ProductListItem })
                 </div>
 
                 {/* Product */}
-                <Link href={`/catalog/${subCategorySlug}/${product.id}`}>
+                <Link href={`/catalog/${categorySlug}/${product.id}`}>
                     <h3 className="text-lg font-semibold text-gray-900 my-6 group-hover:text-[#E99C28] transition-colors">
                         {product.name}
                     </h3>

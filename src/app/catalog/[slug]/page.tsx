@@ -4,6 +4,7 @@ import { getProducts } from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
 import CategoryScroll from '@/components/site/CategoryScroll'
+import SideBar from '@/components/site/SideBar'
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
@@ -28,28 +29,52 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
         throw new Error('No mixed categories!!!')
     }
 
+    // fixme: pseudocode
+    // if (products.length) {
+    //     return <FinalCategory />
+    // }
+    //
+    // if (children.length) {
+    //     return <Subcategory/>
+    // }
+
+    const rootCategories = await getCategoryChildren(null)
+
     const totalPages = Math.ceil(count / limit)
     console.log('new products from [slug] page', products)
 
     return (
         <>
-            <CategoryScroll categories={children}/>
-            <div>
-                <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {products.length ? (
-                        products.map((product) => (
-                            <ProductCard
-                                product={product}
-                                key={product.id}
-                                subCategorySlug={categorySlug}
-                            />
-                        ))
-                    ) : (
-                        <p>Продукты не найдены? </p>
-                    )}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                {/* Боковое меню - 1/5 на больших экранах */}
+                {products.length &&
+                    <div className="md:col-span-1">
+                        <SideBar allCategories={rootCategories}/>
+                    </div>
+                }
+
+                <div className="md:col-span-2 lg:col-span-4">
+                    <CategoryScroll categories={children}/>
+                    <div>
+                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            {products.length ? (
+                                products.map((product) => (
+                                    <ProductCard
+                                        product={product}
+                                        key={product.id}
+                                        categorySlug={categorySlug}
+                                    />
+                                ))
+                            ) : (
+                                <p>Продукты не найдены? </p>
+                            )}
+                        </div>
+                        <ReactPaginateWrapper pages={totalPages} currentPage={page}/>
+                    </div>
                 </div>
-                <ReactPaginateWrapper pages={totalPages} currentPage={page}/>
+
             </div>
+
         </>
     )
 }
