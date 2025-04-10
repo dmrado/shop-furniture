@@ -7,7 +7,7 @@ import Image from 'next/image'
 import {Product} from '@/actions/productActions'
 import UserAddressForm from '@/components/user/UserAddressForm'
 import {InstantOrderForm} from '@/components/site/InstantOrderForm'
-import Modal from "@/components/site/Modal";
+import Modal from '@/components/site/Modal'
 
 const ProductFullDescription = ({product}: { product: Product }) => {
     const {addProductToCart} = useCartContext()
