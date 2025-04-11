@@ -25,9 +25,9 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
 
     const children = await getCategoryChildren(categoryId)
 
-    if (products.length && children.length) {
-        throw new Error('No mixed categories!!!')
-    }
+    // if (products.length && children.length) {
+    //     throw new Error('No mixed categories!!!')
+    // }
 
     // fixme: pseudocode
     // if (products.length) {

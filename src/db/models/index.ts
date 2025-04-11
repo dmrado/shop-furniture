@@ -10,6 +10,7 @@ import { AccountModel } from '@/db/models/accounts.model'
 import { AuthUserModel } from '@/db/models/users.model'
 import {ProfileModel} from "@/db/models/profile.model";
 import {CategoryModel} from "@/db/models/category.model";
+import {TagModel} from "@/db/models/tag.model";
 
 // Установка связей
 ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -107,6 +108,35 @@ ProductModel.belongsTo(CategoryModel, {
     foreignKey: 'categoryId',
     as: 'category'
 });
+
+
+  // Связь тега с родительским тегом (для организации иерархии)
+  TagModel.belongsTo(TagModel, {
+    foreignKey: "parentId",
+    as: "parent",
+  });
+
+  TagModel.hasMany(TagModel, {
+    foreignKey: "parentId",
+    as: "children",
+  });
+
+  // Связь многие-ко-многим с продуктами
+  TagModel.belongsToMany(ProductModel, {
+    through: "product_tags", // Промежуточная таблица
+    foreignKey: "tagId",
+    otherKey: "productId",
+    as: "products",
+  });
+
+  ProductModel.belongsToMany(TagModel, {
+    through: "product_tags", // Промежуточная таблица
+    foreignKey: "productId",
+    otherKey: "tagId",
+    as: "tags",
+  });
+
+
 
 // Создание промежуточной таблицы для связи многие-ко-многим
 // const ProductCategory = sequelize.define('ProductCategory', {}, { timestamps: false });

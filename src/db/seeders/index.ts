@@ -4,6 +4,7 @@ import { seedColors } from '@/db/seeders/color.seeder'
 import { seedUsers } from '@/db/seeders/user.seeder'
 import { seedAddresses } from './address.seeder'
 import { seedCategories } from '@/db/seeders/category.seeder'
+import { seedTags } from '@/db/seeders/tag.seeder'
 
 async function runSeeders() {
     try {
@@ -27,6 +28,7 @@ async function runSeeders() {
         await seedColors()
         await seedCategories() // Сначала заполняем категории
         await seedProducts()   // Затем продукты, которые могут ссылаться на категории
+        await seedTags()   // Затем теги, которые могут ссылаться на продукты
 
         // Закомментированные сидеры
         // await seedAddresses()

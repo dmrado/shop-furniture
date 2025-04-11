@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import SideBar from '@/components/site/SideBar'
+import SideBar from '@/components/site/SideBar1'
 import Title from '@/components/site/Title'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 
