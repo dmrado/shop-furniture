@@ -46,13 +46,13 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
             {/* Description */}
             <div className="relative h-48 p-4 flex flex-col">
                 <div className="flex justify-between items-center space-x-2">
-                    <span className="text-xs text-gray-800 bg-white/80 px-1 rounded">
+                    <span className="text-xs text-[#383838] bg-white/80 px-1 rounded">
                         <span className="text-amber-500 text-xs mr-1">★</span>В наличии
                     </span>
 
                     {/* Кнопка добавления в избранное */}
                     <button
-                        className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
+                        className="hover:shadow-white text-[#383838] p-1 rounded transition hover:text-[#E99C28]"
                         onClick={() => {
                             console.log('Added to favorites', product.id)
                             // addToFavorites(product.id);
@@ -78,7 +78,7 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
 
                 {/* Product */}
                 <Link href={`/catalog/${categorySlug}/${product.id}`}>
-                    <h3 className="text-lg font-semibold text-gray-900 my-6 group-hover:text-[#E99C28] transition-colors">
+                    <h3 className="text-lg font-semibold text-[#383838] my-6 group-hover:text-[#E99C28] transition-colors">
                         {product.name}
                     </h3>
 
@@ -91,7 +91,7 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex justify-between items-center">
                         <div className="space-y-1">
-                            <div className="text-md text-gray-900">{product.new_price}₽</div>
+                            <div className="text-md text-[#383838]">{product.new_price}₽</div>
                             {/* {product.old_price > product.new_price && (
                 <div className="text-sm text-gray-500 line-through">
                   {product.old_price}₽
@@ -112,7 +112,7 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                     <div className="flex items-center space-x-2">
                         {/* Кнопка добавления в корзину */}
                         <button
-                            className="hover:shadow-white text-black p-1 rounded transition hover:text-[#E99C28]"
+                            className="hover:shadow-white text-[#383838] p-1 rounded transition hover:text-[#E99C28]"
                             // onClick={() => addToCart(product.id)}
                             onClick={() => {
                                 console.log('product.id front', product.id)

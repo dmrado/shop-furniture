@@ -80,12 +80,12 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                     {/* Информация о товаре */}
                     <div className="space-y-6">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-                            <p className="mt-2 text-sm text-gray-500">{productArray.category}</p>
+                            <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
+                            <p className="mt-2 text-sm text-[#383838]">{productArray.category}</p>
                         </div>
 
                         <div className="flex items-center">
-                            <div className="text-3xl font-bold text-indigo-600">{product.new_price}₽</div>
+                            <div className="text-3xl font-bold text-[#383838]">{product.new_price}₽</div>
                             {product.old_price && (
                                 <div className="ml-4 text-xl text-gray-400 line-through">
                                     {product.old_price}₽
@@ -93,14 +93,14 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                             )}
                         </div>
 
-                        <div className="prose prose-sm text-gray-600">
+                        <div className="prose prose-sm text-[#383838]">
                             <p>{product.description_2}</p>
                         </div>
 
                         {/* Выбор количества и кнопки */}
                         <div className="space-y-4 pt-6">
                             <div className="flex items-center space-x-4">
-                                <label className="text-gray-700">Количество:</label>
+                                <label className="text-[#383838]">Количество:</label>
                                 <QuantitySelector
                                     count={quantitySelectorCount}
                                     onCountChange={async (quantity: number) => {
@@ -142,7 +142,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                                             await addProductToCart(product.id, quantitySelectorCount)
                                             setIsCartUpdating(false)
                                         }}
-                                        className="w-full sm:w-60 bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                                        className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3  font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                                         Добавить в корзину
                                     </button>
                                 </Link>
@@ -157,7 +157,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                                 </Modal>
                                 <button
                                     onClick={() => setIsOpenModal(true)}
-                                    className="w-full sm:w-60 border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-50 transition-colors">
+                                    className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3  font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                                     Купить сейчас
                                 </button>
 

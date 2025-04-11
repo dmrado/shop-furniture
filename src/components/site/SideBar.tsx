@@ -34,13 +34,13 @@ const SideBar = ({ tags }) => {
                 {({ open }) => (
                   <>
                     <li key={parentTag.id}>
-                      <div className="flex justify-between items-center py-1 hover:text-[#E99C28] hover:text-[#E99C28]">
+                      <div className="flex justify-between items-center py-1 hover:text-[#E99C28]">
                         <DisclosureButton
                           ref={disclosureButtonRef}
                           type="button"
                           className="flex w-full justify-between rounded-sm bg-gray-100 px-4 py-3 text-left text-sm font-medium hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75"
                         >
-                          <h3 className="font-medium text-[#333333] hover:text-[#E99C28]">
+                          <h3 className="font-medium text-[#383838] hover:text-[#E99C28]">
                             {parentTag.name}
                           </h3>
                           <ChevronDownIcon
@@ -57,7 +57,7 @@ const SideBar = ({ tags }) => {
                           {getChildTags(parentTag.id).map((childTag) => (
                             <div key={childTag.id} className="pl-2">
                               <button
-                                className="w-full text-left py-1 text-[#333333] hover:text-[#E99C28]"
+                                className="w-full text-left py-1 text-[#383838] hover:text-[#E99C28]"
                                 // todo server action в БД через TagModel за products со slug или id
                                 // onClick={() =>applyFilterAction(childTag.slug)}
                               >
@@ -77,7 +77,7 @@ const SideBar = ({ tags }) => {
 
         {/* Фильтр: Цена */}
         <div className="mb-2">
-          <h3 className="font-medium">Цена</h3>
+          <h3 className="text-[#383838] font-medium">Цена</h3>
         </div>
 
         <div>
@@ -85,7 +85,7 @@ const SideBar = ({ tags }) => {
             <div className="flex gap-2">
               <input
                 type="number"
-                className="w-1/2 border p-2 text-sm"
+                className="w-1/2 border hover:border-[#383838] focus:border-[#383838] text-[#383838] p-2 text-sm"
                 placeholder={0}
                 min={0}
                 // onInput={() =>updatePriceRange}
@@ -129,7 +129,7 @@ const SideBar = ({ tags }) => {
                 className="form-checkbox h-4 w-4 text-amber-500"
                 // onChange={e => applyFilter('inStock', e.target.checked)}
               />
-              <label htmlFor="inStock" className="ml-2 text-sm">
+              <label htmlFor="inStock" className="ml-2 text-sm text-[#383838]">
                 В наличии
               </label>
             </div>
@@ -140,7 +140,7 @@ const SideBar = ({ tags }) => {
                 className="form-checkbox h-4 w-4 text-amber-500"
                 // onChange={e => applyFilter('new2024', e.target.checked)}
               />
-              <label htmlFor="new2024" className="ml-2 text-sm">
+              <label htmlFor="new2024" className="ml-2 text-sm text-[#383838]">
                 Новинки 2024
               </label>
             </div>
@@ -151,7 +151,7 @@ const SideBar = ({ tags }) => {
                 className="form-checkbox h-4 w-4 text-amber-500"
                 // onChange={e => applyFilter('discounted', e.target.checked)}
               />
-              <label htmlFor="discounted" className="ml-2 text-sm">
+              <label htmlFor="discounted" className="ml-2 text-sm text-[#383838]">
                 Со скидками
               </label>
             </div>
@@ -159,7 +159,7 @@ const SideBar = ({ tags }) => {
 
           {/* Кнопка сброса фильтров */}
           <button
-            className="flex items-center text-sm text-gray-700 hover:text-black"
+            className="flex items-center text-sm text-[#383838] hover:text-black"
             // onClick={() => clearAllFilters}
           >
             Очистить все

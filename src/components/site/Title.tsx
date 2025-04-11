@@ -6,7 +6,7 @@ const Title = async ({ params }) => {
     const { subCategoryName: name } = await getSubCategoryName(subCategorySlug)
 
     return <>
-        <h1 className="text-3xl font-medium text-center mb-8">{name}</h1>
+        <h1 className="text-3xl text-[#383838] font-medium text-center mb-8">{name}</h1>
     </>
 }
 export default Title
