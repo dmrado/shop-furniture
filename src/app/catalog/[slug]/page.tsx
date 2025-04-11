@@ -5,11 +5,12 @@ import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
 import CategoryScroll from '@/components/site/CategoryScroll'
 import SideBar from '@/components/site/SideBar'
+import { getTags } from '@/actions/tagActions'
 
 type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
 };
-//todo мне нужен универсальный инфинитискролл или оставить пагинацию...
+
 const CategoryPage = async ({ params, searchParams }: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
@@ -24,6 +25,9 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
     const { count, products } = await getProducts(categoryId, offset, limit)
 
     const children = await getCategoryChildren(categoryId)
+
+    const tags = await getTags()
+    console.log('???????????? tags from SlugPage', tags)
 
     // if (products.length && children.length) {
     //     throw new Error('No mixed categories!!!')
@@ -49,7 +53,7 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
                 {/* Боковое меню - 1/5 на больших экранах */}
                 {products.length &&
                     <div className="md:col-span-1">
-                        <SideBar allCategories={rootCategories}/>
+                        <SideBar tags={tags}/>
                     </div>
                 }
 

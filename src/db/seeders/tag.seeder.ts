@@ -4,23 +4,12 @@ export const seedTags = async () => {
       // Родительские категории
       const parentTags = [
         { name: 'Популярные', slug: 'populyarnye' },
-        { name: 'Классические', slug: 'klassicheskie' },
-        { name: 'Современные', slug: 'sovremennye' },
-        { name: 'Угловые', slug: 'uglovye' },
-        { name: 'Мягкие', slug: 'myagkie' },
-        { name: 'Модульные', slug: 'modulnye' },
-        { name: 'Прямые', slug: 'pryamye' },
-        { name: 'Раскладные', slug: 'raskladnye' },
         { name: 'По стилю', slug: 'po-stilyu' },
         { name: 'По дизайну', slug: 'po-dizaynu' },
         { name: 'По материалу', slug: 'po-materialu' },
         { name: 'По цвету', slug: 'po-tsvetu' },
         { name: 'По форме', slug: 'po-forme' },
         { name: 'Производитель', slug: 'proizvoditel' },
-        { name: 'Цена', slug: 'tsena' },
-        { name: 'В наличии', slug: 'v-nalichii' },
-        { name: 'Новинки 2024', slug: 'novinki-2024' },
-        { name: 'Со скидками', slug: 'so-skidkami' }
       ];
   
       // Создаем родительские теги
@@ -37,6 +26,7 @@ export const seedTags = async () => {
   
       // Примеры подкатегорий для некоторых родительских тегов
       // Получаем ID родительских тегов
+      const populyarnyeTag = await TagModel.findOne({ where: { slug: 'populyarnye' } });
       const styleTag = await TagModel.findOne({ where: { slug: 'po-stilyu' } });
       const designTag = await TagModel.findOne({ where: { slug: 'po-dizaynu' } });
       const materialTag = await TagModel.findOne({ where: { slug: 'po-materialu' } });
@@ -44,6 +34,30 @@ export const seedTags = async () => {
       const formTag = await TagModel.findOne({ where: { slug: 'po-forme' } });
       const manufacturerTag = await TagModel.findOne({ where: { slug: 'proizvoditel' } });
   
+     // Подкатегории для "Поопулярные"
+     if (populyarnyeTag) {
+      const populyarnyeSubcategories = [
+        { name: 'Классические', slug: 'klassicheskie' },
+        { name: 'Современные', slug: 'sovremennye' },
+        { name: 'Угловые', slug: 'uglovye' },
+        { name: 'Мягкие', slug: 'myagkie' },
+        { name: 'Модульные', slug: 'modulnye' },
+        { name: 'Прямые', slug: 'pryamye' },
+        { name: 'Раскладные', slug: 'raskladnye' },
+      ];
+
+      for (const subTag of populyarnyeSubcategories) {
+        await TagModel.findOrCreate({
+          where: { slug: subTag.slug },
+          defaults: {
+            name: subTag.name,
+            slug: subTag.slug,
+            parentId: populyarnyeTag.id
+          }
+        });
+      }
+    }
+
       // Подкатегории для "По стилю"
       if (styleTag) {
         const styleSubcategories = [
@@ -65,6 +79,25 @@ export const seedTags = async () => {
         }
       }
   
+      // Подкатегории для "По дизайну"
+      if (designTag) {
+        const styleSubcategories = [
+          { name: 'Дизайнерская', slug: 'design-made' },
+          { name: 'Ручная работа', slug: 'hand-made' },
+        ];
+  
+        for (const subTag of styleSubcategories) {
+          await TagModel.findOrCreate({
+            where: { slug: subTag.slug },
+            defaults: {
+              name: subTag.name,
+              slug: subTag.slug,
+              parentId: designTag.id
+            }
+          });
+        }
+      }
+
       // Подкатегории для "По материалу"
       if (materialTag) {
         const materialSubcategories = [
