@@ -18,7 +18,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
 
     return <>
         <div className="p-4">
-            <Breadcrumbs categories={rootCategories}/>
+            {/*<Breadcrumbs categories={rootCategories}/>*/}
             {/*<CategoryNavigation categories={rootCategories}/>*/}
         </div>
         <div className="flex px-4 text-center justify-center text-3xl font-medium items-center mt-16">
