@@ -25,7 +25,7 @@ const SideBar = ({ tags }) => {
   };
 
   return (
-    <div className="flex flex-col  gap-6">
+    <div className="flex flex-col md:flex-row gap-6">
       <div className="w-full md:w-64 flex-shrink-0">
         <ul>
           <div className="mb-4">

@@ -3,11 +3,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
 
+// В файле CategoryBar.tsx
+
 interface CategoryChild {
     id: number;
     name: string;
     slug: string;
-    image: string;
+    image?: string;
+
+
     children?: CategoryChild[];
 }
 
@@ -19,7 +23,7 @@ const CategoryBar: React.FC<CategoryBarProps> = ({ categoryChildren }) => {
     return (
         <div className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold mb-3">Категории</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
                 {categoryChildren.map((category) => (
                     <Link
                         href={`/category/${category.slug}`}
