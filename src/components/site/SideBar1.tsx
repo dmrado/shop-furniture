@@ -14,7 +14,7 @@ const SideBar1 = ({ allCategories }) => {
                             <div
                                 key={category.id}
                                 className="flex justify-between items-center py-2 border-b">
-                                <Link href={`/catalog/${category.slug}`}>
+                                <Link href={`/category/${category.slug}`}>
                                     <h3 className="font-medium">{category.name}</h3>
                                 </Link>
                                 <button className="text-gray-500"
@@ -34,7 +34,7 @@ const SideBar1 = ({ allCategories }) => {
                                     <div
                                         key={childCategory.id}
                                         className="pl-2">
-                                        <Link href={`/catalog/${category.slug}`}>
+                                        <Link href={`/category/${category.slug}`}>
                                             <button className="w-full text-left py-1 hover:text-blue-600"
                                             // onClick={() =>applyFilter('type', 'classic')}
                                             >

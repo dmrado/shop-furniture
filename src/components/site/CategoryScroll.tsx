@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import ProductCategory from '@/components/site/ProductCategory'
 import { CategoryModel } from '@/db/models/category.model'
-import { getCategories } from '@/actions/categoryActions'
+// import { getCategories } from '@/actions/categoryActions'
 
 //*todo требуется сделать этот компонент динамичной оберткой для каждой категории и вообще для сайта
 

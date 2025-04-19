@@ -1,34 +1,49 @@
 import React from 'react'
-import {getCategoryChildren, getCategoryId} from '@/actions/categoryActions'
-import {getProducts} from '@/actions/productActions'
+import { getCategory, getCategoryChildren, getCategoryParents, getChildrenIds } from '@/actions/categoryActions'
+import { getProducts } from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
 import SideBar from '@/components/site/SideBar'
-import {getTags} from '@/actions/tagActions'
+import { getTags } from '@/actions/tagActions'
 import CategoryBar from '@/components/CategoryBar'
+import { notFound } from 'next/navigation'
+import Title from '@/components/site/Title'
+import Breadcrumbs from '@/components/site/Breadcrumbs'
 
 type Props = {
     params: { slug: string };
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
 };
 
-const CategoryPage = async ({params, searchParams}: Props) => {
+const CategoryPage = async ({ params, searchParams }: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
-    const { categoryId } = await getCategoryId(categorySlug)
-    console.log('++++++++++++++++ subCategoryId from SlugPage', categoryId)
+    const category = await getCategory(categorySlug)
+    if (!category) {
+        return notFound()
+    }
+
+    console.log('++++++++++++++++ categoryId from SlugPage', category.id)
 
     const page = Number(searchParams?.page) || 1
     const limit = 16
     const offset = (page - 1) * limit
 
-    //Запрос продуктов категории из params
-    const { count, products } = await getProducts(categoryId, offset, limit)
+    const categoryParents = await getCategoryParents(category.id)
+
+    console.log('categoryParents', categoryParents)
 
     //Запрос дерева категорий
-    const categoryChildren = await getCategoryChildren()
+    const categoryChildren = await getCategoryChildren(category.id)
     console.log('************* categoryChildren from SlugPage', categoryChildren)
+
+    //Запрос продуктов категории из params
+
+    const flatChilrenIds = await getChildrenIds(categoryChildren)
+    console.log('flatChilrenIds', flatChilrenIds)
+
+    const { count, products } = await getProducts([ category.id, ...flatChilrenIds ], offset, limit)
 
     const tags = await getTags()
     console.log('???????????? tags from SlugPage', tags)
@@ -37,6 +52,17 @@ const CategoryPage = async ({params, searchParams}: Props) => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <Title title={category.name}/>
+
+            {/*h2 category.service-instructions*/}
+            {/*h3 category.description*/}
+            <Breadcrumbs
+                items={categoryParents.map(category => ({
+                    label: category.name,
+                    href: `/category/${category.slug}`
+                }))}
+            />
+
             <h1 className="text-2xl font-bold mb-6">Категория: {categorySlug}</h1>
 
             {/* Отображаем подкатегории, если они есть */}

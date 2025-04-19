@@ -50,11 +50,11 @@ const Header = () => {
 
     // todo переделать ссылки на реальные
     const navItems = [
-        { name: 'Каталог', href: '/catalog', subItems: [ 'Мебель', 'Декор', 'Текстиль' ] },
-        { name: 'Кухни', href: '/catalog/kitchen', subItems: [ 'Модульные кухни', 'Аксессуары' ] },
-        { name: 'Свет', href: '/catalog/smartphones', subItems: [ 'Люстры', 'Торшеры', 'Бра' ] },
-        { name: 'Диваны', href: '/catalog/mens-clothing', subItems: [ 'Кожаные', 'Тканевые' ] },
-        { name: 'Декор', href: '/catalog/computers', subItems: [ 'Картины', 'Зеркала' ] },
+        { name: 'Каталог', href: '/category', subItems: [ 'Мебель', 'Декор', 'Текстиль' ] },
+        { name: 'Кухни', href: '/category/kitchen', subItems: [ 'Модульные кухни', 'Аксессуары' ] },
+        { name: 'Свет', href: '/category/smartphones', subItems: [ 'Люстры', 'Торшеры', 'Бра' ] },
+        { name: 'Диваны', href: '/category/mens-clothing', subItems: [ 'Кожаные', 'Тканевые' ] },
+        { name: 'Декор', href: '/category/computers', subItems: [ 'Картины', 'Зеркала' ] },
     ]
 
     // todo сделать функцию закрытия по клику вне выпадающего меню
