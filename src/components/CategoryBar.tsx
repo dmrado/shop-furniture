@@ -30,7 +30,7 @@ const CategoryBar: React.FC<CategoryBarProps> = ({ categoryChildren }) => {
                         key={category.id}
                         className="flex flex-col items-center group hover:bg-gray-50 p-2 rounded-lg transition-colors"
                     >
-                        <div className="relative w-16 h-16 mb-2 overflow-hidden rounded-full">
+                        <div className="relative w-16 h-16 mb-2 overflow-hidden">
                             <Image
                                 src={category.image || '/placeholder.jpg'}
                                 alt={category.name}

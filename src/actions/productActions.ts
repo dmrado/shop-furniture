@@ -1,6 +1,6 @@
 'use server'
-import {ProductModel} from '@/db/models'
-import {InferAttributes} from "sequelize"
+import { ProductModel } from '@/db/models'
+import { InferAttributes } from 'sequelize'
 
 export type Product = InferAttributes<ProductModel>
 export type ProductListItem = Pick<Product, 'id'| 'name'| 'description_1' | 'old_price' | 'new_price' | 'image' | 'isNew' > & {category: string}
@@ -17,14 +17,14 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
 
 export const getProducts = async (subCategoryId, offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
-    const {count, rows} = await ProductModel.findAndCountAll({
+    const { count, rows } = await ProductModel.findAndCountAll({
         limit,
         offset,
         where: {
             categoryId: subCategoryId,
             isActive: true
         },
-        attributes: ['id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew'],
+        attributes: [ 'id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew' ],
     })
 
     return {

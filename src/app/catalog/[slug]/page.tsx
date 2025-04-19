@@ -16,15 +16,17 @@ const CategoryPage = async ({params, searchParams}: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
-    const {categoryId} = await getCategoryId(categorySlug)
+    const { categoryId } = await getCategoryId(categorySlug)
     console.log('++++++++++++++++ subCategoryId from SlugPage', categoryId)
 
     const page = Number(searchParams?.page) || 1
     const limit = 16
     const offset = (page - 1) * limit
 
-    const {count, products} = await getProducts(categoryId, offset, limit)
+    //Запрос продуктов категории из params
+    const { count, products } = await getProducts(categoryId, offset, limit)
 
+    //Запрос дерева категорий
     const categoryChildren = await getCategoryChildren()
     console.log('************* categoryChildren from SlugPage', categoryChildren)
 
@@ -40,14 +42,14 @@ const CategoryPage = async ({params, searchParams}: Props) => {
             {/* Отображаем подкатегории, если они есть */}
             {categoryChildren && categoryChildren.length > 0 && (
                 <div className="mb-8">
-                    <CategoryBar categoryChildren={categoryChildren} />
+                    <CategoryBar categoryChildren={categoryChildren}/>
                 </div>
             )}
 
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Боковая панель с фильтрами */}
                 <div className="w-full md:w-1/4">
-                    <SideBar tags={tags} />
+                    <SideBar tags={tags}/>
                 </div>
 
                 {/* Основной контент с товарами */}
@@ -56,7 +58,7 @@ const CategoryPage = async ({params, searchParams}: Props) => {
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {products.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
+                                    <ProductCard key={product.id} product={product}/>
                                 ))}
                             </div>
 
