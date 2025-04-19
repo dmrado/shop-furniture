@@ -1,7 +1,7 @@
 import CategoryScroll from '@/components/site/CategoryScroll'
 import { getCategoryChildren } from '@/actions/categoryActions'
-import CategoryNavigation from '@/components/site/CategoryNavigation'
-import Breadcrumbs from '@/components/site/Breadcrumbs'
+// import CategoryNavigation from '@/components/site/CategoryNavigation'
+// import Breadcrumbs from '@/components/site/Breadcrumbs'
 import Link from 'next/link'
 
 type Props = {
@@ -12,7 +12,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
 
     // Получаем полное дерево категорий
     const rootCategories = await getCategoryChildren()
-    console.log('new rootCategories from catalog page', rootCategories)
+    console.log('new rootCategories from category page', rootCategories)
 
     const page = Number(searchParams?.page) || 1
 
@@ -33,7 +33,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
                         <div className="container mx-auto my-8">
                             <div className="flex p-4 flex-row items-center mb-6">
                                 <div className="text-3xl font-medium">
-                                    <Link href={`/catalog/${rootCategory.slug}`}>
+                                    <Link href={`/category/${rootCategory.slug}`}>
                                         <h3 className="">
                                             {rootCategory.name}
                                         </h3>

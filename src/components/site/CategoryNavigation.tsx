@@ -8,7 +8,7 @@ const CategoryNavigation = ({ categories }) => {
                 {categories.map(category => (
                     <li key={category.id}>
                         <Link
-                            href={`/catalog/${category.slug}`}
+                            href={`/category/${category.slug}`}
                             className="text-blue-600 hover:underline"
                         >
                             {category.name}
@@ -19,7 +19,7 @@ const CategoryNavigation = ({ categories }) => {
                                 {category.children.map(subcategory => (
                                     <li key={subcategory.id}>
                                         <Link
-                                            href={`/catalog/${category.slug}/${subcategory.slug}`}
+                                            href={`/category/${category.slug}/${subcategory.slug}`}
                                             className="text-blue-500 hover:underline text-sm"
                                         >
                                             {subcategory.name}
@@ -31,7 +31,7 @@ const CategoryNavigation = ({ categories }) => {
                                                 {subcategory.children.map(thirdLevel => (
                                                     <li key={thirdLevel.id}>
                                                         <Link
-                                                            href={`/catalog/${category.slug}/${subcategory.slug}/${thirdLevel.slug}`}
+                                                            href={`/category/${category.slug}/${subcategory.slug}/${thirdLevel.slug}`}
                                                             className="text-gray-600 hover:underline text-xs"
                                                         >
                                                             {thirdLevel.name}
@@ -48,7 +48,7 @@ const CategoryNavigation = ({ categories }) => {
                 ))}
             </ul>
         </nav>
-    );
-};
+    )
+}
 
 export default CategoryNavigation

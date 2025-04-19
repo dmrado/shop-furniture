@@ -1,8 +1,8 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import SideBar from '@/components/site/SideBar1'
-import Title from '@/components/site/Title'
-import Breadcrumbs from '@/components/site/Breadcrumbs'
+// import SideBar from '@/components/site/SideBar1'
+// import Title from '@/components/site/Title'
+// import Breadcrumbs from '@/components/site/Breadcrumbs'
 
 export const metadata: Metadata = {
     title: 'Каталог товаров - Decoro',
@@ -14,7 +14,7 @@ export default function CatalogLayout({ children, params }: Readonly<{ children:
     return (
         <div className="container mx-auto px-4 py-8">
             {/*<Breadcrumbs/>*/}
-            <Title params={params}/>
+            {/*<Title params={params}/>*/}
             {/*<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">*/}
             {/*    /!* Боковое меню - 1/5 на больших экранах *!/*/}
             {/*    <div className="md:col-span-1">*/}

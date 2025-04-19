@@ -10,11 +10,30 @@ import { ProductModel } from './product.model'
 
 export interface Tag extends InferAttributes<TagModel> {}
 
+// export enum ExpositionType {
+//     Static = "Static",
+//     Prism = "Prism",
+//     Scroll = "Scroll",
+//     Video = "Video",
+// }
+
+// const PossibleTagTypes = {
+//     Color: 'color',
+//     Size: 'size',
+//     Style: 'style',
+//     Material: 'material',
+//     PureSeo: 'seo'
+// }
+
+// const PossibleTagTypes = ["color", "size", ....]
+
 export class TagModel extends Model<
   InferAttributes<TagModel>,
   InferCreationAttributes<TagModel>
 > {
     declare id?: CreationOptional<number>
+    // declare isPopular: boolean
+    // declare tageType: TagType
     declare parentId: number | null
     declare name: string
     declare slug: string
@@ -30,6 +49,11 @@ TagModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
+        // todo: replace tree structure with flat structure
+        // type: {
+        //     type: DataTypes.ENUM(...Object.values(TagType)),
+        //     allowNull: false,
+        // },
         parentId: {
             type: DataTypes.INTEGER,
             allowNull: true,

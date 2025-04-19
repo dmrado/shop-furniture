@@ -77,7 +77,7 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                 </div>
 
                 {/* Product */}
-                <Link href={`/catalog/${categorySlug}/${product.id}`}>
+                <Link href={`/product/${product.id}`}>
                     <h3 className="text-lg font-semibold text-[#383838] my-6 group-hover:text-[#E99C28] transition-colors">
                         {product.name}
                     </h3>
