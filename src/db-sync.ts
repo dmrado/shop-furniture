@@ -14,6 +14,8 @@ import {
     AuthUserModel,
 } from '@/db/models'
 import {CategoryModel} from '@/db/models/category.model'
+import {ProductVariantModel} from "@/db/models/productVariant.model";
+import {ProductCategoryModel} from "@/db/models/productCategory.model";
 
 //todo взять из index.model.ts и так же во всех местах где они используются https://stackoverflow.com/questions/73319033/sequelize-model-is-not-associated-to-post
 
@@ -28,7 +30,9 @@ const registeredModels = [
     CartModel,
     AuthUserModel,
     ProfileModel,
-    CategoryModel
+    CategoryModel,
+    ProductVariantModel,
+    ProductCategoryModel,
 ]
 const runDbSync = async () => {
     console.log('Syncing DB schema for: ', registeredModels.map(m => m.name).join(', '))

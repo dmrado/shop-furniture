@@ -20,7 +20,6 @@ export class CategoryModel extends Model<
     declare name: string
     declare slug: string
     declare image: string
-    declare product?: ProductModel // Добавляем связь с ProductModel
 }
 
 CategoryModel.init(

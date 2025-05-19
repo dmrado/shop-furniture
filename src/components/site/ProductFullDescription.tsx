@@ -94,7 +94,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                         </div>
 
                         <div className="prose prose-sm text-[#383838]">
-                            <p>{product.description_2}</p>
+                            <p>{product.descriptionLong}</p>
                         </div>
 
                         {/* Выбор количества и кнопки */}
