@@ -101,6 +101,6 @@ ProductVariantModel.init(
     },
     {
         sequelize,
-        tableName: 'productVariants',
+        tableName: 'product_variants',
     }
 )

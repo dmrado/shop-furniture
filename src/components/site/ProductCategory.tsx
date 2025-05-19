@@ -4,10 +4,10 @@ import Link from 'next/link'
 import { useCartContext } from '@/components/cart/CartContext'
 import { useState } from 'react'
 import { ProductListItem } from '@/actions/productActions'
-import { Category } from '@/db/models/category.model'
+import { CategoryDTO } from '@/db/models/category.model'
 
 // todo заменить product на category после создания модели CategoryModel
-const ProductCategory = ({ category }: { category: Category }) => {
+const ProductCategory = ({ category }: { category: CategoryDTO }) => {
     const [ isHovered, setIsHovered ] = useState(false)
     console.log('category from ProductCategory', category)
     console.log('category SLUG from ProductCategory', category.slug)

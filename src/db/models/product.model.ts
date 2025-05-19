@@ -1,22 +1,27 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import {StockModel} from '@/db/models'
+import { StyleModel } from '@/db/models/style.model'
+import { CollectionModel } from '@/db/models/collection.model'
+import { BrandModel } from '@/db/models/brand.model'
+import { CountryModel } from '@/db/models/country.model'
 
-
-export interface Product extends InferAttributes<ProductModel> {}
+export interface ProductDTO extends InferAttributes<ProductModel> {}
 
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     declare id: CreationOptional<number>
 
+    declare styleId: number
+    declare brandId: number
+    declare collectionId: number
+
+    declare name: string
     declare articul: string
     declare sku: string
-    declare name: string
     declare descriptionShort: string
     declare descriptionLong: string
 
     declare isNew: boolean
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
-    stock?: StockModel
 }
 
 ProductModel.init(
@@ -26,10 +31,41 @@ ProductModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        isNew: {
-            type: DataTypes.BOOLEAN,
+        styleId: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: false,
+            references: {
+                model: StyleModel,
+                key: 'id'
+            }
+        },
+        brandId: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // или true, если продукт может не иметь бренда
+            references: {
+                model: BrandModel,
+                key: 'id'
+            }
+        },
+        collectionId: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // или true, если продукт может не иметь признака коллекции
+            references: {
+                model: CollectionModel,
+                key: 'id'
+            }
+        },
+        countryId: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // или true, если продукт может не иметь признака коллекции
+            references: {
+                model: CountryModel,
+                key: 'id'
+            }
+        },
+        name: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
         },
         articul: {
             type: DataTypes.STRING(128),
@@ -39,17 +75,18 @@ ProductModel.init(
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-        name: {
-            type: DataTypes.STRING(128),
-            allowNull: false,
-        },
         descriptionShort: {
             type: DataTypes.STRING(128),
             allowNull: false,
         },
         descriptionLong: {
-            type: DataTypes.STRING(128),
+            type: DataTypes.TEXT,
             allowNull: false,
+        },
+        isNew: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
         isActive: {
             type: DataTypes.BOOLEAN,

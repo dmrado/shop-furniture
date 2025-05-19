@@ -36,7 +36,7 @@ PhotoModel.init(
             }
         },
         photoPath: {
-            type: DataTypes.STRING(128),
+            type: DataTypes.STRING(255),
             allowNull: false,
         }
     },

@@ -1,4 +1,3 @@
-// export {}
 import { sequelize } from '../connection'
 import {
     CreationOptional,
@@ -7,14 +6,10 @@ import {
     InferCreationAttributes,
     Model,
 } from 'sequelize'
-import { ProductModel } from '@/db/models/product.model'
 
-export interface Category extends InferAttributes<CategoryModel> {}
+export interface CategoryDTO extends InferAttributes<CategoryModel> {}
 
-export class CategoryModel extends Model<
-  InferAttributes<CategoryModel>,
-  InferCreationAttributes<CategoryModel>
-> {
+export class CategoryModel extends Model<InferAttributes<CategoryModel>, InferCreationAttributes<CategoryModel>> {
     declare id: CreationOptional<number>
     declare parentId: number | null
     declare name: string
