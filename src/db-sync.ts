@@ -14,8 +14,8 @@ import {
     AuthUserModel,
 } from '@/db/models'
 import {CategoryModel} from '@/db/models/category.model'
-import {ProductVariantModel} from "@/db/models/productVariant.model";
-import {ProductCategoryModel} from "@/db/models/productCategory.model";
+import {ProductVariantModel} from "@/db/models/product_variant.model";
+import {ProductCategoryModel} from "@/db/models/product_category.model";
 import {PhotoModel} from "@/db/models/photo.model";
 import {MaterialModel} from "@/db/models/material.model";
 import {CollectionModel} from "@/db/models/collection.model";

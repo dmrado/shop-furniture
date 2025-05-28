@@ -11,5 +11,5 @@ export const isAdmin = (session: Session | null) => {
     const adminEmails = process.env.USER_EMAIL?.split(',') ?? []
     console.log(adminEmails, session.user.email)
     console.log(adminEmails.includes(session.user.email))
-    return adminEmails.includes(session.user.email) //прроверили что adminEmails содкржит пришедший с провайдера email
+    return adminEmails.includes(session.user.email) //прроверили что adminEmails содержит пришедший с провайдера email
 }

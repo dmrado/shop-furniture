@@ -11,7 +11,6 @@ interface CategoryChild {
     slug: string;
     image?: string;
 
-
     children?: CategoryChild[];
 }
 
@@ -19,7 +18,7 @@ interface CategoryBarProps {
     categoryChildren: CategoryChild[];
 }
 
-const CategoryBar: React.FC<CategoryBarProps> = ({ categoryChildren }) => {
+const CategoryBar = ({ categoryChildren }: CategoryBarProps) => {
     return (
         <div className="bg-white rounded-lg shadow p-4">
             <h2 className="text-lg font-semibold mb-3">Категории</h2>

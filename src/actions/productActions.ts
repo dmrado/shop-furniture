@@ -1,30 +1,44 @@
 'use server'
-import { ProductModel } from '@/db/models'
-import { InferAttributes, Op } from 'sequelize'
+import {ProductModel} from '@/db/models'
+import {InferAttributes, Op} from 'sequelize'
+import {ProductVariantModel} from "@/db/models/product_variant.model";
 
 export type Product = InferAttributes<ProductModel>
-export type ProductListItem = Pick<Product, 'id'| 'name'| 'description_1' | 'old_price' | 'new_price' | 'image' | 'isNew' > & {category: string}
+export type ProductListItem =
+    Pick<Product, 'id' | 'name' | 'description_1' | 'old_price' | 'new_price' | 'image' | 'isNew'>
+    & { category: string }
 // TODO: create category like an object and add it to the ProductModel
 export const getProductBiId = async (id: number): Promise<Product | null> => {
     console.log('getProductBiId productId:', id)
 
-    const product = await ProductModel.findByPk(id)
+    const product = await ProductModel.findByPk(id,
+        {
+            include: [
+                {
+                    model: ProductVariantModel,
+                    attributes: [ 'price' ],
+                    as: 'ProductVariants'
+                }
+            ]
+        }
+    )
     if (!product) {
         return null
     }
+    console.log('product_________________', product);
     return product.toJSON()
 }
 
-export const getProducts = async (categoryIds:number[], offset: number, limit: number):
+export const getProducts = async (categoryIds: number[], offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
-    const { count, rows } = await ProductModel.findAndCountAll({
+    const {count, rows} = await ProductModel.findAndCountAll({
         limit,
         offset,
         where: {
-            categoryId: { [Op.in]: categoryIds },
+            categoryId: {[Op.in]: categoryIds},
             isActive: true
         },
-        attributes: [ 'id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew' ],
+        attributes: ['id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew'],
     })
 
     return {

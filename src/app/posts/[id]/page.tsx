@@ -7,7 +7,7 @@ import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
 import CookieConsent from '@/components/CookieConsent.tsx'
 import { getConsentAccepted } from '@/actions/getCookiesAccepted.ts'
-import { isAdmin } from '@/isAdmin.ts'
+import { isAdmin } from '@/actions/isAdmin.ts'
 // import '../tailwind.css'
 
 type PostPageParams = { params: { id: number } }

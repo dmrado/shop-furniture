@@ -4,7 +4,13 @@ import { seedColors } from '@/db/seeders/color.seeder'
 import { seedUsers } from '@/db/seeders/user.seeder'
 import { seedAddresses } from './address.seeder'
 import { seedCategories } from '@/db/seeders/category.seeder'
-import { seedTags } from '@/db/seeders/tag.seeder'
+import { seedProductVariants} from '@/db/seeders/product_variant.seeder'
+import {seedStyles} from "@/db/seeders/style.seeder"
+import {seedBrands} from "@/db/seeders/brand.seeder";
+import {seedCollections} from "@/db/seeders/collection.seeder";
+import {seedMaterials} from "@/db/seeders/material.seeder";
+import {seedCountries} from "@/db/seeders/country.seeder";
+import {seedPhotos} from "@/db/seeders/photo.seeder";
 
 async function runSeeders() {
     try {
@@ -19,17 +25,30 @@ async function runSeeders() {
         await sequelize.query('TRUNCATE colors');
         await sequelize.query('TRUNCATE categories');
         await sequelize.query('TRUNCATE products');
-        // Добавьте другие таблицы, которые нужно очистить
+        await sequelize.query('TRUNCATE styles'); // Очищаем таблицу стилей
+        await sequelize.query('TRUNCATE brands'); // Очищаем таблицу брендов
+        await sequelize.query('TRUNCATE collections'); // Очищаем таблицу коллекций
+        await sequelize.query('TRUNCATE countries'); // Очищаем таблицу стран
+        await sequelize.query('TRUNCATE materials'); // Очищаем таблицу материалов
+        await sequelize.query('TRUNCATE product_variants'); // Очищаем таблицу вариантов
+        await sequelize.query('TRUNCATE photos'); // Очищаем таблицу фотографий
         // await sequelize.query('TRUNCATE addresses');
         // await sequelize.query('TRUNCATE users');
 
         // Запуск сидеров в правильном порядке
-        console.log('Starting seeders...');
-        await seedColors()
-        await seedCategories() // Сначала заполняем категории
-        await seedProducts()   // Затем продукты, которые могут ссылаться на категории
-        await seedTags()   // Затем теги, которые могут ссылаться на продукты
-
+        console.log('Starting seeders...')
+        await seedStyles() // Таблица стилей (на нее ссылаются продукты)
+        await seedBrands() // Таблица брендов (на нее ссылаются продукты)
+        await seedCollections() // Таблица коллекций (на нее ссылаются продукты)
+        await seedCountries() // Таблица стран (на нее ссылаются продукты)
+        await seedCategories() // Таблица категорий (на нее ссылаются продукты)
+        await seedColors() // Таблица цветов (на них ссылаются варианты продуктов)
+        await seedMaterials() // Таблица материалов (может использоваться вариантами продуктов)
+        await seedProducts() // Таблица продуктов (ссылается на стили, бренды, коллекции, страны, категории)
+        await seedProductVariants() // Таблица вариантов продуктов (ссылается на продукты и цвета)
+        await seedPhotos() // Таблица фотографий (ссылается на продукты и варианты продуктов)
+        await seedUsers() // Таблица пользователей (не имеет прямых зависимостей от основных таблиц продуктов)
+        await seedAddresses() // Таблица адресов (не имеет прямых зависимостей от основных таблиц продуктов)
         // Закомментированные сидеры
         // await seedAddresses()
         // await seedUsers()
@@ -53,34 +72,3 @@ async function runSeeders() {
 }
 
 runSeeders()
-
-// import { sequelize } from '@/db/connection'
-// import { seedProducts } from '@/db/seeders/product.seeder'
-// import { seedColors } from '@/db/seeders/color.seeder'
-// import { seedUsers } from '@/db/seeders/user.seeder'
-// import { seedAddresses } from './address.seeder'
-// import {seedCategories} from '@/db/seeders/category.seeder'
-//
-// async function runSeeders() {
-//     try {
-//     // Синхронизация базы данных
-//         await sequelize.sync({ alter: true }) // force: true пересоздаст таблицы
-//
-//         // Запуск сидеров
-//         await Promise.all([
-//             seedColors(),
-//             seedProducts(),
-//             seedCategories(),
-//             // seedAddresses(),
-//             // seedUsers()
-//         ])
-//
-//         console.log('All seeds completed successfully')
-//         process.exit(0)
-//     } catch (error) {
-//         console.error('Error running seeds:', error)
-//         process.exit(1)
-//     }
-// }
-//
-// runSeeders()

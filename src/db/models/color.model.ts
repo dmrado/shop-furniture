@@ -19,7 +19,7 @@ ColorModel.init(
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: true,
         },
         code: {
             type: DataTypes.STRING(128),

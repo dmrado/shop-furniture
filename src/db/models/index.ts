@@ -1,7 +1,7 @@
 import {AddressModel} from '@/db/models/address.model'
 import {ColorModel} from '@/db/models/color.model'
 import {ProductModel} from '@/db/models/product.model'
-import {OrderedProductsModel} from '@/db/models/orderedProducts.model'
+import {OrderedProductsModel} from '@/db/models/ordered_products.model'
 import {OrderModel} from '@/db/models/order.model'
 import {StockModel} from '@/db/models/stock.model'
 import {CartModel} from '@/db/models/cart.model'
@@ -10,8 +10,9 @@ import {AccountModel} from '@/db/models/accounts.model'
 import {AuthUserModel} from '@/db/models/users.model'
 import {ProfileModel} from "@/db/models/profile.model";
 import {CategoryModel} from "@/db/models/category.model";
-import {TagModel} from "@/db/models/tag.model";
-import {ProductCategoryModel} from "@/db/models/productCategory.model";
+// import {TagModel} from "@/db/models/tag.model";
+import {ProductCategoryModel} from "@/db/models/product_category.model";
+import {ProductVariantModel} from "@/db/models/product_variant.model";
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -25,6 +26,18 @@ OrderModel.hasMany(OrderedProductsModel, {
 OrderedProductsModel.belongsTo(OrderModel, {
     // foreignKey: 'order'
 })
+
+
+ProductModel.hasMany(ProductVariantModel, {
+    foreignKey: 'productId',
+    as: 'ProductVariants' // Имя ассоциации, которое используем в include
+})
+
+ProductVariantModel.belongsTo(ProductModel, {
+    foreignKey: 'productId',
+    as: 'Product' // Имя ассоциации, под которым вы сможете получать продукт
+})
+
 
 // StockModel.belongsTo(ProductModel, {
 //     // sourceKey: 'id',
@@ -107,15 +120,15 @@ CategoryModel.hasMany(CategoryModel, {
 
 
 // Связь тега с родительским тегом (для организации иерархии)
-TagModel.belongsTo(TagModel, {
-    foreignKey: "parentId",
-    as: "parent",
-});
-
-TagModel.hasMany(TagModel, {
-    foreignKey: "parentId",
-    as: "children",
-});
+// TagModel.belongsTo(TagModel, {
+//     foreignKey: "parentId",
+//     as: "parent",
+// });
+//
+// TagModel.hasMany(TagModel, {
+//     foreignKey: "parentId",
+//     as: "children",
+// });
 
 // Связь многие-ко-многим с продуктами
 // TagModel.belongsToMany(ProductModel, {
@@ -197,5 +210,6 @@ export {
     ProfileModel,
     AccountModel,
     SessionModel,
-    AuthUserModel
+    AuthUserModel,
+    ProductVariantModel
 }

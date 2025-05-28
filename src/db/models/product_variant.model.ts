@@ -65,7 +65,6 @@ ProductVariantModel.init(
             type: DataTypes.STRING(128),
             allowNull: false,
         },
-
         length: {
             type: DataTypes.INTEGER,
             allowNull: false,

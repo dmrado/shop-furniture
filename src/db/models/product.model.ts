@@ -1,18 +1,23 @@
-import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { StyleModel } from '@/db/models/style.model'
-import { CollectionModel } from '@/db/models/collection.model'
-import { BrandModel } from '@/db/models/brand.model'
-import { CountryModel } from '@/db/models/country.model'
+import {sequelize} from '../connection'
+import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import {StyleModel} from '@/db/models/style.model'
+import {CollectionModel} from '@/db/models/collection.model'
+import {BrandModel} from '@/db/models/brand.model'
+import {CountryModel} from '@/db/models/country.model'
+import {CategoryModel} from "@/db/models/category.model";
+import {ProductVariantModel} from "@/db/models/product_variant.model";
 
-export interface ProductDTO extends InferAttributes<ProductModel> {}
+export interface ProductDTO extends InferAttributes<ProductModel> {
+}
 
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     declare id: CreationOptional<number>
 
+    declare categoryId: number
     declare styleId: number
     declare brandId: number
     declare collectionId: number
+    declare countryId: number
 
     declare name: string
     declare articul: string
@@ -22,6 +27,11 @@ export class ProductModel extends Model<InferAttributes<ProductModel>, InferCrea
 
     declare isNew: boolean
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
+
+
+    // Определение ассоциации с ProductVariantModel
+    declare ProductVariants?: ProductVariantModel[]; // Опционально для TypeScript
+    static associate: (models: any) => void;
 }
 
 ProductModel.init(
@@ -31,12 +41,22 @@ ProductModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
+        categoryId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: CategoryModel,
+                key: 'id',
+                defaultValue: true
+            }
+        },
         styleId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: StyleModel,
-                key: 'id'
+                key: 'id',
+                defaultValue: true
             }
         },
         brandId: {

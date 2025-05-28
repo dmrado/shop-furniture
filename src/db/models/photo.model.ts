@@ -1,6 +1,6 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { ProductVariantModel } from '@/db/models/productVariant.model'
+import { ProductVariantModel } from '@/db/models/product_variant.model'
 import { ProductModel } from '@/db/models/product.model'
 
 export interface PhotoDTO extends InferAttributes<PhotoModel> {}

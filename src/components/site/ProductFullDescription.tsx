@@ -85,7 +85,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                         </div>
 
                         <div className="flex items-center">
-                            <div className="text-3xl font-bold text-[#383838]">{product.new_price}₽</div>
+                            <div className="text-3xl font-bold text-[#383838]">{product.price}₽</div>
                             {product.old_price && (
                                 <div className="ml-4 text-xl text-gray-400 line-through">
                                     {product.old_price}₽
