@@ -41,15 +41,15 @@ ProductModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        categoryId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: CategoryModel,
-                key: 'id',
-                defaultValue: true
-            }
-        },
+        // categoryId: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false,
+        //     references: {
+        //         model: CategoryModel,
+        //         key: 'id',
+        //         defaultValue: true
+        //     }
+        // },
         styleId: {
             type: DataTypes.INTEGER,
             allowNull: false,

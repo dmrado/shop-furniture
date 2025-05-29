@@ -15,7 +15,7 @@ import {seedPhotos} from "@/db/seeders/photo.seeder";
 async function runSeeders() {
     try {
         // Синхронизация базы данных
-        await sequelize.sync({ alter: true }) // force: true пересоздаст таблицы
+        // await sequelize.sync({ alter: true }) // force: true пересоздаст таблицы
 
         // Отключаем проверку внешних ключей перед запуском сидеров
         await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');

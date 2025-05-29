@@ -1,7 +1,7 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
-export interface StylelDTO extends InferAttributes<StyleModel> {}
+export interface StyleDTO extends InferAttributes<StyleModel> {}
 
 export class StyleModel extends Model<InferAttributes<StyleModel>, InferCreationAttributes<StyleModel>> {
     declare id: CreationOptional<number>

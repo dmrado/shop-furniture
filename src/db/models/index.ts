@@ -13,6 +13,7 @@ import {CategoryModel} from "@/db/models/category.model";
 // import {TagModel} from "@/db/models/tag.model";
 import {ProductCategoryModel} from "@/db/models/product_category.model";
 import {ProductVariantModel} from "@/db/models/product_variant.model";
+import {StyleModel} from "@/db/models/style.model";
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -25,6 +26,18 @@ OrderModel.hasMany(OrderedProductsModel, {
 })
 OrderedProductsModel.belongsTo(OrderModel, {
     // foreignKey: 'order'
+})
+
+
+
+ProductModel.belongsTo(StyleModel, {
+    foreignKey: 'styleId',
+    as: 'style' // Имя ассоциации, которое используем в include
+})
+
+StyleModel.hasMany(ProductModel, {
+    foreignKey: 'styleId',
+    as: 'products' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
 
