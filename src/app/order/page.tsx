@@ -2,10 +2,10 @@ import React from 'react'
 import UserOrderForm from '@/components/user/UserOrderForm'
 import { ProfileModel } from '@/db/models'
 import { AddressModel } from '@/db/models'
-import { InferAttributes } from 'sequelize'
+// import { InferAttributes } from 'sequelize'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { AuthUserModel } from '@/db/models/users.model'
+// import { AuthUserModel } from '@/db/models/users.model'
 import { redirect } from 'next/navigation'
 
 // // const deliveryDate = toLocaleDateString('ru-RU', Date.now())

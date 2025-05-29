@@ -1,46 +1,57 @@
 'use client'
-import {useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import {useCartContext} from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
-import {Product} from '@/actions/productActions'
-import UserAddressForm from '@/components/user/UserAddressForm'
-import {InstantOrderForm} from '@/components/site/InstantOrderForm'
-import Modal from "@/components/site/Modal";
+import { Product } from '@/actions/productActions'
+// import UserAddressForm from '@/components/user/UserAddressForm'
+import { InstantOrderForm } from '@/components/site/InstantOrderForm'
+import Modal from '@/components/site/Modal'
+import { ProductVariantDTO } from '@/db/models/product_variant.model'
 
-const ProductFullDescription = ({product}: { product: Product }) => {
-    const {addProductToCart} = useCartContext()
-    const [selectedImage, setSelectedImage] = useState(0)
-    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
-    const [isCartUpdating, setIsCartUpdating] = useState(false)
+const ProductFullDescription = ({ product }: { product: Product }) => {
+    const { addProductToCart } = useCartContext()
+    const [ selectedImage, setSelectedImage ] = useState(0)
+    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO|null>(null)
+    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
+    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
 
     // for InstantOrderModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
-
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    useEffect(() => {
+        const defaultVariant = product.variants?.[0]
+        if (!defaultVariant) return
+        setSelectedVariant(defaultVariant)
+    }, [ product.id ])
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
 
-    const productArray = {
-        name: 'Название товара',
-        category: 'Категория',
-        price: 1999,
-        oldPrice: 2499, // опционально
-        description: 'Подробное описание товара...',
-        images: [
-            'url1.jpg',
-            'url2.jpg',
-            'url3.jpg',
-            'url4.jpg'
-        ],
-        specifications: {
-            'Материал': 'Дерево',
-            'Размеры': '200x150x75 см',
-            'Вес': '25 кг',
-            // другие характеристики
-        }
-    }
+    // const productArray = {
+    //     name: 'Название товара',
+    //     category: 'Категория',
+    //     price: 1999,
+    //     oldPrice: 2499, // опционально
+    //     description: 'Подробное описание товара...',
+    //     images: [
+    //         'url1.jpg',
+    //         'url2.jpg',
+    //         'url3.jpg',
+    //         'url4.jpg'
+    //     ],
+    //     specifications: {
+    //         'Материал': 'Дерево',
+    //         'Размеры': '200x150x75 см',
+    //         'Вес': '25 кг',
+    //         // другие характеристики
+    //     }
+    // }
+
+    // todo: temp option
+    const minPrice = product.variants
+        ? Math.min(...product.variants.map(variant => variant.price))
+        : 999
 
     return <>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -50,8 +61,8 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                     <div className="space-y-4">
                         <div className="aspect-w-1 aspect-h-1 rounded-xl overflow-hidden">
                             <Image
-
-                                src={product.image}
+                                src="/modulnyj-divan.jpg"
+                                // src={product.image}
                                 alt={product.name}
                                 width={500}
                                 height={300}
@@ -81,16 +92,40 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                     <div className="space-y-6">
                         <div>
                             <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
-                            <p className="mt-2 text-sm text-[#383838]">{productArray.category}</p>
+                            <p>Categories: </p>
+                            <ul>
+                                {
+                                    product.categories?.length && product.categories.map((category) =>
+                                        (<li key={category.id} className="mt-2 text-sm text-[#383838]">{category.name}</li>)
+                                    )
+                                }
+                            </ul>
+
                         </div>
+                        <select
+                            className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            value={selectedVariant?.id}
+                            onChange={(e) => {
+                                console.log('event.target.value: ', e.target.value, typeof e.target.value)
+                                const variant = product.variants.find(
+                                    variant => variant.id === Number(e.target.value)) ?? null
+                                console.log('variant: ', variant)
+                                setSelectedVariant(variant)
+                            }}
+                        >
+                            {product.variants && product.variants.map(variant => (
+                                <option key={variant.id} value={variant.id}>
+                                    <p>Размеры: {variant.width}x{variant.length}. Цена: {variant.price}</p>
+                                </option>
+                            ))}
+                        </select>
 
                         <div className="flex items-center">
-                            <div className="text-3xl font-bold text-[#383838]">{product.price}₽</div>
-                            {product.old_price && (
-                                <div className="ml-4 text-xl text-gray-400 line-through">
-                                    {product.old_price}₽
-                                </div>
-                            )}
+                            Min: <div className="text-3xl font-bold text-[#383838]">{minPrice}₽</div>
+                            Cur: <div className="text-3xl font-bold text-[#383838]">{selectedVariant?.price}₽</div>
+                            <div className="ml-4 text-xl text-gray-400 line-through">
+                                {minPrice / 0.9}₽
+                            </div>
                         </div>
 
                         <div className="prose prose-sm text-[#383838]">

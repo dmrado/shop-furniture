@@ -1,11 +1,12 @@
-import {sequelize} from '../connection'
-import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
-import {StyleModel} from '@/db/models/style.model'
-import {CollectionModel} from '@/db/models/collection.model'
-import {BrandModel} from '@/db/models/brand.model'
-import {CountryModel} from '@/db/models/country.model'
-import {CategoryModel} from "@/db/models/category.model";
-import {ProductVariantModel} from "@/db/models/product_variant.model";
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import { StyleModel } from '@/db/models/style.model'
+import { CollectionModel } from '@/db/models/collection.model'
+import { BrandModel } from '@/db/models/brand.model'
+import { CountryModel } from '@/db/models/country.model'
+// import { CategoryModel } from '@/db/models/category.model'
+import { ProductVariantDTO, ProductVariantModel } from '@/db/models/product_variant.model'
+import { CategoryModel } from '@/db/models/category.model'
 
 export interface ProductDTO extends InferAttributes<ProductModel> {
 }
@@ -13,7 +14,7 @@ export interface ProductDTO extends InferAttributes<ProductModel> {
 export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
     declare id: CreationOptional<number>
 
-    declare categoryId: number
+    // declare categoryId: number
     declare styleId: number
     declare brandId: number
     declare collectionId: number
@@ -28,10 +29,11 @@ export class ProductModel extends Model<InferAttributes<ProductModel>, InferCrea
     declare isNew: boolean
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
 
-
     // Определение ассоциации с ProductVariantModel
-    declare ProductVariants?: ProductVariantModel[]; // Опционально для TypeScript
-    static associate: (models: any) => void;
+    declare variants?: ProductVariantDTO[] // Опционально для TypeScript
+    declare style?: StyleModel
+    declare categories?: CategoryModel[]
+    static associate: (models: any) => void
 }
 
 ProductModel.init(
@@ -56,7 +58,8 @@ ProductModel.init(
             references: {
                 model: StyleModel,
                 key: 'id',
-                defaultValue: true
+                // onDelete: 'RESTRICT',
+                // defaultValue: 1
             }
         },
         brandId: {

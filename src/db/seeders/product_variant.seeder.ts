@@ -1,9 +1,9 @@
-import {ProductVariantModel} from '@/db/models/product_variant.model'
+import { ProductVariantModel } from '@/db/models/product_variant.model'
 
 const productVariantSeedData = [
     {
         productId: 101, // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -17,7 +17,7 @@ const productVariantSeedData = [
     },
     {
         productId: 101, // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -31,7 +31,7 @@ const productVariantSeedData = [
     },
     {
         productId: 102, // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -45,7 +45,7 @@ const productVariantSeedData = [
     },
     {
         productId: 102, // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -59,7 +59,7 @@ const productVariantSeedData = [
     },
     {
         productId: 103, // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -73,7 +73,7 @@ const productVariantSeedData = [
     },
     {
         productId: 104, // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -87,7 +87,7 @@ const productVariantSeedData = [
     },
     {
         productId: 105, // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -101,7 +101,7 @@ const productVariantSeedData = [
     },
     {
         productId: 106, // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -115,7 +115,7 @@ const productVariantSeedData = [
     },
     {
         productId: 107, // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -129,7 +129,7 @@ const productVariantSeedData = [
     },
     {
         productId: 108, // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -142,8 +142,8 @@ const productVariantSeedData = [
         price: 1099.99,
     },
     {
-        productId: 11,  // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        productId: 11, // Замените на реальный ID продукта
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -156,8 +156,8 @@ const productVariantSeedData = [
         price: 849.99,
     },
     {
-        productId: 12,  // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        productId: 12, // Замените на реальный ID продукта
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -170,8 +170,8 @@ const productVariantSeedData = [
         price: 1149.99,
     },
     {
-        productId: 13,  // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        productId: 13, // Замените на реальный ID продукта
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -184,8 +184,8 @@ const productVariantSeedData = [
         price: 799.99,
     },
     {
-        productId: 14,  // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        productId: 14, // Замените на реальный ID продукта
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -198,8 +198,8 @@ const productVariantSeedData = [
         price: 1099.99,
     },
     {
-        productId: 15,  // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        productId: 15, // Замените на реальный ID продукта
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -212,8 +212,8 @@ const productVariantSeedData = [
         price: 849.99,
     },
     {
-        productId: 16,  // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        productId: 16, // Замените на реальный ID продукта
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -226,8 +226,8 @@ const productVariantSeedData = [
         price: 1149.99,
     },
     {
-        productId: 17,  // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        productId: 17, // Замените на реальный ID продукта
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -240,8 +240,8 @@ const productVariantSeedData = [
         price: 799.99,
     },
     {
-        productId: 18,  // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        productId: 18, // Замените на реальный ID продукта
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -254,8 +254,8 @@ const productVariantSeedData = [
         price: 1099.99,
     },
     {
-        productId: 1,   // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        productId: 1, // Замените на реальный ID продукта
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -268,8 +268,8 @@ const productVariantSeedData = [
         price: 849.99,
     },
     {
-        productId: 2,   // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        productId: 2, // Замените на реальный ID продукта
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -282,8 +282,8 @@ const productVariantSeedData = [
         price: 1149.99,
     },
     {
-        productId: 3,   // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        productId: 3, // Замените на реальный ID продукта
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -296,8 +296,8 @@ const productVariantSeedData = [
         price: 799.99,
     },
     {
-        productId: 4,   // Замените на реальный ID продукта
-        colorId: 3,     // Замените на реальный ID цвета
+        productId: 4, // Замените на реальный ID продукта
+        colorId: 3, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-1',
         length: 120,
@@ -310,8 +310,8 @@ const productVariantSeedData = [
         price: 1099.99,
     },
     {
-        productId: 5,   // Замените на реальный ID продукта
-        colorId: 2,     // Замените на реальный ID цвета
+        productId: 5, // Замените на реальный ID продукта
+        colorId: 2, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-2',
         length: 105,
@@ -324,8 +324,8 @@ const productVariantSeedData = [
         price: 849.99,
     },
     {
-        productId: 6,   // Замените на реальный ID продукта
-        colorId: 4,     // Замените на реальный ID цвета
+        productId: 6, // Замените на реальный ID продукта
+        colorId: 4, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART002-2',
         length: 125,
@@ -338,8 +338,8 @@ const productVariantSeedData = [
         price: 1149.99,
     },
     {
-        productId: 7,   // Замените на реальный ID продукта
-        colorId: 1,     // Замените на реальный ID цвета
+        productId: 7, // Замените на реальный ID продукта
+        colorId: 1, // Замените на реальный ID цвета
         isActive: true,
         articul: 'ART001-1',
         length: 100,
@@ -404,6 +404,7 @@ const productVariantSeedData = [
         weight: 2000,
         box_length: 110,
         box_height: 40,
+        box_weight: 2000,
         price: 1149.99,
     }
 ]
@@ -413,6 +414,6 @@ export async function seedProductVariants() {
         await ProductVariantModel.bulkCreate(productVariantSeedData)
         console.log('Products seeded successfully')
     } catch (error) {
-        console.error('Error seeding products:', error)
+        console.error('Error seeding products variants:', error)
     }
 }

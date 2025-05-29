@@ -9,7 +9,7 @@ import {
     InferCreationAttributes,
     Model
 } from 'sequelize'
-import {ProfileModel} from "@/db/models/profile.model";
+import { ProfileModel } from '@/db/models/profile.model'
 
 export interface AuthUser extends InferAttributes<AuthUserModel> {}
 

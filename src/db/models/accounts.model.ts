@@ -1,6 +1,7 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { AuthUserModel } from '@/db/models/users.model'
+// import { AuthUserModel } from '@/db/models/users.model'
+// todo: This model is not needed. Please double check and remove.
 export class AccountModel extends Model<InferAttributes<AccountModel>, InferCreationAttributes<AccountModel>> {
 
     declare id: CreationOptional<string>

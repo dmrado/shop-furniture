@@ -1,8 +1,8 @@
 export{}
 
-import { Adapter, AdapterUser, AdapterAccount, AdapterSession } from 'next-auth/adapters'
-import { AddressModel, ProfileModel } from '@/db/models'
-import { AuthUserModel } from '@/db/models/users.model'
+// import { Adapter, AdapterUser, AdapterAccount, AdapterSession } from 'next-auth/adapters'
+// import { AddressModel, ProfileModel } from '@/db/models'
+// import { AuthUserModel } from '@/db/models/users.model'
 
 // export function AuthAdapter(): Adapter {
 //     return {

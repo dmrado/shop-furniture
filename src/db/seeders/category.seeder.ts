@@ -1,9 +1,10 @@
-import {CategoryModel} from '../models/category.model';
+import { CategoryModel } from '../models/category.model'
+import { ProductCategoryDTO, ProductCategoryModel } from '@/db/models/product_category.model'
 
 export async function seedCategories() {
     try {
         // Очистка таблицы перед заполнением (опционально)
-        await CategoryModel.destroy({where: {}, truncate: true});
+        await CategoryModel.destroy({ where: {}, truncate: true })
 
         const categories = [
             // Категории первого уровня
@@ -87,7 +88,6 @@ export async function seedCategories() {
                 parentId: 1
             },
 
-
             // Категории третьего уровня для Компьютеров
             {
                 id: 7,
@@ -152,8 +152,6 @@ export async function seedCategories() {
                 image: '/kofeinii-stolik-elite.webp',
                 parentId: 4
             },
-
-
 
             // Категории четвертого уровня для Ноутбуков
             {
@@ -321,14 +319,44 @@ export async function seedCategories() {
                 image: '/modulnyj-divan.jpg',
                 parentId: 3
             }
-        ];
+        ]
 
         // Создаем записи в базе данных
-        await CategoryModel.bulkCreate(categories);
+        await CategoryModel.bulkCreate(categories)
 
-        console.log('Категории успешно добавлены в базу данных');
+        console.log('Категории успешно добавлены в базу данных')
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы категорий:', error);
+        console.error('Ошибка при заполнении таблицы категорий:', error)
+    }
+}
+
+export async function seedProductCategories() {
+    try {
+        // Очистка таблицы перед заполнением (опционально)
+        await ProductCategoryModel.destroy({ where: {}, truncate: true })
+
+        const productCategoryLinks: ProductCategoryDTO[] = [
+            {
+                productId: 15,
+                categoryId: 1,
+            },
+            {
+                productId: 15,
+                categoryId: 6,
+            },
+            {
+                productId: 15,
+                categoryId: 20,
+            },
+
+        ]
+
+        // Создаем записи в базе данных
+        await ProductCategoryModel.bulkCreate(productCategoryLinks)
+
+        console.log('Категории успешно добавлены в базу данных')
+    } catch (error) {
+        console.error('Ошибка при заполнении таблицы категорий:', error)
     }
 }
 

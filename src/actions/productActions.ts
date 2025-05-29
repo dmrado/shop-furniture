@@ -1,7 +1,8 @@
 'use server'
-import {ProductModel} from '@/db/models'
-import {InferAttributes, Op} from 'sequelize'
-import {ProductVariantModel} from "@/db/models/product_variant.model";
+import { ProductModel } from '@/db/models'
+import { InferAttributes, Op } from 'sequelize'
+import { ProductVariantModel } from '@/db/models/product_variant.model'
+import { CategoryModel } from '@/db/models/category.model'
 
 export type Product = InferAttributes<ProductModel>
 export type ProductListItem =
@@ -16,29 +17,30 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
             include: [
                 {
                     model: ProductVariantModel,
-                    attributes: [ 'price' ],
-                    as: 'ProductVariants'
-                }
+                    // attributes: [ 'price' ],
+                    as: 'variants',
+                },
+                { model: CategoryModel, as: 'categories' }
             ]
         }
     )
     if (!product) {
         return null
     }
-    console.log('product_________________', product);
+    console.log('product_________________', product)
     return product.toJSON()
 }
 
 export const getProducts = async (categoryIds: number[], offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
-    const {count, rows} = await ProductModel.findAndCountAll({
+    const { count, rows } = await ProductModel.findAndCountAll({
         limit,
         offset,
         where: {
-            categoryId: {[Op.in]: categoryIds},
+            categoryId: { [Op.in]: categoryIds },
             isActive: true
         },
-        attributes: ['id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew'],
+        attributes: [ 'id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew' ],
     })
 
     return {

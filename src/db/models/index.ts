@@ -1,24 +1,23 @@
-import {AddressModel} from '@/db/models/address.model'
-import {ColorModel} from '@/db/models/color.model'
-import {ProductModel} from '@/db/models/product.model'
-import {OrderedProductsModel} from '@/db/models/ordered_products.model'
-import {OrderModel} from '@/db/models/order.model'
-import {StockModel} from '@/db/models/stock.model'
-import {CartModel} from '@/db/models/cart.model'
-import {SessionModel} from '@/db/models/sessions.model'
-import {AccountModel} from '@/db/models/accounts.model'
-import {AuthUserModel} from '@/db/models/users.model'
-import {ProfileModel} from "@/db/models/profile.model";
-import {CategoryModel} from "@/db/models/category.model";
+import { AddressModel } from '@/db/models/address.model'
+import { ColorModel } from '@/db/models/color.model'
+import { StyleModel } from '@/db/models/style.model'
+import { OrderedProductsModel } from '@/db/models/ordered_products.model'
+import { OrderModel } from '@/db/models/order.model'
+import { StockModel } from '@/db/models/stock.model'
+import { CartModel } from '@/db/models/cart.model'
+import { SessionModel } from '@/db/models/sessions.model'
+import { AccountModel } from '@/db/models/accounts.model'
+import { AuthUserModel } from '@/db/models/users.model'
+import { ProfileModel } from '@/db/models/profile.model'
+import { CategoryModel } from '@/db/models/category.model'
 // import {TagModel} from "@/db/models/tag.model";
-import {ProductCategoryModel} from "@/db/models/product_category.model";
-import {ProductVariantModel} from "@/db/models/product_variant.model";
-import {StyleModel} from "@/db/models/style.model";
+import { ProductCategoryModel } from '@/db/models/product_category.model'
+import { ProductVariantModel } from '@/db/models/product_variant.model'
+import { ProductModel } from '@/db/models/product.model'
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
 // ProductModel.belongsTo(ColorModel, { as: 'secondaryColor', foreignKey: 'secondary_color' })
-
 
 OrderModel.hasMany(OrderedProductsModel, {
     foreignKey: 'orderId',
@@ -27,8 +26,6 @@ OrderModel.hasMany(OrderedProductsModel, {
 OrderedProductsModel.belongsTo(OrderModel, {
     // foreignKey: 'order'
 })
-
-
 
 ProductModel.belongsTo(StyleModel, {
     foreignKey: 'styleId',
@@ -40,17 +37,15 @@ StyleModel.hasMany(ProductModel, {
     as: 'products' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
-
 ProductModel.hasMany(ProductVariantModel, {
     foreignKey: 'productId',
-    as: 'ProductVariants' // Имя ассоциации, которое используем в include
+    as: 'variants' // Имя ассоциации, которое используем в include
 })
 
 ProductVariantModel.belongsTo(ProductModel, {
     foreignKey: 'productId',
-    as: 'Product' // Имя ассоциации, под которым вы сможете получать продукт
+    as: 'product' // Имя ассоциации, под которым вы сможете получать продукт
 })
-
 
 // StockModel.belongsTo(ProductModel, {
 //     // sourceKey: 'id',
@@ -61,7 +56,6 @@ ProductVariantModel.belongsTo(ProductModel, {
 //     foreignKey: 'productId',
 //     as: 'stock', // Алиас для связи
 // })
-
 
 CartModel.belongsTo(ProductModel, {
     foreignKey: 'productId',
@@ -94,30 +88,28 @@ ProfileModel.belongsTo(AuthUserModel, {
     targetKey: 'id'
 })
 
-
 //так как при входе через разных провайдеров каждый раз создается запись и в AuthUser и в AccountModel, то выбрана связь один-к-одному
 AuthUserModel.hasOne(AccountModel, {
     foreignKey: 'userId', // Это поле в таблице accounts
     as: 'accounts',
     sourceKey: 'id'
-});
+})
 AccountModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId', // Это должно соответствовать полю в таблице accounts
     as: 'authUser', // Алиас для доступа к связанному пользователю в AuthUser
     targetKey: 'id'
-});
+})
 
 // Для создания самоссылающейся связи
 CategoryModel.belongsTo(CategoryModel, {
     foreignKey: 'parentId',
     as: 'parent'
-});
+})
 
 CategoryModel.hasMany(CategoryModel, {
     foreignKey: 'parentId',
     as: 'children'
-});
-
+})
 
 // Связь "один-ко-многим" между категорией и продуктами
 // CategoryModel.hasMany(ProductModel, {
@@ -130,7 +122,6 @@ CategoryModel.hasMany(CategoryModel, {
 //     foreignKey: 'categoryId',
 //     as: 'category'
 // });
-
 
 // Связь тега с родительским тегом (для организации иерархии)
 // TagModel.belongsTo(TagModel, {
@@ -158,18 +149,18 @@ CategoryModel.hasMany(CategoryModel, {
 //   as: "tags",
 // });
 
-
 CategoryModel.belongsToMany(ProductModel, {
     through: ProductCategoryModel,
     foreignKey: 'categoryId',
     otherKey: 'productId',
+    as: 'products'
 })
-
 
 ProductModel.belongsToMany(CategoryModel, {
     through: ProductCategoryModel,
     foreignKey: 'productId',
     otherKey: 'categoryId',
+    as: 'categories'
 })
 
 // Создание промежуточной таблицы для связи многие-ко-многим
@@ -188,7 +179,6 @@ ProductModel.belongsToMany(CategoryModel, {
 //     otherKey: 'categoryId',
 //     as: 'categories'
 // });
-
 
 // Связи для Sessions
 // SessionModel.belongsTo(UserModel, {
@@ -210,7 +200,6 @@ ProductModel.belongsToMany(CategoryModel, {
 //     as: 'accounts'
 // })
 
-
 //файл подключен в root layout
 export {
     CartModel,
@@ -220,6 +209,7 @@ export {
     OrderedProductsModel,
     OrderModel,
     StockModel,
+    StyleModel,
     ProfileModel,
     AccountModel,
     SessionModel,

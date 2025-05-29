@@ -1,5 +1,6 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+// import { ProductModel } from '@/db/models/product.model'
 
 export interface StyleDTO extends InferAttributes<StyleModel> {}
 
