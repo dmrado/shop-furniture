@@ -5,7 +5,7 @@ import { useCartContext } from '@/components/cart/CartContext'
 const CartTotalAmount = () => {
     const { finalAmount } = useCartContext()
     return <>
-        🛍️ {Number(finalAmount.toFixed(2))}
+       {Number(finalAmount.toFixed(2))}
         </>
 }
 

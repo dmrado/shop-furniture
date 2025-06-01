@@ -1,29 +1,29 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import { useCartContext } from '@/components/cart/CartContext'
+import {useCartContext} from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Product } from '@/actions/productActions'
+import {Product} from '@/actions/productActions'
 // import UserAddressForm from '@/components/user/UserAddressForm'
-import { InstantOrderForm } from '@/components/site/InstantOrderForm'
+import {InstantOrderForm} from '@/components/site/InstantOrderForm'
 import Modal from '@/components/site/Modal'
-import { ProductVariantDTO } from '@/db/models/product_variant.model'
+import {ProductVariantDTO} from '@/db/models/product_variant.model'
 
-const ProductFullDescription = ({ product }: { product: Product }) => {
-    const { addProductToCart } = useCartContext()
-    const [ selectedImage, setSelectedImage ] = useState(0)
-    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO|null>(null)
-    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
-    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
+const ProductFullDescription = ({product}: { product: Product }) => {
+    const {addProductToCart} = useCartContext()
+    const [selectedImage, setSelectedImage] = useState(0)
+    const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(null)
+    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
+    const [isCartUpdating, setIsCartUpdating] = useState(false)
 
     // for InstantOrderModal
-    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
     useEffect(() => {
         const defaultVariant = product.variants?.[0]
         if (!defaultVariant) return
         setSelectedVariant(defaultVariant)
-    }, [ product.id ])
+    }, [product.id])
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
@@ -90,46 +90,216 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
 
                     {/* Информация о товаре */}
                     <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
-                            <p>Categories: </p>
-                            <ul>
-                                {
-                                    product.categories?.length && product.categories.map((category) =>
-                                        (<li key={category.id} className="mt-2 text-sm text-[#383838]">{category.name}</li>)
-                                    )
-                                }
-                            </ul>
-
+                        <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
+                        <div className="prose prose-sm text-[#383838]">
+                            <p>{product.descriptionLong}</p>
                         </div>
-                        <select
-                            className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            value={selectedVariant?.id}
-                            onChange={(e) => {
-                                console.log('event.target.value: ', e.target.value, typeof e.target.value)
-                                const variant = product.variants.find(
-                                    variant => variant.id === Number(e.target.value)) ?? null
-                                console.log('variant: ', variant)
-                                setSelectedVariant(variant)
-                            }}
-                        >
-                            {product.variants && product.variants.map(variant => (
-                                <option key={variant.id} value={variant.id}>
-                                    <p>Размеры: {variant.width}x{variant.length}. Цена: {variant.price}</p>
-                                </option>
-                            ))}
-                        </select>
+                        <div>
+                            <h5>Категория: </h5>
+                            <select
+                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                value={selectedVariant?.id}
+                                onChange={(e) => {
+                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
+                                    const variant = product.variants.find(
+                                        variant => variant.id === Number(e.target.value)) ?? null
+                                    console.log('variant категория: ', variant)
+                                    setSelectedVariant(variant)
+                                }}
+                            >
+                                {product.categories?.length && product.categories.map(category => (
+                                    <option key={category.id} value={category.id}>
+                                        <p className="mt-2 text-sm text-[#383838]">{category.name}</p>
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <div className="flex items-center">
-                            Min: <div className="text-3xl font-bold text-[#383838]">{minPrice}₽</div>
-                            Cur: <div className="text-3xl font-bold text-[#383838]">{selectedVariant?.price}₽</div>
-                            <div className="ml-4 text-xl text-gray-400 line-through">
-                                {minPrice / 0.9}₽
+                        <div>
+                            <h5>Цвет: </h5>
+                            <select
+                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                value={selectedVariant?.id}
+                                onChange={(e) => {
+                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
+                                    const variant = product.variants.find(
+                                        variant => variant.id === Number(e.target.value)) ?? null
+                                    console.log('variant: ', variant)
+                                    setSelectedVariant(variant)
+                                }}
+                            >
+                                {product.variants && product.variants.map(variant => (
+                                    <option key={variant.id} value={variant.id}>
+                                        <p>Цвет: {variant.color}</p>
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <h5>Это правильный селект цены по размерам вместо бегункового: </h5>
+                            <select
+                                className="min-w-64 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                value={selectedVariant?.id}
+                                onChange={(e) => {
+                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
+                                    const variant = product.variants.find(
+                                        variant => variant.id === Number(e.target.value)) ?? null
+                                    console.log('variant: ', variant)
+                                    setSelectedVariant(variant)
+                                }}
+                            >
+                                {product.variants && product.variants.map(variant => (
+                                    <option key={variant.id} value={variant.id}>
+                                        <p>Размеры: {variant.width}x{variant.length}. Цена: {variant.price}</p>
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/*<div className="flex items-center">*/}
+                        {/*    Min: <div className="text-xl font-bold text-[#383838]">{minPrice}₽</div>*/}
+                        {/*    Cur: <div className="text-xl font-bold text-[#383838]">{selectedVariant?.price}₽</div>*/}
+                        {/*    <div className="ml-4 text-xl text-gray-400 line-through">*/}
+                        {/*        {minPrice / 0.9}₽*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
+
+                        {/*todo from variants size нужна только длина и ширина остальное в описании выведем, потолки у всех выше 2,3 метров*/}
+                        {/*<div>*/}
+                        {/*    <h5>Размеры : </h5>*/}
+                        {/*    <div className="py-4 space-y-4">*/}
+                        {/*        <div className="flex gap-2">*/}
+                        {/*            /!*todo from variants.length*!/*/}
+                        {/*            <input*/}
+                        {/*                type="number"*/}
+                        {/*                className="w-1/2 border hover:border-[#383838] focus:border-[#383838] text-[#383838] p-2 text-sm"*/}
+                        {/*                // placeholder={0}*/}
+                        {/*                placeholder="длина"*/}
+                        {/*                min={0}*/}
+                        {/*                // onInput={() =>updatePriceRange}*/}
+                        {/*                v-model="priceMin"*/}
+                        {/*            />*/}
+                        {/*            /!*todo from variants.width*!/*/}
+                        {/*            <input*/}
+                        {/*                type="number"*/}
+                        {/*                className="w-1/2 border p-2 text-sm"*/}
+                        {/*                placeholder="глубина/ширина"*/}
+                        {/*                min={0}*/}
+                        {/*                // onInput={() => updatePriceRange" v-model="priceMax"}*/}
+                        {/*            />*/}
+                        {/*        </div>*/}
+                        {/*        <div className="relative pt-1">*/}
+                        {/*            <div className="flex h-2 bg-gray-200 rounded">*/}
+                        {/*                <div className="h-2 bg-amber-500 rounded"/>*/}
+                        {/*            </div>*/}
+                        {/*            <div className="absolute left-0 top-0 h-2 flex items-center">*/}
+                        {/*                <div*/}
+                        {/*                    className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"*/}
+                        {/*                    // onMouseDown={() => startDragging('min')}*/}
+                        {/*                />*/}
+                        {/*            </div>*/}
+                        {/*            <div className="absolute right-0 top-0 h-2 flex items-center">*/}
+                        {/*                <div*/}
+                        {/*                    className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"*/}
+                        {/*                    // onMouseDown={() => startDragging('max')"}*/}
+                        {/*                />*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
+
+                        {/*todo from variants.price*/}
+                        <div>
+                            <h5>Цена: </h5>
+                            <div className="py-4 space-y-4">
+                                <div className="flex gap-2">
+                                    <input
+                                        type="number"
+                                        className="w-1/2 border hover:border-[#383838] focus:border-[#383838] text-[#383838] p-2 text-sm"
+                                        placeholder={0}
+                                        min={0}
+                                        // onInput={() =>updatePriceRange}
+                                        v-model="priceMin"
+                                    />
+                                    <input
+                                        type="number"
+                                        className="w-1/2 border p-2 text-sm"
+                                        placeholder="8 500 765"
+                                        min={0}
+                                        // onInput={() => updatePriceRange" v-model="priceMax"}
+                                    />
+                                </div>
+                                <div className="relative pt-1">
+                                    <div className="flex h-2 bg-gray-200 rounded">
+                                        <div className="h-2 bg-amber-500 rounded"/>
+                                    </div>
+                                    <div className="absolute left-0 top-0 h-2 flex items-center">
+                                        <div
+                                            className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"
+                                            // onMouseDown={() => startDragging('min')}
+                                        />
+                                    </div>
+                                    <div className="absolute right-0 top-0 h-2 flex items-center">
+                                        <div
+                                            className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"
+                                            // onMouseDown={() => startDragging('max')"}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="prose prose-sm text-[#383838]">
-                            <p>{product.descriptionLong}</p>
+                        <div>
+                            {/* Дополнительные фильтры */}
+                            <div className="space-y-3 mb-6">
+                                {/*todo from products.isNew*/}
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="inStock"
+                                        className="form-checkbox h-4 w-4 text-amber-500"
+                                        // onChange={e => applyFilter('inStock', e.target.checked)}
+                                    />
+                                    <label htmlFor="inStock" className="ml-2 text-sm text-[#383838]">
+                                        В наличии
+                                    </label>
+                                </div>
+                                {/*todo from именно variants.isActive НЕ products.isActive*/}
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="new2024"
+                                        className="form-checkbox h-4 w-4 text-amber-500"
+                                        // onChange={e => applyFilter('new2024', e.target.checked)}
+                                    />
+                                    <label htmlFor="new2024" className="ml-2 text-sm text-[#383838]">
+                                        Новинки 2025
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* Кнопка сброса фильтров */}
+                            <button
+                                className="flex items-center text-sm text-[#383838] hover:text-black"
+                                // onClick={() => clearAllFilters}
+                            >
+                                Очистить все
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 ml-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
                         </div>
 
                         {/* Выбор количества и кнопки */}

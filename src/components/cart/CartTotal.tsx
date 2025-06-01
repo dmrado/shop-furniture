@@ -76,7 +76,7 @@ const CartTotal = () => {
         <>
             <div className="max-w-4xl mx-auto p-6">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold">Корзина</h2>
+                    <h2 className="text-2xl font-bold"> 🛍️ Корзина </h2>
 
                     <div className="flex flex-col gap-4">
                         {/*todo селать прверку для подсчета только выбранных*/}
