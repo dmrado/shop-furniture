@@ -4,10 +4,9 @@ import { InferAttributes, Op } from 'sequelize'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
+import { CartModelDTO } from '@/db/models/cart.model'
 
-export type CartRow =
-    Omit<InferAttributes<CartModel>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'>
-    & Required<Pick<CartModel, 'product'>>
+export type CartRow = Omit<InferAttributes<CartModelDTO>, 'user' | 'userId' | 'discount' | 'createdAt' | 'updatedAt' | 'productId'> & Required<Pick<CartModel, 'product'>>
 
 type DeleteResult = {
     success: boolean;
@@ -19,28 +18,20 @@ const CART_INCLUDE = [{
     model: ProductModel,
     as: 'product',
     attributes: [
-        // todo: remove reduntant atributes
         'id',
-        'isActive',
+        'styleId',
+        'brandId',
+        'collectionId',
+        'countryId',
+        'name',
         'articul',
         'sku',
-        'name',
-        'description_1',
-        'description_2',
-        'length',
-        'width',
-        'height',
-        'weight',
-        'box_length',
-        'box_height',
-        'box_weight',
-        'old_price',
-        'new_price',
-        'primary_color',
-        'secondary_color',
+        'descriptionShort',
+        'descriptionLong',
+        'isNew',
+        'isActive',
         'createdAt',
         'updatedAt',
-        'image',
     ]
 }]
 
@@ -48,31 +39,22 @@ const mapCartRow = (cart: CartModel): CartRow => {
     if (!cart.product) {
         throw new Error(`Cart row with id ${cart.id} contains no product`)
     }
-
     return {
         id: cart.id,
         quantity: cart.quantity,
         product: {
             id: cart.product.id,
-            isNew: cart.product.isNew,
-            isActive: cart.product.isActive,
+            styleId: cart.product.styleId,
+            brandId: cart.product.brandId,
+            collectionId: cart.product.collectionId,
+            countryId: cart.product.countryId,
+            name: cart.product.name,
             articul: cart.product.articul,
             sku: cart.product.sku,
-            name: cart.product.name,
-            description_1: cart.product.description_1,
-            description_2: cart.product.description_2,
-            length: cart.product.length,
-            width: cart.product.width,
-            height: cart.product.height,
-            weight: cart.product.weight,
-            box_length: cart.product.box_length,
-            box_height: cart.product.box_height,
-            box_weight: cart.product.box_weight,
-            image: cart.product.image,
-            old_price: cart.product.old_price,
-            new_price: cart.product.new_price,
-            primary_color: cart.product.primary_color,
-            secondary_color: cart.product.secondary_color,
+            descriptionShort: cart.product.descriptionShort,
+            descriptionLong: cart.product.descriptionLong,
+            isNew: cart.product.isNew,
+            isActive: cart.product.isActive,
         }
     }
 }

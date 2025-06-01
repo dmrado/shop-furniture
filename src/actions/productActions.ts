@@ -1,8 +1,8 @@
 'use server'
-import { ProductModel } from '@/db/models'
-import { InferAttributes, Op } from 'sequelize'
-import { ProductVariantModel } from '@/db/models/product_variant.model'
-import { CategoryModel } from '@/db/models/category.model'
+import {ProductModel} from '@/db/models'
+import {InferAttributes, Op} from 'sequelize'
+import {ProductVariantModel} from '@/db/models/product_variant.model'
+import {CategoryModel} from '@/db/models/category.model'
 
 export type Product = InferAttributes<ProductModel>
 export type ProductListItem =
@@ -20,7 +20,7 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
                     // attributes: [ 'price' ],
                     as: 'variants',
                 },
-                { model: CategoryModel, as: 'categories' }
+                {model: CategoryModel, as: 'categories'}
             ]
         }
     )
@@ -33,14 +33,23 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
 
 export const getProducts = async (categoryIds: number[], offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
-    const { count, rows } = await ProductModel.findAndCountAll({
+    const {count, rows} = await ProductModel.findAndCountAll({
         limit,
         offset,
         where: {
-            categoryId: { [Op.in]: categoryIds },
             isActive: true
         },
-        attributes: [ 'id', 'name', 'description_1', 'old_price', 'new_price', 'image', 'isNew' ],
+        attributes: ['id', 'name', 'descriptionShort', 'isNew'],
+        include: [{
+            model: CategoryModel,
+            as: 'categories',
+            attributes: [ 'name' ],
+            through: { attributes: [] }, // Исключаем атрибуты промежуточной таблицы
+            where: {
+                id: { [Op.in]: categoryIds }, // Фильтрация связанных категорий
+            },
+            required: true, // Обязательно наличие связи с указанными категориями
+        }]
     })
 
     return {
@@ -48,11 +57,8 @@ export const getProducts = async (categoryIds: number[], offset: number, limit: 
         products: rows.map(row => ({
             id: row.id,
             name: row.name,
-            description_1: row.description_1,
-            old_price: row.old_price,
-            new_price: row.new_price,
-            image: row.image,
-            category: '-- Категория по умочанию -- ', // TODO: create category model
+            descriptionShort: row.descriptionShort,
+            category: row.categories && row.categories.length > 0 ? row.categories[0].name : '-- Категория по умолчанию --',
             isNew: row.isNew,
         }))
     }

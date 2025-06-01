@@ -2,6 +2,7 @@ import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { ProductModel } from '@/db/models'
 import { AuthUserModel } from '@/db/models/users.model'
+export interface CartModelDTO extends InferAttributes<CartModel> {}
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
     declare id: CreationOptional<number>

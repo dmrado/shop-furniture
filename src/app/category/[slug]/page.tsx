@@ -45,8 +45,8 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
 
     const { count, products } = await getProducts([ category.id, ...flatChilrenIds ], offset, limit)
 
-    const tags = await getTags()
-    console.log('???????????? tags from SlugPage', tags)
+    // const tags = await getTags()
+    // console.log('???????????? tags from SlugPage', tags)
 
     const totalPages = Math.ceil(count / limit)
 
@@ -75,7 +75,7 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Боковая панель с фильтрами */}
                 <div className="w-full md:w-1/4">
-                    <SideBar tags={tags}/>
+                    {/*<SideBar tags={tags}/>*/}
                 </div>
 
                 {/* Основной контент с товарами */}

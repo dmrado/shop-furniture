@@ -56,11 +56,11 @@ const CartRow = ({ cartRow }: Props) => {
                                 {cartRow.product.name}
                             </h3>
                             <div className="text-sm text-gray-600 mt-1">
-                                {cartRow.product.description_1}
+                                {cartRow.product.descriptionShort}
                             </div>
                             <div className="text-sm text-gray-600">
-                                {`${cartRow.product.description_2?.slice(0, 60)}${
-                                    cartRow.product.description_2?.length > 60 ? '...' : ''
+                                {`${cartRow.product.descriptionLong?.slice(0, 60)}${
+                                    cartRow.product.descriptionLong?.length > 60 ? '...' : ''
                                 }`}
                             </div>
                         </Link>
