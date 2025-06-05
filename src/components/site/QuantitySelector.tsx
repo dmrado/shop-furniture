@@ -39,8 +39,8 @@ const QuantitySelector = ({ count, onCountChange, disabled }: any) => {
             readOnly={disabled}
             type="text"
             value={inputValue}
-            className="w-16 text-center border border-gray-300 rounded-lg p-1
-                       focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none
+            className="w-16 text-center border border-gray-300 rounded-sm p-1
+                       hover:border-[#383838] focus:border-[#383838]
                        disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent
                        "
         />

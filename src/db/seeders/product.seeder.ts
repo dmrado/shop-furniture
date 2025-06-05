@@ -1,332 +1,371 @@
 import { ProductModel } from '@/db/models/product.model';
+import { ProductCategoryModel } from '@/db/models/product_category.model'; // Импортируем модель для связей
 
-const productSeedData = [
-    {
-        id: 101,
-        categoryId: 4,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 101',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 102,
-        categoryId: 4,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 102',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 103,
-        categoryId: 4,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 103',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 104,
-        categoryId: 4,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 104',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 105,
-        categoryId: 4,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 105',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 106,
-        categoryId: 5,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 106',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 107,
-        categoryId: 5,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 107',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 108,
-        categoryId: 5,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 108',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 11,
-        categoryId: 5,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 11',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 12,
-        categoryId: 5,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 12',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 13,
-        categoryId: 5,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 13',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 14,
-        categoryId: 5,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 14',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 15,
-        categoryId: 5,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 15',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 16,
-        categoryId: 12,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 16',
-        descriptionShort: 'Description 1 for Product 2',
-        descriptionLong: 'Description 2 for Product 2',
-        image: '/modulnyj-divan.jpg',
-        old_price: 1299.99,
-        new_price: 1099.99,
-        primary_color: 3,
-        secondary_color: 4
-    },
-    {
-        id: 17,
-        categoryId: 12,
-        styleId: 1, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 1, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 1, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 1, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: true,
-        articul: 'ART001',
-        sku: 'SKU001',
-        name: 'Product 17',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    },
-    {
-        id: 18,
-        categoryId: 12,
-        styleId: 2, // <---- Добавьте styleId (замените на реальный ID стиля)
-        brandId: 2, // <---- Добавьте brandId (замените на реальный ID бренда)
-        collectionId: 2, // <---- Добавьте collectionId (замените на реальный ID коллекции)
-        countryId: 2, // <---- Добавьте countryId (замените на реальный ID страны)
-        isActive: true,
-        isNew: false,
-        articul: 'ART002',
-        sku: 'SKU002',
-        name: 'Product 18',
-        descriptionShort: 'Description 1 for Product 1',
-        descriptionLong: 'Description 2 for Product 1',
-        image: '/kofeinii-stolik-elite.webp',
-        old_price: 999.99,
-        new_price: 799.99,
-        primary_color: 1,
-        secondary_color: 2
-    }
-]
 export async function seedProducts() {
     try {
-        await ProductModel.bulkCreate(productSeedData)
-        console.log('Products seeded successfully')
+        // Очистка таблицы продуктов перед заполнением (опционально)
+        await ProductModel.destroy({ where: {}, truncate: true });
+
+        const productSeedData = [
+            // ==================================================================================================
+            // Продукты для "Мебель для гостиной" (Category ID: 4) -> "Диваны и кресла" (ID: 7)
+            // ==================================================================================================
+            {
+                id: 101, // ID продукта
+                styleId: 1, // Современный стиль
+                brandId: 1, // Бренд "Мебель-Эксперт"
+                collectionId: 1, // Коллекция "Уют"
+                countryId: 1, // Страна "Россия"
+                isActive: true,
+                isNew: true,
+                articul: 'DIV-MOD-001',
+                sku: 'MD001-BROWN',
+                name: 'Модульный диван "Лаунж Про"',
+                descriptionShort: 'Элегантный модульный диван с регулируемыми спинками, идеален для просторной гостиной.',
+                descriptionLong: 'Модульный диван "Лаунж Про" выполнен в современном стиле, имеет прочный каркас из массива дерева и обивку из износостойкой рогожки. Секции легко перемещаются, позволяя создать идеальную конфигурацию для любого интерьера. Включает встроенные USB-порты и ниши для хранения.',
+                // image: '/images/products/divan-lounge-pro.jpg', // Пример пути, если есть
+                // old_price: 150000, // Если эти поля есть в модели
+                // new_price: 125000,
+                // primary_color: 1, // Коричневый
+                // secondary_color: 2 // Бежевый
+            },
+            {
+                id: 102,
+                styleId: 2, // Классический стиль
+                brandId: 2, // Бренд "КлассикХоум"
+                collectionId: 2, // Коллекция "Антик"
+                countryId: 2, // Страна "Италия"
+                isActive: true,
+                isNew: false,
+                articul: 'KRES-VEL-002',
+                sku: 'KV002-BLUE',
+                name: 'Велюровое кресло "Элегант"',
+                descriptionShort: 'Изысканное кресло из велюра с резными деревянными ножками, добавляет роскоши интерьеру.',
+                descriptionLong: 'Кресло "Элегант" — это воплощение классического стиля. Обивка из мягкого велюра синего цвета, каркас из бука, декорированные подлокотники. Идеально дополнит интерьер гостиной или кабинета, создавая атмосферу уюта и респектабельности.',
+                // image: '/images/products/kreslo-elegant.jpg',
+                // old_price: 45000,
+                // new_price: 38000,
+                // primary_color: 3, // Синий
+                // secondary_color: 4 // Золотой
+            },
+            // ==================================================================================================
+            // Продукты для "Мебель для гостиной" (Category ID: 4) -> "Столы журнальные" (ID: 8)
+            // ==================================================================================================
+            {
+                id: 103,
+                styleId: 1, // Современный
+                brandId: 1, // Мебель-Эксперт
+                collectionId: 1, // Уют
+                countryId: 1, // Россия
+                isActive: true,
+                isNew: true,
+                articul: 'STO-ZUR-003',
+                sku: 'SZ003-GLASS',
+                name: 'Журнальный столик "Минимал"',
+                descriptionShort: 'Современный журнальный столик со стеклянной столешницей и хромированным основанием.',
+                descriptionLong: 'Журнальный столик "Минимал" привнесет легкость в вашу гостиную. Столешница из закаленного стекла, устойчивое металлическое основание. Практичное и стильное решение для хранения книг и напитков.',
+                // image: '/images/products/stolik-minimal.jpg',
+                // old_price: 15000,
+                // new_price: 12000,
+                // primary_color: 1, // Прозрачный
+                // secondary_color: 2 // Хром
+            },
+            // ==================================================================================================
+            // Продукты для "Мебель для спальни" (Category ID: 5)
+            // ==================================================================================================
+            {
+                id: 104,
+                styleId: 2, // Классический
+                brandId: 2, // КлассикХоум
+                collectionId: 2, // Антик
+                countryId: 2, // Италия
+                isActive: true,
+                isNew: false,
+                articul: 'KROV-KLAS-004',
+                sku: 'KK004-WHITE',
+                name: 'Кровать двуспальная "Гармония"',
+                descriptionShort: 'Элегантная двуспальная кровать с мягким изголовьем и ортопедическим основанием.',
+                descriptionLong: 'Кровать "Гармония" обеспечит идеальный сон. Изготовлена из натурального дерева, обтянута мягкой тканью. Высокое изголовье с каретной стяжкой создает атмосферу уюта и комфорта.',
+                // image: '/images/products/krovat-garmoniya.jpg',
+                // old_price: 80000,
+                // new_price: 65000,
+                // primary_color: 3, // Белый
+                // secondary_color: 4 // Золотой
+            },
+            {
+                id: 105,
+                styleId: 1, // Современный
+                brandId: 1, // Мебель-Эксперт
+                collectionId: 1, // Уют
+                countryId: 1, // Россия
+                isActive: true,
+                isNew: true,
+                articul: 'SHKAF-KUP-005',
+                sku: 'SK005-GREY',
+                name: 'Шкаф-купе "Модерн"',
+                descriptionShort: 'Вместительный шкаф-купе с зеркальными дверями и продуманной системой хранения.',
+                descriptionLong: 'Шкаф-купе "Модерн" — идеальное решение для спальни. Две раздвижные двери, одна из которых зеркальная, обеспечивают экономию пространства. Внутри - полки, штанги для одежды и выдвижные ящики для удобной организации.',
+                // image: '/images/products/shkaf-kupe-modern.jpg',
+                // old_price: 70000,
+                // new_price: 59000,
+                // primary_color: 1, // Серый
+                // secondary_color: 2 // Зеркало
+            },
+            // ==================================================================================================
+            // Продукты для "Мебель для кухни" (Category ID: 6)
+            // ==================================================================================================
+            {
+                id: 106,
+                styleId: 2, // Классический
+                brandId: 2, // КлассикХоум
+                collectionId: 2, // Антик
+                countryId: 2, // Италия
+                isActive: true,
+                isNew: false,
+                articul: 'KUX-GARN-006',
+                sku: 'KG006-WOOD',
+                name: 'Кухонный гарнитур "Прованс"',
+                descriptionShort: 'Уютный кухонный гарнитур в стиле прованс с элементами состаренного дерева.',
+                descriptionLong: 'Гарнитур "Прованс" создаст атмосферу французской деревни на вашей кухне. Фасады из МДФ с патиной, фурнитура под бронзу, встроенная сушка для посуды. Отличное решение для тех, кто ценит тепло и домашний уют.',
+                // image: '/images/products/kuhnya-provans.jpg',
+                // old_price: 250000,
+                // new_price: 210000,
+                // primary_color: 3, // Светлое дерево
+                // secondary_color: 4 // Кремовый
+            },
+            // ==================================================================================================
+            // Продукты для "Мебель для детской" (Category ID: 18)
+            // ==================================================================================================
+            {
+                id: 107,
+                styleId: 1, // Современный
+                brandId: 1, // Мебель-Эксперт
+                collectionId: 1, // Уют
+                countryId: 1, // Россия
+                isActive: true,
+                isNew: true,
+                articul: 'KROV-DET-007',
+                sku: 'KD007-PINK',
+                name: 'Детская кровать-чердак "Фантазия"',
+                descriptionShort: 'Многофункциональная кровать-чердак со встроенным столом и шкафом для детской.',
+                descriptionLong: 'Кровать-чердак "Фантазия" — это идеальное решение для небольшой детской комнаты. Объединяет спальное место, рабочую зону и систему хранения, оставляя много места для игр. Изготовлена из безопасных материалов.',
+                // image: '/images/products/krovat-fantaziya.jpg',
+                // old_price: 60000,
+                // new_price: 52000,
+                // primary_color: 1, // Розовый
+                // secondary_color: 2 // Белый
+            },
+            // ==================================================================================================
+            // Продукты для "Офисные столы" (Category ID: 12)
+            // ==================================================================================================
+            {
+                id: 108,
+                styleId: 2, // Классический
+                brandId: 2, // КлассикХоум
+                collectionId: 2, // Антик
+                countryId: 2, // Италия
+                isActive: true,
+                isNew: false,
+                articul: 'STO-OFIS-008',
+                sku: 'SO008-WALNUT',
+                name: 'Офисный стол "Директор"',
+                descriptionShort: 'Представительный офисный стол из натурального шпона ореха с кожаной вставкой.',
+                descriptionLong: 'Стол "Директор" создан для комфортной и продуктивной работы. Массивная столешница, элегантные линии, встроенные кабель-каналы. Идеально подходит для руководителя, подчеркивая статус и вкус.',
+                // image: '/images/products/stol-direktor.jpg',
+                // old_price: 95000,
+                // new_price: 78000,
+                // primary_color: 3, // Орех
+                // secondary_color: 4 // Черный (кожа)
+            },
+            // ==================================================================================================
+            // Продукты для "Освещение" (Category ID: 15)
+            // ==================================================================================================
+            {
+                id: 109, // Изменен на 109, чтобы не конфликтовать с 11
+                styleId: 3, // Лофт
+                brandId: 3, // Свет-Хаус
+                collectionId: 3, // Индустриал
+                countryId: 3, // Китай
+                isActive: true,
+                isNew: true,
+                articul: 'LAMP-POT-009',
+                sku: 'LP009-BLACK',
+                name: 'Потолочная люстра "Эдисон"',
+                descriptionShort: 'Индустриальная потолочная люстра с открытыми лампами Эдисона, идеальна для лофта.',
+                descriptionLong: 'Люстра "Эдисон" привнесет неповторимый шарм в ваш интерьер. Металлический каркас черного цвета, открытые патроны для ламп Эдисона (не входят в комплект). Создает уютное, теплое освещение.',
+                // image: '/images/products/lyustra-edison.jpg',
+                // old_price: 12000,
+                // new_price: 9500,
+                // primary_color: 1, // Черный
+                // secondary_color: 2 // Бронза
+            },
+            // ==================================================================================================
+            // Продукты для "Текстиль" (Category ID: 16)
+            // ==================================================================================================
+            {
+                id: 110, // Изменен на 110, чтобы не конфликтовать с 12
+                styleId: 4, // Скандинавский
+                brandId: 4, // Уютный Дом
+                collectionId: 4, // Сканди
+                countryId: 4, // Турция
+                isActive: true,
+                isNew: false,
+                articul: 'PLE-VYZ-010',
+                sku: 'PV010-GREY',
+                name: 'Плед вязаный "Сканди-Уют"',
+                descriptionShort: 'Мягкий вязаный плед из натуральной шерсти, идеален для создания уюта.',
+                descriptionLong: 'Плед "Сканди-Уют" — это воплощение тепла и комфорта. Изготовлен из высококачественной шерсти мериноса, крупная вязка. Отлично подходит для прохладных вечеров и станет стильным акцентом в интерьере гостиной или спальни.',
+                // image: '/images/products/pled-skandi.jpg',
+                // old_price: 8000,
+                // new_price: 6500,
+                // primary_color: 3, // Серый
+                // secondary_color: 4 // Молочный
+            },
+            // ==================================================================================================
+            // Продукты для "Декор для стен" (Category ID: 17)
+            // ==================================================================================================
+            {
+                id: 111, // Изменен на 111, чтобы не конфликтовать с 13
+                styleId: 3, // Лофт
+                brandId: 3, // Арт-Декор
+                collectionId: 5, // Абстракция
+                countryId: 1, // Россия
+                isActive: true,
+                isNew: true,
+                articul: 'PAN-ABS-011',
+                sku: 'PA011-MULTI',
+                name: 'Декоративное панно "Городские ритмы"',
+                descriptionShort: 'Абстрактное металлическое панно на стену в стиле лофт.',
+                descriptionLong: 'Панно "Городские ритмы" выполнено из высококачественного металла, имеет многослойную покраску. Создает динамичный и современный акцент на стене. Легко монтируется.',
+                // image: '/images/products/panno-gorod.jpg',
+                // old_price: 25000,
+                // new_price: 19999,
+                // primary_color: 1, // Металлик
+                // secondary_color: 2 // Черный
+            },
+            // ==================================================================================================
+            // Продукты для "Зеркала" (Category ID: 45)
+            // ==================================================================================================
+            {
+                id: 112, // Изменен на 112, чтобы не конфликтовать с 14
+                styleId: 2, // Классический
+                brandId: 2, // КлассикХоум
+                collectionId: 2, // Антик
+                countryId: 2, // Италия
+                isActive: true,
+                isNew: false,
+                articul: 'ZERK-REZ-012',
+                sku: 'ZR012-GOLD',
+                name: 'Зеркало напольное "Версаль"',
+                descriptionShort: 'Напольное зеркало в резной золотой раме, добавляет роскоши интерьеру.',
+                descriptionLong: 'Зеркало "Версаль" с массивной рамой ручной работы. Идеально для прихожей или спальни, зрительно расширяет пространство и служит элегантным элементом декора.',
+                // image: '/images/products/zerkalo-versal.jpg',
+                // old_price: 35000,
+                // new_price: 29000,
+                // primary_color: 3, // Золото
+                // secondary_color: 4 // Бронза
+            },
+            // ==================================================================================================
+            // Продукты для "Декоративные фигурки" (Category ID: 50)
+            // ==================================================================================================
+            {
+                id: 113, // Изменен на 113, чтобы не конфликтовать с 15
+                styleId: 5, // Восточный
+                brandId: 5, // Восток-Декор
+                collectionId: 6, // Азия
+                countryId: 5, // Индия
+                isActive: true,
+                isNew: true,
+                articul: 'FIG-SLON-013',
+                sku: 'FS013-BRONZE',
+                name: 'Фигурка "Слон мудрости"',
+                descriptionShort: 'Декоративная статуэтка слона из бронзы, символ мудрости и удачи.',
+                descriptionLong: 'Фигурка "Слон мудрости" выполнена из высококачественной бронзы с детальной проработкой. Идеальное дополнение для рабочего стола или книжной полки. Принесет гармонию и процветание в ваш дом.',
+                // image: '/images/products/figurka-slon.jpg',
+                // old_price: 8000,
+                // new_price: 6500,
+                // primary_color: 1, // Бронза
+                // secondary_color: 2 // Патина
+            },
+            // ==================================================================================================
+            // Пример: Продукт, относящийся к нескольким категориям (Кухонный стол может быть и для кухни, и для столовой/гостиной)
+            // ==================================================================================================
+            {
+                id: 114,
+                styleId: 1,
+                brandId: 1,
+                collectionId: 1,
+                countryId: 1,
+                isActive: true,
+                isNew: false,
+                articul: 'STO-KUX-014',
+                sku: 'SK014-WHITE',
+                name: 'Стол обеденный "Семейный"',
+                descriptionShort: 'Раздвижной обеденный стол для кухни или столовой, в современном стиле.',
+                descriptionLong: 'Стол "Семейный" — универсальное решение для любой кухни или гостиной. Прочный деревянный каркас, столешница из ЛДСП с возможностью увеличения. Идеально подходит как для повседневных обедов, так и для больших застолий.',
+                // image: '/images/products/stol-semeinyi.jpg',
+                // old_price: 40000,
+                // new_price: 32000,
+                // primary_color: 1, // Белый
+                // secondary_color: 2 // Дерево
+            }
+        ];
+
+        // Создаем записи продуктов в базе данных
+        await ProductModel.bulkCreate(productSeedData);
+        console.log('Продукты успешно добавлены в базу данных');
+
+        // Теперь создадим связи между продуктами и категориями
+        await ProductCategoryModel.destroy({ where: {}, truncate: true }); // Очистка связей
+
+        const productCategoryLinks = [
+            // Связи для продуктов, созданных выше
+            { productId: 101, categoryId: 4 }, // Модульный диван -> Мебель для гостиной
+            { productId: 101, categoryId: 7 }, // Модульный диван -> Диваны и кресла
+            { productId: 101, categoryId: 10 }, // Модульный диван -> Модульные диваны
+
+            { productId: 102, categoryId: 4 }, // Велюровое кресло -> Мебель для гостиной
+            { productId: 102, categoryId: 7 }, // Велюровое кресло -> Диваны и кресла
+            { productId: 102, categoryId: 30 }, // Велюровое кресло -> Кресла
+
+            { productId: 103, categoryId: 4 }, // Журнальный столик -> Мебель для гостиной
+            { productId: 103, categoryId: 8 }, // Журнальный столик -> Столы журнальные
+
+            { productId: 104, categoryId: 5 }, // Кровать -> Мебель для спальни
+            { productId: 105, categoryId: 5 }, // Шкаф-купе -> Мебель для спальни
+
+            { productId: 106, categoryId: 6 }, // Кухонный гарнитур -> Мебель для кухни
+
+            { productId: 107, categoryId: 18 }, // Детская кровать -> Мебель для детской
+
+            { productId: 108, categoryId: 2 }, // Офисный стол -> Мебель для офиса
+            { productId: 108, categoryId: 12 }, // Офисный стол -> Офисные столы
+
+            { productId: 109, categoryId: 3 }, // Люстра -> Декор и Интерьер
+            { productId: 109, categoryId: 15 }, // Люстра -> Освещение
+
+            { productId: 110, categoryId: 3 }, // Плед -> Декор и Интерьер
+            { productId: 110, categoryId: 16 }, // Плед -> Текстиль
+
+            { productId: 111, categoryId: 3 }, // Панно -> Декор и Интерьер
+            { productId: 111, categoryId: 17 }, // Панно -> Декор для стен
+
+            { productId: 112, categoryId: 3 }, // Зеркало -> Декор и Интерьер
+            { productId: 112, categoryId: 45 }, // Зеркало -> Зеркала
+
+            { productId: 113, categoryId: 3 }, // Фигурка -> Декор и Интерьер
+            { productId: 113, categoryId: 50 }, // Фигурка -> Декоративные фигурки
+
+            // Пример продукта, который относится к нескольким категориям (кухня и гостиная)
+            { productId: 114, categoryId: 6 }, // Обеденный стол -> Мебель для кухни
+            { productId: 114, categoryId: 4 }, // Обеденный стол -> Мебель для гостиной (как часть обеденной группы)
+            { productId: 114, categoryId: 26 }, // Обеденный стол -> Обеденные группы (если эта категория создана)
+        ];
+
+        await ProductCategoryModel.bulkCreate(productCategoryLinks);
+        console.log('Связи продуктов с категориями успешно добавлены.');
+
     } catch (error) {
-        console.error('Error seeding products:', error)
+        console.error('Ошибка при заполнении таблицы продуктов или связей:', error);
     }
 }

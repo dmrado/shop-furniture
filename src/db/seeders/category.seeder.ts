@@ -3,339 +3,377 @@ import { ProductCategoryDTO, ProductCategoryModel } from '@/db/models/product_ca
 
 export async function seedCategories() {
     try {
-        // Очистка таблицы перед заполнением (опционально)
+        // Очистка таблицы перед заполнением (опционально, но рекомендуется для seeders)
         await CategoryModel.destroy({ where: {}, truncate: true })
 
         const categories = [
-            // Категории первого уровня
+            // ==================================================================================================
+            // Категории первого уровня (Мебель для дома, Мебель для офиса, Декор и Интерьер)
+            // ==================================================================================================
             {
                 id: 1,
-                name: 'Электроника',
-                slug: 'electronics',
-                image: '/modulnyj-divan.jpg',
+                name: 'Мебель для дома',
+                slug: 'mebel-dlya-doma',
+                image: '/images/categories/domashnyaya-mebel.jpg', // Пример пути
                 parentId: null
             },
             {
                 id: 2,
-                name: 'Одежда',
-                slug: 'clothing',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Мебель для офиса',
+                slug: 'mebel-dlya-ofisa',
+                image: '/images/categories/ofisnaya-mebel.jpg', // Пример пути
                 parentId: null
             },
             {
                 id: 3,
-                name: 'Мебель',
-                slug: 'furniture',
-                image: '/slavianskii-shkaf.jpg',
+                name: 'Декор и Интерьер',
+                slug: 'dekor-i-interer',
+                image: '/images/categories/dekor.jpg', // Пример пути
                 parentId: null
             },
 
-            // Категории второго уровня для Электроники
+            // ==================================================================================================
+            // Категории второго уровня для "Мебель для дома" (parentId: 1)
+            // ==================================================================================================
             {
                 id: 4,
-                name: 'Компьютеры',
-                slug: 'computers',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Мебель для гостиной',
+                slug: 'mebel-dlya-gostinoy',
+                image: '/images/categories/gostinaya.jpg',
                 parentId: 1
             },
             {
                 id: 5,
-                name: 'Смартфоны',
-                slug: 'smartphones',
-                image: '/modulnyj-divan.jpg',
+                name: 'Мебель для спальни',
+                slug: 'mebel-dlya-spalni',
+                image: '/images/categories/spalnya.jpg',
                 parentId: 1
             },
             {
                 id: 6,
-                name: 'Телевизоры',
-                slug: 'tvs',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Мебель для кухни',
+                slug: 'mebel-dlya-kuhni',
+                image: '/images/categories/kuhnya.jpg',
                 parentId: 1
             },
             {
                 id: 18,
-                name: 'Микро-компьютеры',
-                slug: 'microcomputers',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Мебель для детской',
+                slug: 'mebel-dlya-detskoi',
+                image: '/images/categories/detskaya.jpg',
                 parentId: 1
             },
             {
                 id: 19,
-                name: 'Микро-Смартфоны',
-                slug: 'microsmartphones',
-                image: '/modulnyj-divan.jpg',
+                name: 'Мебель для прихожей',
+                slug: 'mebel-dlya-prihozhei',
+                image: '/images/categories/prihozhaya.jpg',
                 parentId: 1
             },
             {
                 id: 20,
-                name: 'Микро-Телевизоры',
-                slug: 'microtvs',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Мебель для ванной',
+                slug: 'mebel-dlya-vannoi',
+                image: '/images/categories/vannaya.jpg',
                 parentId: 1
             },
             {
                 id: 21,
-                name: 'Мега-Смартфоны',
-                slug: 'megasmartphones',
-                image: '/modulnyj-divan.jpg',
+                name: 'Комплекты мебели',
+                slug: 'komplekty-mebeli',
+                image: '/images/categories/komplekty.jpg',
                 parentId: 1
             },
             {
                 id: 22,
-                name: 'Мега-Телевизоры',
-                slug: 'megatvs',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Садовая мебель',
+                slug: 'sadovaya-mebel',
+                image: '/images/categories/sadovaya.jpg',
                 parentId: 1
             },
 
-            // Категории третьего уровня для Компьютеров
+            // ==================================================================================================
+            // Категории третьего уровня для "Мебель для гостиной" (parentId: 4)
+            // ==================================================================================================
             {
                 id: 7,
-                name: 'Ноутбуки',
-                slug: 'laptops',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Диваны и кресла',
+                slug: 'divany-kresla',
+                image: '/images/categories/divany.jpg',
                 parentId: 4
             },
             {
                 id: 8,
-                name: 'Настольные компьютеры',
-                slug: 'desktops',
-                image: '/modulnyj-divan.jpg',
+                name: 'Столы журнальные',
+                slug: 'stoly-zhurnalnye',
+                image: '/images/categories/zhurnalnye-stoly.jpg',
                 parentId: 4
             },
             {
                 id: 9,
-                name: 'Планшеты',
-                slug: 'tablets',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Тумбы ТВ',
+                slug: 'tumby-tv',
+                image: '/images/categories/tumby-tv.jpg',
                 parentId: 4
             },
             {
                 id: 23,
-                name: 'ИнфоНоутбуки',
-                slug: 'infolaptops',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Стенки и горки',
+                slug: 'stenki-gorki',
+                image: '/images/categories/stenki.jpg',
                 parentId: 4
             },
             {
                 id: 24,
-                name: 'ИнфоНастольные компьютеры',
-                slug: 'infodesktops',
-                image: '/modulnyj-divan.jpg',
+                name: 'Стеллажи и витрины',
+                slug: 'stellazhi-vitriny',
+                image: '/images/categories/stellazhi.jpg',
                 parentId: 4
             },
             {
                 id: 25,
-                name: 'ИнфоПланшеты',
-                slug: 'infotablets',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Комоды и буфеты',
+                slug: 'komody-bufety',
+                image: '/images/categories/komody.jpg',
                 parentId: 4
             },
             {
                 id: 26,
-                name: 'Легко-Ноутбуки',
-                slug: 'lightlaptops',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Обеденные группы',
+                slug: 'obedinnye-gruppy',
+                image: '/images/categories/obedinnye.jpg',
                 parentId: 4
             },
             {
                 id: 27,
-                name: 'Легко-Настольные компьютеры',
-                slug: 'lightdesktops',
-                image: '/modulnyj-divan.jpg',
+                name: 'Пуфы и банкетки',
+                slug: 'pufy-banketki',
+                image: '/images/categories/pufy.jpg',
                 parentId: 4
             },
             {
                 id: 28,
-                name: 'Легко-Планшеты',
-                slug: 'lighttablets',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Витрины для посуды',
+                slug: 'vitriny-dlya-posudy',
+                image: '/images/categories/vitriny-posuda.jpg',
                 parentId: 4
             },
 
-            // Категории четвертого уровня для Ноутбуков
+            // ==================================================================================================
+            // Категории четвертого уровня для "Диваны и кресла" (parentId: 7)
+            // ==================================================================================================
             {
                 id: 10,
-                name: 'Игровые ноутбуки',
-                slug: 'gaming-laptops',
-                image: '/modulnyj-divan.jpg',
+                name: 'Модульные диваны',
+                slug: 'modulnye-divany',
+                image: '/images/categories/modulnye-divany.jpg',
                 parentId: 7
             },
             {
                 id: 11,
-                name: 'Бизнес ноутбуки',
-                slug: 'business-laptops',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Прямые диваны',
+                slug: 'pryamye-divany',
+                image: '/images/categories/pryamye-divany.jpg',
+                parentId: 7
+            },
+            {
+                id: 29,
+                name: 'Угловые диваны',
+                slug: 'uglovye-divany',
+                image: '/images/categories/uglovye-divany.jpg',
+                parentId: 7
+            },
+            {
+                id: 30,
+                name: 'Кресла',
+                slug: 'kresla',
+                image: '/images/categories/kresla.jpg',
+                parentId: 7
+            },
+            {
+                id: 31,
+                name: 'Кресла-кровати',
+                slug: 'kresla-krovati',
+                image: '/images/categories/kresla-krovati.jpg',
                 parentId: 7
             },
 
-            // Категории второго уровня для Одежды
+            // ==================================================================================================
+            // Категории второго уровня для "Мебель для офиса" (parentId: 2)
+            // ==================================================================================================
             {
                 id: 12,
-                name: 'Мужская одежда',
-                slug: 'mens-clothing',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Офисные столы',
+                slug: 'ofisnye-stoly',
+                image: '/images/categories/ofisnye-stoly.jpg',
                 parentId: 2
             },
             {
                 id: 13,
-                name: 'Женская одежда',
-                slug: 'womens-clothing',
-                image: '/modulnyj-divan.jpg',
+                name: 'Офисные кресла',
+                slug: 'ofisnye-kresla',
+                image: '/images/categories/ofisnye-kresla.jpg',
                 parentId: 2
             },
             {
                 id: 14,
-                name: 'Детская одежда',
-                slug: 'kids-clothing',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Шкафы для документов',
+                slug: 'shkafy-dlya-dokumentov',
+                image: '/images/categories/shkafy-dokumenty.jpg',
                 parentId: 2
             },
             {
                 id: 32,
-                name: 'Большая Мужская одежда',
-                slug: 'big-mens-clothing',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Стеллажи офисные',
+                slug: 'stellazhi-ofisnye',
+                image: '/images/categories/stellazhi-ofis.jpg',
                 parentId: 2
             },
             {
                 id: 33,
-                name: 'Большая Женская одежда',
-                slug: 'big-womens-clothing',
-                image: '/modulnyj-divan.jpg',
+                name: 'Тумбы офисные',
+                slug: 'tumby-ofisnye',
+                image: '/images/categories/tumby-ofis.jpg',
                 parentId: 2
             },
             {
                 id: 34,
-                name: 'Большая Детская одежда',
-                slug: 'big-kids-clothing',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Ресепшн стойки',
+                slug: 'resepshn-stoiki',
+                image: '/images/categories/resepshn.jpg',
                 parentId: 2
             },
             {
                 id: 35,
-                name: 'Кошачья одежда',
-                slug: 'cats-clothing',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Перегородки офисные',
+                slug: 'peregorodki-ofisnye',
+                image: '/images/categories/peregorodki.jpg',
                 parentId: 2
             },
             {
                 id: 36,
-                name: 'Собачья одежда',
-                slug: 'dog-clothing',
-                image: '/modulnyj-divan.jpg',
+                name: 'Мебель для персонала',
+                slug: 'mebel-dlya-personala',
+                image: '/images/categories/mebel-personal.jpg',
                 parentId: 2
             },
             {
                 id: 37,
-                name: 'Одежда для хомяков',
-                slug: 'hamster-clothing',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Мебель для переговорных',
+                slug: 'mebel-dlya-peregovornyh',
+                image: '/images/categories/mebel-peregovornye.jpg',
                 parentId: 2
             },
 
-            // Категории второго уровня для Мебели
+            // ==================================================================================================
+            // Категории второго уровня для "Декор и Интерьер" (parentId: 3)
+            // ==================================================================================================
             {
                 id: 15,
-                name: 'Мебель для гостиной',
-                slug: 'living-room',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Освещение',
+                slug: 'osveschenie',
+                image: '/images/categories/osveschenie.jpg',
                 parentId: 3
             },
             {
                 id: 16,
-                name: 'Мебель для спальни',
-                slug: 'bedroom',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Текстиль',
+                slug: 'tekstil',
+                image: '/images/categories/tekstil.jpg',
                 parentId: 3
             },
             {
                 id: 17,
-                name: 'Кухонная мебель',
-                slug: 'kitchen',
-                image: '/modulnyj-divan.jpg',
+                name: 'Декор для стен',
+                slug: 'dekor-dlya-sten',
+                image: '/images/categories/dekor-sten.jpg',
                 parentId: 3
             },
             {
                 id: 45,
-                name: 'Мега мебель для гостиной',
-                slug: 'mega-living-room',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Зеркала',
+                slug: 'zerkala',
+                image: '/images/categories/zerkala.jpg',
                 parentId: 3
             },
             {
                 id: 46,
-                name: 'Мега мебель для спальни',
-                slug: 'mega-bedroom',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Вазы и кашпо',
+                slug: 'vazy-kashpo',
+                image: '/images/categories/vazy-kashpo.jpg',
                 parentId: 3
             },
             {
                 id: 47,
-                name: 'Мега Кухонная мебель',
-                slug: 'mega-kitchen',
-                image: '/modulnyj-divan.jpg',
+                name: 'Картины и постеры',
+                slug: 'kartiny-postery',
+                image: '/images/categories/kartiny.jpg',
                 parentId: 3
             },
             {
                 id: 48,
-                name: 'Мини мебель для гостиной',
-                slug: 'mini-living-room',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Декоративные подушки',
+                slug: 'dekorativnye-podushki',
+                image: '/images/categories/podushki.jpg',
                 parentId: 3
             },
             {
                 id: 49,
-                name: 'Мини мебель для спальни',
-                slug: 'mini-bedroom',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Искусственные растения',
+                slug: 'iskusstvennye-rasteniya',
+                image: '/images/categories/rasteniya.jpg',
                 parentId: 3
             },
             {
                 id: 50,
-                name: 'Мини кухонная мебель',
-                slug: 'mini-kitchen',
-                image: '/modulnyj-divan.jpg',
+                name: 'Декоративные фигурки',
+                slug: 'dekorativnye-figurki',
+                image: '/images/categories/figurki.jpg',
                 parentId: 3
             },
             {
                 id: 51,
-                name: 'Не мебель для гостиной',
-                slug: 'no-living-room',
-                image: '/kofeinii-stolik-elite.webp',
+                name: 'Свечи и подсвечники',
+                slug: 'svechi-podsvechniki',
+                image: '/images/categories/svechi.jpg',
                 parentId: 3
             },
             {
                 id: 52,
-                name: 'Не мебель для спальни',
-                slug: 'no-bedroom',
-                image: '/tumbochka-for-slavianskii-shkaf.jpg',
+                name: 'Ароматы для дома',
+                slug: 'aromaty-dlya-doma',
+                image: '/images/categories/aromaty.jpg',
                 parentId: 3
             },
             {
                 id: 53,
-                name: 'Не Кухонная мебель',
-                slug: 'no-kitchen',
-                image: '/modulnyj-divan.jpg',
+                name: 'Настольные часы',
+                slug: 'nastolnye-chasy',
+                image: '/images/categories/chasy.jpg',
                 parentId: 3
             }
-        ]
+        ];
 
         // Создаем записи в базе данных
-        await CategoryModel.bulkCreate(categories)
+        await CategoryModel.bulkCreate(categories);
 
-        console.log('Категории успешно добавлены в базу данных')
+        console.log('Категории успешно добавлены в базу данных');
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы категорий:', error)
+        console.error('Ошибка при заполнении таблицы категорий:', error);
     }
 }
 
 export async function seedProductCategories() {
     try {
         // Очистка таблицы перед заполнением (опционально)
-        await ProductCategoryModel.destroy({ where: {}, truncate: true })
+        await ProductCategoryModel.destroy({ where: {}, truncate: true });
 
         const productCategoryLinks: ProductCategoryDTO[] = [
+            // Пример связей:
+            // Продукт 15 (условный продукт) связан с категориями:
+            // 1 (Мебель для дома)
+            // 6 (Мебель для кухни)
+            // 20 (Мебель для ванной)
             {
                 productId: 15,
                 categoryId: 1,
@@ -348,17 +386,25 @@ export async function seedProductCategories() {
                 productId: 15,
                 categoryId: 20,
             },
+            // Добавим еще примеры, чтобы показать работу с "реальными" категориями
+            { productId: 1, categoryId: 7 }, // Продукт 1 (диван) -> Диваны и кресла
+            { productId: 1, categoryId: 10 }, // Продукт 1 (диван) -> Модульные диваны
+            { productId: 2, categoryId: 12 }, // Продукт 2 (офисный стол) -> Офисные столы
+            { productId: 3, categoryId: 15 }, // Продукт 3 (лампа) -> Освещение
+            { productId: 4, categoryId: 16 }, // Продукт 4 (шторы) -> Текстиль
+            { productId: 5, categoryId: 47 }, // Продукт 5 (картина) -> Картины и постеры
 
         ]
 
         // Создаем записи в базе данных
         await ProductCategoryModel.bulkCreate(productCategoryLinks)
 
-        console.log('Категории успешно добавлены в базу данных')
+        console.log('Связи продуктов с категориями успешно добавлены в базу данных')
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы категорий:', error)
+        console.error('Ошибка при заполнении таблицы связей продуктов с категориями:', error)
     }
 }
 
-// Вызов функции для заполнения базы данных
-// seedCategories()
+// Вызов функции для заполнения базы данных (для локального тестирования)
+// seedCategories();
+// seedProductCategories(); // Не забудьте вызвать после seedCategories

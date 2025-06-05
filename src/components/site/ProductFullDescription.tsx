@@ -97,7 +97,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                         <div>
                             <h5>Категория: </h5>
                             <select
-                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
                                 value={selectedVariant?.id}
                                 onChange={(e) => {
                                     console.log('event.target.value: ', e.target.value, typeof e.target.value)
@@ -118,7 +118,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                         <div>
                             <h5>Цвет: </h5>
                             <select
-                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
                                 value={selectedVariant?.id}
                                 onChange={(e) => {
                                     console.log('event.target.value: ', e.target.value, typeof e.target.value)
@@ -130,16 +130,16 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                             >
                                 {product.variants && product.variants.map(variant => (
                                     <option key={variant.id} value={variant.id}>
-                                        <p>Цвет: {variant.color}</p>
+                                        <p>Цвет: {variant.colorId}</p>
                                     </option>
                                 ))}
                             </select>
                         </div>
 
                         <div>
-                            <h5>Это правильный селект цены по размерам вместо бегункового: </h5>
+                            <h5>Это селект здесь лучше подходит вместо бегункового: </h5>
                             <select
-                                className="min-w-64 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                className="min-w-64 px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm  hover:border-[#383838] focus:border-[#383838]"
                                 value={selectedVariant?.id}
                                 onChange={(e) => {
                                     console.log('event.target.value: ', e.target.value, typeof e.target.value)
@@ -211,7 +211,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
 
                         {/*todo from variants.price*/}
                         <div>
-                            <h5>Цена: </h5>
+                            <h5>Цена: этот селект не отсюда, а из категорий</h5>
                             <div className="py-4 space-y-4">
                                 <div className="flex gap-2">
                                     <input
