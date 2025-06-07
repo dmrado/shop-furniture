@@ -76,7 +76,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                                     key={index}
                                     onClick={() => setSelectedImage(index)}
                                     className={`aspect-w-1 aspect-h-1 rounded-lg overflow-hidden border-2
-                                        ${selectedImage === index ? 'border-indigo-500' : 'border-transparent'}`}
+                                        ${selectedImage === index ? 'border border-[#E99C28] text-[#383838] cursor-pointer' : 'border-transparent'}`}
                                 >
                                     <img
                                         src={image}

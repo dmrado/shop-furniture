@@ -62,7 +62,7 @@ const UserOrderForm = ({ user, addresses, profile }: Props) => {
                 <button
                     type="button"
                     onClick={() => setIsOpenModal(true)}
-                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                         Добавить новый адрес
                 </button>
                 {/*</Link>*/}
@@ -145,21 +145,21 @@ const UserOrderForm = ({ user, addresses, profile }: Props) => {
 
                 <button
                     type="submit"
-                    className="bg-blue-500 text-white p-2 rounded-md transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                     Отправить
                 </button>
             </form>
 
             <Link href={'/cart'}>
                 <button
-                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                     Вернуться в корзину
                 </button>
             </Link>
 
             <Link href={'/products'}>
                 <button
-                    className="p-2 rounded-md text-blue-500 border-2 border-transparent hover:border-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-blue-500 hover:bg-clip-text hover:text-transparent transition duration-200 relative after:absolute after:inset-0 after:rounded-md after:border-2 hover:after:border-gradient-to-r hover:after:from-blue-500 hover:after:to-purple-500 after:transition-all">
+                    className="w-full sm:m-6 sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                     Хочу больше!
                 </button>
             </Link>

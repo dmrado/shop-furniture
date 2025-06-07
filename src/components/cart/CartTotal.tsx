@@ -159,11 +159,7 @@ const CartTotal = () => {
                         Товарных позиций: {isLoading ? "..." : count}
                     </div>
 
-                    <button className="w-2xl bg-indigo-600 text-white mt-1.5 py-3 px-4 rounded-xl font-medium
-                    transition-all duration-300 transform
-                    hover:bg-indigo-700 hover:shadow-lg
-                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                    active:scale-[0.98]">
+                    <button className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                         <Link href='/order'>
                             Оформить доставку
                         </Link>
