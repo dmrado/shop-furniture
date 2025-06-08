@@ -1,52 +1,53 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import {useCartContext} from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
-import {Product} from '@/actions/productActions'
 // import UserAddressForm from '@/components/user/UserAddressForm'
-import {InstantOrderForm} from '@/components/site/InstantOrderForm'
+import { InstantOrderForm } from '@/components/site/InstantOrderForm'
 import Modal from '@/components/site/Modal'
-import {ProductVariantDTO} from '@/db/models/product_variant.model'
+import { Product } from '@/actions/productActions'
+import { ProductVariantDTO } from '@/db/models/product_variant.model'
 
-const ProductFullDescription = ({product}: { product: Product }) => {
-    const {addProductToCart} = useCartContext()
-    const [selectedImage, setSelectedImage] = useState(0)
-    const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(null)
-    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
-    const [isCartUpdating, setIsCartUpdating] = useState(false)
+const ProductFullDescription = ({ product }: { product: Product }) => {
+    const { addProductToCart } = useCartContext()
+    // const [ selectedImage, setSelectedImage ] = useState(0)
+
+    // for select Variants with useMemo ==========================================
+    // хранит весь массив Вариантов, пришедший со страницы в объекте product
+    const [ allVariants, setAllVariants ] = useState<ProductVariantDTO[]>([])
+
+    // хранит выбранный вариант продукта по умолчанию первый
+    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO | null>(product.variants[0] || null)
+
+    // хранит выбранное значение цвета
+    const [ selectedColorId, setSelectedColorId ] = useState<number | null>(null)
+
+    // Фильтрация массива на основе `filterPriceValue`
+    const filteredVariants: ProductVariantDTO | undefined = useMemo(() => {
+        if (allVariants === null) {
+            return allVariants[0] // Если фильтр не установлен, показываем все продукты
+        }
+        return allVariants.find(variant => variant.colorId === selectedColorId)
+    }, [ allVariants, selectedColorId, selectedVariant ])
+
+    //============================================================================
+
+    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
+    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
 
     // for InstantOrderModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
     useEffect(() => {
         const defaultVariant = product.variants?.[0]
         if (!defaultVariant) return
         setSelectedVariant(defaultVariant)
-    }, [product.id])
+    }, [ product.id ])
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
 
-    // const productArray = {
-    //     name: 'Название товара',
-    //     category: 'Категория',
-    //     price: 1999,
-    //     oldPrice: 2499, // опционально
-    //     description: 'Подробное описание товара...',
-    //     images: [
-    //         'url1.jpg',
-    //         'url2.jpg',
-    //         'url3.jpg',
-    //         'url4.jpg'
-    //     ],
-    //     specifications: {
-    //         'Материал': 'Дерево',
-    //         'Размеры': '200x150x75 см',
-    //         'Вес': '25 кг',
-    //         // другие характеристики
-    //     }
-    // }
 
     // todo: temp option
     const minPrice = product.variants
