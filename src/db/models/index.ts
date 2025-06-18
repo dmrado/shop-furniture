@@ -27,6 +27,18 @@ OrderedProductsModel.belongsTo(OrderModel, {
     // foreignKey: 'order'
 })
 
+
+ProductVariantModel.belongsTo(ColorModel, {
+    foreignKey: 'colorId',
+    as: 'color' // Имя ассоциации, которое используем в include
+})
+
+ColorModel.hasMany(ProductVariantModel, {
+    foreignKey: 'colorId',
+    as: 'variants' // Имя ассоциации, под которым вы сможете получать продукт
+})
+
+
 ProductModel.belongsTo(StyleModel, {
     foreignKey: 'styleId',
     as: 'style' // Имя ассоциации, которое используем в include

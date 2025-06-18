@@ -1,8 +1,9 @@
 'use server'
-import {ProductModel} from '@/db/models'
+import {ColorModel, ProductModel} from '@/db/models'
 import {InferAttributes, Op} from 'sequelize'
 import {ProductVariantModel} from '@/db/models/product_variant.model'
 import {CategoryModel} from '@/db/models/category.model'
+import {models} from "@auth/sequelize-adapter";
 
 export type Product = InferAttributes<ProductModel>
 export type ProductListItem =
@@ -19,15 +20,19 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
                     model: ProductVariantModel,
                     // attributes: [ 'price' ],
                     as: 'variants',
+                    include: [{
+                        model: ColorModel,
+                        as: 'color'
+                    }]
                 },
-                {model: CategoryModel, as: 'categories'}
+                { model: CategoryModel, as: 'categories' }
             ]
         }
     )
     if (!product) {
         return null
     }
-    console.log('product_________________', product)
+    console.log('product_________________>', product)
     return product.toJSON()
 }
 
@@ -43,10 +48,10 @@ export const getProducts = async (categoryIds: number[], offset: number, limit: 
         include: [{
             model: CategoryModel,
             as: 'categories',
-            attributes: [ 'name' ],
-            through: { attributes: [] }, // Исключаем атрибуты промежуточной таблицы
+            attributes: ['name'],
+            through: {attributes: []}, // Исключаем атрибуты промежуточной таблицы
             where: {
-                id: { [Op.in]: categoryIds }, // Фильтрация связанных категорий
+                id: {[Op.in]: categoryIds}, // Фильтрация связанных категорий
             },
             required: true, // Обязательно наличие связи с указанными категориями
         }]

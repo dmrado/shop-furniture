@@ -1,14 +1,14 @@
 'use client'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import { useCartContext } from '@/components/cart/CartContext'
+import {useCartContext} from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
 // import UserAddressForm from '@/components/user/UserAddressForm'
-import { InstantOrderForm } from '@/components/site/InstantOrderForm'
+import {InstantOrderForm} from '@/components/site/InstantOrderForm'
 import Modal from '@/components/site/Modal'
-import { Product } from '@/actions/productActions'
-import { ProductVariantDTO } from '@/db/models/product_variant.model'
+import {Product} from '@/actions/productActions'
+import {ProductVariantDTO} from '@/db/models/product_variant.model'
 
 const ProductFullDescription = ({ product }: { product: Product }) => {
     const { addProductToCart } = useCartContext()
@@ -16,34 +16,42 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
 
     // for select Variants with useMemo ==========================================
     // хранит весь массив Вариантов, пришедший со страницы в объекте product
-    const [ allVariants, setAllVariants ] = useState<ProductVariantDTO[]>([])
+    const allColors = product.variants.map(variant => ({id: variant.color.id, label: variant.color.code}))
+
+    const uniqueColors = Object.values(
+        allColors.reduce((acc, obj) => {
+            acc[obj.id] = obj
+            return acc
+        }, {})
+    )
+
+    const allLength = Array.from(new Set(product.variants.map(variant => variant.length)))
+        .map(length => ({ id: length, label: length }))
+
+    // хранят выбранное значение свойств
+    const [selectedColorId, setSelectedColorId] = useState<number | null>(null)
+    const [selectedLength, setSelectedLength] = useState<number | null>(null)
 
     // хранит выбранный вариант продукта по умолчанию первый
-    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO | null>(product.variants[0] || null)
-
-    // хранит выбранное значение цвета
-    const [ selectedColorId, setSelectedColorId ] = useState<number | null>(null)
+    const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(product.variants[0] || null)
 
     // Фильтрация массива на основе `filterPriceValue`
-    const filteredVariants: ProductVariantDTO | undefined = useMemo(() => {
-        if (allVariants === null) {
-            return allVariants[0] // Если фильтр не установлен, показываем все продукты
-        }
-        return allVariants.find(variant => variant.colorId === selectedColorId)
-    }, [ allVariants, selectedColorId, selectedVariant ])
+    const filteredVariants: ProductVariantDTO[] = product.variants
+        .filter(variant => selectedColorId === null || variant.colorId === selectedColorId)
+        .filter(variant => selectedLength === null || variant.length === selectedLength)
 
     //============================================================================
 
-    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
-    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
+    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
+    const [isCartUpdating, setIsCartUpdating] = useState(false)
 
     // for InstantOrderModal
-    const [ isOpenModal, setIsOpenModal ] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
     useEffect(() => {
         const defaultVariant = product.variants?.[0]
         if (!defaultVariant) return
         setSelectedVariant(defaultVariant)
-    }, [ product.id ])
+    }, [product.id])
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
@@ -96,21 +104,26 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                             <p>{product.descriptionLong}</p>
                         </div>
                         <div>
-                            <h5>Категория: </h5>
+                            <h5>Длина: </h5>
                             <select
                                 className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
-                                value={selectedVariant?.id}
+                                value={selectedLength ?? ''}
                                 onChange={(e) => {
-                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
-                                    const variant = product.variants.find(
-                                        variant => variant.id === Number(e.target.value)) ?? null
-                                    console.log('variant категория: ', variant)
-                                    setSelectedVariant(variant)
+                                    console.log(' setSelectedLength ', e.target.value)
+                                    if (e.target.value === '') {
+                                        setSelectedLength(null)
+                                        return
+                                    }
+                                    setSelectedLength(Number(e.target.value))
                                 }}
                             >
-                                {product.categories?.length && product.categories.map(category => (
-                                    <option key={category.id} value={category.id}>
-                                        <p className="mt-2 text-sm text-[#383838]">{category.name}</p>
+                                <option value=''>
+                                    <p className="mt-2 text-sm text-[#383838]"></p>
+                                </option>
+
+                                {allLength.map(length => (
+                                    <option key={length.id} value={length.id}>
+                                        <p className="mt-2 text-sm text-[#383838]">{length.label}</p>
                                     </option>
                                 ))}
                             </select>
@@ -120,18 +133,23 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                             <h5>Цвет: </h5>
                             <select
                                 className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
-                                value={selectedVariant?.id}
+                                value={selectedColorId ?? ''}
                                 onChange={(e) => {
-                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
-                                    const variant = product.variants.find(
-                                        variant => variant.id === Number(e.target.value)) ?? null
-                                    console.log('variant: ', variant)
-                                    setSelectedVariant(variant)
+                                    console.log(' setSelectedColorId ', e.target.value)
+                                    if (e.target.value === '') {
+                                        setSelectedColorId(null)
+                                        return
+                                    }
+                                    setSelectedColorId(Number(e.target.value))
                                 }}
                             >
-                                {product.variants && product.variants.map(variant => (
-                                    <option key={variant.id} value={variant.id}>
-                                        <p>Цвет: {variant.colorId}</p>
+                                <option value=''>
+                                    <p className="mt-2 text-sm text-[#383838]"></p>
+                                </option>
+
+                                {uniqueColors.map(color => (
+                                    <option key={color.id} value={color.id}>
+                                        <p>Цвет: {color.label}</p>
                                     </option>
                                 ))}
                             </select>
@@ -150,9 +168,9 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                     setSelectedVariant(variant)
                                 }}
                             >
-                                {product.variants && product.variants.map(variant => (
+                                {filteredVariants.map(variant => (
                                     <option key={variant.id} value={variant.id}>
-                                        <p>Размеры: {variant.width}x{variant.length}. Цена: {variant.price}</p>
+                                        <p>Размеры: {variant.width}x{variant.length}. Цвет: {variant.color.code} Цена: {variant.price}</p>
                                     </option>
                                 ))}
                             </select>
