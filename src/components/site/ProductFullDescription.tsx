@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
 import {useCartContext} from '@/components/cart/CartContext'
 import Link from 'next/link'
@@ -15,8 +15,18 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     // const [ selectedImage, setSelectedImage ] = useState(0)
 
     // for select Variants with useMemo ==========================================
-    // хранит весь массив Вариантов, пришедший со страницы в объекте product
-    const allColors = product.variants.map(variant => ({id: variant.color.id, label: variant.color.code}))
+    // хранят выбранное значение свойств
+    const [ selectedColorId, setSelectedColorId ] = useState<number | null>(null)
+    const [ selectedLength, setSelectedLength ] = useState<number | null>(null)
+
+    // Фильтрация массива на основе `filterPriceValue`
+    const filteredVariants: ProductVariantDTO[] = product.variants
+        .filter(variant => selectedColorId === null || variant.colorId === selectedColorId)
+        .filter(variant => selectedLength === null || variant.length === selectedLength)
+
+
+
+    const allColors = filteredVariants.map(variant => ({ id: variant.color.id, label: variant.color.code }))
 
     const uniqueColors = Object.values(
         allColors.reduce((acc, obj) => {
@@ -25,33 +35,26 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
         }, {})
     )
 
-    const allLength = Array.from(new Set(product.variants.map(variant => variant.length)))
+    const allLength = Array.from(new Set(filteredVariants.map(variant => variant.length)))
         .map(length => ({ id: length, label: length }))
 
-    // хранят выбранное значение свойств
-    const [selectedColorId, setSelectedColorId] = useState<number | null>(null)
-    const [selectedLength, setSelectedLength] = useState<number | null>(null)
-
     // хранит выбранный вариант продукта по умолчанию первый
-    const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(product.variants[0] || null)
-
-    // Фильтрация массива на основе `filterPriceValue`
-    const filteredVariants: ProductVariantDTO[] = product.variants
-        .filter(variant => selectedColorId === null || variant.colorId === selectedColorId)
-        .filter(variant => selectedLength === null || variant.length === selectedLength)
-
+    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO | null>(product.variants[0] || null)
+    console.log('selectedVariant' ,  selectedVariant)
     //============================================================================
 
-    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
-    const [isCartUpdating, setIsCartUpdating] = useState(false)
+    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
+    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
 
     // for InstantOrderModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
-    useEffect(() => {
-        const defaultVariant = product.variants?.[0]
-        if (!defaultVariant) return
-        setSelectedVariant(defaultVariant)
-    }, [product.id])
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
+
+    // useEffect(() => {
+    //     const defaultVariant = product.variants?.[0]
+    //     if (!defaultVariant) return
+    //     setSelectedVariant(defaultVariant)
+    // }, [product.id])
+
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
     console.log('>>>> >>product', product)
