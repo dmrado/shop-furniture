@@ -152,31 +152,38 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
 
     // Расчет общей скидки в процентах
-    //todo need check
-    const totalOldPrice = cartRows
+    //todo убрать или пересмотреть так как общая скидка будет просто 10%
+
+    // const totalOldPrice = cartRows
+    //     ? cartRows.reduce(
+    //         (sum, item) => sum + item.product.old_price * item.quantity,
+    //         0
+    //     )
+    //     : 0
+    // const totalNewPrice = cartRows
+    //     ? cartRows.reduce(
+    //         (sum, item) => sum + item.product.new_price * item.quantity,
+    //         0
+    //     )
+    //     : 0
+    // const totalDiscount = totalOldPrice - totalNewPrice
+    //
+    // const totalDiscountPercent = (totalDiscount / totalOldPrice) * 100
+    //
+    // const finalAmount = totalOldPrice - totalDiscount
+
+    const finalAmount = cartRows
         ? cartRows.reduce(
-            (sum, item) => sum + item.product.old_price * item.quantity,
+            (sum, item) => sum + item.productVariant.price * item.quantity,
             0
         )
         : 0
-    const totalNewPrice = cartRows
-        ? cartRows.reduce(
-            (sum, item) => sum + item.product.new_price * item.quantity,
-            0
-        )
-        : 0
-
-    const totalDiscount = totalOldPrice - totalNewPrice
-
-    const totalDiscountPercent = (totalDiscount / totalOldPrice) * 100
-
-    const finalAmount = totalOldPrice - totalDiscount
 
     const value = {
-        totalOldPrice,
-        totalDiscount,
+        // totalOldPrice,
+        // totalDiscount,
         finalAmount,
-        totalDiscountPercent,
+        // totalDiscountPercent,
         //todo need check <?> below
         count: cartRows?.length,
         cartRows,

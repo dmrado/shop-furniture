@@ -1,5 +1,5 @@
 'use client'
-// этот компонент нужен для использования его как клиентский для деструктурирования из контекста useUserCartContext
+// этот компонент-обертка нужен для использования его как клиентский так как все page-серверные для деструктурирования из контекста useUserCartContext
 import { useCartContext } from '@/components/cart/CartContext'
 import CartRow from '@/components/cart/CartRow'
 import Loading from '@/app/cart/loading'
