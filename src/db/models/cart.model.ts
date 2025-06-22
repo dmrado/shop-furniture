@@ -1,16 +1,15 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { AuthUserModel } from '@/db/models/users.model'
-import { ProductVariantDTO } from '@/db/models/product_variant.model'
+import {ProductVariantDTO, ProductVariantModel} from '@/db/models/product_variant.model'
 export interface CartModelDTO extends InferAttributes<CartModel> {}
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
     declare id: CreationOptional<number>
-    // declare productId: number
     declare quantity: number
     declare userId: string
     declare discount: CreationOptional<number | null>
-    // declare productVariant?: ProductVariantDTO[]
+    declare product_variants?: ProductVariantModel
     declare user?: AuthUserModel
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>

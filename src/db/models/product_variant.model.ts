@@ -14,7 +14,7 @@ export class ProductVariantModel extends Model<InferAttributes<ProductVariantMod
     declare productId: number
     // declare materialId: number
     declare colorId: number
-    declare cartId: CreationOptional<number | null> // может быть null если не в корзине
+    // declare cartId: CreationOptional<number | null> // может быть null если не в корзине
 
     declare length: number
     declare width: number
@@ -34,14 +34,14 @@ ProductVariantModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        cartId: {
-            type: DataTypes.INTEGER,
-            allowNull: true, // товар может не быть в корзине
-            references: {
-                model: CartModel,
-                key: 'id'
-            }
-        },
+        // cartId: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: true, // товар может не быть в корзине
+        //     references: {
+        //         model: CartModel,
+        //         key: 'id'
+        //     }
+        // },
         // productId: {
         //     type: DataTypes.INTEGER,
         //     allowNull: false, // или true, если продукт может не иметь категории

@@ -41,8 +41,8 @@ const CartRow = ({ cartRow }: Props) => {
                 {/* Изображение */}
                 <div className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
                     <Image
-                        src={cartRow.product.image}
-                        alt={cartRow.product.name}
+                        src={cartRow.productVariant.image}
+                        alt={cartRow.productVariant.name}
                         fill
                         className="object-contain hover:scale-105 transition-transform duration-300"
                     />
@@ -53,14 +53,14 @@ const CartRow = ({ cartRow }: Props) => {
                     <div>
                         <Link href={`/products/${cartRow.product.id}`}>
                             <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200">
-                                {cartRow.product.name}
+                                {cartRow.productVariant.name}
                             </h3>
                             <div className="text-sm text-gray-600 mt-1">
-                                {cartRow.product.descriptionShort}
+                                {cartRow.productVariant.descriptionShort}
                             </div>
                             <div className="text-sm text-gray-600">
-                                {`${cartRow.product.descriptionLong?.slice(0, 60)}${
-                                    cartRow.product.descriptionLong?.length > 60 ? '...' : ''
+                                {`${cartRow.productVariant.product.descriptionLong?.slice(0, 60)}${
+                                    cartRow.productVariant.product.descriptionLong?.length > 60 ? '...' : ''
                                 }`}
                             </div>
                         </Link>
@@ -90,10 +90,10 @@ const CartRow = ({ cartRow }: Props) => {
                 {/* Цена */}
                 <div className="text-right">
                     <div className="text-green-600 font-bold text-lg md:text-xl">
-                        {(cartRow.product.new_price * cartRow.quantity).toFixed(2)} ₽
+                        {(cartRow.productVariant.price * cartRow.quantity).toFixed(2)} ₽
                     </div>
                     <div className="text-gray-400 line-through text-sm">
-                        {(cartRow.product.old_price * cartRow.quantity).toFixed(2)} ₽
+                        {(cartRow.productVariant.price * cartRow.quantity).toFixed(2)} ₽
                     </div>
                 </div>
 

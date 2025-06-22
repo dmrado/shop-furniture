@@ -19,6 +19,7 @@ import { ProductModel } from '@/db/models/product.model'
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
 // ProductModel.belongsTo(ColorModel, { as: 'secondaryColor', foreignKey: 'secondary_color' })
 
+
 OrderModel.hasMany(OrderedProductsModel, {
     foreignKey: 'orderId',
     as: 'products'
@@ -32,7 +33,6 @@ ProductVariantModel.belongsTo(ColorModel, {
     foreignKey: 'colorId',
     as: 'color' // Имя ассоциации, которое используем в include
 })
-
 ColorModel.hasMany(ProductVariantModel, {
     foreignKey: 'colorId',
     as: 'variants' // Имя ассоциации, под которым вы сможете получать продукт
@@ -43,53 +43,58 @@ ProductModel.belongsTo(StyleModel, {
     foreignKey: 'styleId',
     as: 'style' // Имя ассоциации, которое используем в include
 })
-
 StyleModel.hasMany(ProductModel, {
     foreignKey: 'styleId',
     as: 'products' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
+
 ProductModel.hasMany(ProductVariantModel, {
     foreignKey: 'productId',
     as: 'variants' // Имя ассоциации, которое используем в include
 })
-
 ProductVariantModel.belongsTo(ProductModel, {
     foreignKey: 'productId',
     as: 'product' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
+
 // 🛒 Корзина говорит: "У меня много вариантов товара"
-CartModel.hasMany(ProductVariantModel, {
-    foreignKey: 'cartId',
+// CartModel.hasMany(ProductVariantModel, {
+//     foreignKey: 'cartId',
+//     as: 'product_variants'
+// })
+//
+// // todo что-то здесь не то в логике📦 Вариант товара говорит: "Я принадлежу одной корзине"
+// ProductVariantModel.belongsTo(CartModel, {
+//     foreignKey: 'cartId',
+//     as: 'cart'
+// })
+
+
+// 1. CartModel принадлежит одному варианту продукта
+CartModel.belongsTo(ProductVariantModel, {
+    foreignKey: 'productVariant', // Это имя поля в CartModel
     as: 'product_variants'
 })
+// 2. Вариант продукта может быть во многих записях корзины (если нужно)
+// ProductVariantModel.hasMany(CartModel, {
+//     foreignKey: 'productVariant',
+//     as: 'cartItems' // Или любое другое подходящее имя
+// });
 
-// 📦 Вариант товара говорит: "Я принадлежу одной корзине"
-ProductVariantModel.belongsTo(CartModel, {
-    foreignKey: 'cartId',
-    as: 'cart'
-})
 
-// StockModel.belongsTo(ProductModel, {
-//     // sourceKey: 'id',
-//     // foreignKey: 'id',
-// })
-// ProductModel.hasOne(StockModel, {
-//     // targetKey: 'id',
+//todo удалить так как мы теперь наполняем корзину вариантами продуктов
+// CartModel.belongsTo(ProductModel, {
 //     foreignKey: 'productId',
-//     as: 'stock', // Алиас для связи
+//     as: 'product'
 // })
-
-CartModel.belongsTo(ProductModel, {
-    foreignKey: 'productId',
-    as: 'product'
-})
 
 CartModel.belongsTo(AuthUserModel, {
     foreignKey: 'userId',
     as: 'user'
 })
+
 
 AddressModel.belongsTo(AuthUserModel, {
     // targetKey: 'id',
@@ -101,6 +106,7 @@ AuthUserModel.hasMany(AddressModel, {
     as: 'addresses', // Алиас для связи
 })
 
+
 AuthUserModel.hasOne(ProfileModel, {
     foreignKey: 'userId', // Это поле в таблице ourusers, в accounts требует sequelize adapter
     as: 'profiles', // Алиас для связи с OuruserModel
@@ -111,6 +117,7 @@ ProfileModel.belongsTo(AuthUserModel, {
     as: 'profiles',
     targetKey: 'id'
 })
+
 
 //так как при входе через разных провайдеров каждый раз создается запись и в AuthUser и в AccountModel, то выбрана связь один-к-одному
 AuthUserModel.hasOne(AccountModel, {
@@ -179,13 +186,23 @@ CategoryModel.belongsToMany(ProductModel, {
     otherKey: 'productId',
     as: 'products'
 })
-
 ProductModel.belongsToMany(CategoryModel, {
     through: ProductCategoryModel,
     foreignKey: 'productId',
     otherKey: 'categoryId',
     as: 'categories'
 })
+
+// StockModel.belongsTo(ProductModel, {
+//     // sourceKey: 'id',
+//     // foreignKey: 'id',
+// })
+// ProductModel.hasOne(StockModel, {
+//     // targetKey: 'id',
+//     foreignKey: 'productId',
+//     as: 'stock', // Алиас для связи
+// })
+
 
 // Создание промежуточной таблицы для связи многие-ко-многим
 // const ProductCategory = sequelize.define('ProductCategory', {}, { timestamps: false });

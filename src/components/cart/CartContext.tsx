@@ -20,9 +20,9 @@ import { AuthUser } from '@/db/models/users.model'
 
 const CartContext = createContext({
     finalAmount: 0,
-    totalOldPrice: 0,
-    totalDiscount: 0,
-    totalDiscountPercent: 0,
+    // totalOldPrice: 0,
+    // totalDiscount: 0,
+    // totalDiscountPercent: 0,
     count: 0,
     cartRows: [] as CartRow[],
     isLoading: false,
@@ -91,7 +91,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const selectedTotalAmount = cartRows
         ? cartRows
             .filter((row) => selectedItems.includes(row.id))
-            .reduce((sum, item) => sum + item.product.new_price * item.quantity, 0)
+            .reduce((sum, item) => sum + item.productVariant.price * item.quantity, 0)
         : 0
 
     // Функция получения содержимого корзины

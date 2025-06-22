@@ -26,6 +26,7 @@ export type CartRow = {
         articul: string;
         sku: string;
         descriptionShort: string;
+        descriptionLong: string;
     };
     color?: { // Опционально
         id: number;
@@ -74,23 +75,23 @@ const CART_INCLUDE = [
             {
                 model: ProductModel,
                 as: 'product',
-                attributes: ['id', 'name', 'articul', 'sku', 'descriptionShort']
+                attributes: [ 'id', 'name', 'descriptionShort', 'descriptionLong' ]
             },
             {
                 model: ColorModel,
                 as: 'color',
-                attributes: ['id', 'name', 'code']
+                attributes: [ 'id', 'name', 'code' ]
             }
         ]
     }
 ]
 
 const mapCartRow = (cartItem: CartModel) => {
-    if (!cartItem.productVariant) {
-        throw new Error(`Cart item with id ${cartItem.id} contains no product variant.`);
+    if (!cartItem.product_variants) {
+        throw new Error(`Cart item with id ${cartItem.id} contains no product variant.`)
     }
 
-    const variant = cartItem.productVariant
+    const variant = cartItem.product_variants
 
     return {
         id: cartItem.id,
@@ -113,9 +114,10 @@ const mapCartRow = (cartItem: CartModel) => {
                 product: {
                     id: variant.product.id,
                     name: variant.product.name,
-                    articul: variant.product.articul,
-                    sku: variant.product.sku,
+                    // articul: variant.product.articul,
+                    // sku: variant.product.sku,
                     descriptionShort: variant.product.descriptionShort,
+                    descriptionLong: variant.product.descriptionLong,
                 }
             }),
             ...(variant.color && {

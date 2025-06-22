@@ -25,7 +25,7 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
                         as: 'color'
                     }]
                 },
-                { model: CategoryModel, as: 'categories' }
+                // { model: CategoryModel, as: 'categories' } //todo удалить
             ]
         }
     )
