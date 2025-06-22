@@ -19,12 +19,10 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     const [ selectedColorId, setSelectedColorId ] = useState<number | null>(null)
     const [ selectedLength, setSelectedLength ] = useState<number | null>(null)
 
-    // Фильтрация массива на основе `filterPriceValue`
+    // Отфильтрованные варианты на основе свойств выше
     const filteredVariants: ProductVariantDTO[] = product.variants
         .filter(variant => selectedColorId === null || variant.colorId === selectedColorId)
         .filter(variant => selectedLength === null || variant.length === selectedLength)
-
-
 
     const allColors = filteredVariants.map(variant => ({ id: variant.color.id, label: variant.color.code }))
 
@@ -38,9 +36,9 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     const allLength = Array.from(new Set(filteredVariants.map(variant => variant.length)))
         .map(length => ({ id: length, label: length }))
 
-    // хранит выбранный вариант продукта по умолчанию первый
+    // хранит финально выбранный пользователем вариант продукта по умолчанию первый
     const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO | null>(product.variants[0] || null)
-    console.log('selectedVariant' ,  selectedVariant)
+    console.log('selectedVariant', selectedVariant)
     //============================================================================
 
     const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
@@ -55,9 +53,37 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     //     setSelectedVariant(defaultVariant)
     // }, [product.id])
 
+    // *** ЕДИНСТВЕННЫЙ useEffect ДЛЯ СИНХРОНИЗАЦИИ selectedVariant ***
+    // Этот useEffect теперь отвечает за:
+    // 1. Установку selectedVariant при первом появлении filteredVariants (т.е. когда product загружен и есть варианты).
+    // 2. Сброс selectedVariant, если filteredVariants становится пустым.
+    // 3. Обновление selectedVariant, если текущий выбранный вариант "выпал" из отфильтрованного списка.
+    useEffect(() => {
+        // Условие 1: Если filteredVariants пуст, сбрасываем selectedVariant на null.
+        if (filteredVariants.length === 0) {
+            setSelectedVariant(null)
+            return
+        }
+
+        // Условие 2:
+        // Если selectedVariant равен null (это будет при первом рендере или после сброса),
+        // ИЛИ если текущий selectedVariant больше не содержится в filteredVariants
+        // (это происходит, когда пользователь меняет фильтры "Цвет" или "Длина" так,
+        // что ранее выбранный вариант больше не подходит).
+        if (selectedVariant === null || !filteredVariants.some(v => v.id === selectedVariant.id)) {
+            // Устанавливаем первый вариант из отфильтрованного списка как новый selectedVariant.
+            setSelectedVariant(filteredVariants[0])
+            // Важно: здесь мы НЕ трогаем selectedColorId и setSelectedLength,
+            // потому что они должны меняться только вручную через их селекты.
+        }
+        // Если selectedVariant уже установлен и все еще находится в filteredVariants,
+        // ничего не делаем. Выбор пользователя сохраняется.
+    }, [ filteredVariants, selectedVariant ]) // Зависимости: изменения filteredVariants или selectedVariant.
+
+
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null
-    console.log('>>>> >>product', product)
+    // console.log('>>>> >>product', product)
 
 
     // todo: temp option
@@ -159,16 +185,15 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                         </div>
 
                         <div>
-                            <h5>Это селект здесь лучше подходит вместо бегункового: </h5>
+                            <h5>Это выбирает КОНКРЕТНЫЙ вариант из ОТФИЛЬТРОВАННЫХ: </h5>
                             <select
                                 className="min-w-64 px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm  hover:border-[#383838] focus:border-[#383838]"
                                 value={selectedVariant?.id}
                                 onChange={(e) => {
-                                    console.log('event.target.value: ', e.target.value, typeof e.target.value)
-                                    const variant = product.variants.find(
-                                        variant => variant.id === Number(e.target.value)) ?? null
-                                    console.log('variant: ', variant)
-                                    setSelectedVariant(variant)
+                                    console.log('selectedVariant?.id variant.id', e.target.value, typeof e.target.value)
+                                    const finalVariant = product.variants.find(variant => variant.id === Number(e.target.value)) ?? null
+                                    console.log('finalVariant: ', finalVariant)
+                                    setSelectedVariant(finalVariant)
                                 }}
                             >
                                 {filteredVariants.map(variant => (
@@ -370,9 +395,15 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                     <button
                                         onClick={async () => {
                                             setIsCartUpdating(true)
-                                            await addProductToCart(product.id, quantitySelectorCount)
+                                            if (selectedVariant) {
+                                                await addProductToCart(selectedVariant.id, quantitySelectorCount)
+                                                console.log('Добавлено в корзину ID:', selectedVariant.id)
+                                            } else {
+                                                console.warn('Невозможно добавить в корзину: вариант продукта не выбран.')
+                                            }
                                             setIsCartUpdating(false)
                                         }}
+                                        disabled={!selectedVariant || isCartUpdating}
                                         className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3  font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
                                         Добавить в корзину
                                     </button>
