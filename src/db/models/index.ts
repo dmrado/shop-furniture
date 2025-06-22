@@ -59,6 +59,18 @@ ProductVariantModel.belongsTo(ProductModel, {
     as: 'product' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
+// 🛒 Корзина говорит: "У меня много вариантов товара"
+CartModel.hasMany(ProductVariantModel, {
+    foreignKey: 'cartId',
+    as: 'product_variants'
+})
+
+// 📦 Вариант товара говорит: "Я принадлежу одной корзине"
+ProductVariantModel.belongsTo(CartModel, {
+    foreignKey: 'cartId',
+    as: 'cart'
+})
+
 // StockModel.belongsTo(ProductModel, {
 //     // sourceKey: 'id',
 //     // foreignKey: 'id',

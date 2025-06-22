@@ -333,6 +333,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                     console.log('clearAllFilters is pushed')
                                     setSelectedColorId(null)
                                     setSelectedLength(null)
+                                    setSelectedVariant(null)
                                 }}
                             >
                                 Очистить все
@@ -397,7 +398,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                             setIsCartUpdating(true)
                                             if (selectedVariant) {
                                                 await addProductToCart(selectedVariant.id, quantitySelectorCount)
-                                                console.log('Добавлено в корзину ID:', selectedVariant.id)
+                                                console.log('Добавлено в корзину ID:', selectedVariant.id, quantitySelectorCount, 'штуки')
                                             } else {
                                                 console.warn('Невозможно добавить в корзину: вариант продукта не выбран.')
                                             }

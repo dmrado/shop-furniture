@@ -2,6 +2,7 @@ import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { ProductModel } from '@/db/models/product.model'
 import { ColorModel } from '@/db/models/color.model'
+import {CartModel} from "@/db/models/cart.model";
 
 export interface ProductVariantDTO extends InferAttributes<ProductVariantModel> {}
 
@@ -13,6 +14,7 @@ export class ProductVariantModel extends Model<InferAttributes<ProductVariantMod
     declare productId: number
     // declare materialId: number
     declare colorId: number
+    declare cartId: CreationOptional<number | null> // может быть null если не в корзине
 
     declare length: number
     declare width: number
@@ -32,14 +34,22 @@ ProductVariantModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        productId: {
+        cartId: {
             type: DataTypes.INTEGER,
-            allowNull: false, // или true, если продукт может не иметь категории
+            allowNull: true, // товар может не быть в корзине
             references: {
-                model: ProductModel,
+                model: CartModel,
                 key: 'id'
             }
         },
+        // productId: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false, // или true, если продукт может не иметь категории
+        //     references: {
+        //         model: ProductModel,
+        //         key: 'id'
+        //     }
+        // },
         // materialId: {
         //     type: DataTypes.INTEGER,
         //     allowNull: false, // или true, если продукт может не иметь категории

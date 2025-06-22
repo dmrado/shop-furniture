@@ -133,7 +133,7 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
     }
 }
 
-export const addProductToCartAction = async (productId: number, quantity: number): Promise<CartRow[]> => {
+export const addProductToCartAction = async (selectedVariantId: number, quantity: number): Promise<CartRow[]> => {
 
     const session = await getServerSession(authOptions)
 
@@ -144,7 +144,7 @@ export const addProductToCartAction = async (productId: number, quantity: number
     const userId = session.user.id
     const existingCartItem = await CartModel.findOne({
         where: {
-            productId,
+            selectedVariantId,
             userId,
         },
         include: CART_INCLUDE

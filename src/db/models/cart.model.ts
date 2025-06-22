@@ -1,16 +1,16 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { ProductModel } from '@/db/models'
 import { AuthUserModel } from '@/db/models/users.model'
+import { ProductVariantDTO } from '@/db/models/product_variant.model'
 export interface CartModelDTO extends InferAttributes<CartModel> {}
 
 export class CartModel extends Model<InferAttributes<CartModel>, InferCreationAttributes<CartModel>> {
     declare id: CreationOptional<number>
-    declare productId: number
+    // declare productId: number
     declare quantity: number
     declare userId: string
     declare discount: CreationOptional<number | null>
-    declare product?: InferAttributes<ProductModel>
+    // declare productVariant?: ProductVariantDTO[]
     declare user?: AuthUserModel
     declare createdAt: CreationOptional<Date>
     declare updatedAt: CreationOptional<Date>
@@ -23,11 +23,11 @@ CartModel.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        productId: {
+        productVariant: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'products',
+                model: 'product_variants',
                 key: 'id'
             }
         },

@@ -146,8 +146,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
 
     //   Функция добавления элемента корзины
-    const addProductToCart = async (productId: number, quantity = 1) => {
-        const updatedCartRows = await addProductToCartAction(productId, quantity)
+    const addProductToCart = async (selectedVariantId: number, quantity = 1) => {
+        const updatedCartRows = await addProductToCartAction(selectedVariantId, quantity)
         setCartRows(updatedCartRows)
     }
 
