@@ -231,80 +231,84 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                         {/*    </div>*/}
                         {/*</div>*/}
 
-                        {/*todo from variants.price*/}
-                        <div>
-                            <h5>Цена: этот селект не отсюда, а из категорий</h5>
-                            <div className="py-4 space-y-4">
-                                <div className="flex gap-2">
-                                    <input
-                                        type="number"
-                                        className="w-1/2 border hover:border-[#383838] focus:border-[#383838] text-[#383838] p-2 text-sm"
-                                        placeholder={0}
-                                        min={0}
-                                        // onInput={() =>updatePriceRange}
-                                        v-model="priceMin"
-                                    />
-                                    <input
-                                        type="number"
-                                        className="w-1/2 border p-2 text-sm"
-                                        placeholder="8 500 765"
-                                        min={0}
-                                        // onInput={() => updatePriceRange" v-model="priceMax"}
-                                    />
-                                </div>
-                                <div className="relative pt-1">
-                                    <div className="flex h-2 bg-gray-200 rounded">
-                                        <div className="h-2 bg-amber-500 rounded"/>
-                                    </div>
-                                    <div className="absolute left-0 top-0 h-2 flex items-center">
-                                        <div
-                                            className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"
-                                            // onMouseDown={() => startDragging('min')}
-                                        />
-                                    </div>
-                                    <div className="absolute right-0 top-0 h-2 flex items-center">
-                                        <div
-                                            className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"
-                                            // onMouseDown={() => startDragging('max')"}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {/*todo перенести для категорий*/}
+                        {/*<div>*/}
+                        {/*    <h5>Цена: этот селект не отсюда, а из категорий</h5>*/}
+                        {/*    <div className="py-4 space-y-4">*/}
+                        {/*        <div className="flex gap-2">*/}
+                        {/*            <input*/}
+                        {/*                type="number"*/}
+                        {/*                className="w-1/2 border hover:border-[#383838] focus:border-[#383838] text-[#383838] p-2 text-sm"*/}
+                        {/*                placeholder={0}*/}
+                        {/*                min={0}*/}
+                        {/*                // onInput={() =>updatePriceRange}*/}
+                        {/*                v-model="priceMin"*/}
+                        {/*            />*/}
+                        {/*            <input*/}
+                        {/*                type="number"*/}
+                        {/*                className="w-1/2 border p-2 text-sm"*/}
+                        {/*                placeholder="8 500 765"*/}
+                        {/*                min={0}*/}
+                        {/*                // onInput={() => updatePriceRange" v-model="priceMax"}*/}
+                        {/*            />*/}
+                        {/*        </div>*/}
+                        {/*        <div className="relative pt-1">*/}
+                        {/*            <div className="flex h-2 bg-gray-200 rounded">*/}
+                        {/*                <div className="h-2 bg-amber-500 rounded"/>*/}
+                        {/*            </div>*/}
+                        {/*            <div className="absolute left-0 top-0 h-2 flex items-center">*/}
+                        {/*                <div*/}
+                        {/*                    className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"*/}
+                        {/*                    // onMouseDown={() => startDragging('min')}*/}
+                        {/*                />*/}
+                        {/*            </div>*/}
+                        {/*            <div className="absolute right-0 top-0 h-2 flex items-center">*/}
+                        {/*                <div*/}
+                        {/*                    className="w-4 h-4 bg-amber-500 rounded-full cursor-pointer"*/}
+                        {/*                    // onMouseDown={() => startDragging('max')"}*/}
+                        {/*                />*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
                         <div>
                             {/* Дополнительные фильтры */}
-                            <div className="space-y-3 mb-6">
-                                {/*todo from products.isNew*/}
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="inStock"
-                                        className="form-checkbox h-4 w-4 text-amber-500"
-                                        // onChange={e => applyFilter('inStock', e.target.checked)}
-                                    />
-                                    <label htmlFor="inStock" className="ml-2 text-sm text-[#383838]">
-                                        В наличии
-                                    </label>
-                                </div>
+                            {/*<div className="space-y-3 mb-6">*/}
+                            {/*    /!*todo from products.isNew*!/*/}
+                            {/*    <div className="flex items-center">*/}
+                            {/*        <input*/}
+                            {/*            type="checkbox"*/}
+                            {/*            id="inStock"*/}
+                            {/*            className="form-checkbox h-4 w-4 text-amber-500"*/}
+                            {/*            // onChange={e => applyFilter('inStock', e.target.checked)}*/}
+                            {/*        />*/}
+                            {/*        <label htmlFor="inStock" className="ml-2 text-sm text-[#383838]">*/}
+                            {/*            В наличии*/}
+                            {/*        </label>*/}
+                            {/*    </div>*/}
                                 {/*todo from именно variants.isActive НЕ products.isActive*/}
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="new2024"
-                                        className="form-checkbox h-4 w-4 text-amber-500"
-                                        // onChange={e => applyFilter('new2024', e.target.checked)}
-                                    />
-                                    <label htmlFor="new2024" className="ml-2 text-sm text-[#383838]">
-                                        Новинки 2025
-                                    </label>
-                                </div>
-                            </div>
+                            {/*    <div className="flex items-center">*/}
+                            {/*        <input*/}
+                            {/*            type="checkbox"*/}
+                            {/*            id="new2024"*/}
+                            {/*            className="form-checkbox h-4 w-4 text-amber-500"*/}
+                            {/*            // onChange={e => applyFilter('new2024', e.target.checked)}*/}
+                            {/*        />*/}
+                            {/*        <label htmlFor="new2024" className="ml-2 text-sm text-[#383838]">*/}
+                            {/*            Новинки 2025*/}
+                            {/*        </label>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
 
                             {/* Кнопка сброса фильтров */}
                             <button
                                 className="flex items-center text-sm text-[#383838] hover:text-black"
-                                // onClick={() => clearAllFilters}
+                                onClick={() => {
+                                    console.log('clearAllFilters is pushed')
+                                    setSelectedColorId(null)
+                                    setSelectedLength(null)
+                                }}
                             >
                                 Очистить все
                                 <svg
