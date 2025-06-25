@@ -60,7 +60,7 @@ const CartTotal = () => {
 
     // todo Функция для шаринга корзины
     const shareCart = async () => {
-        return;
+        return
         try {
             await navigator.share({
                 title: 'Моя корзина',

@@ -13,8 +13,8 @@ import {
     deleteCartRowAction,
     deleteSelectedCartRowsAction,
     updateQuantityAction,
+    addProductToCartAction, // Это действие используется внутри CartProvider
 } from '@/actions/cartActions'
-import { addProductToCartAction } from '@/actions/cartActions'
 import { getCurrentUserAction } from '@/actions/userActions'
 import { AuthUser } from '@/db/models/users.model'
 
@@ -58,6 +58,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             try{
                 const currentUser: AuthUser = await getCurrentUserAction()
                 setUser(currentUser)
+                console.log('Пользователь при загрузке пользователя CartContext', user)
+
             }catch(error) {
                 console.log('Ошибка при загрузке пользователя', error)
             }
@@ -99,7 +101,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         const fetchCart = async () => {
             setIsLoading(true)
 
-            if (user) {
+            // todo здесь вернуть if (user)
+            if (true) {
                 const rows = await getCartAction()
                 setCartRows(rows)
             }

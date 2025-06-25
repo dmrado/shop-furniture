@@ -42,14 +42,14 @@ ProductVariantModel.init(
         //         key: 'id'
         //     }
         // },
-        // productId: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: false, // или true, если продукт может не иметь категории
-        //     references: {
-        //         model: ProductModel,
-        //         key: 'id'
-        //     }
-        // },
+        productId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: ProductModel,
+                key: 'id'
+            }
+        },
         // materialId: {
         //     type: DataTypes.INTEGER,
         //     allowNull: false, // или true, если продукт может не иметь категории

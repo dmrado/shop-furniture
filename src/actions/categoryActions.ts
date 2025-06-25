@@ -36,7 +36,7 @@ export const getChildrenIds = async (categories: any[]):Promise<number[]> => {
     if (categories.length === 0) {
         return []
     }
-
+    //todo корневой не итерабельный (хлебные крошки падают на корневом)
     const directChildren = categories.reduce(
         (acc, category) => [ ...acc, ...category.children ],
         []

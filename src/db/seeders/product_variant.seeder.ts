@@ -412,8 +412,8 @@ const productVariantSeedData = [
 export async function seedProductVariants() {
     try {
         await ProductVariantModel.bulkCreate(productVariantSeedData)
-        console.log('Products seeded successfully')
+        console.log('product_variants seeded successfully')
     } catch (error) {
-        console.error('Error seeding products variants:', error)
+        console.error('Error seeding products_variants:', error)
     }
 }
