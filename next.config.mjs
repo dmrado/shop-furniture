@@ -9,6 +9,13 @@ const nextConfig = {
                 pathname:  '/**',
                 search: '',
             },
+            {
+                protocol: 'https',
+                hostname: 'avatars.yandex.net', // <--- ДОБАВЬТЕ ЭТУ ЗАПИСЬ
+                port: '',
+                pathname:  '/**',
+                search: '', // Необязательно
+            },
         ],
     },
 }
