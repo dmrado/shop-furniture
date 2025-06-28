@@ -3,9 +3,9 @@ import React from 'react'
 import { useCartContext } from '@/components/cart/CartContext'
 
 const CartTotalAmount = () => {
-    const { finalAmount } = useCartContext()
+    const { selectedTotalAmount } = useCartContext()
     return <>
-       {Number(finalAmount.toFixed(2))}
+       {Number(selectedTotalAmount.toFixed(2))}
         </>
 }
 

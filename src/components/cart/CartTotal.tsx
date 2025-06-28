@@ -66,11 +66,11 @@ const CartTotal = () => {
                 title: 'Моя корзина',
                 text: `Товаров в корзине: ${count}`,
                 url: window.location.href,
-            });
+            })
         } catch (error) {
             console.error('Ошибка при попытке поделиться:', error)
         }
-    };
+    }
 
     return (
         <>
@@ -78,15 +78,15 @@ const CartTotal = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold"> 🛍️ Корзина </h2>
 
-                    <div className="flex flex-col gap-4">
-                        {/*todo селать прверку для подсчета только выбранных*/}
-                        {selectedTotalAmount > 0 && (
-                            <div className="flex justify-between">
-                                <span>Выбрано на сумму:&nbsp;</span>
-                                <span>{selectedTotalAmount.toFixed(2)}</span>
-                            </div>
-                        )}
-                    </div>
+                    {/*<div className="flex flex-col gap-4">*/}
+                    {/*    /!*todo селать прверку для подсчета только выбранных*!/*/}
+                    {/*    {selectedTotalAmount > 0 && (*/}
+                    {/*        <div className="flex justify-between">*/}
+                    {/*            <span>Выбрано на сумму:&nbsp;</span>*/}
+                    {/*            <span>{selectedTotalAmount.toFixed(2)}</span>*/}
+                    {/*        </div>*/}
+                    {/*    )}*/}
+                    {/*</div>*/}
 
                     <div className="flex items-center gap-4">
                         <label className="flex items-center gap-2">
@@ -141,20 +141,20 @@ const CartTotal = () => {
                     <div className="text-2xl text-green-600 font-bold">
                         Итого: <CartTotalAmount/> ₽
                     </div>
-                    <div className="flex justify-end font-bold">
-                        <span>Общая сумма:&nbsp;</span>
-                        <span>{isLoading ? "..." : finalAmount.toFixed(2)}</span>
-                    </div>
-                    {totalDiscountPercent > 0 && (
-                        <div className="text-sm text-red-600 font-bold">
-                            - {isLoading ? "..." : totalDiscountPercent.toFixed(2)} %
-                        </div>
-                    )}
-                    {totalDiscount > 0 && (
-                        <div className="text-sm text-red-600 font-bold">
-                            Скидка: {isLoading ? "..." : totalDiscount.toFixed(2)} ₽
-                        </div>
-                    )}
+                    {/*<div className="flex justify-end font-bold">*/}
+                    {/*    <span>Общая сумма:&nbsp;</span>*/}
+                    {/*    <span>{isLoading ? "..." : finalAmount.toFixed(2)}</span>*/}
+                    {/*</div>*/}
+                    {/*{totalDiscountPercent > 0 && (*/}
+                    {/*    <div className="text-sm text-red-600 font-bold">*/}
+                    {/*        - {isLoading ? "..." : totalDiscountPercent.toFixed(2)} %*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
+                    {/*{totalDiscount > 0 && (*/}
+                    {/*    <div className="text-sm text-red-600 font-bold">*/}
+                    {/*        Скидка: {isLoading ? "..." : totalDiscount.toFixed(2)} ₽*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                     <div className="text-sm text-gray-600 mt-1">
                         Товарных позиций: {isLoading ? "..." : count}
                     </div>
@@ -169,7 +169,7 @@ const CartTotal = () => {
                 </div>
             </div>
         </>
-    );
-};
+    )
+}
 
 export default CartTotal
