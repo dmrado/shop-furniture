@@ -42,7 +42,7 @@ const CartRow = ({ cartRow }: Props) => {
                 <div className="relative w-full sm:w-32 h-32 rounded-lg overflow-hidden bg-gray-50 bg-gradient-to-r from-gray-50 to-gray-100">
                     <Image
                         src={cartRow.productVariant.image}
-                        alt={cartRow.productVariant.name}
+                        alt={`Картинка ${cartRow.productVariant.name}`}
                         fill
                         className="object-contain hover:scale-105 transition-transform duration-300"
                     />
