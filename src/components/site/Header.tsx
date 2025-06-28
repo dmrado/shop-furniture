@@ -1,5 +1,5 @@
 'use client'
-import React, {useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import Link from 'next/link'
 import {Decoro} from '@/components/site/img/Decoro'
 import {Heart} from '@/components/site/img/Heart'
@@ -10,6 +10,7 @@ import {Profile} from '@/components/site/img/Profile'
 import {ProfileY} from '@/components/site/img/ProfileY'
 import {Search} from '@/components/site/img/Search'
 import {Phone} from '@/components/site/img/Phone'
+import { useDebouncedHover } from '@/hooks/useDebouncedHover'
 
 import CartTotalAmount from '@/components/cart/CartTotalAmount'
 // import { getServerSession } from 'next-auth'
@@ -21,10 +22,12 @@ const Header = () => {
     // для мобильного меню
     const [isOpen, setIsOpen] = useState(false)
 
-    const [isFavoritesIconHovered, setIsFavoritesIconHovered] = useState(false)
-    const [isCartIconHovered, setIsCartIconHovered] = useState(false)
-    const [isProfileIconHovered, setIsProfileIconHovered] = useState(false)
     // todo предотвратить для иконок "залипание" состояния React попробуй debounce
+    // Используем хук для каждой иконки
+    const { isHovered: isFavoritesIconHovered, onMouseEnter: onFavoritesMouseEnter, onMouseLeave: onFavoritesMouseLeave } = useDebouncedHover(false, 100)
+    const { isHovered: isCartIconHovered, onMouseEnter: onCartMouseEnter, onMouseLeave: onCartMouseLeave } = useDebouncedHover(false, 100)
+    const { isHovered: isProfileIconHovered, onMouseEnter: onProfileMouseEnter, onMouseLeave: onProfileMouseLeave } = useDebouncedHover(false, 100)
+
 
 
     // для подменю в десктопном меню
@@ -202,8 +205,8 @@ const Header = () => {
                 <Link
                     href="/favorites"
                     onClick={closeMenu}
-                    onMouseEnter={() => setIsFavoritesIconHovered(true)}
-                    onMouseLeave={() => setIsFavoritesIconHovered(false)}
+                    onMouseEnter={onFavoritesMouseEnter}
+                    onMouseLeave={onFavoritesMouseLeave}
                     className="flex items-center"
                 >
                     {isFavoritesIconHovered ?
@@ -223,8 +226,8 @@ const Header = () => {
                 <Link
                     href="/cart"
                     onClick={closeMenu}
-                    onMouseEnter={() => setIsCartIconHovered(true)}
-                    onMouseLeave={() => setIsCartIconHovered(false)}
+                    onMouseEnter={onCartMouseEnter}
+                    onMouseLeave={onCartMouseLeave}
                     className="flex items-center relative"
                 >
                     <NavCartTotal/>
@@ -263,14 +266,8 @@ const Header = () => {
                     <Link
                         href={'/profile'}
                         onClick={closeMenu}
-                        onMouseEnter={() => {
-                            console.log('Вход мыши: Устанавливаем в true')
-                            setIsProfileIconHovered(true)
-                        }}
-                        onMouseLeave={() => {
-                            console.log('Выход мыши: Устанавливаем в false');
-                            setIsProfileIconHovered(false)
-                        }}
+                        onMouseEnter={onProfileMouseEnter}
+                        onMouseLeave={onProfileMouseLeave}
                         className="flex items-center"
                     >
                         {isProfileIconHovered ?
