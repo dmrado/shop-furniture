@@ -131,14 +131,19 @@ const mapCartRow = (cartItem: CartModel) => {
     };
 };
 
-// fixme: почему то при заходе на http://127.0.0.1:3000/ сразу ломится за Cart и соотв логиниться CartContext useEffect 84 строка
 export async function getCartAction(): Promise<CartRow[]> {
     const session = await getServerSession(authOptions)
     // console.log('Cart Session', session)
 
-    if (!session || !session.user) {
-        redirect('/api/auth/signin')
+    // if (!session || !session.user) {
+    //     redirect('/api/auth/signin')
+    // }
+
+    if (!session || !session.user || !session.user.id) {
+        console.log('User not authenticated for cart action. Returning empty cart.')
+        return []
     }
+
     const userId = session.user.id
 
     const { rows } = await CartModel.findAndCountAll({
