@@ -15,8 +15,8 @@ import {
     updateQuantityAction,
     addProductToCartAction, // Это действие используется внутри CartProvider
 } from '@/actions/cartActions'
-import { getCurrentUserAction } from '@/actions/userActions'
-import { AuthUser } from '@/db/models/users.model'
+import {getCurrentUserAction} from '@/actions/userActions'
+import {AuthUser} from '@/db/models/users.model'
 
 const CartContext = createContext({
     finalAmount: 0,
@@ -26,14 +26,19 @@ const CartContext = createContext({
     count: 0,
     cartRows: [] as CartRow[],
     isLoading: false,
-    updateQuantity: async (cartId: number, quantity: number) => {},
-    deleteCartRow: async (cartId: number) => {},
-    addProductToCart: async (productId: number, quantity?: number) => {},
+    updateQuantity: async (cartId: number, quantity: number) => {
+    },
+    deleteCartRow: async (cartId: number) => {
+    },
+    addProductToCart: async (productId: number, quantity?: number) => {
+    },
     selectedItems: [], // храним ID выбранных элементов
-    toggleSelection: (id: number) => {}, // функция для переключения выбора
+    toggleSelection: (id: number) => {
+    }, // функция для переключения выбора
     //   setSelectedItems: Set<number>,
     onSelect: true,
-    setOnSelect: () => {},
+    setOnSelect: () => {
+    },
     selectedTotalAmount: 0,
     selectAll: () => {
         id: Number
@@ -43,7 +48,7 @@ const CartContext = createContext({
     },
 })
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+export const CartProvider = ({ childre }: { children: ReactNode }) => {
     const [ cartRows, setCartRows ] = useState<CartRow[]>([])
     const [ isLoading, setIsLoading ] = useState(false)
     // todo стейты для чекбокса выбора товаров в корзине
@@ -55,13 +60,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const loadUser = async () => {
-            try{
+            try {
                 const currentUser: AuthUser = await getCurrentUserAction()
                 setUser(currentUser)
                 console.log('Пользователь при загрузке пользователя CartContext', user)
 
-            }catch(error) {
+            } catch (error) {
                 console.log('Ошибка при загрузке пользователя', error)
+                setUser(null) // Важно: установить null при ошибке, чтобы избежать зацикливания или некорректного состояния
             }
         }
         loadUser()
@@ -89,30 +95,33 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     // Функция для подсчета общей суммы только выбранных товаров
-    //todo need check что переменная cartRows не инициализирована или равна undefined к моменту выполнения этого кода. Ошибка возникает еще до того, как код доходит до обращения к item.product.new_price. Проверьте, где и как инициализируется переменная cartRows. Возможно, вы пытаетесь использовать её до того, как данные загружены с сервера или до инициализации состояния. Если вы используете асинхронную загрузку данных, убедитесь, что вы обрабатываете начальное состояние, когда данные еще не загружены.
     const selectedTotalAmount = cartRows
         ? cartRows
             .filter((row) => selectedItems.includes(row.id))
             .reduce((sum, item) => sum + item.productVariant.price * item.quantity, 0)
         : 0
 
-    // Функция получения содержимого корзины
+    // Функция получения содержимого корзины зависит от наличия нового юзера
     useEffect(() => {
         const fetchCart = async () => {
-            setIsLoading(true)
-
-            // todo здесь вернуть if (user)
-            if (true) {
+            if (user === undefined) {
+                return
+            }
+            try {
+                setIsLoading(true)
                 const rows = await getCartAction()
                 setCartRows(rows)
+                setSelectedItems(rows.map((row) => row.id))
+            } catch (error) {
+                console.error('Ошибка при загрузке корзины:', error)
+                setCartRows([]); // Очищаем корзину при ошибке
+                setSelectedItems([]); // Очищаем выбранные элементы при ошибке
+            } finally {
+                setIsLoading(false)
             }
-
-            setIsLoading(false)
-            setSelectedItems(cartRows.map((row) => row.id))
-            console.log('rows', cartRows)
         }
         fetchCart()
-    }, [])
+    }, [ user ])
 
     //   Функция обновления количества элемента корзины
     const updateQuantity = async (
