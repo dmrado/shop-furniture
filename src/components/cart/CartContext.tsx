@@ -48,7 +48,7 @@ const CartContext = createContext({
     },
 })
 
-export const CartProvider = ({ childre }: { children: ReactNode }) => {
+export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [ cartRows, setCartRows ] = useState<CartRow[]>([])
     const [ isLoading, setIsLoading ] = useState(false)
     // todo стейты для чекбокса выбора товаров в корзине

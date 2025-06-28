@@ -101,7 +101,7 @@ const CartTotal = () => {
                                 title="Выбрать все"
                                 role="img"
                                 aria-label="select all"
-                                className="text-xl"
+                                className="text-xl text-blue-500"
                             >
                 ☑️
                             </span>
