@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import Decoro from '@/components/site/img/Decoro.svg'
-import Image from 'next/image'
-import React from 'react'
+import { Decoro } from '@/components/site/img/Decoro.tsx'
 
 const NavStick = () => {
     return <>
@@ -15,9 +13,7 @@ export default function Footer() {
             <div className="container mx-auto px-4 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between mb-10">
                     <div className="mb-8 md:mb-0">
-                        <Image
-                            src={Decoro}
-                            alt="Logo"
+                        <Decoro
                             width={135}
                             height={35}
                             className=""
