@@ -1,12 +1,12 @@
 import React from 'react'
-import { getCategory, getCategoryChildren, getCategoryParents, getChildrenIds } from '@/actions/categoryActions'
-import { getProducts } from '@/actions/productActions'
+import {getCategory, getCategoryChildren, getCategoryParents, getChildrenIds} from '@/actions/categoryActions'
+import {getProducts} from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
 import SideBar from '@/components/site/SideBar'
-import { getTags } from '@/actions/tagActions'
+import {getTags} from '@/actions/tagActions'
 import CategoryBar from '@/components/CategoryBar'
-import { notFound } from 'next/navigation'
+import {notFound} from 'next/navigation'
 import Title from '@/components/site/Title'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 
@@ -15,7 +15,7 @@ type Props = {
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
 };
 
-const CategoryPage = async ({ params, searchParams }: Props) => {
+const CategoryPage = async ({params, searchParams}: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
@@ -43,7 +43,7 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
     const flatChilrenIds = await getChildrenIds(categoryChildren)
     console.log('flatChilrenIds', flatChilrenIds)
 
-    const { count, products } = await getProducts([ category.id, ...flatChilrenIds ], offset, limit)
+    const {count, products} = await getProducts([category.id, ...flatChilrenIds], offset, limit)
 
     // const tags = await getTags()
     // console.log('???????????? tags from SlugPage', tags)
@@ -57,10 +57,19 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
             {/*h2 category.service-instructions*/}
             {/*h3 category.description*/}
             <Breadcrumbs
-                items={categoryParents.map(category => ({
-                    label: category.name,
-                    href: `/category/${category.slug}`
-                }))}
+                items={[
+                    {
+                        label: 'Главная',
+                        href: '/'
+                    },
+                    {
+                        label: 'Каталог',
+                        href: '/category'
+                    },
+                    ...categoryParents.map(category => ({
+                        label: category.name,
+                        href: `/category/${category.slug}`
+                    })) ] }
             />
 
             <h1 className="text-2xl font-bold mb-6">Категория: {categorySlug}</h1>

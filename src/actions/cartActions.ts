@@ -211,7 +211,7 @@ export const addProductToCartAction = async (selectedVariantId: number, quantity
 
     console.log('Cart Session', session)
     if (!session || !session.user) {
-        redirect('/api/auth/signin')
+        throw new Error('Not authenticated user')
     }
     const userId = session.user.id
     const existingCartItem = await CartModel.findOne({

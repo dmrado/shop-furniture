@@ -1,15 +1,11 @@
 'use client'
 import React, { useState, Fragment } from 'react'
 import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
-import { Description, Dialog } from '@headlessui/react'
+// import { Description, Dialog } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
-import { createInstantUserAction } from '@/actions/userActions'
-import { Simulate } from 'react-dom/test-utils'
-import error = Simulate.error;
-import { handleOrderToDB } from '@/actions/user/handleOrderToDB'
-import Modal from '@/components/site/Modal'
+// import { createInstantUserAction } from '@/actions/userActions'
 
 export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
     const [ isFocused, setIsFocused ] = useState(false)

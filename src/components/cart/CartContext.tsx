@@ -17,6 +17,7 @@ import {
 } from '@/actions/cartActions'
 import {getCurrentUserAction} from '@/actions/userActions'
 import {AuthUser} from '@/db/models/users.model'
+import {UnauthorizedError} from "@/errors";
 
 const CartContext = createContext({
     finalAmount: 0,
@@ -159,7 +160,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     //   Функция добавления элемента корзины
     const addProductToCart = async (selectedVariantId: number, quantity = 1) => {
+        if(!user) {
+            throw new UnauthorizedError()
+        }
         const updatedCartRows = await addProductToCartAction(selectedVariantId, quantity)
+        console.log('updatedCartRows from addProductToCart CartContext', updatedCartRows)
         setCartRows(updatedCartRows)
     }
 
