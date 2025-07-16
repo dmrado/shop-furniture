@@ -33,12 +33,17 @@ const ProductForm = ({ product }: ProductFormProps) => {
     const [ isNew, setIsNew ] = useState(product?.isNew || false)
     const [ isActive, setIsActive ] = useState(product?.isActive || false)
 
+    // Инициализируем 1, так как 0 может быть невалидным FK
+    const [brandId, setBrandId] = useState(product?.brandId || 1);
+    const [collectionId, setCollectionId] = useState(product?.collectionId || 1);
+    const [countryId, setCountryId] = useState(product?.countryId || 1);
+    const [styleId, setStyleId] = useState(product?.styleId || 1);
+
     // Состояния для валидации
     const [ touchedName, setTouchedName ] = useState(false)
     const [ isFileSizeError, setFileSizeError ] = useState(false)
 
-    // Placeholder для onSubmit, как было в оригинале
-    const onSubmit = (formData: FormData) => {
+       const onSubmit = (formData: FormData) => {
         handleForm(formData)
     }
 
@@ -53,6 +58,15 @@ const ProductForm = ({ product }: ProductFormProps) => {
         }
         return baseStyle + 'text-green-600 opacity-50 cursor-not-allowed' // Добавил стили для disabled
     }
+
+    // Вспомогательная функция для генерации опций select
+    const generateOptions = () => {
+        const options = [];
+        for (let i = 1; i <= 10; i++) { // Генерируем опции от 1 до 10
+            options.push(<option key={i} value={i}>{i}</option>);
+        }
+        return options;
+    };
 
     return (
         <form className="bg-white rounded px-8 pt-6 pb-8" action={onSubmit}>
@@ -80,6 +94,67 @@ const ProductForm = ({ product }: ProductFormProps) => {
                     maxLength={180} // Добавляем ограничение по длине
                 />
                 {!isNameValid() && <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
+            </div>
+
+            {/* НОВЫЕ ПОЛЯ SELECT ДЛЯ ID: */}
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
+                    ID Бренда:
+                </label>
+                <select
+                    name="brandId"
+                    id="brandId"
+                    value={brandId}
+                    onChange={(e) => setBrandId(Number(e.target.value))}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                    {generateOptions()}
+                </select>
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
+                    ID Коллекции:
+                </label>
+                <select
+                    name="collectionId"
+                    id="collectionId"
+                    value={collectionId}
+                    onChange={(e) => setCollectionId(Number(e.target.value))}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                    {generateOptions()}
+                </select>
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
+                    ID Страны:
+                </label>
+                <select
+                    name="countryId"
+                    id="countryId"
+                    value={countryId}
+                    onChange={(e) => setCountryId(Number(e.target.value))}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                    {generateOptions()}
+                </select>
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
+                    ID Стиля:
+                </label>
+                <select
+                    name="styleId"
+                    id="styleId"
+                    value={styleId}
+                    onChange={(e) => setStyleId(Number(e.target.value))}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                    {generateOptions()}
+                </select>
             </div>
 
             {/* Поле 'articul' */}

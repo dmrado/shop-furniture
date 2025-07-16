@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { ProductModel } from '@/db/models/product.model.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import fs from 'fs'
 // Импортируем типы для InferAttributes, InferCreationAttributes, CreationOptional
@@ -54,8 +53,14 @@ type ProductFormData = {
     sku: string;
     descriptionShort: string;
     descriptionLong: string;
+
     isNew: boolean;
     isActive: boolean;
+
+    brandId: number;
+    collectionId: number;
+    countryId: number;
+    styleId: number;
 }
 
 const cleanFormData = (formData: FormData): ProductFormData => {
@@ -67,6 +72,10 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     const descriptionLong = formData.get('descriptionLong')
     const isNew = formData.get('isNew') // Чекбокс будет 'on' или null/undefined
     const isActive = formData.get('isActive') // Чекбокс будет 'on' или null/undefined
+    const brandId = formData.get('brandId')
+    const collectionId = formData.get('collectionId')
+    const countryId = formData.get('countryId')
+    const styleId = formData.get('styleId')
 
     console.log('--- FormData contents ---');
     console.log('id:', id, typeof id);
@@ -77,6 +86,10 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     console.log('descriptionLong:', descriptionLong, typeof descriptionLong);
     console.log('isNew:', isNew, typeof isNew);
     console.log('isActive:', isActive, typeof isActive);
+    console.log('brandId:', brandId, typeof brandId);
+    console.log('collectionId:', collectionId, typeof collectionId);
+    console.log('countryId:', countryId, typeof countryId);
+    console.log('styleId:', styleId, typeof styleId);
     console.log('-------------------------');
 
     // Проверяем типы полученных данных
@@ -88,6 +101,19 @@ const cleanFormData = (formData: FormData): ProductFormData => {
         typeof descriptionLong !== 'string'
     ) {
         throw new ValidationError('Invalid data type for text fields')
+    }
+
+    // FormData.get() для <select> всегда возвращает строку, даже если это число
+    const parsedBrandId = Number(brandId)
+    const parsedCollectionId = Number(collectionId)
+    const parsedCountryId = Number(countryId)
+    const parsedStyleId = Number(styleId)
+
+    if (isNaN(parsedBrandId) || isNaN(parsedCollectionId) || isNaN(parsedCountryId) || isNaN(parsedStyleId)) {
+        throw new ValidationError('Invalid data type for ID fields');
+    }
+    if (parsedBrandId <= 0 || parsedCollectionId <= 0 || parsedCountryId <= 0 || parsedStyleId <= 0) {
+        throw new ValidationError('ID fields cannot be zero or negative');
     }
 
     // Проверяем обязательные поля (например, name)
@@ -111,6 +137,10 @@ const cleanFormData = (formData: FormData): ProductFormData => {
         descriptionLong,
         isNew: parsedIsNew,
         isActive: parsedIsActive,
+        brandId: parsedBrandId,
+        collectionId: parsedCollectionId,
+        countryId: parsedCountryId,
+        styleId: parsedStyleId,
     }
 }
 
@@ -153,8 +183,11 @@ export const handleForm = async (formData: FormData) => {
         // Подключаем ProductModel
         // Создаем объект для upsert
         const upsertData: InferCreationAttributes<ProductModel> = {
-            //todo добавить в форму ввод id-шек, а позже выбор из выпадашек по справочникам
-            brandId: 1, collectionId: 1, countryId: 1, styleId: 1,
+            brandId: productData.brandId,
+            collectionId: productData.collectionId,
+            countryId: productData.countryId,
+            styleId: productData.styleId,
+
             id: productData.id,
             name: productData.name,
             articul: productData.articul,
@@ -197,7 +230,7 @@ export const handleForm = async (formData: FormData) => {
         // }
 
         revalidatePath('/product')
-        redirect('/product') // Перенаправляем на страницу со списком продуктов
+        redirect(`/product/${product.id}`) // Перенаправляем на страницу нового продукта
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)
         // Проверяем, является ли ошибка перенаправлением по ее 'digest' свойству. Это самый надежный способ для Server Actions
