@@ -9,13 +9,13 @@ import { redirect } from 'next/navigation'
 const AddPost = async () => {
     const session = await getServerSession()
 
-    if (!session || !isAdmin(session) || isSessionExpired(session)) {
-        return redirect('/api/auth/signin')
-    }
+    // if (!session || !isAdmin(session) || isSessionExpired(session)) {
+    //     return redirect('/api/auth/signin')
+    // }
 
     return (<>
         <div className="flex justify-center">
-            <h1 className="mt-6 pb-2">Создадим новый пост...</h1>
+            <h1 className="mt-6 pb-2">Ввод товарной позиции</h1>
         </div>
 
         <div className="items-center p-5">
