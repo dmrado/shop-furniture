@@ -125,8 +125,8 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     }
 
     // Преобразуем чекбоксы в булевы значения
-    const parsedIsNew = isNew === 'on' ? true : false
-    const parsedIsActive = isActive === 'on' ? true : false
+    const parsedIsNew = isNew === 'on'
+    const parsedIsActive = isActive === 'on'
 
     return {
         id: id ? Number(id) : undefined,

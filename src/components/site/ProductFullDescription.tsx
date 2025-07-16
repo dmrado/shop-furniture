@@ -131,7 +131,8 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                     <div className="space-y-6">
                         <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
                         <div className="prose prose-sm text-[#383838]">
-                            <p>{product.descriptionLong}</p>
+                            {/*<p>{product.descriptionLong}</p>*/}
+                            <div dangerouslySetInnerHTML={{ __html: product.descriptionLong }}/>
                         </div>
                         <div>
                             <h5>Длина: </h5>
