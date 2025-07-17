@@ -8,7 +8,11 @@ import { redirect } from 'next/navigation'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import fs from 'fs'
 // Импортируем типы для InferAttributes, InferCreationAttributes, CreationOptional
-import { InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize'
+import {
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional
+} from 'sequelize'
 
 class ValidationError extends Error {}
 
@@ -24,8 +28,8 @@ const saveFile = async (file: File): Promise<string> => {
     const resizedBuffer = await sharp(buffer)
         .resize(1356, 668)
         .toBuffer()
-        .then(buffer => buffer)
-        .catch(err => console.error(err))
+        .then((buffer) => buffer)
+        .catch((err) => console.error(err))
 
     if (!resizedBuffer) {
         throw new ValidationError('File format not supported')
@@ -47,20 +51,20 @@ const saveFile = async (file: File): Promise<string> => {
 
 // Новый тип для очищенных данных формы, соответствующий ProductModel
 type ProductFormData = {
-    id: number | undefined;
-    name: string;
-    articul: string;
-    sku: string;
-    descriptionShort: string;
-    descriptionLong: string;
+    id: number | undefined
+    name: string
+    articul: string
+    sku: string
+    descriptionShort: string
+    descriptionLong: string
 
-    isNew: boolean;
-    isActive: boolean;
+    isNew: boolean
+    isActive: boolean
 
-    brandId: number;
-    collectionId: number;
-    countryId: number;
-    styleId: number;
+    brandId: number
+    collectionId: number
+    countryId: number
+    styleId: number
 }
 
 const cleanFormData = (formData: FormData): ProductFormData => {
@@ -77,20 +81,20 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     const countryId = formData.get('countryId')
     const styleId = formData.get('styleId')
 
-    console.log('--- FormData contents ---');
-    console.log('id:', id, typeof id);
-    console.log('name:', name, typeof name);
-    console.log('articul:', articul, typeof articul);
-    console.log('sku:', sku, typeof sku);
-    console.log('descriptionShort:', descriptionShort, typeof descriptionShort);
-    console.log('descriptionLong:', descriptionLong, typeof descriptionLong);
-    console.log('isNew:', isNew, typeof isNew);
-    console.log('isActive:', isActive, typeof isActive);
-    console.log('brandId:', brandId, typeof brandId);
-    console.log('collectionId:', collectionId, typeof collectionId);
-    console.log('countryId:', countryId, typeof countryId);
-    console.log('styleId:', styleId, typeof styleId);
-    console.log('-------------------------');
+    console.log('--- FormData contents ---')
+    console.log('id:', id, typeof id)
+    console.log('name:', name, typeof name)
+    console.log('articul:', articul, typeof articul)
+    console.log('sku:', sku, typeof sku)
+    console.log('descriptionShort:', descriptionShort, typeof descriptionShort)
+    console.log('descriptionLong:', descriptionLong, typeof descriptionLong)
+    console.log('isNew:', isNew, typeof isNew)
+    console.log('isActive:', isActive, typeof isActive)
+    console.log('brandId:', brandId, typeof brandId)
+    console.log('collectionId:', collectionId, typeof collectionId)
+    console.log('countryId:', countryId, typeof countryId)
+    console.log('styleId:', styleId, typeof styleId)
+    console.log('-------------------------')
 
     // Проверяем типы полученных данных
     if (
@@ -109,18 +113,30 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     const parsedCountryId = Number(countryId)
     const parsedStyleId = Number(styleId)
 
-    if (isNaN(parsedBrandId) || isNaN(parsedCollectionId) || isNaN(parsedCountryId) || isNaN(parsedStyleId)) {
-        throw new ValidationError('Invalid data type for ID fields');
+    if (
+        isNaN(parsedBrandId) ||
+        isNaN(parsedCollectionId) ||
+        isNaN(parsedCountryId) ||
+        isNaN(parsedStyleId)
+    ) {
+        throw new ValidationError('Invalid data type for ID fields')
     }
-    if (parsedBrandId <= 0 || parsedCollectionId <= 0 || parsedCountryId <= 0 || parsedStyleId <= 0) {
-        throw new ValidationError('ID fields cannot be zero or negative');
+    if (
+        parsedBrandId <= 0 ||
+        parsedCollectionId <= 0 ||
+        parsedCountryId <= 0 ||
+        parsedStyleId <= 0
+    ) {
+        throw new ValidationError('ID fields cannot be zero or negative')
     }
 
     // Проверяем обязательные поля (например, name)
-    if (!name || name.trim().length === 0) { // Проверка на пустую строку после обрезки пробелов
+    if (!name || name.trim().length === 0) {
+        // Проверка на пустую строку после обрезки пробелов
         throw new ValidationError('Product name cannot be empty')
     }
-    if (name.length < TITLE_MIN_LENGTH) { // Используем TITLE_MIN_LENGTH для name
+    if (name.length < TITLE_MIN_LENGTH) {
+        // Используем TITLE_MIN_LENGTH для name
         throw new ValidationError('Product name too short')
     }
 
@@ -140,7 +156,7 @@ const cleanFormData = (formData: FormData): ProductFormData => {
         brandId: parsedBrandId,
         collectionId: parsedCollectionId,
         countryId: parsedCountryId,
-        styleId: parsedStyleId,
+        styleId: parsedStyleId
     }
 }
 
@@ -149,7 +165,8 @@ const cleanFormFile = (formData: FormData): File | undefined => {
     if (file == null) {
         return undefined
     }
-    if (!(file instanceof File)) { // Проверяем, что это действительно File, а не string
+    if (!(file instanceof File)) {
+        // Проверяем, что это действительно File, а не string
         throw new ValidationError('Unexpected file type for product_picture')
     }
 
@@ -167,17 +184,25 @@ export const handleForm = async (formData: FormData) => {
         // Очищаем и получаем данные формы
         const productData = cleanFormData(formData)
 
-        // Получаем файл
+        // Получаем и сохраняем файл
+        //todo в какую модель добавить поле path для изображения
         const formFile = cleanFormFile(formData)
+        if (formFile) {
+            await saveFile(formFile)
+        }
 
         //ВНИМАНИЕ: нужно сохранить форматирование (жирный, курсив и т.д.) в descriptionLong, то удалять все HTML-теги не стоит. В таком случае ReactQuill поступает правильно, оборачивая в <p>. Если ты хочешь сохранить HTML, просто не делай replace(/<[^>]+>/g, '').
 
         let preview: string | undefined
         // Для 'descriptionShort' или 'descriptionLong' можно сделать превью
         if (productData.descriptionShort) {
-            preview = productData.descriptionShort.replace(/<[^>]+>/g, '').slice(0, 100)
+            preview = productData.descriptionShort
+                .replace(/<[^>]+>/g, '')
+                .slice(0, 100)
         } else if (productData.descriptionLong) {
-            preview = productData.descriptionLong.replace(/<[^>]+>/g, '').slice(0, 100)
+            preview = productData.descriptionLong
+                .replace(/<[^>]+>/g, '')
+                .slice(0, 100)
         }
 
         // Подключаем ProductModel
@@ -215,7 +240,7 @@ export const handleForm = async (formData: FormData) => {
         }
 
         // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
-        const [ product, created ] = await ProductModel.upsert(upsertData)
+        const [product, created] = await ProductModel.upsert(upsertData)
 
         if (created) {
             console.log(`Product with ID ${product.id} was created.`)
@@ -234,15 +259,25 @@ export const handleForm = async (formData: FormData) => {
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)
         // Проверяем, является ли ошибка перенаправлением по ее 'digest' свойству. Это самый надежный способ для Server Actions
-        if (err && typeof err === 'object' && 'digest' in err && typeof err.digest === 'string' && err.digest.startsWith('NEXT_REDIRECT')) {
+        if (
+            err &&
+            typeof err === 'object' &&
+            'digest' in err &&
+            typeof err.digest === 'string' &&
+            err.digest.startsWith('NEXT_REDIRECT')
+        ) {
             throw err // Перебрасываем ошибку перенаправления дальше
         }
 
         // Для всех остальных ошибок
         if (err instanceof ValidationError) {
-            redirect(`/api/error/?code=400&message=VALIDATION_ERROR&details=${encodeURIComponent(err.message)}`);
+            redirect(
+                `/api/error/?code=400&message=VALIDATION_ERROR&details=${encodeURIComponent(err.message)}`
+            )
         }
         // Для остальных серверных ошибок
-        redirect(`/api/error/?code=500&message=SERVER_ERROR_on_handleForm&details=${encodeURIComponent(String(err))}`);
+        redirect(
+            `/api/error/?code=500&message=SERVER_ERROR_on_handleForm&details=${encodeURIComponent(String(err))}`
+        )
     }
 }
