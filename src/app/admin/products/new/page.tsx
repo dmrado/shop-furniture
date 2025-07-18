@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import React from 'react'
-import PostForm from '@/components/admin/PostForm.tsx'
+import ProductForm from '@/components/admin/ProductForm.tsx'
 import { isAdmin } from '@/app/isAdmin.ts'
 import { isSessionExpired } from '@/app/isSessionExpired.ts'
 import { redirect } from 'next/navigation'
+import ProductVariantForm from "@/components/admin/ProductVariantForm";
 
 const AddPost = async () => {
     const session = await getServerSession()
@@ -19,9 +20,9 @@ const AddPost = async () => {
         </div>
 
         <div className="items-center p-5">
-            <PostForm post={{ title: '', text: '' }}/>
+            <ProductForm/>
             <div className="flex justify-center p-10">
-                <Link href={'/posts'}>
+                <Link href={'/admin'}>
                     <button className='button_blue'>Вернуться</button>
                 </Link>
             </div>

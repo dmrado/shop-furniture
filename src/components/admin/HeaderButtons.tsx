@@ -28,7 +28,7 @@ export default async function HeaderButtons() {
 
                 <div className='flex flex-wrap '>
                     {isAdmin(session) &&
-                        <Link href={'/posts/new'}>
+                        <Link href={'/admin/new'}>
                             <button className='button_green'>Добавить пост</button>
                         </Link>
                     }

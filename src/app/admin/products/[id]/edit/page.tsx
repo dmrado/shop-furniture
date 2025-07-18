@@ -5,7 +5,7 @@ import React from 'react'
 import { getServerSession } from 'next-auth'
 import { isAdmin } from '@/actions/isAdmin.ts'
 import { isSessionExpired } from '@/actions/isSessionExpired.ts'
-import PostForm from '@/components/admin/PostForm.tsx'
+import PostForm from '@/components/admin/ProductForm.tsx'
 // import '../tailwind.css'
 
 type PostPageParams = { params: { id: number } }
@@ -37,7 +37,7 @@ const EditPost = async ({ params }: PostPageParams) => {
         <div className="items-center p-5">
             <PostForm post={{ title: post.title, text: post.text, id: post.id }}/>
             <div className="flex justify-center p-10">
-                <Link href={'/posts'}>
+                <Link href={'/admin'}>
                     <button className='button_blue'>Вернуться</button>
                 </Link>
             </div>

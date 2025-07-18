@@ -64,3 +64,38 @@ export async function getStyles() {
         return []
     }
 }
+
+// ... (существующие импорты BrandModel, CollectionModel, CountryModel, StyleModel)
+import { ProductModel } from '@/db/models/product.model.ts' // Импортируем ProductModel
+import { ColorModel } from '@/db/models/color.model.ts' // Импортируем ColorModel
+
+// ... (существующие функции getBrands, getCollections, getCountries, getStyles)
+
+// Новая функция для получения всех продуктов (например, по имени и ID)
+export async function getProducts() {
+    try {
+        const products = await ProductModel.findAll({
+            attributes: [ 'id', 'name' ], // Выбираем только id и name
+            order: [ [ 'name', 'ASC' ] ],
+        })
+        return products.map(product => product.toJSON())
+    } catch (error) {
+        console.error('Error fetching products:', error)
+        return []
+    }
+}
+
+// Новая функция для получения всех активных цветов
+export async function getColors() {
+    try {
+        const colors = await ColorModel.findAll({
+            where: { isActive: true },
+            attributes: [ 'id', 'name', 'code' ], // Можно взять также 'code', если нужно отображать
+            order: [ [ 'name', 'ASC' ] ],
+        })
+        return colors.map(color => color.toJSON())
+    } catch (error) {
+        console.error('Error fetching colors:', error)
+        return []
+    }
+}

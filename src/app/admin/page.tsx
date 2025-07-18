@@ -12,7 +12,7 @@ export const metadata = {
 
 const Posts = async () => {
     const isAcceptedCookie = await getConsentAccepted()
-    // const { posts } = await getPosts(0, NUMBER_OF_POSTS_TO_FETCH)
+    // const { admin } = await getPosts(0, NUMBER_OF_POSTS_TO_FETCH)
 
     return (<>
         {!isAcceptedCookie && <div className="flex justify-center mt-36">
@@ -22,12 +22,12 @@ const Posts = async () => {
             <HeaderButtons/>
 
             <p className='text-[#505050] font-bold text-2xl mt-6 px-12 indent-12'>
-                На этой странице осуществляется ввод товарных позиций
+                На этой странице осуществляется ввод товарных позиций все продукты и с фильтрами
             </p>
         </div>
         <div className='max-w-2xl overflow-hidden my-0 mr-auto ml-auto'>{/*container*/}
             <div className='flex float-left p-0 mt-9'>{/*card-list*/}
-                {/*<PostList initialPosts={posts}/>*/}
+                {/*<PostList initialPosts={admin}/>*/}
             </div>
         </div>
     </>)

@@ -14,7 +14,7 @@ export default function PostList({ initialPosts }: { initialPosts: PostPreview[]
     const { ref, inView } = useInView()
 
     const loadMorePosts = async () => {
-        //присваиваем значение posts в переменную newPosts деструктуризация с переимнованием
+        //присваиваем значение admin в переменную newPosts деструктуризация с переимнованием
         const { posts: newPosts, count } = await getPosts(offset, NUMBER_OF_POSTS_TO_FETCH)
         setPosts([ ...posts, ...newPosts ])
         setOffset(offset + NUMBER_OF_POSTS_TO_FETCH)
