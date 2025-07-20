@@ -55,7 +55,6 @@ const ProductForm = ({ product }: ProductFormProps) => {
     const [ touchedName, setTouchedName ] = useState(false)
     const [ isFileSizeError, setFileSizeError ] = useState(false)
 
-
     // useEffect для загрузки данных при монтировании компонента
     useEffect(() => {
         const loadDictionaryData = async () => {
@@ -157,104 +156,108 @@ const ProductForm = ({ product }: ProductFormProps) => {
                     type="text"
                     name='name'
                     placeholder="Название товарной позиции (мин. 3, макс. 180 символов)"
-                    maxLength={180} // Добавляем ограничение по длине
+                    maxLength={180}
                 />
                 {!isNameValid() && <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
             </div>
 
-            {/* ПОЛЯ SELECT ДЛЯ ID: */}
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
+            {/* Контейнер для полей в три колонки на md и выше */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+                {/* ПОЛЯ SELECT ДЛЯ ID: */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
                     Бренд:
-                </label>
-                <select
-                    name="brandId"
-                    id="brandId"
-                    value={brandId}
-                    onChange={(e) => setBrandId(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                    <option value="">Выберите бренд</option>
-                    {renderOptions(brands)}
-                </select>
-            </div>
+                    </label>
+                    <select
+                        name="brandId"
+                        id="brandId"
+                        value={brandId}
+                        onChange={(e) => setBrandId(Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="">Выберите бренд</option>
+                        {renderOptions(brands)}
+                    </select>
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
                     Коллекция:
-                </label>
-                <select
-                    name="collectionId"
-                    id="collectionId"
-                    value={collectionId}
-                    onChange={(e) => setCollectionId(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                    <option value="">Выберите коллекцию</option>
-                    {renderOptions(collections)}
-                </select>
-            </div>
+                    </label>
+                    <select
+                        name="collectionId"
+                        id="collectionId"
+                        value={collectionId}
+                        onChange={(e) => setCollectionId(Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="">Выберите коллекцию</option>
+                        {renderOptions(collections)}
+                    </select>
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
                     Страна:
-                </label>
-                <select
-                    name="countryId"
-                    id="countryId"
-                    value={countryId}
-                    onChange={(e) => setCountryId(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                    <option value="">Выберите страну</option>
-                    {renderOptions(countries)}
-                </select>
-            </div>
+                    </label>
+                    <select
+                        name="countryId"
+                        id="countryId"
+                        value={countryId}
+                        onChange={(e) => setCountryId(Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="">Выберите страну</option>
+                        {renderOptions(countries)}
+                    </select>
+                </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
                     Стиль:
-                </label>
-                <select
-                    name="styleId"
-                    id="styleId"
-                    value={styleId}
-                    onChange={(e) => setStyleId(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                    <option value="">Выберите стиль</option>
-                    {renderOptions(styles)}
-                </select>
-            </div>
+                    </label>
+                    <select
+                        name="styleId"
+                        id="styleId"
+                        value={styleId}
+                        onChange={(e) => setStyleId(Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="">Выберите стиль</option>
+                        {renderOptions(styles)}
+                    </select>
+                </div>
 
-            {/* Поле 'articul' */}
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
+                {/* Поле 'articul' */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
                     Артикул:
-                </label>
-                <input
-                    value={articul}
-                    onChange={(e) => setArticul(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name='articul'
-                    placeholder="Артикул товара"
-                />
-            </div>
+                    </label>
+                    <input
+                        value={articul}
+                        onChange={(e) => setArticul(e.target.value)}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        name='articul'
+                        placeholder="Артикул товара"
+                    />
+                </div>
 
-            {/* Поле 'sku' */}
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sku">
+                {/* Поле 'sku' */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sku">
                     SKU:
-                </label>
-                <input
-                    value={sku}
-                    onChange={(e) => setSku(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name='sku'
-                    placeholder="SKU товара"
-                />
+                    </label>
+                    <input
+                        value={sku}
+                        onChange={(e) => setSku(e.target.value)}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        name='sku'
+                        placeholder="SKU товара"
+                    />
+                </div>
             </div>
 
             {/* Поле 'descriptionShort' */}

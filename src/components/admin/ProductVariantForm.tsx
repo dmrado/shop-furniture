@@ -28,7 +28,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
 
     // ID внешних ключей
     // const [ productId, setProductId ] = useState(productVariant?.productId || 1) // 1 как дефолт
-    const [ colorId, setColorId ] = useState(productVariant?.colorId || 1)     // 1 как дефолт
+    const [ colorId, setColorId ] = useState(productVariant?.colorId || 1) // 1 как дефолт
 
     // Числовые поля
     const [ length, setLength ] = useState(productVariant?.length || 0)
@@ -97,7 +97,6 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
         ))
     }
 
-
     return (
         <form className="bg-white rounded px-8 pt-6 pb-8" action={onSubmit}>
             {/* ID варианта продукта - скрытое поле, если редактируем */}
@@ -106,58 +105,51 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
             {/*Форма всегда имеет конкретный продукт и без него не существует*/}
             <input hidden type="number" name="productId" value={productId} readOnly/>
 
-            {/* Выбор Цвета */}
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="colorId">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    {/* Поле 'articul' */}
+                {/* Выбор Цвета */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="colorId">
                     Цвет:
-                </label>
-                <select
-                    name="colorId"
-                    id="colorId"
-                    value={colorId}
-                    onChange={(e) => setColorId(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                    <option value="">Выберите цвет</option>
-                    {renderOptions(colors)}
-                </select>
-            </div>
+                    </label>
+                    <select
+                        name="colorId"
+                        id="colorId"
+                        value={colorId}
+                        onChange={(e) => setColorId(Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                        <option value="">Выберите цвет</option>
+                        {renderOptions(colors)}
+                    </select>
+                </div>
 
-            {/* Поле 'articul' */}
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
+
+                {/* Поле 'articul' */}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
                     Артикул варианта:
-                </label>
-                <input
-                    required
-                    value={articul}
-                    onBlur={() => setTouchedArticul(true)}
-                    onChange={(e) => setArticul(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name='articul'
-                    placeholder="Артикул для данного варианта"
-                />
-                {!isArticulValid() && <span style={{color: 'red'}}>Артикул не может быть пустым.</span>}
+                    </label>
+                    <input
+                        required
+                        value={articul}
+                        onBlur={() => setTouchedArticul(true)}
+                        onChange={(e) => setArticul(e.target.value)}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        name='articul'
+                        placeholder="Артикул для данного варианта"
+                    />
+                    {!isArticulValid() && <span style={{ color: 'red' }}>Артикул не может быть пустым.</span>}
+                </div>
             </div>
 
-            {/* Чекбокс 'isActive' */}
-            <div className="mb-4 flex items-center">
-                <input
-                    id="isActive"
-                    type="checkbox"
-                    name="isActive"
-                    checked={isActive}
-                    onChange={(e) => setIsActive(e.target.checked)}
-                    className="mr-2 leading-tight"
-                />
-                <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
-                    Активен (отображать на сайте)
-                </label>
-            </div>
+            {/*/!* Контейнер для полей в три колонки на md и выше *!/*/}
+            {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">*/}
 
             {/* Числовые поля */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="length">
                         Длина (см):
@@ -170,7 +162,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                         type="number"
                         name='length'
                         placeholder="Длина"
-                        min="0" // Добавим минимальное значение
+                        min="0"
                     />
                 </div>
                 <div className="mb-4">
@@ -196,7 +188,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                         required
                         value={height}
                         onChange={(e) => setHeight(Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-shadow-outline"
                         type="number"
                         name='height'
                         placeholder="Высота"
@@ -215,7 +207,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                         type="number"
                         name='weight'
                         placeholder="Вес"
-                        step="0.01" // Для дробных значений, если вес может быть дробным
+                        step="0.01"
                         min="0"
                     />
                 </div>
@@ -261,29 +253,27 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                         type="number"
                         name='box_weight'
                         placeholder="Вес коробки"
-                        step="0.01" // Для дробных значений
+                        step="0.01"
                         min="0"
                     />
                 </div>
             </div>
 
-            {/* Поле 'price' */}
+
+            {/* Поле 'Активен' (isActive) - теперь отдельный блок во всю ширину */}
             <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
-                    Цена:
+                <label className="inline-flex items-center">
+                    <input
+                        type="checkbox"
+                        name="isActive"
+                        checked={isActive}
+                        onChange={(e) => setIsActive(e.target.checked)}
+                        className="form-checkbox h-5 w-5 text-gray-600"
+                    />
+                    <span className="ml-2 text-gray-700 text-sm font-bold">Активен</span>
                 </label>
-                <input
-                    required
-                    value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="number"
-                    name='price'
-                    placeholder="Цена"
-                    step="0.01" // Для десятичных значений
-                    min="0"
-                />
             </div>
+
 
             <div className="flex items-center justify-center mt-2">
                 <button
