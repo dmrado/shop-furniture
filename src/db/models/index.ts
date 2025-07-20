@@ -14,11 +14,11 @@ import { CategoryModel } from '@/db/models/category.model'
 import { ProductCategoryModel } from '@/db/models/product_category.model'
 import { ProductVariantModel } from '@/db/models/product_variant.model'
 import { ProductModel } from '@/db/models/product.model'
+import { ImageModel } from '@/db/models/image.model'
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
 // ProductModel.belongsTo(ColorModel, { as: 'secondaryColor', foreignKey: 'secondary_color' })
-
 
 OrderModel.hasMany(OrderedProductsModel, {
     foreignKey: 'orderId',
@@ -27,7 +27,6 @@ OrderModel.hasMany(OrderedProductsModel, {
 OrderedProductsModel.belongsTo(OrderModel, {
     // foreignKey: 'order'
 })
-
 
 ProductVariantModel.belongsTo(ColorModel, {
     foreignKey: 'colorId',
@@ -38,7 +37,6 @@ ColorModel.hasMany(ProductVariantModel, {
     as: 'variants' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
-
 ProductModel.belongsTo(StyleModel, {
     foreignKey: 'styleId',
     as: 'style' // Имя ассоциации, которое используем в include
@@ -47,7 +45,6 @@ StyleModel.hasMany(ProductModel, {
     foreignKey: 'styleId',
     as: 'products' // Имя ассоциации, под которым вы сможете получать продукт
 })
-
 
 ProductModel.hasMany(ProductVariantModel, {
     foreignKey: 'productId',
@@ -58,6 +55,25 @@ ProductVariantModel.belongsTo(ProductModel, {
     as: 'product' // Имя ассоциации, под которым вы сможете получать продукт
 })
 
+ImageModel.belongsTo(ProductModel, {
+    foreignKey: 'productId',
+    as: 'product'
+})
+
+ProductModel.hasMany(ImageModel, {
+    foreignKey: 'productId',
+    as: 'images'
+})
+
+ImageModel.belongsTo(ProductVariantModel, {
+    foreignKey: 'productVariantId',
+    as: 'product_variants'
+})
+
+ProductVariantModel.hasMany(ImageModel, {
+    foreignKey: 'productVariantId',
+    as: 'images'
+})
 
 // 🛒 Корзина говорит: "У меня много вариантов товара"
 // CartModel.hasMany(ProductVariantModel, {
@@ -65,12 +81,11 @@ ProductVariantModel.belongsTo(ProductModel, {
 //     as: 'product_variants'
 // })
 //
-// // todo что-то здесь не то в логике📦 Вариант товара говорит: "Я принадлежу одной корзине"
+// todo что-то здесь не то в логике📦 Вариант товара говорит: "Я принадлежу одной корзине"
 // ProductVariantModel.belongsTo(CartModel, {
 //     foreignKey: 'cartId',
 //     as: 'cart'
 // })
-
 
 // 1. CartModel принадлежит одному варианту продукта
 CartModel.belongsTo(ProductVariantModel, {
@@ -83,7 +98,6 @@ CartModel.belongsTo(ProductVariantModel, {
 //     as: 'cartItems' // Или любое другое подходящее имя
 // });
 
-
 //todo удалить так как мы теперь наполняем корзину вариантами продуктов
 // CartModel.belongsTo(ProductModel, {
 //     foreignKey: 'productId',
@@ -95,7 +109,6 @@ CartModel.belongsTo(AuthUserModel, {
     as: 'user'
 })
 
-
 AddressModel.belongsTo(AuthUserModel, {
     // targetKey: 'id',
     foreignKey: 'userId',
@@ -105,7 +118,6 @@ AuthUserModel.hasMany(AddressModel, {
     foreignKey: 'userId',
     as: 'addresses', // Алиас для связи
 })
-
 
 AuthUserModel.hasOne(ProfileModel, {
     foreignKey: 'userId', // Это поле в таблице ourusers, в accounts требует sequelize adapter
@@ -117,7 +129,6 @@ ProfileModel.belongsTo(AuthUserModel, {
     as: 'profiles',
     targetKey: 'id'
 })
-
 
 //так как при входе через разных провайдеров каждый раз создается запись и в AuthUser и в AccountModel, то выбрана связь один-к-одному
 AuthUserModel.hasOne(AccountModel, {
@@ -203,7 +214,6 @@ ProductModel.belongsToMany(CategoryModel, {
 //     as: 'stock', // Алиас для связи
 // })
 
-
 // Создание промежуточной таблицы для связи многие-ко-многим
 // const ProductCategory = sequelize.define('ProductCategory', {}, { timestamps: false });
 //
@@ -255,5 +265,6 @@ export {
     AccountModel,
     SessionModel,
     AuthUserModel,
-    ProductVariantModel
+    ProductVariantModel,
+    ImageModel
 }

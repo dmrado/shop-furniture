@@ -12,7 +12,7 @@ import {
     ProfileModel,
     ProductModel,
     StockModel,
-    AuthUserModel,
+    AuthUserModel, ImageModel,
 } from '@/db/models'
 
 import { CategoryModel } from '@/db/models/category.model'
@@ -29,6 +29,7 @@ import { CountryModel } from '@/db/models/country.model'
 
 const registeredModels = [
     // Admin, Post, Alert,
+    ImageModel,
     AddressModel,
     ColorModel,
     StyleModel,
@@ -46,7 +47,7 @@ const registeredModels = [
     MaterialModel,
     CollectionModel,
     BrandModel,
-    CountryModel
+    CountryModel,
 ]
 
 const runDbSync = async () => {
