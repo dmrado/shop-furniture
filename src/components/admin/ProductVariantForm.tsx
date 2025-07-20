@@ -1,37 +1,39 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { handleProductVariantForm } from '@/actions/handleProductVariantForm.ts' // Импортируем новый Server Action
-import { getProducts, getColors } from '@/actions/dictionaryActions.ts' // Импортируем новые Server Actions для продуктов и цветов
-import { ProductVariantModel } from '@/db/models/product_variant.model' // Импортируем модель варианта продукта
-
-type ProductVariantFormProps = {
-    productVariant?: ProductVariantModel // Может быть не передан при создании нового варианта
-    productId: number
-}
+import { handleProductVariantForm as handleProductVariantFormAction } from '@/actions/handleProductVariantForm.ts'
+import { getColors } from '@/actions/dictionaryActions.ts'
 
 // Типы для элементов справочника (Product, Color)
 type DictionaryItem = {
     id: number
     name: string
 }
-// Для ColorModel может быть полезно также получить 'code'
+
 type ColorItem = {
     id: number
     name: string
-    code: string // Если тебе нужен код цвета для отображения
+    code?: string
 }
 
-const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormProps) => {
-    console.log('productVariant', productVariant)
+type ProductVariantFormProps = {
+    productVariant?: any // Может быть не передан при создании нового варианта, используем 'any' для гибкости
+    productId: number
+    onSuccess?: () => void //функция, вызываемая при успешной отправке
+    onCancel?: () => void // функция, вызываемая при отмене редактирования
+}
+
+const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: ProductVariantFormProps) => {
+    console.log('ProductVariantForm received productVariant:', productVariant)
+
     // Инициализируем состояния, используя данные из productVariant или значения по умолчанию
-    const [ isActive, setIsActive ] = useState(productVariant?.isActive || false)
-    const [ articul, setArticul ] = useState(productVariant?.articul || '')
+    // Используем ?? '' для числовых полей, чтобы избежать 0 при отсутствии значения
+    const [ isActive, setIsActive ] = useState(productVariant?.isActive ?? false)
+    const [ articul, setArticul ] = useState(productVariant?.articul ?? '')
 
     // ID внешних ключей
-    // const [ productId, setProductId ] = useState(productVariant?.productId || 1) // 1 как дефолт
-    const [ colorId, setColorId ] = useState(productVariant?.colorId || 1) // 1 как дефолт
+    const [ colorId, setColorId ] = useState(productVariant?.colorId ?? '') // Используем '' для пустого/невыбранного
 
-    // Числовые поля
+    // Числовые поля - могут быть числом или пустой строкой
     const [ length, setLength ] = useState<number | ''>(productVariant?.length ?? '')
     const [ width, setWidth ] = useState<number | ''>(productVariant?.width ?? '')
     const [ height, setHeight ] = useState<number | ''>(productVariant?.height ?? '')
@@ -39,10 +41,10 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
     const [ box_height, setBoxHeight ] = useState<number | ''>(productVariant?.box_height ?? '')
     const [ box_weight, setBoxWeight ] = useState<number | ''>(productVariant?.box_weight ?? '')
     const [ weight, setWeight ] = useState<number | ''>(productVariant?.weight ?? '')
-    const [ price, setPrice ] = useState<number | ''>(productVariant?.price ?? '') // Цена может быть десятичной
+    const [ price, setPrice ] = useState<number | ''>(productVariant?.price ?? '')
 
     // Состояния для хранения списков справочников
-    const [ colors, setColors ] = useState<ColorItem[]>([]) // Используем ColorItem для цвета
+    const [ colors, setColors ] = useState<ColorItem[]>([])
 
     // Состояния для валидации
     const [ touchedArticul, setTouchedArticul ] = useState(false)
@@ -52,34 +54,83 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
     useEffect(() => {
         const loadDictionaryData = async () => {
             const fetchedColors = await getColors()
-
             setColors(fetchedColors)
 
             // Установка выбранных значений для редактирования
-            if (productVariant) {
-
-                if (productVariant.colorId && fetchedColors.some(c => c.id === productVariant.colorId)) {
+            if (productVariant?.colorId) {
+                if (fetchedColors.some(c => c.id === productVariant.colorId)) {
                     setColorId(productVariant.colorId)
                 } else if (fetchedColors.length > 0) {
-                    setColorId(fetchedColors[0].id)
+                    setColorId(fetchedColors[0].id) // Fallback
                 }
-            } else {
+            } else if (!productVariant && fetchedColors.length > 0) {
                 // Для нового варианта, если есть данные, выбираем первый доступный ID
-                if (fetchedColors.length > 0) setColorId(fetchedColors[0].id)
+                setColorId(fetchedColors[0].id)
             }
         }
-
         loadDictionaryData()
-    }, [ productVariant ]) // Зависимость от productVariant для режима редактирования
+    }, []) // Зависимость от productVariant убрана, т.к. данные загружаются один раз
 
-    const onSubmit = (formData: FormData) => {
-        handleProductVariantForm(formData)
+    // useEffect для сброса состояния формы при смене productVariant (когда выбирают другой вариант для редактирования или сбрасывают форму)
+    useEffect(() => {
+        setIsActive(productVariant?.isActive ?? false)
+        setArticul(productVariant?.articul ?? '')
+        setColorId(productVariant?.colorId ?? (colors.length > 0 ? colors[0].id : '')) // Учитываем загруженные цвета при сбросе
+        setLength(productVariant?.length ?? '')
+        setWidth(productVariant?.width ?? '')
+        setHeight(productVariant?.height ?? '')
+        setBoxLength(productVariant?.box_length ?? '')
+        setBoxHeight(productVariant?.box_height ?? '')
+        setBoxWeight(productVariant?.box_weight ?? '')
+        setWeight(productVariant?.weight ?? '')
+        setPrice(productVariant?.price ?? '')
+        setTouchedArticul(false) // Сбрасываем состояние валидации при смене варианта
+    }, [ productVariant, colors ]) // Зависимость от productVariant и colors
+
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault() // Предотвращаем дефолтную отправку формы
+
+        if (!isArticulValid()) {
+            console.error('Артикул не может быть пустым.')
+            return
+        }
+
+        const formData = new FormData(e.currentTarget)
+
+        // Добавляем/обновляем числовые поля и isActive в FormData, так как их value управляется useState
+        formData.set('length', String(length))
+        formData.set('width', String(width))
+        formData.set('height', String(height))
+        formData.set('box_length', String(box_length))
+        formData.set('box_height', String(box_height))
+        formData.set('box_weight', String(box_weight))
+        formData.set('weight', String(weight))
+        formData.set('price', String(price))
+        formData.set('isActive', String(isActive)) // 'true' или 'false'
+
+        // Убедимся, что productId всегда установлен
+        formData.set('productId', String(productId))
+        // Убедимся, что id установлен для обновления
+        if (productVariant?.id) {
+            formData.set('id', String(productVariant.id))
+        } else {
+            formData.delete('id') // Убедимся, что id нет для создания нового
+        }
+
+        try {
+            await handleProductVariantFormAction(formData) // Вызываем Server Action
+            if (onSuccess) {
+                onSuccess() // Вызываем переданный колбэк при успехе
+            }
+        } catch (error) {
+            console.error("Ошибка при сохранении варианта:", error)
+            // Можно добавить отображение ошибки пользователю
+        }
     }
 
     // Стили кнопки submit
     const buttonStyle = () => {
         const baseStyle: string = 'border-2 border-my_white border-solid px-5 py-2 rounded '
-        // Простая валидация: артикул не пустой
         if (isArticulValid()) {
             return baseStyle + 'hover:text-my_l_green hover:border-2 hover:border-my_l_green text-[#000]'
         }
@@ -99,20 +150,16 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
     }
 
     return (
-        <form className="bg-white rounded px-8 pt-6 pb-8" action={onSubmit}>
+        <form className="bg-white rounded px-8 pt-6 pb-8" onSubmit={onSubmit}> {/* Используем onSubmit для client-side */}
             {/* ID варианта продукта - скрытое поле, если редактируем */}
-            <input hidden type="number" name="id" value={productVariant?.id || ''} readOnly/>
+            {/* id будет добавляться в formData вручную в onSubmit */}
+            {/* productId также будет добавляться в formData вручную */}
 
-            {/*Форма всегда имеет конкретный продукт и без него не существует*/}
-            <input hidden type="number" name="productId" value={productId} readOnly/>
-
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                    {/* Поле 'articul' */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {/* Выбор Цвета */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="colorId">
-                    Цвет:
+                        Цвет:
                     </label>
                     <select
                         name="colorId"
@@ -126,11 +173,10 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     </select>
                 </div>
 
-
                 {/* Поле 'articul' */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
-                    Артикул варианта:
+                        Артикул варианта:
                     </label>
                     <input
                         required
@@ -145,9 +191,6 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     {!isArticulValid() && <span style={{ color: 'red' }}>Артикул не может быть пустым.</span>}
                 </div>
             </div>
-
-            {/*/!* Контейнер для полей в три колонки на md и выше *!/*/}
-            {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">*/}
 
             {/* Числовые поля */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
@@ -258,24 +301,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                         min="0"
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_weight">
-                        Цена (руб):
-                    </label>
-                    <input
-                        required
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="number"
-                        name='price'
-                        placeholder="Цена"
-                        step="0.01"
-                        min="0"
-                    />
-                </div>
             </div>
-
 
             {/* Поле 'Активен' (isActive) - теперь отдельный блок во всю ширину */}
             <div className="mb-4">
@@ -298,6 +324,15 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     className={buttonStyle()}
                     type="submit">Записать
                 </button>
+                {productVariant && ( // Показываем кнопку "Отмена" только если productVariant передан (т.е. в режиме редактирования)
+                    <button
+                        type="button" // Важно: type="button" чтобы не отправлять форму
+                        onClick={onCancel}
+                        className="button_red ml-4"
+                    >
+                        Отмена
+                    </button>
+                )}
             </div>
         </form>
     )

@@ -3,20 +3,17 @@ import Image from 'next/image'
 import React from 'react'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { Post } from '@/db/modeladmin/post.model.ts'
 import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
-import CookieConsent from '@/components/CookieConsent.tsx'
-import { getConsentAccepted } from '@/actions/getCookiesAccepted.ts'
 import { isAdmin } from '@/actions/isAdmin.ts'
 import { ImageModel, ProductModel, ProductVariantModel } from '@/db/models'
-import ProductVariantForm from '@/components/admin/ProductVariantForm'
 import ProductForm from '@/components/admin/ProductForm'
+import ProductVariantManager from '@/components/admin/ProductVariantManager'
 // import '../tailwind.css'
 
 type ProductPageParams = { params: { id: number } }
 
-const Product = async ({ params }: ProductPageParams) => {
+const ProductPage = async ({ params }: ProductPageParams) => {
     const session = await getServerSession()
 
     const product = await ProductModel.findByPk(params.id)
@@ -37,14 +34,14 @@ const Product = async ({ params }: ProductPageParams) => {
         redirect('/admin/products')
     };
 
-    async function removeVariant(id: number) {
-        'use server'
-        const productId = product.id
-        console.log('~~~~~~~~~~productId', productId)
-        await ProductVariantModel.destroy({ where: { id } })
-        revalidatePath(`/admin/products/${productId}`)
-        redirect(`/admin/products/${productId}`)
-    }
+    // async function removeVariant(id: number) {
+    //     'use server'
+    //     const productId = product.id
+    //     console.log('~~~~~~~~~~productId', productId)
+    //     await ProductVariantModel.destroy({ where: { id } })
+    //     revalidatePath(`/admin/products/${productId}`)
+    //     redirect(`/admin/products/${productId}`)
+    // }
 
     return (<>
         <div className="max-w-4xl mx-auto my-4 p-2 bg-white rounded-lg shadow-sm">
@@ -110,49 +107,19 @@ const Product = async ({ params }: ProductPageParams) => {
             {/*        </Link>*/}
             {/*}*/}
 
-            <ProductForm product={product}/>
-
             {/*Блок вариантов продукта*/}
-            {variants.map(variant => (
-                <li key={variant.id} className="list-none mb-2">
-                    <div
-                        className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-sm">
 
-                        {/* Контейнер для артикула и цвета */}
-                        <div className="flex items-center gap-2 mb-2 sm:mb-0">
-                            <span className="text-gray-700 font-medium">Артикул: {variant.articul}</span>
-                            {variant.colorId && (
-                                <span className="text-gray-600 text-sm">(Цвет ID: {variant.colorId})</span>
-                            )}
-                        </div>
+            <ProductForm product={product.toJSON()}/>
 
-                        {/* Контейнер для кнопок "Редактировать" и "Удалить" */}
-                        <div
-                            className="flex items-center gap-2 flex-shrink-0"> {/* Добавил flex-col sm:flex-row items-center gap-2 */}
-
-                            <Link href={`/admin/variants/edit/${variant.id}`}>
-                                <button className="button_blue px-4 py-2 text-sm w-full sm:w-auto">Редактировать</button>
-                            </Link>
-
-                            {/*{isAdmin(session) &&*/}
-                            <form action={removeVariant.bind(null, variant.id)} className="w-full sm:w-auto">
-                                <button type="submit" className='button_red px-4 py-2 text-sm w-full'>
-                                Удалить
-                                </button>
-                            </form>
-                            {/*}*/}
-
-                        </div>
-                    </div>
-                </li>
-            ))}
-
-            <h3 className="text-xl font-bold mt-8 mb-4">Добавить новый вариант продукта</h3>
-            <ProductVariantForm productId={product.id}/>
+            {/* Вставляем новый клиентский компонент для управления вариантами */}
+            <ProductVariantManager
+                initialVariants={variants.map(v => v.toJSON())}
+                productId={product.id}
+            />
         </div>
     </>
     )
 
 }
 
-export default Product
+export default ProductPage

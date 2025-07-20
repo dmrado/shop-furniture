@@ -1,0 +1,112 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation' // Для обновления страницы после изменений
+import ProductVariantForm from '@/components/admin/ProductVariantForm'
+
+// Импортируем Server Actions, которые будут вызываться из этого клиентского компонента
+import { removeVariant as removeVariantAction } from '@/actions/removeVariantAction'
+import { handleProductVariantForm } from '@/actions/handleProductVariantForm' // Предполагаем, что этот action уже есть и работает
+
+// Типы для пропсов
+type ProductVariantManagerProps = {
+    initialVariants: any[]; // Варианты, переданные с сервера (уже сериализованные)
+    productId: number; // ID продукта, к которому относятся варианты
+};
+
+const ProductVariantManager = ({ initialVariants, productId }: ProductVariantManagerProps) => {
+    const router = useRouter()
+    // хранит текущий список вариантов на клиенте
+    const [ variants, setVariants ] = useState(initialVariants)
+    // хранит вариант, который сейчас редактируется (или null, если создается новый)
+    const [ editingVariant, setEditingVariant ] = useState<any | null>(null)
+
+    // useEffect для синхронизации initialVariants с внутренним состоянием,
+    // если initialVariants изменяются (например, после router.refresh() на родительской странице)
+    useEffect(() => {
+        setVariants(initialVariants)
+    }, [ initialVariants ])
+
+    // Обработчик нажатия кнопки "Редактировать"
+    const handleEditClick = (variant: any) => {
+        setEditingVariant(variant)
+    }
+
+    // Обработчик успешного сохранения формы (как для создания, так и для обновления)
+    const handleFormSuccess = () => {
+        setEditingVariant(null) // Сбрасываем редактируемый вариант (скрываем форму редактирования)
+        router.refresh() // Заставляет Next.js перерендерить серверный компонент и обновить данные
+    }
+
+    // Обработчик отмены редактирования
+    const handleFormCancel = () => {
+        setEditingVariant(null) // Сбрасываем редактируемый вариант
+    }
+
+    // Обработчик удаления варианта
+    const handleDeleteVariant = async (variantId: number) => {
+        // Вызываем Server Action для удаления
+        await removeVariantAction(variantId, productId) // Передаем productId для ревалидации конкретного пути
+        router.refresh() // Обновляем список вариантов на странице
+    }
+
+    return (
+        <>
+            <h2 className="text-xl font-bold mt-8 mb-4">Варианты продукта</h2>
+            {variants.length === 0 ? (
+                <p className="text-gray-600">Для этого продукта пока нет вариантов.</p>
+            ) : (
+                <ul>
+                    {variants.map(variant => (
+                        <li key={variant.id} className="list-none mb-2">
+                            <div
+                                className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-sm">
+
+                                {/* Контейнер для артикула и цвета */}
+                                <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                                    <span className="text-gray-700 font-medium">Артикул: {variant.articul}</span>
+                                    {variant.colorId && (
+                                        <span className="text-gray-600 text-sm">(Цвет ID: {variant.colorId})</span>
+                                    )}
+                                </div>
+
+                                {/* Контейнер для кнопок "Редактировать" и "Удалить" */}
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    <button
+                                        onClick={() => handleEditClick(variant)} // Передаем ВЕСЬ объект варианта
+                                        className="button_blue px-4 py-2 text-sm w-full sm:w-auto"
+                                    > Редактировать</button>
+
+                                    {/* Форма для удаления - вызываем Server Action */}
+                                    {/* Используем onSubmit для клиентского компонента */}
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault()
+                                        handleDeleteVariant(variant.id)
+                                    }} className="w-full sm:w-auto">
+                                        <button type="submit" className='button_red px-4 py-2 text-sm w-full'>
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {/* Заголовок формы: меняется в зависимости от режима (редактирование или создание) */}
+            <h3 className="text-xl font-bold mt-8 mb-4">
+                {editingVariant ? `Редактировать вариант: ${editingVariant.articul}` : 'Добавить новый вариант продукта'}
+            </h3>
+            {/* Рендеринг ProductVariantForm */}
+            <ProductVariantForm
+                productVariant={editingVariant} // Передаем либо объект варианта, либо null
+                productId={productId} // Всегда передаем ID продукта
+                onSuccess={handleFormSuccess} // Передаем колбэк для успешного сохранения
+                onCancel={handleFormCancel} // Передаем колбэк для отмены
+            />
+        </>
+    )
+}
+
+export default ProductVariantManager
