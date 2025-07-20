@@ -18,7 +18,6 @@ import {
 import { CategoryModel } from '@/db/models/category.model'
 import { ProductVariantModel } from '@/db/models/product_variant.model'
 import { ProductCategoryModel } from '@/db/models/product_category.model'
-import { PhotoModel } from '@/db/models/photo.model'
 import { MaterialModel } from '@/db/models/material.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { BrandModel } from '@/db/models/brand.model'
@@ -43,7 +42,6 @@ const registeredModels = [
     ProductVariantModel,
     CartModel,
     ProductCategoryModel,
-    PhotoModel,
     MaterialModel,
     CollectionModel,
     BrandModel,
