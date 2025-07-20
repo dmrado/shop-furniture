@@ -66,3 +66,47 @@ html, body {
 /*    text-wrap: balance;*/
 /*  }*/
 /*}*/
+
+
+/*button_blue_____________________________________*/
+.button_blue {
+  @apply relative mx-2 inline-block px-4 py-2 text-[#0285d5] border-2 border-transparent transition-colors ease-in-out duration-300;
+}
+
+.button_blue::before {
+  content: '';
+  @apply absolute top-[-2px] left-[-2px] right-[-2px] bottom-[-2px] border-2 border-transparent transition-colors ease-in-out duration-300 rounded;
+}
+
+.button_blue:hover::before {
+  @apply border-[#0285d5] rounded;
+}
+
+/*button_red______________________________________*/
+.button_red {
+  @apply relative mx-2 inline-block px-4 py-2 text-[#D50000] border-2 border-transparent transition-colors ease-in-out duration-300;
+}
+
+.button_red::before {
+  content: '';
+  @apply absolute top-[-2px] left-[-2px] right-[-2px] bottom-[-2px] border-2 border-transparent transition-colors ease-in-out duration-300 rounded;
+}
+
+.button_red:hover::before {
+  @apply border-[#D50000] rounded;
+}
+
+/*button_green___________________________________*/
+.button_green {
+  @apply relative mx-2 inline-block px-4 py-2 text-[#02bb5f] border-2 border-transparent transition-colors ease-in-out duration-300;
+}
+
+.button_green::before {
+  content: '';
+  @apply absolute top-[-2px] left-[-2px] right-[-2px] bottom-[-2px] border-2 border-transparent transition-colors ease-in-out duration-300 rounded;
+}
+
+.button_green:hover::before {
+  @apply border-[#02bb5f] rounded;
+}
+

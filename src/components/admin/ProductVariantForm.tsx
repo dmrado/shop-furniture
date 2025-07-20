@@ -22,6 +22,7 @@ type ColorItem = {
 }
 
 const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormProps) => {
+    console.log('productVariant', productVariant)
     // Инициализируем состояния, используя данные из productVariant или значения по умолчанию
     const [ isActive, setIsActive ] = useState(productVariant?.isActive || false)
     const [ articul, setArticul ] = useState(productVariant?.articul || '')
@@ -31,14 +32,14 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
     const [ colorId, setColorId ] = useState(productVariant?.colorId || 1) // 1 как дефолт
 
     // Числовые поля
-    const [ length, setLength ] = useState(productVariant?.length || 0)
-    const [ width, setWidth ] = useState(productVariant?.width || 0)
-    const [ height, setHeight ] = useState(productVariant?.height || 0)
-    const [ box_length, setBoxLength ] = useState(productVariant?.box_length || 0)
-    const [ box_height, setBoxHeight ] = useState(productVariant?.box_height || 0)
-    const [ box_weight, setBoxWeight ] = useState(productVariant?.box_weight || 0)
-    const [ weight, setWeight ] = useState(productVariant?.weight || 0)
-    const [ price, setPrice ] = useState(productVariant?.price || 0) // Цена может быть десятичной, поэтому useState(0)
+    const [ length, setLength ] = useState<number | ''>(productVariant?.length ?? '')
+    const [ width, setWidth ] = useState<number | ''>(productVariant?.width ?? '')
+    const [ height, setHeight ] = useState<number | ''>(productVariant?.height ?? '')
+    const [ box_length, setBoxLength ] = useState<number | ''>(productVariant?.box_length ?? '')
+    const [ box_height, setBoxHeight ] = useState<number | ''>(productVariant?.box_height ?? '')
+    const [ box_weight, setBoxWeight ] = useState<number | ''>(productVariant?.box_weight ?? '')
+    const [ weight, setWeight ] = useState<number | ''>(productVariant?.weight ?? '')
+    const [ price, setPrice ] = useState<number | ''>(productVariant?.price ?? '') // Цена может быть десятичной
 
     // Состояния для хранения списков справочников
     const [ colors, setColors ] = useState<ColorItem[]>([]) // Используем ColorItem для цвета
@@ -157,7 +158,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={length}
-                        onChange={(e) => setLength(Number(e.target.value))}
+                        onChange={(e) => setLength(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='length'
@@ -172,7 +173,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={width}
-                        onChange={(e) => setWidth(Number(e.target.value))}
+                        onChange={(e) => setWidth(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='width'
@@ -187,7 +188,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={height}
-                        onChange={(e) => setHeight(Number(e.target.value))}
+                        onChange={(e) => setHeight(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-shadow-outline"
                         type="number"
                         name='height'
@@ -202,7 +203,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={weight}
-                        onChange={(e) => setWeight(Number(e.target.value))}
+                        onChange={(e) => setWeight(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='weight'
@@ -218,7 +219,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={box_length}
-                        onChange={(e) => setBoxLength(Number(e.target.value))}
+                        onChange={(e) => setBoxLength(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='box_length'
@@ -233,7 +234,7 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={box_height}
-                        onChange={(e) => setBoxHeight(Number(e.target.value))}
+                        onChange={(e) => setBoxHeight(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='box_height'
@@ -248,11 +249,27 @@ const ProductVariantForm = ({ productVariant, productId }: ProductVariantFormPro
                     <input
                         required
                         value={box_weight}
-                        onChange={(e) => setBoxWeight(Number(e.target.value))}
+                        onChange={(e) => setBoxWeight(e.target.value === '' ? '' : Number(e.target.value))}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
                         name='box_weight'
                         placeholder="Вес коробки"
+                        step="0.01"
+                        min="0"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_weight">
+                        Цена (руб):
+                    </label>
+                    <input
+                        required
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="number"
+                        name='price'
+                        placeholder="Цена"
                         step="0.01"
                         min="0"
                     />

@@ -9,12 +9,13 @@ import { notFound } from 'next/navigation'
 import CookieConsent from '@/components/CookieConsent.tsx'
 import { getConsentAccepted } from '@/actions/getCookiesAccepted.ts'
 import { isAdmin } from '@/actions/isAdmin.ts'
-import {ImageModel, ProductModel, ProductVariantModel} from '@/db/models'
+import { ImageModel, ProductModel, ProductVariantModel } from '@/db/models'
 import ProductVariantForm from '@/components/admin/ProductVariantForm'
 import ProductForm from '@/components/admin/ProductForm'
 // import '../tailwind.css'
 
 type ProductPageParams = { params: { id: number } }
+
 const Product = async ({ params }: ProductPageParams) => {
     const session = await getServerSession()
 
@@ -36,12 +37,22 @@ const Product = async ({ params }: ProductPageParams) => {
         redirect('/admin/products')
     };
 
+    async function removeVariant(id: number) {
+        'use server'
+        const productId = product.id
+        console.log('~~~~~~~~~~productId', productId)
+        await ProductVariantModel.destroy({ where: { id } })
+        revalidatePath(`/admin/products/${productId}`)
+        redirect(`/admin/products/${productId}`)
+    }
+
     return (<>
-        <div className="max-w-4xl mx-auto my-4 p-2 bg-white rounded-lg shadow-sm"> {/* Уменьшил my и p, shadow */}
+        <div className="max-w-4xl mx-auto my-4 p-2 bg-white rounded-lg shadow-sm">
             {/* Основной контейнер для картинки и текста */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3"> {/* Уменьшил gap, изменил md на sm */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
                 {/* Левая часть: Картинка - теперь намного меньше */}
-                <div className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 max-w-[96px] sm:max-w-none rounded-md overflow-hidden border border-gray-200"> {/* Фиксированные размеры, уменьшил max-w */}
+                <div
+                    className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 max-w-[96px] sm:max-w-none rounded-md overflow-hidden border border-gray-200">
                     <Image
                         width={80} /* 240 / 3 = 80 */
                         height={106} /* 320 / 3 = 106.6 (округлил) */
@@ -53,7 +64,8 @@ const Product = async ({ params }: ProductPageParams) => {
                 </div>
 
                 {/* Правая часть: Название, краткое описание, дата - шрифты уменьшены */}
-                <div className="flex-grow flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
+                <div
+                    className="flex-grow flex flex-col justify-center items-center sm:items-start text-center sm:text-left">
                     <h1 className="text-lg sm:text-xl font-bold mb-1 text-[#505050]"> {/* Уменьшил text-2xl/3xl до text-lg/xl, mb-2 до mb-1 */}
                         {product.name}
                     </h1>
@@ -64,7 +76,7 @@ const Product = async ({ params }: ProductPageParams) => {
                     ></div>
 
                     <p className="text-gray-500 text-xxs sm:text-xs italic mt-auto"> {/* Уменьшил text-sm до text-xxs/xs */}
-                            Добавлено:&nbsp;
+                    Добавлено:&nbsp;
                         {product.createdAt.toLocaleDateString('ru-RU', {
                             weekday: 'short',
                             year: 'numeric',
@@ -76,14 +88,17 @@ const Product = async ({ params }: ProductPageParams) => {
             </div>
 
             {/* Блок с кнопками - остается внизу под всей информацией */}
-            <div className="flex flex-wrap p-5 justify-center md:justify-end items-center mt-6 border-t pt-4">
+            <div className="flex flex-wrap p-5 justify-center items-center mt-6 border-t pt-4">
                 <Link href={'/admin/products'}>
                     <button className='button_blue mr-6'>Вернуться к продуктам</button>
                 </Link>
 
                 {/*{isAdmin(session) &&*/}
                 <form action={removeProduct.bind(null, product.id)}>
-                    <input className='button_red' type='submit' value="Удалить продукт"/>
+                    <button className='button_red'>
+                        <input type='submit' value="Удалить продукт"/>
+                    </button>
+
                 </form>
                 {/*}*/}
             </div>
@@ -97,10 +112,43 @@ const Product = async ({ params }: ProductPageParams) => {
 
             <ProductForm product={product}/>
 
-            {variants.map(variant => (<li key={variant.id}>
-                {variant.articul} {variant.colorId}
-            </li>))}
-            < ProductVariantForm productId={product.id}/>
+            {/*Блок вариантов продукта*/}
+            {variants.map(variant => (
+                <li key={variant.id} className="list-none mb-2">
+                    <div
+                        className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded-lg shadow-sm">
+
+                        {/* Контейнер для артикула и цвета */}
+                        <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                            <span className="text-gray-700 font-medium">Артикул: {variant.articul}</span>
+                            {variant.colorId && (
+                                <span className="text-gray-600 text-sm">(Цвет ID: {variant.colorId})</span>
+                            )}
+                        </div>
+
+                        {/* Контейнер для кнопок "Редактировать" и "Удалить" */}
+                        <div
+                            className="flex items-center gap-2 flex-shrink-0"> {/* Добавил flex-col sm:flex-row items-center gap-2 */}
+
+                            <Link href={`/admin/variants/edit/${variant.id}`}>
+                                <button className="button_blue px-4 py-2 text-sm w-full sm:w-auto">Редактировать</button>
+                            </Link>
+
+                            {/*{isAdmin(session) &&*/}
+                            <form action={removeVariant.bind(null, variant.id)} className="w-full sm:w-auto">
+                                <button type="submit" className='button_red px-4 py-2 text-sm w-full'>
+                                Удалить
+                                </button>
+                            </form>
+                            {/*}*/}
+
+                        </div>
+                    </div>
+                </li>
+            ))}
+
+            <h3 className="text-xl font-bold mt-8 mb-4">Добавить новый вариант продукта</h3>
+            <ProductVariantForm productId={product.id}/>
         </div>
     </>
     )
