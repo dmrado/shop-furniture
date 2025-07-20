@@ -27,7 +27,7 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
     // Инициализируем состояния, используя данные из productVariant или значения по умолчанию
     // Используем ?? '' для числовых полей, чтобы избежать 0 при отсутствии значения
-    const [ isActive, setIsActive ] = useState(productVariant?.isActive ?? false)
+    const [ isActive, setIsActive ] = useState(productVariant?.isActive ?? true)
     const [ articul, setArticul ] = useState(productVariant?.articul ?? '')
 
     // ID внешних ключей
@@ -123,18 +123,19 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                 onSuccess() // Вызываем переданный колбэк при успехе
             }
         } catch (error) {
-            console.error("Ошибка при сохранении варианта:", error)
+            console.error('Ошибка при сохранении варианта:', error)
             // Можно добавить отображение ошибки пользователю
         }
     }
 
-    // Стили кнопки submit
     const buttonStyle = () => {
-        const baseStyle: string = 'border-2 border-my_white border-solid px-5 py-2 rounded '
-        if (isArticulValid()) {
-            return baseStyle + 'hover:text-my_l_green hover:border-2 hover:border-my_l_green text-[#000]'
+        // Базовый класс для кнопки
+        let classes = 'button_green'
+        // классы для неактивного состояния, если артикул не валиден
+        if (!isArticulValid()) {
+            classes += ' opacity-50 cursor-not-allowed'
         }
-        return baseStyle + 'text-green-600 opacity-50 cursor-not-allowed'
+        return classes
     }
 
     // Вспомогательная функция для рендеринга опций select
@@ -147,6 +148,15 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                 {'code' in item ? `${item.name} (${item.code})` : item.name} {/* Для цвета можно отобразить код */}
             </option>
         ))
+    }
+
+    // ФУНКЦИЯ ДЛЯ ОБРАБОТКИ ЦЕНЫ
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value
+        // Заменяем все запятые на точки
+        value = value.replace(/,/g, '.')
+        // Проверяем, если значение пустое, устанавливаем '', иначе преобразуем в число
+        setPrice(value === '' ? '' : Number(value))
     }
 
     return (
@@ -301,9 +311,26 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                         min="0"
                     />
                 </div>
+
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
+                        Цена (руб):
+                    </label>
+                    <input
+                        required
+                        value={price}
+                        onChange={handlePriceChange}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="number"
+                        name="price"
+                        placeholder="125.32"
+                        step="0.01"
+                        min="0"
+                    />
+                </div>
+
             </div>
 
-            {/* Поле 'Активен' (isActive) - теперь отдельный блок во всю ширину */}
             <div className="mb-4">
                 <label className="inline-flex items-center">
                     <input
@@ -316,7 +343,6 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                     <span className="ml-2 text-gray-700 text-sm font-bold">Активен</span>
                 </label>
             </div>
-
 
             <div className="flex items-center justify-center mt-2">
                 <button

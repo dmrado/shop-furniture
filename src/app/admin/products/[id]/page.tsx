@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation'
 import { isAdmin } from '@/actions/isAdmin.ts'
-import { ImageModel, ProductModel, ProductVariantModel } from '@/db/models'
+import { ImageModel, ProductModel, ProductVariantModel, ColorModel } from '@/db/models'
 import ProductForm from '@/components/admin/ProductForm'
 import ProductVariantManager from '@/components/admin/ProductVariantManager'
 // import '../tailwind.css'
@@ -27,21 +27,14 @@ const ProductPage = async ({ params }: ProductPageParams) => {
         }
     })
 
+    const colors = await ColorModel.findAll()
+
     async function removeProduct(id: number) {
         'use server'
         await ProductModel.destroy({ where: { id } })
         revalidatePath('/admin/products')
         redirect('/admin/products')
-    };
-
-    // async function removeVariant(id: number) {
-    //     'use server'
-    //     const productId = product.id
-    //     console.log('~~~~~~~~~~productId', productId)
-    //     await ProductVariantModel.destroy({ where: { id } })
-    //     revalidatePath(`/admin/products/${productId}`)
-    //     redirect(`/admin/products/${productId}`)
-    // }
+    }
 
     return (<>
         <div className="max-w-4xl mx-auto my-4 p-2 bg-white rounded-lg shadow-sm">
@@ -115,6 +108,7 @@ const ProductPage = async ({ params }: ProductPageParams) => {
             <ProductVariantManager
                 initialVariants={variants.map(v => v.toJSON())}
                 productId={product.id}
+                allColors={colors}
             />
         </div>
     </>
