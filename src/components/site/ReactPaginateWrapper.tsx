@@ -1,24 +1,39 @@
-'use client';
-import ReactPaginate from 'react-paginate';
-import { useRouter } from 'next/navigation';
-import {useEffect, useState} from "react";
+'use client'
+import ReactPaginate from 'react-paginate'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-const ReactPaginateWrapper = ({ pages, currentPage }) => {
-    const [activePage, setActivePage] = useState(currentPage - 1)
+//  опциональный пропс onPageChange. Если этот пропс передан, компонент будет использовать его для обработки смены страницы. Если нет, он вернется к поведению по умолчанию, использующему router.push.
+
+type ReactPaginateWrapperProps = {
+    pages: number; // Общее количество страниц (переименовано из totalPages для соответствия вашему коду)
+    currentPage: number; // Текущая страница (1-индексированная)
+    onPageChange?: (selectedPage: { selected: number }) => void; // Опциональный колбэк для внешней обработки
+};
+
+const ReactPaginateWrapper = ({ pages, currentPage, onPageChange }: ReactPaginateWrapperProps) => {
+
+    // ReactPaginate использует 0-индексацию, поэтому currentPage - 1
+    const [ activePage, setActivePage ] = useState(currentPage - 1)
     const router = useRouter()
 
-//     useEffect(() => {
-//         setActivePage(currentPage - 1)
-//     }, [currentPage])
+    useEffect(() => {
+        setActivePage(currentPage - 1)
+    }, [ currentPage ])
 
-    console.log('pages', pages)
-    console.log('currentPage', currentPage)
-    const handlePageClick = (event) => {
-        const newPage = event.selected + 1
-        console.log('event', event)
-        console.log('newPage', newPage)
-        router.push(`?page=${newPage}`)
-    };
+    console.log('Wrapper - pages:', pages, 'currentPage:', currentPage)
+
+    const handlePageClick = (event: { selected: number }) => {
+        // Если передан колбэк onPageChange, используем его
+        if (onPageChange) {
+            onPageChange(event)
+        } else {
+            // Иначе, используем router.push (старое поведение)
+            const newPage = event.selected + 1
+            console.log('Wrapper - router.push to page:', newPage)
+            router.push(`?page=${newPage}`)
+        }
+    }
 
     return (
         <ReactPaginate
@@ -29,7 +44,7 @@ const ReactPaginateWrapper = ({ pages, currentPage }) => {
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={handlePageClick}
-            forcePage={activePage}
+            forcePage={activePage} // Принудительно устанавливаем активную страницу
             containerClassName={'flex justify-center gap-2 mt-8'}
             pageClassName={'rounded border hover:bg-indigo-50'}
             pageLinkClassName={'px-3 py-1 block'}

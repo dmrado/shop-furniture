@@ -131,7 +131,9 @@ const ProductFullDescription = ({product}: { product: Product }) => {
                     <div className="space-y-6">
                         <h1 className="text-3xl font-bold text-[#383838]">{product.name}</h1>
                         <div className="prose prose-sm text-[#383838]">
-                            {/*<p>{product.descriptionLong}</p>*/}
+                            <p>{product.descriptionShort}</p>
+                        </div>
+                        <div className="prose prose-sm text-[#383838]">
                             <div dangerouslySetInnerHTML={{ __html: product.descriptionLong }}/>
                         </div>
                         <div>
@@ -397,7 +399,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
 
                                 {/*<Link href="#" className="w-full sm:w-auto">*/}
                                 <button
-                                    onClick={ async () => {
+                                    onClick={async () => {
                                         setIsCartUpdating(true)
                                         if (!selectedVariant) {
                                             throw new Error('Невозможно добавить в корзину: вариант продукта не выбран.')
@@ -408,7 +410,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
 
                                             setIsCartUpdating(false)
                                         } catch (error) {
-                                            if(error instanceof UnauthorizedError) {
+                                            if (error instanceof UnauthorizedError) {
                                                 router.push('/api/auth/signin')
                                             } else {
                                                 throw error

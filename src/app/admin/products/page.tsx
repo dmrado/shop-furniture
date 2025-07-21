@@ -1,13 +1,13 @@
 import React from 'react'
-import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import HeaderButtons from '@/components/admin/HeaderButtons.tsx'
 import { ProductModel, StyleModel } from '@/db/models'
 import { BrandModel } from '@/db/models/brand.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { CountryModel } from '@/db/models/country.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
-import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation";
+import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export const metadata = {
     title: 'Decoro | Список продукции'
@@ -51,12 +51,8 @@ const ProductsManagementPage = async () => {
                 initialCountries={initialCountries}
                 initialStyles={initialStyles}
                 removeProduct={removeProduct}
+                itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
             />
-        </div>
-        <div className='max-w-2xl overflow-hidden my-0 mr-auto ml-auto'>{/*container*/}
-            <div className='flex float-left p-0 mt-9'>{/*card-list*/}
-                {/*<PostList initialPosts={admin}/>*/}
-            </div>
         </div>
     </>)
 }

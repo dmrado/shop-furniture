@@ -6,6 +6,7 @@ import ProductForm from '@/components/admin/ProductForm' // Будет испо�
 import { ProductDTO } from '@/db/models/product.model.ts'
 import Link from 'next/link'
 import Image from 'next/image'
+import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 
 // Типы для справочников
 type DictionaryItem = {
@@ -20,6 +21,7 @@ type ProductFilterAndListProps = {
     initialCountries: DictionaryItem[]
     initialStyles: DictionaryItem[]
     removeProduct: (id: number) => Promise<void>
+    itemsPerPage: number
 }
 
 const ProductFilterAndList = ({
@@ -28,10 +30,12 @@ const ProductFilterAndList = ({
     initialCollections = [],
     initialCountries = [],
     initialStyles = [],
-    removeProduct
+    removeProduct,
+    itemsPerPage
 }: ProductFilterAndListProps) => {
     const router = useRouter()
-
+    console.log('initialProducts', initialProducts)
+    console.log('itemsPerPage', itemsPerPage)
     // Состояния для фильтров
     const [ brandFilter, setBrandFilter ] = useState<number | ''>('')
     const [ collectionFilter, setCollectionFilter ] = useState<number | ''>('')
@@ -39,9 +43,11 @@ const ProductFilterAndList = ({
     const [ styleFilter, setStyleFilter ] = useState<number | ''>('')
     const [ articulFilter, setArticulFilter ] = useState<string>('')
 
-
     // Состояние для отображаемых продуктов (после фильтрации)
     const [ filteredProducts, setFilteredProducts ] = useState(initialProducts)
+
+    // Поскольку фильтрация происходит на клиенте, пагинация также будет происходить на клиенте, по списку filteredProducts // Состояние для текущей страницы пагинации
+    const [ currentPage, setCurrentPage ] = useState(1)
 
     // Состояние для редактируемого продукта (null для создания нового)
     const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(null)
@@ -68,7 +74,15 @@ const ProductFilterAndList = ({
         }
 
         setFilteredProducts(currentProducts)
+        setCurrentPage(1)// Сброс на первую страницу при изменении фильтров
     }, [ initialProducts, brandFilter, collectionFilter, countryFilter, styleFilter, articulFilter ])
+
+
+    // Вычисляем продукты для текущей страницы
+    const offset = (currentPage - 1) * itemsPerPage
+    const currentItems = filteredProducts.slice(offset, offset + itemsPerPage)
+    const pageCount = Math.ceil(filteredProducts.length / itemsPerPage)
+
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
@@ -77,6 +91,13 @@ const ProductFilterAndList = ({
         setCountryFilter('')
         setStyleFilter('')
         setArticulFilter('')
+        setCurrentPage(1)
+    }
+
+    // Обработчик изменения страницы пагинации
+    const handlePageChange = (selectedPage: { selected: number }) => {
+        setCurrentPage(selectedPage.selected + 1)
+        window.scrollTo({ top: 0, behavior: 'smooth' }) // Прокрутка к началу списка
     }
 
     // Обработчик выбора продукта для редактирования
@@ -84,7 +105,7 @@ const ProductFilterAndList = ({
         setEditingProduct(product)
     }
 
-    // Обработчик для создания нового продукта кнопка на котроой он висит не требуется проверить и удалить
+    // Обработчик для создания нового продукта кнопка на котроой он висит по-моему не требуется? проверить и удалить
     // const handleCreateNewProduct = () => {
     //     setEditingProduct(null) // Передаем null, чтобы ProductForm знал, что это новый продукт
     // }
@@ -199,11 +220,11 @@ const ProductFilterAndList = ({
             {/* Список продуктов */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h3 className="text-lg font-bold mb-4">Список продуктов ({filteredProducts.length})</h3>
-                {filteredProducts.length === 0 ? (
+                {currentItems.length === 0 ? (
                     <p className="text-gray-600">Нет продуктов, соответствующих фильтрам.</p>
                 ) : (
                     <ul className="divide-y divide-gray-200">
-                        {filteredProducts.map(product => (
+                        {currentItems.map(product => (
                             <li key={product.id} className="py-3 flex items-center justify-between">
                                 {/* Контейнер для миниатюры и названия */}
                                 <div
@@ -253,6 +274,17 @@ const ProductFilterAndList = ({
                     </ul>
                 )}
             </div>
+
+            {/* Компонент пагинации */}
+            {pageCount > 1 && (
+                <div className="mt-6">
+                    <ReactPaginateWrapper
+                        pages={pageCount}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            )}
 
             {/* Форма редактирования/создания продукта */}
             <div className="bg-white p-6 rounded-lg shadow-md">
