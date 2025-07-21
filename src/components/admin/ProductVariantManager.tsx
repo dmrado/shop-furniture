@@ -21,6 +21,7 @@ type ProductVariantManagerProps = {
 };
 
 const ProductVariantManager = ({ initialVariants, productId, allColors }: ProductVariantManagerProps) => {
+    console.log('initialVariants 3', initialVariants)
     const router = useRouter()
     // хранит текущий список вариантов на клиенте
     const [ variants, setVariants ] = useState(initialVariants)

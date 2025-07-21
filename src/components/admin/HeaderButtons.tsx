@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import React from 'react'
@@ -29,7 +28,7 @@ export default async function HeaderButtons() {
                 <div className='flex flex-wrap '>
                     {isAdmin(session) &&
                         <Link href={'/admin/new'}>
-                            <button className='button_green'>Добавить пост</button>
+                            <button className='button_green'>Добавить товар</button>
                         </Link>
                     }
 

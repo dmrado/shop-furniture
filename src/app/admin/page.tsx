@@ -22,7 +22,7 @@ const Posts = async () => {
             <HeaderButtons/>
 
             <p className='text-[#505050] font-bold text-2xl mt-6 px-12 indent-12'>
-                На этой странице осуществляется ввод товарных позиций все продукты и с фильтрами
+               Страница Админ - предлагаю отсюда сразу перебрасывать на http://127.0.0.1:3000/admin/products
             </p>
         </div>
         <div className='max-w-2xl overflow-hidden my-0 mr-auto ml-auto'>{/*container*/}
