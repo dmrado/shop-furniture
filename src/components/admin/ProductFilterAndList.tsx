@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import ProductForm from '@/components/admin/ProductForm' // Будет использоваться для редактирования/создания
-import { ProductDTO } from '@/db/models/product.model.ts' // Для типизации, если нужна более строгая
+import { ProductDTO } from '@/db/models/product.model.ts'
+import Link from 'next/link' // Для типизации, если нужна более строгая
 
 // Типы для справочников
 type DictionaryItem = {
@@ -17,6 +18,7 @@ type ProductFilterAndListProps = {
     initialCollections: DictionaryItem[];
     initialCountries: DictionaryItem[];
     initialStyles: DictionaryItem[];
+    removeProduct: () => void
 };
 
 const ProductFilterAndList = ({
@@ -25,6 +27,7 @@ const ProductFilterAndList = ({
     initialCollections = [],
     initialCountries = [],
     initialStyles = [],
+    removeProduct
 }: ProductFilterAndListProps) => {
     const router = useRouter()
 
@@ -106,7 +109,8 @@ const ProductFilterAndList = ({
                 <h3 className="text-lg font-bold mb-4">Фильтр продуктов</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                        <label htmlFor="brandFilter" className="block text-gray-700 text-sm font-bold mb-2">Бренд:</label>
+                        <label htmlFor="brandFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2">Бренд:</label>
                         <select
                             id="brandFilter"
                             value={brandFilter}
@@ -117,7 +121,8 @@ const ProductFilterAndList = ({
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="collectionFilter" className="block text-gray-700 text-sm font-bold mb-2">Коллекция:</label>
+                        <label htmlFor="collectionFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2">Коллекция:</label>
                         <select
                             id="collectionFilter"
                             value={collectionFilter}
@@ -128,7 +133,8 @@ const ProductFilterAndList = ({
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="countryFilter" className="block text-gray-700 text-sm font-bold mb-2">Страна:</label>
+                        <label htmlFor="countryFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2">Страна:</label>
                         <select
                             id="countryFilter"
                             value={countryFilter}
@@ -139,7 +145,8 @@ const ProductFilterAndList = ({
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="styleFilter" className="block text-gray-700 text-sm font-bold mb-2">Стиль:</label>
+                        <label htmlFor="styleFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2">Стиль:</label>
                         <select
                             id="styleFilter"
                             value={styleFilter}
@@ -157,12 +164,12 @@ const ProductFilterAndList = ({
                     >
                         Сбросить фильтры
                     </button>
-                    <button
-                        onClick={handleCreateNewProduct}
-                        className="button_green px-4 py-2 text-sm ml-4" // Предполагается, что button_green существует
-                    >
-                        Создать новый продукт
-                    </button>
+                    {/*<button*/}
+                    {/*    onClick={handleCreateNewProduct}*/}
+                    {/*    className="button_green px-4 py-2 text-sm ml-4" // Предполагается, что button_green существует*/}
+                    {/*>*/}
+                    {/*    Создать новый продукт*/}
+                    {/*</button>*/}
                 </div>
             </div>
 
@@ -175,13 +182,49 @@ const ProductFilterAndList = ({
                     <ul className="divide-y divide-gray-200">
                         {filteredProducts.map(product => (
                             <li key={product.id} className="py-3 flex items-center justify-between">
-                                <span className="text-gray-800 font-medium">{product.name}</span>
-                                <button
-                                    onClick={() => handleEditProduct(product)}
-                                    className="button_blue px-3 py-1 text-sm"
-                                >
-                                    Редактировать
-                                </button>
+                                {/* Контейнер для миниатюры и названия */}
+                                <div
+                                    className="flex items-center gap-4 flex-grow"> {/* flex-grow позволит ему занять доступное пространство */}
+                                    {/* Миниатюра */}
+                                    <div
+                                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                        <img
+                                            width={64} // 16 * 4 = 64px
+                                            height={64} // 16 * 4 = 64px
+                                            src={product.path ? product.path : '/spalni.png'}
+
+                                            alt={`Картинка продукта ${product.name}`}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
+
+                                    {/* Название продукта */}
+                                    <span className="text-gray-800 font-medium text-lg">{product.name}</span>
+                                </div>
+
+                                {/* Контейнер для кнопок */}
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    <button
+                                        onClick={() => handleEditProduct(product)}
+                                        className="button_blue px-3 py-1 text-sm"
+                                    >
+                                        Редактировать
+                                    </button>
+
+                                    <Link href={`/admin/products/${product.id}`}
+                                        className='button_green px-3 py-1 text-sm'>
+                                        Варианты
+                                    </Link>
+
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault()
+                                        removeProduct(product.id)
+                                    }} className="w-full sm:w-auto">
+                                        <button type="submit" className='button_red px-4 py-2 text-sm w-full'>
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </div>
                             </li>
                         ))}
                     </ul>

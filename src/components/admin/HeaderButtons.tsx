@@ -26,11 +26,11 @@ export default async function HeaderButtons() {
                 </div>
 
                 <div className='flex flex-wrap '>
-                    {isAdmin(session) &&
-                        <Link href={'/admin/new'}>
-                            <button className='button_green'>Добавить товар</button>
-                        </Link>
-                    }
+                    {/*{isAdmin(session) &&*/}
+                    {/*    <Link href={'/admin/new'}>Добавить товар*/}
+                    {/*        <button className='button_green'></button>*/}
+                    {/*    </Link>*/}
+                    {/*}*/}
 
                     {ALERTS_ENABLED && isAdmin(session) &&
                         <Link href={'/alerts'}>

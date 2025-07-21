@@ -6,6 +6,8 @@ import { BrandModel } from '@/db/models/brand.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { CountryModel } from '@/db/models/country.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
+import {revalidatePath} from "next/cache";
+import {redirect} from "next/navigation";
 
 export const metadata = {
     title: 'Decoro | Список продукции'
@@ -30,6 +32,13 @@ const ProductsManagementPage = async () => {
     const initialCountries = countries.map(c => c.toJSON())
     const initialStyles = styles.map(s => s.toJSON())
 
+    async function removeProduct(id: number) {
+        'use server'
+        await ProductModel.destroy({ where: { id } })
+        revalidatePath('/admin/products')
+        redirect('/admin/products')
+    }
+
     return (<>
         <h1 className='flex flex-col text-[#505050] font-bold text-2xl justify-center items-center mt-2'> Управление товарными позициями </h1>
         <div className='flex flex-col justify-between items-center mt-2'>
@@ -41,6 +50,7 @@ const ProductsManagementPage = async () => {
                 initialCollections={initialCollections}
                 initialCountries={initialCountries}
                 initialStyles={initialStyles}
+                removeProduct={removeProduct}
             />
         </div>
         <div className='max-w-2xl overflow-hidden my-0 mr-auto ml-auto'>{/*container*/}
