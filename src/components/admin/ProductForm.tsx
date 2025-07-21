@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { handleForm } from '@/actions/handleForm.ts'
-import { getBrands, getCollections, getCountries, getStyles } from '@/actions/dictionaryActions.ts'
+// import { getBrands, getCollections, getCountries, getStyles } from '@/actions/dictionaryActions.ts'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
-import { ProductModel } from '@/db/models/product.model.ts'
+import { ProductDTO } from '@/db/models/product.model.ts'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
@@ -20,7 +20,15 @@ const IMAGE_TYPES = [
 
 // Типы для PostForm меняем на ProductForm, используя ProductModel
 type ProductFormProps = {
-    product?: ProductModel // Может быть не передан при создании нового продукта
+    product?: ProductDTO // Может быть не передан при создании нового продукта
+    onSuccess?: () => void; // Добавляем колбэк для успешного сохранения
+    onCancel?: () => void; // Добавляем колбэк для отмены
+
+    // Добавляем пропсы для справочников, но делаем их опциональными и даем дефолтное значение
+    initialBrands?: DictionaryItem[];
+    initialCollections?: DictionaryItem[];
+    initialCountries?: DictionaryItem[];
+    initialStyles?: DictionaryItem[];
 }
 
 // Типы для элементов справочника
@@ -29,7 +37,15 @@ type DictionaryItem = {
     name: string
 }
 
-const ProductForm = ({ product }: ProductFormProps) => {
+const ProductForm = ({
+    product,
+    onSuccess,
+    onCancel,
+    initialBrands = [],
+    initialCollections = [],
+    initialCountries = [],
+    initialStyles = []
+}: ProductFormProps) => {
     // Инициализируем состояния, используя данные из product или значения по умолчанию
     const [ name, setName ] = useState(product?.name || '')
     const [ articul, setArticul ] = useState(product?.articul || '')
@@ -46,66 +62,34 @@ const ProductForm = ({ product }: ProductFormProps) => {
     const [ styleId, setStyleId ] = useState(product?.styleId || 1)
 
     //  СОСТОЯНИЯ ДЛЯ ХРАНЕНИЯ СПИСКОВ СПРАВОЧНИКОВ
-    const [ brands, setBrands ] = useState<DictionaryItem[]>([])
-    const [ collections, setCollections ] = useState<DictionaryItem[]>([])
-    const [ countries, setCountries ] = useState<DictionaryItem[]>([])
-    const [ styles, setStyles ] = useState<DictionaryItem[]>([])
+    const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands)
+    const [ collections, setCollections ] = useState<DictionaryItem[]>(initialCollections)
+    const [ countries, setCountries ] = useState<DictionaryItem[]>(initialCountries)
+    const [ styles, setStyles ] = useState<DictionaryItem[]>(initialStyles)
 
     // Состояния для валидации
     const [ touchedName, setTouchedName ] = useState(false)
     const [ isFileSizeError, setFileSizeError ] = useState(false)
 
-    // useEffect для загрузки данных при монтировании компонента
+    // useEffect для установки начальных значений или обновления при смене product
     useEffect(() => {
-        const loadDictionaryData = async () => {
-            const [ fetchedBrands, fetchedCollections, fetchedCountries, fetchedStyles ] = await Promise.all([
-                getBrands(),
-                getCollections(),
-                getCountries(),
-                getStyles(),
-            ])
+        setName(product?.name || '')
+        setArticul(product?.articul || '')
+        setSku(product?.sku || '')
+        setDescriptionShort(product?.descriptionShort || '')
+        setDescriptionLong(product?.descriptionLong || '')
+        setIsNew(product?.isNew ?? false)
+        setIsActive(product?.isActive ?? false)
 
-            setBrands(fetchedBrands)
-            setCollections(fetchedCollections)
-            setCountries(fetchedCountries)
-            setStyles(fetchedStyles)
+        // Установка значений для select-ов, учитывая переданные initialItems проверяем, что brands, collections и т.д. не undefined здесь
+        setBrandId(product?.brandId && brands.some(b => b.id === product.brandId) ? product.brandId : (brands.length > 0 ? brands[0].id : ''));
+        setCollectionId(product?.collectionId && collections.some(c => c.id === product.collectionId) ? product.collectionId : (collections.length > 0 ? collections[0].id : ''));
+        setCountryId(product?.countryId && countries.some(c => c.id === product.countryId) ? product.countryId : (countries.length > 0 ? countries[0].id : ''));
+        setStyleId(product?.styleId && styles.some(s => s.id === product.styleId) ? product.styleId : (styles.length > 0 ? styles[0].id : ''));
 
-            // Если продукт существует и у него есть ID, убедимся, что выбранные ID присутствуют в списках иначе, можно установить 1 (или первый доступный ID) если существующего ID нет в списке
-            if (product) {
-                if (product.brandId && fetchedBrands.some(b => b.id === product.brandId)) {
-                    setBrandId(product.brandId)
-                } else if (fetchedBrands.length > 0) { // Если не нашли старый ID, выбираем первый
-                    setBrandId(fetchedBrands[0].id)
-                }
-
-                if (product.collectionId && fetchedCollections.some(c => c.id === product.collectionId)) {
-                    setCollectionId(product.collectionId)
-                } else if (fetchedCollections.length > 0) {
-                    setCollectionId(fetchedCollections[0].id)
-                }
-
-                if (product.countryId && fetchedCountries.some(c => c.id === product.countryId)) {
-                    setCountryId(product.countryId)
-                } else if (fetchedCountries.length > 0) {
-                    setCountryId(fetchedCountries[0].id)
-                }
-
-                if (product.styleId && fetchedStyles.some(s => s.id === product.styleId)) {
-                    setStyleId(product.styleId)
-                } else if (fetchedStyles.length > 0) {
-                    setStyleId(fetchedStyles[0].id)
-                }
-            } else {
-                // Для нового продукта, если есть данные, выбираем первый доступный ID
-                if (fetchedBrands.length > 0) setBrandId(fetchedBrands[0].id)
-                if (fetchedCollections.length > 0) setCollectionId(fetchedCollections[0].id)
-                if (fetchedCountries.length > 0) setCountryId(fetchedCountries[0].id)
-                if (fetchedStyles.length > 0) setStyleId(fetchedStyles[0].id)
-            }
-        }
-
-        loadDictionaryData()
-    }, [ product ]) // Зависимость от product, чтобы обновить значения при изменении продукта (для режима редактирования)
+        setTouchedName(false);
+        setFileSizeError(false);
+    }, [ product, brands, collections, countries, styles ]) // Зависимость от product и initial-справочников
 
     const onSubmit = (formData: FormData) => {
         handleForm(formData)
@@ -125,7 +109,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
 
     // Вспомогательная функция для генерации опций select
     const renderOptions = (items: DictionaryItem[]) => {
-        if (items.length === 0) {
+        if (!items || items.length === 0) {
             return <option value="">Загрузка...</option>
         }
         return items.map(item => (
@@ -136,7 +120,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
     return (
         <form className="bg-white rounded px-8 pt-6 pb-8" action={onSubmit}>
             {/* ID продукта - скрытое поле, если редактируем */}
-            <input hidden type="number" name="id" value={product?.id || ''} readOnly />
+            <input hidden type="number" name="id" value={product?.id || ''} readOnly/>
 
             {/* Поле 'name' - аналог старого 'title' */}
             <div className="mb-4">
@@ -148,9 +132,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                     value={name}
                     onBlur={() => setTouchedName(true)}
                     onChange={(e) => {
-                        if (e.target?.value) {
-                            setName(e.target.value)
-                        }
+                        setName(e.target.value)
                     }}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="text"
@@ -158,7 +140,8 @@ const ProductForm = ({ product }: ProductFormProps) => {
                     placeholder="Название товарной позиции (мин. 3, макс. 180 символов)"
                     maxLength={180}
                 />
-                {!isNameValid() && <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
+                {!isNameValid() &&
+                    <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
             </div>
 
             {/* Контейнер для полей в три колонки на md и выше */}
@@ -167,7 +150,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 {/* ПОЛЯ SELECT ДЛЯ ID: */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
-                    Бренд:
+                        Бренд:
                     </label>
                     <select
                         name="brandId"
@@ -183,7 +166,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
-                    Коллекция:
+                        Коллекция:
                     </label>
                     <select
                         name="collectionId"
@@ -199,7 +182,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
-                    Страна:
+                        Страна:
                     </label>
                     <select
                         name="countryId"
@@ -215,7 +198,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
-                    Стиль:
+                        Стиль:
                     </label>
                     <select
                         name="styleId"
@@ -232,7 +215,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 {/* Поле 'articul' */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
-                    Артикул:
+                        Артикул:
                     </label>
                     <input
                         value={articul}
@@ -247,7 +230,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 {/* Поле 'sku' */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sku">
-                    SKU:
+                        SKU:
                     </label>
                     <input
                         value={sku}
@@ -282,8 +265,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 </label>
                 <Editor
                     defaultValue={descriptionLong}
-                    // Это предположение, что Editor умеет передавать изменения через пропс или реф
-                    // Для этой задачи просто передаем defaultValue
+                    // Это предположение, что Editor умеет передавать изменения через пропс или реф для этой задачи просто передаем defaultValue
                 />
             </div>
 
@@ -315,7 +297,7 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 </label>
             </div>
 
-            {/* Поле для загрузки файла (осталось как есть) */}
+            {/* Поле для загрузки файла */}
             <div className="flex flex-col my-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">
                     Изображение товара:
@@ -330,15 +312,25 @@ const ProductForm = ({ product }: ProductFormProps) => {
                 />
                 {isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}
                 <label htmlFor="product_picture"
-                    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif, .tiff, .heic</label>
+                    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
+                    .tiff, .heic</label>
             </div>
 
             <div className="flex items-center justify-center mt-2">
                 <button
-                    disabled={!isNameValid() || isFileSizeError} // Валидация по имени (бывшему title) и размеру файла
+                    disabled={!isNameValid() || isFileSizeError} // Валидация по имени и размеру файла
                     className={buttonStyle()}
                     type="submit">Записать
                 </button>
+                {product && ( // Добавляем кнопку отмены только если редактируем
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        className="button_red ml-4"
+                    >
+                        Отмена
+                    </button>
+                )}
             </div>
         </form>
     )

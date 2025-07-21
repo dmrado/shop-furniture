@@ -254,8 +254,8 @@ export const handleForm = async (formData: FormData) => {
         //     await ProductModel.update({ path: `/img/${fileName}` }, { where: { id: product.id } })
         // }
 
-        // revalidatePath('/admin/products')
-        redirect(`/admin/products/${product.id}`) // Перенаправляем на страницу нового продукта
+        revalidatePath('/admin/products')
+        // redirect(`/admin/products/${product.id}`) // Перенаправляем на страницу нового продукта
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)
         // Проверяем, является ли ошибка перенаправлением по ее 'digest' свойству. Это самый надежный способ для Server Actions

@@ -1,4 +1,4 @@
-export const NUMBER_OF_POSTS_TO_FETCH = 10
+export const NUMBER_OF_PRODUCTS_TO_FETCH = 100
 
 export const FILE_LIMIT = 10_000_000
 
