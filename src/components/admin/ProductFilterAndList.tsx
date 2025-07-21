@@ -4,22 +4,23 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import ProductForm from '@/components/admin/ProductForm' // Будет использоваться для редактирования/создания
 import { ProductDTO } from '@/db/models/product.model.ts'
-import Link from 'next/link' // Для типизации, если нужна более строгая
+import Link from 'next/link'
+import Image from 'next/image'
 
 // Типы для справочников
 type DictionaryItem = {
-    id: number;
-    name: string;
-};
+    id: number
+    name: string
+}
 
 type ProductFilterAndListProps = {
-    initialProducts: any[]; // Начальный список продуктов
-    initialBrands: DictionaryItem[];
-    initialCollections: DictionaryItem[];
-    initialCountries: DictionaryItem[];
-    initialStyles: DictionaryItem[];
-    removeProduct: () => void
-};
+    initialProducts: ProductDTO[] // Начальный список продуктов
+    initialBrands: DictionaryItem[]
+    initialCollections: DictionaryItem[]
+    initialCountries: DictionaryItem[]
+    initialStyles: DictionaryItem[]
+    removeProduct: (id: number) => Promise<void>
+}
 
 const ProductFilterAndList = ({
     initialProducts,
@@ -36,12 +37,14 @@ const ProductFilterAndList = ({
     const [ collectionFilter, setCollectionFilter ] = useState<number | ''>('')
     const [ countryFilter, setCountryFilter ] = useState<number | ''>('')
     const [ styleFilter, setStyleFilter ] = useState<number | ''>('')
+    const [ articulFilter, setArticulFilter ] = useState<string>('')
+
 
     // Состояние для отображаемых продуктов (после фильтрации)
     const [ filteredProducts, setFilteredProducts ] = useState(initialProducts)
 
     // Состояние для редактируемого продукта (null для создания нового)
-    const [ editingProduct, setEditingProduct ] = useState<any | null>(null)
+    const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(null)
 
     // Эффект для применения фильтров при изменении начальных продуктов или самих фильтров
     useEffect(() => {
@@ -59,9 +62,13 @@ const ProductFilterAndList = ({
         if (styleFilter) {
             currentProducts = currentProducts.filter(p => p.styleId === styleFilter)
         }
+        if (articulFilter) {
+            // Ищем совпадения артикула, игнорируя регистр
+            currentProducts = currentProducts.filter(p => p.articul && p.articul.toLowerCase().includes(articulFilter.toLowerCase()))
+        }
 
         setFilteredProducts(currentProducts)
-    }, [ initialProducts, brandFilter, collectionFilter, countryFilter, styleFilter ])
+    }, [ initialProducts, brandFilter, collectionFilter, countryFilter, styleFilter, articulFilter ])
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
@@ -69,17 +76,18 @@ const ProductFilterAndList = ({
         setCollectionFilter('')
         setCountryFilter('')
         setStyleFilter('')
+        setArticulFilter('')
     }
 
     // Обработчик выбора продукта для редактирования
-    const handleEditProduct = (product: any) => {
+    const handleEditProduct = (product: ProductDTO) => {
         setEditingProduct(product)
     }
 
-    // Обработчик для создания нового продукта
-    const handleCreateNewProduct = () => {
-        setEditingProduct(null) // Передаем null, чтобы ProductForm знал, что это новый продукт
-    }
+    // Обработчик для создания нового продукта кнопка на котроой он висит не требуется проверить и удалить
+    // const handleCreateNewProduct = () => {
+    //     setEditingProduct(null) // Передаем null, чтобы ProductForm знал, что это новый продукт
+    // }
 
     // Обработчик успешного сохранения формы (из ProductForm)
     const handleFormSuccess = () => {
@@ -156,6 +164,21 @@ const ProductFilterAndList = ({
                             {renderFilterOptions(initialStyles, 'Все стили')}
                         </select>
                     </div>
+
+                    {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
+                    <div className="md:col-span-2 lg:col-span-1"> {/* Растягиваем на 2 колонки на md, на 1 на lg */}
+                        <label htmlFor="articulSearch"
+                            className="block text-gray-700 text-sm font-bold mb-2">Поиск по артикулу:</label>
+                        <input
+                            type="text"
+                            id="articulSearch"
+                            value={articulFilter}
+                            onChange={(e) => setArticulFilter(e.target.value)}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Введите артикул"
+                        />
+                    </div>
+
                 </div>
                 <div className="flex justify-end mt-4">
                     <button
@@ -188,7 +211,7 @@ const ProductFilterAndList = ({
                                     {/* Миниатюра */}
                                     <div
                                         className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
-                                        <img
+                                        <Image
                                             width={64} // 16 * 4 = 64px
                                             height={64} // 16 * 4 = 64px
                                             src={product.path ? product.path : '/spalni.png'}
