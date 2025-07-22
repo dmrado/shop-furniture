@@ -220,6 +220,18 @@ const ProductFilterAndList = ({
             {/* Список продуктов */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h3 className="text-lg font-bold mb-4">Список продуктов ({filteredProducts.length})</h3>
+
+                {/* Компонент пагинации */}
+                {pageCount > 1 && (
+                    <div className="mt-6">
+                        <ReactPaginateWrapper
+                            pages={pageCount}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
+                )}
+
                 {currentItems.length === 0 ? (
                     <p className="text-gray-600">Нет продуктов, соответствующих фильтрам.</p>
                 ) : (
@@ -274,17 +286,6 @@ const ProductFilterAndList = ({
                     </ul>
                 )}
             </div>
-
-            {/* Компонент пагинации */}
-            {pageCount > 1 && (
-                <div className="mt-6">
-                    <ReactPaginateWrapper
-                        pages={pageCount}
-                        currentPage={currentPage}
-                        onPageChange={handlePageChange}
-                    />
-                </div>
-            )}
 
             {/* Форма редактирования/создания продукта */}
             <div className="bg-white p-6 rounded-lg shadow-md">

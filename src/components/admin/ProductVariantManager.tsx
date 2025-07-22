@@ -6,6 +6,7 @@ import ProductVariantForm from '@/components/admin/ProductVariantForm'
 
 // Импортируем Server Actions, которые будут вызываться из этого клиентского компонента
 import { removeVariant as removeVariantAction } from '@/actions/removeVariantAction'
+import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 
 type ColorItem = {
     id: number;
@@ -20,13 +21,21 @@ type ProductVariantManagerProps = {
     allColors: ColorItem[]
 };
 
-const ProductVariantManager = ({ initialVariants, productId, allColors }: ProductVariantManagerProps) => {
+const ProductVariantManager = ({
+    initialVariants,
+    productId,
+    allColors,
+    itemsPerPage
+}: ProductVariantManagerProps) => {
     console.log('initialVariants 3', initialVariants)
     const router = useRouter()
     // хранит текущий список вариантов на клиенте
     const [ variants, setVariants ] = useState(initialVariants)
     // хранит вариант, который сейчас редактируется (или null, если создается новый)
     const [ editingVariant, setEditingVariant ] = useState<any | null>(null)
+
+    // Состояние для текущей страницы пагинации
+    const [ currentPage, setCurrentPage ] = useState(1)
 
     // useEffect для синхронизации initialVariants с внутренним состоянием,
     // если initialVariants изменяются (например, после router.refresh() на родительской странице)
@@ -57,14 +66,38 @@ const ProductVariantManager = ({ initialVariants, productId, allColors }: Produc
         router.refresh() // Обновляем список вариантов на странице
     }
 
+    // Вычисляем продукты для текущей страницы
+    const offset = (currentPage - 1) * itemsPerPage
+    const currentItems = initialVariants.slice(offset, offset + itemsPerPage)
+    const pageCount = Math.ceil(initialVariants.length / itemsPerPage)
+    // Обработчик изменения страницы пагинации
+    const handlePageChange = (selectedPage: { selected: number }) => {
+        setCurrentPage(selectedPage.selected + 1)
+        window.scrollTo({ top: 0, behavior: 'smooth' }) // Прокрутка к началу списка
+    }
+
+
+
     return (
         <>
-            <h2 className="text-xl font-bold mt-8 mb-4">Варианты продукта</h2>
-            {variants.length === 0 ? (
+            <h2 className="text-xl font-bold mt-2 mb-2">Варианты продукта</h2>
+
+            {/* Компонент пагинации */}
+            {pageCount > 1 && (
+                <div className="mt-2">
+                    <ReactPaginateWrapper
+                        pages={pageCount}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            )}
+
+            {currentItems.length === 0 ? (
                 <p className="text-gray-600">Для этого продукта пока нет вариантов.</p>
             ) : (
                 <ul>
-                    {variants.map(variant => {
+                    {currentItems.map(variant => {
                         // Находим соответствующий объект цвета по colorId
                         const color = allColors.find(c => c.id === variant.colorId)
 

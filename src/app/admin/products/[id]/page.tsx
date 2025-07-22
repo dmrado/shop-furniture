@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
+import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
@@ -106,6 +107,7 @@ const ProductPage = async ({ params }: ProductPageParams) => {
                 initialVariants={variants.map(v => v.toJSON())}
                 productId={product.id}
                 allColors={colors.map(v => v.toJSON())}
+                itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
             />
         </div>
     </>

@@ -91,11 +91,18 @@ const ProductForm = ({
         setFileSizeError(false);
     }, [ product, brands, collections, countries, styles ]) // Зависимость от product и initial-справочников
 
-    const onSubmit = (formData: FormData) => {
-        handleForm(formData)
+    const onSubmit = async (formData: FormData) => {
+        try{
+            await handleForm(formData)
+            if (onSuccess) { // Проверка для TS опциональной функции
+                onSuccess() // Вызываем переданный колбэк при успехе
+            }
+        } catch (error) {
+            console.error('Ошибка при сохранении продукта:', error)
+        }
     }
 
-    // Валидация для 'name' (аналог 'title')
+    // Валидация для 'name'
     const isNameValid = () => !touchedName || (touchedName && name.length >= TITLE_MIN_LENGTH)
 
     // Стили кнопки submit

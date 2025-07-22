@@ -88,7 +88,7 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
     }, [ productVariant, colors ]) // Зависимость от productVariant и colors
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault() // Предотвращаем дефолтную отправку формы
+        e.preventDefault()
 
         if (!isArticulValid()) {
             console.error('Артикул не может быть пустым.')
@@ -119,12 +119,11 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
         try {
             await handleProductVariantFormAction(formData) // Вызываем Server Action
-            if (onSuccess) {
+            if (onSuccess) { // Проверка для TS опциональной функции
                 onSuccess() // Вызываем переданный колбэк при успехе
             }
         } catch (error) {
             console.error('Ошибка при сохранении варианта:', error)
-            // Можно добавить отображение ошибки пользователю
         }
     }
 

@@ -4,7 +4,6 @@ import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
 import { ProductModel } from '@/db/models/product.model.ts'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import fs from 'fs'
 // Импортируем типы для InferAttributes, InferCreationAttributes, CreationOptional
@@ -256,28 +255,15 @@ export const handleForm = async (formData: FormData) => {
 
         revalidatePath('/admin/products')
         // redirect(`/admin/products/${product.id}`) // Перенаправляем на страницу нового продукта
+        return { success: true, product: product.toJSON() }
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)
-        // Проверяем, является ли ошибка перенаправлением по ее 'digest' свойству. Это самый надежный способ для Server Actions
-        if (
-            err &&
-            typeof err === 'object' &&
-            'digest' in err &&
-            typeof err.digest === 'string' &&
-            err.digest.startsWith('NEXT_REDIRECT')
-        ) {
-            throw err // Перебрасываем ошибку перенаправления дальше
-        }
-
-        // Для всех остальных ошибок
+        // Если это ошибка валидации, выбрасываем ее как ValidationError
         if (err instanceof ValidationError) {
-            redirect(
-                `/api/error/?code=400&message=VALIDATION_ERROR&details=${encodeURIComponent(err.message)}`
-            )
+            // Чтобы клиент мог поймать ее как ошибку с сообщением
+            throw err
         }
-        // Для остальных серверных ошибок
-        redirect(
-            `/api/error/?code=500&message=SERVER_ERROR_on_handleForm&details=${encodeURIComponent(String(err))}`
-        )
+        // Для всех остальных ошибок, выбрасываем общую Error
+        throw new Error(`Server error: ${err.message || String(err)}`)
     }
 }
