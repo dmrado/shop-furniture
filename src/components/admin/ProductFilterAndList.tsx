@@ -97,7 +97,7 @@ const ProductFilterAndList = ({
     // Обработчик изменения страницы пагинации
     const handlePageChange = (selectedPage: { selected: number }) => {
         setCurrentPage(selectedPage.selected + 1)
-        window.scrollTo({ top: 0, behavior: 'smooth' }) // Прокрутка к началу списка
+        // window.scrollTo({ top: 0, behavior: 'smooth' }) // Прокрутка к началу списка
     }
 
     // Обработчик выбора продукта для редактирования

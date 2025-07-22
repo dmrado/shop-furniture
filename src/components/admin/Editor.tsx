@@ -4,8 +4,14 @@ import 'react-quill/dist/quill.snow.css'
 import { useEffect, useRef, useState } from 'react'
 
 const Editor = ({ defaultValue }: {defaultValue : string}) => {
-    const [ value, setValue ] = useState(defaultValue ? defaultValue : '')
+    const [ value, setValue ] = useState(defaultValue)
     const ref = useRef(null)
+
+    useEffect(() => {
+        // Обновляем внутреннее состояние 'value' компонента Editor
+        // только когда пропс 'defaultValue' меняется.
+        setValue(defaultValue)
+    }, [ defaultValue ]) // Зависимость от defaultValue
 
     const modules = {
         toolbar: [
