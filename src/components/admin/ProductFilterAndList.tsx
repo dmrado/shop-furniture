@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import ProductForm from '@/components/admin/ProductForm' // Будет использоваться для редактирования/создания
 import { ProductDTO } from '@/db/models/product.model.ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
+import UrlParamsSelect from '@/components/ui/UrlParamsSelect'
+// import Select from '@/components/ui/Select'
 
 // Типы для справочников
 type DictionaryItem = {
@@ -15,7 +17,7 @@ type DictionaryItem = {
 }
 
 type ProductFilterAndListProps = {
-    initialProducts: ProductDTO[] // Начальный список продуктов
+    products: ProductDTO[] // Начальный список продуктов
     initialBrands: DictionaryItem[]
     initialCollections: DictionaryItem[]
     initialCountries: DictionaryItem[]
@@ -25,7 +27,7 @@ type ProductFilterAndListProps = {
 }
 
 const ProductFilterAndList = ({
-    initialProducts,
+    products,
     initialBrands = [], //Добавляем дефолтное значение пустой массив
     initialCollections = [],
     initialCountries = [],
@@ -34,17 +36,17 @@ const ProductFilterAndList = ({
     itemsPerPage
 }: ProductFilterAndListProps) => {
     const router = useRouter()
-    console.log('initialProducts', initialProducts)
+    console.log('initialProducts', products)
     console.log('itemsPerPage', itemsPerPage)
     // Состояния для фильтров
-    const [ brandFilter, setBrandFilter ] = useState<number | ''>('')
+    // const [ brandFilter, setBrandFilter ] = useState<number | null>(null)
     const [ collectionFilter, setCollectionFilter ] = useState<number | ''>('')
     const [ countryFilter, setCountryFilter ] = useState<number | ''>('')
     const [ styleFilter, setStyleFilter ] = useState<number | ''>('')
     const [ articulFilter, setArticulFilter ] = useState<string>('')
 
     // Состояние для отображаемых продуктов (после фильтрации)
-    const [ filteredProducts, setFilteredProducts ] = useState(initialProducts)
+    // const [ filteredProducts, setFilteredProducts ] = useState(products)
 
     // Поскольку фильтрация происходит на клиенте, пагинация также будет происходить на клиенте, по списку filteredProducts // Состояние для текущей страницы пагинации
     const [ currentPage, setCurrentPage ] = useState(1)
@@ -53,40 +55,38 @@ const ProductFilterAndList = ({
     const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(null)
 
     // Эффект для применения фильтров при изменении начальных продуктов или самих фильтров
-    useEffect(() => {
-        let currentProducts = initialProducts
-
-        if (brandFilter) {
-            currentProducts = currentProducts.filter(p => p.brandId === brandFilter)
-        }
-        if (collectionFilter) {
-            currentProducts = currentProducts.filter(p => p.collectionId === collectionFilter)
-        }
-        if (countryFilter) {
-            currentProducts = currentProducts.filter(p => p.countryId === countryFilter)
-        }
-        if (styleFilter) {
-            currentProducts = currentProducts.filter(p => p.styleId === styleFilter)
-        }
-        if (articulFilter) {
-            // Ищем совпадения артикула, игнорируя регистр
-            currentProducts = currentProducts.filter(p => p.articul && p.articul.toLowerCase().includes(articulFilter.toLowerCase()))
-        }
-
-        setFilteredProducts(currentProducts)
-        setCurrentPage(1)// Сброс на первую страницу при изменении фильтров
-    }, [ initialProducts, brandFilter, collectionFilter, countryFilter, styleFilter, articulFilter ])
-
+    // useEffect(() => {
+    //     let currentProducts = products
+    //
+    //     // if (brandFilter) {
+    //     //     currentProducts = currentProducts.filter(p => p.brandId === brandFilter)
+    //     // }
+    //     if (collectionFilter) {
+    //         currentProducts = currentProducts.filter(p => p.collectionId === collectionFilter)
+    //     }
+    //     if (countryFilter) {
+    //         currentProducts = currentProducts.filter(p => p.countryId === countryFilter)
+    //     }
+    //     if (styleFilter) {
+    //         currentProducts = currentProducts.filter(p => p.styleId === styleFilter)
+    //     }
+    //     if (articulFilter) {
+    //         // Ищем совпадения артикула, игнорируя регистр
+    //         currentProducts = currentProducts.filter(p => p.articul && p.articul.toLowerCase().includes(articulFilter.toLowerCase()))
+    //     }
+    //
+    //     setFilteredProducts(currentProducts)
+    //     setCurrentPage(1)// Сброс на первую страницу при изменении фильтров
+    // }, [ initialProducts, collectionFilter, countryFilter, styleFilter, articulFilter ])
 
     // Вычисляем продукты для текущей страницы
     const offset = (currentPage - 1) * itemsPerPage
-    const currentItems = filteredProducts.slice(offset, offset + itemsPerPage)
-    const pageCount = Math.ceil(filteredProducts.length / itemsPerPage)
-
+    const currentItems = products.slice(offset, offset + itemsPerPage)
+    const pageCount = Math.ceil(products.length / itemsPerPage)
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
-        setBrandFilter('')
+        // setBrandFilter(null)
         setCollectionFilter('')
         setCountryFilter('')
         setStyleFilter('')
@@ -131,24 +131,47 @@ const ProductFilterAndList = ({
         </>
     )
 
+    // const selectedBrand = initialBrands.find(brand => brand.id === brandFilter) ?? null
+
     return (
         <div className="w-full max-w-6xl mx-auto p-4">
             {/* Форма фильтрации */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h3 className="text-lg font-bold mb-4">Фильтр продуктов</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                        <label htmlFor="brandFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2">Бренд:</label>
-                        <select
-                            id="brandFilter"
-                            value={brandFilter}
-                            onChange={(e) => setBrandFilter(Number(e.target.value) || '')}
-                            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            {renderFilterOptions(initialBrands, 'Все бренды')}
-                        </select>
-                    </div>
+                    <UrlParamsSelect
+                        label={'Выберите бренд'}
+                        options={initialBrands.map(brand => ({
+                            value: String(brand.id),
+                            label: brand.name
+                        }))}
+                        queryKey={'brand'}
+                    />
+                    {/*<Select value={selectedBrand ? { value: String(selectedBrand.id), label: selectedBrand.name } : null}*/}
+                    {/*    label={'Выберите бренд'}*/}
+                    {/*    options={initialBrands.map(brand => ({*/}
+                    {/*        value: String(brand.id),*/}
+                    {/*        label: brand.name*/}
+                    {/*    }))}*/}
+                    {/*    handleChange={option => {*/}
+                    {/*        if (!option) {*/}
+                    {/*            setBrandFilter(null)*/}
+                    {/*        } else{*/}
+                    {/*            setBrandFilter(Number(option.value))*/}
+                    {/*        }}}*/}
+                    {/*/>*/}
+                    {/*<div>*/}
+                    {/*    <label htmlFor="brandFilter"*/}
+                    {/*        className="block text-gray-700 text-sm font-bold mb-2">Бренд:</label>*/}
+                    {/*    <select*/}
+                    {/*        id="brandFilter"*/}
+                    {/*        value={brandFilter}*/}
+                    {/*        onChange={(e) => setBrandFilter(Number(e.target.value) || '')}*/}
+                    {/*        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
+                    {/*    >*/}
+                    {/*        {renderFilterOptions(initialBrands, 'Все бренды')}*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
                     <div>
                         <label htmlFor="collectionFilter"
                             className="block text-gray-700 text-sm font-bold mb-2">Коллекция:</label>
@@ -219,7 +242,7 @@ const ProductFilterAndList = ({
 
             {/* Список продуктов */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h3 className="text-lg font-bold mb-4">Список продуктов ({filteredProducts.length})</h3>
+                <h3 className="text-lg font-bold mb-4">Список продуктов ({products.length})</h3>
 
                 {/* Компонент пагинации */}
                 {pageCount > 1 && (

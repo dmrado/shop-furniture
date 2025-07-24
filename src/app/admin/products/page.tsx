@@ -13,11 +13,16 @@ export const metadata = {
     title: 'Decoro | Список продукции'
 }
 
-const ProductsManagementPage = async () => {
+const ProductsManagementPage = async ({ searchParams }) => {
+
+    const { brand } = await searchParams
+    console.log('brand' , brand , typeof brand)
 
     const products = await ProductModel.findAll({
-        order: [ [ 'updatedAt', 'DESC' ] ]
+        order: [ [ 'updatedAt', 'DESC' ] ],
+        where: { brandId: brand,  }
     })
+        .then(data => data.map(p => p.toJSON()))
 
     // Загружаем справочные данные для фильтров
     const brands = await BrandModel.findAll()
@@ -26,7 +31,7 @@ const ProductsManagementPage = async () => {
     const styles = await StyleModel.findAll()
 
     // Преобразуем в JSON для передачи на клиентскую сторону
-    const initialProducts = products.map(p => p.toJSON())
+    // const initialProducts = products.map(p => p.toJSON())
     const initialBrands = brands.map(b => b.toJSON())
     const initialCollections = collections.map(col => col.toJSON())
     const initialCountries = countries.map(c => c.toJSON())
@@ -45,7 +50,7 @@ const ProductsManagementPage = async () => {
             <HeaderButtons/>
 
             <ProductFilterAndList
-                initialProducts={initialProducts}
+                products={products}
                 initialBrands={initialBrands}
                 initialCollections={initialCollections}
                 initialCountries={initialCountries}
