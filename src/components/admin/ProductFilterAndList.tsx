@@ -40,19 +40,21 @@ const ProductFilterAndList = ({
     console.log('itemsPerPage', itemsPerPage)
     // Состояния для фильтров
     // const [ brandFilter, setBrandFilter ] = useState<number | null>(null)
-    const [ collectionFilter, setCollectionFilter ] = useState<number | ''>('')
-    const [ countryFilter, setCountryFilter ] = useState<number | ''>('')
-    const [ styleFilter, setStyleFilter ] = useState<number | ''>('')
-    const [ articulFilter, setArticulFilter ] = useState<string>('')
+    const [collectionFilter, setCollectionFilter] = useState<number | ''>('')
+    const [countryFilter, setCountryFilter] = useState<number | ''>('')
+    const [styleFilter, setStyleFilter] = useState<number | ''>('')
+    const [articulFilter, setArticulFilter] = useState<string>('')
 
     // Состояние для отображаемых продуктов (после фильтрации)
     // const [ filteredProducts, setFilteredProducts ] = useState(products)
 
     // Поскольку фильтрация происходит на клиенте, пагинация также будет происходить на клиенте, по списку filteredProducts // Состояние для текущей страницы пагинации
-    const [ currentPage, setCurrentPage ] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1)
 
     // Состояние для редактируемого продукта (null для создания нового)
-    const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(null)
+    const [editingProduct, setEditingProduct] = useState<ProductDTO | null>(
+        null
+    )
 
     // Эффект для применения фильтров при изменении начальных продуктов или самих фильтров
     // useEffect(() => {
@@ -122,11 +124,16 @@ const ProductFilterAndList = ({
     }
 
     // Вспомогательная функция для рендеринга опций select
-    const renderFilterOptions = (items: DictionaryItem[], placeholder: string) => (
+    const renderFilterOptions = (
+        items: DictionaryItem[],
+        placeholder: string
+    ) => (
         <>
             <option value="">{placeholder}</option>
-            {items.map(item => (
-                <option key={item.id} value={item.id}>{item.name}</option>
+            {items.map((item) => (
+                <option key={item.id} value={item.id}>
+                    {item.name}
+                </option>
             ))}
         </>
     )
@@ -141,11 +148,12 @@ const ProductFilterAndList = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <UrlParamsSelect
                         label={'Выберите бренд'}
-                        options={initialBrands.map(brand => ({
+                        options={initialBrands.map((brand) => ({
                             value: String(brand.id),
                             label: brand.name
                         }))}
                         queryKey={'brand'}
+                        placeHolder={'Выберите бренд'}
                     />
                     {/*<Select value={selectedBrand ? { value: String(selectedBrand.id), label: selectedBrand.name } : null}*/}
                     {/*    label={'Выберите бренд'}*/}
@@ -173,36 +181,62 @@ const ProductFilterAndList = ({
                     {/*    </select>*/}
                     {/*</div>*/}
                     <div>
-                        <label htmlFor="collectionFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2">Коллекция:</label>
+                        <label
+                            htmlFor="collectionFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                        >
+                            Коллекция:
+                        </label>
                         <select
                             id="collectionFilter"
                             value={collectionFilter}
-                            onChange={(e) => setCollectionFilter(Number(e.target.value) || '')}
+                            onChange={(e) =>
+                                setCollectionFilter(
+                                    Number(e.target.value) || ''
+                                )
+                            }
                             className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         >
-                            {renderFilterOptions(initialCollections, 'Все коллекции')}
+                            {renderFilterOptions(
+                                initialCollections,
+                                'Все коллекции'
+                            )}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="countryFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2">Страна:</label>
+                        <label
+                            htmlFor="countryFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                        >
+                            Страна:
+                        </label>
                         <select
                             id="countryFilter"
                             value={countryFilter}
-                            onChange={(e) => setCountryFilter(Number(e.target.value) || '')}
+                            onChange={(e) =>
+                                setCountryFilter(Number(e.target.value) || '')
+                            }
                             className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         >
-                            {renderFilterOptions(initialCountries, 'Все страны')}
+                            {renderFilterOptions(
+                                initialCountries,
+                                'Все страны'
+                            )}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="styleFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2">Стиль:</label>
+                        <label
+                            htmlFor="styleFilter"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                        >
+                            Стиль:
+                        </label>
                         <select
                             id="styleFilter"
                             value={styleFilter}
-                            onChange={(e) => setStyleFilter(Number(e.target.value) || '')}
+                            onChange={(e) =>
+                                setStyleFilter(Number(e.target.value) || '')
+                            }
                             className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         >
                             {renderFilterOptions(initialStyles, 'Все стили')}
@@ -210,9 +244,15 @@ const ProductFilterAndList = ({
                     </div>
 
                     {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
-                    <div className="md:col-span-2 lg:col-span-1"> {/* Растягиваем на 2 колонки на md, на 1 на lg */}
-                        <label htmlFor="articulSearch"
-                            className="block text-gray-700 text-sm font-bold mb-2">Поиск по артикулу:</label>
+                    <div className="md:col-span-2 lg:col-span-1">
+                        {' '}
+                        {/* Растягиваем на 2 колонки на md, на 1 на lg */}
+                        <label
+                            htmlFor="articulSearch"
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                        >
+                            Поиск по артикулу:
+                        </label>
                         <input
                             type="text"
                             id="articulSearch"
@@ -222,7 +262,6 @@ const ProductFilterAndList = ({
                             placeholder="Введите артикул"
                         />
                     </div>
-
                 </div>
                 <div className="flex justify-end mt-4">
                     <button
@@ -242,7 +281,9 @@ const ProductFilterAndList = ({
 
             {/* Список продуктов */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h3 className="text-lg font-bold mb-4">Список продуктов ({products.length})</h3>
+                <h3 className="text-lg font-bold mb-4">
+                    Список продуктов ({products.length})
+                </h3>
 
                 {/* Компонент пагинации */}
                 {pageCount > 1 && (
@@ -256,50 +297,69 @@ const ProductFilterAndList = ({
                 )}
 
                 {currentItems.length === 0 ? (
-                    <p className="text-gray-600">Нет продуктов, соответствующих фильтрам.</p>
+                    <p className="text-gray-600">
+                        Нет продуктов, соответствующих фильтрам.
+                    </p>
                 ) : (
                     <ul className="divide-y divide-gray-200">
-                        {currentItems.map(product => (
-                            <li key={product.id} className="py-3 flex items-center justify-between">
+                        {currentItems.map((product) => (
+                            <li
+                                key={product.id}
+                                className="py-3 flex items-center justify-between"
+                            >
                                 {/* Контейнер для миниатюры и названия */}
-                                <div
-                                    className="flex items-center gap-4 flex-grow"> {/* flex-grow позволит ему занять доступное пространство */}
+                                <div className="flex items-center gap-4 flex-grow">
+                                    {' '}
+                                    {/* flex-grow позволит ему занять доступное пространство */}
                                     {/* Миниатюра */}
-                                    <div
-                                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                    <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
                                         <Image
                                             width={64} // 16 * 4 = 64px
                                             height={64} // 16 * 4 = 64px
-                                            src={product.path ? product.path : '/spalni.png'}
-
+                                            src={
+                                                product.path
+                                                    ? product.path
+                                                    : '/spalni.png'
+                                            }
                                             alt={`Картинка продукта ${product.name}`}
                                             className="object-cover w-full h-full"
                                         />
                                     </div>
-
                                     {/* Название продукта */}
-                                    <span className="text-gray-800 font-medium text-lg">{product.name}</span>
+                                    <span className="text-gray-800 font-medium text-lg">
+                                        {product.name}
+                                    </span>
                                 </div>
 
                                 {/* Контейнер для кнопок */}
                                 <div className="flex items-center gap-2 flex-shrink-0">
                                     <button
-                                        onClick={() => handleEditProduct(product)}
+                                        onClick={() =>
+                                            handleEditProduct(product)
+                                        }
                                         className="button_blue px-3 py-1 text-sm"
                                     >
                                         Редактировать
                                     </button>
 
-                                    <Link href={`/admin/products/${product.id}`}
-                                        className='button_green px-3 py-1 text-sm'>
+                                    <Link
+                                        href={`/admin/products/${product.id}`}
+                                        className="button_green px-3 py-1 text-sm"
+                                    >
                                         Варианты
                                     </Link>
 
-                                    <form onSubmit={(e) => {
-                                        e.preventDefault()
-                                        removeProduct(product.id)
-                                    }} className="w-full sm:w-auto">
-                                        <button type="submit" className='button_red px-4 py-2 text-sm w-full'>
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault()
+                                            removeProduct(product.id)
+                                        }}
+                                        className="w-full sm:w-auto"
+                                    >
+                                        <button
+                                            type="submit"
+                                            className="button_red px-4 py-2 text-sm w-full"
+                                        >
                                             Удалить
                                         </button>
                                     </form>
@@ -313,7 +373,9 @@ const ProductFilterAndList = ({
             {/* Форма редактирования/создания продукта */}
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-bold mb-4">
-                    {editingProduct ? `Редактировать продукт: ${editingProduct.name}` : 'Создать новый продукт'}
+                    {editingProduct
+                        ? `Редактировать продукт: ${editingProduct.name}`
+                        : 'Создать новый продукт'}
                 </h3>
                 <ProductForm
                     product={editingProduct} // Передаем продукт для редактирования или null для создания
