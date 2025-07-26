@@ -99,6 +99,36 @@ const ProductFilterAndList = ({
         setEditingProduct(null) // Скрываем форму
     }
 
+
+    const handleShare = async () => {
+        // Получаем текущий полный URL страницы
+        const fullUrl = window.location.origin + urlForShare
+        console.log('window.location.origin', window.location.origin)
+        console.log('fullUrl', fullUrl)
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Продукты Decoro', // Заголовок, который будет отображаться
+                    text: 'Посмотрите нашу продукцию с примененными фильтрами:', // Текст сообщения
+                    url: fullUrl, // URL, которым делимся
+                });
+                console.log('Контент успешно опубликован');
+            } catch (error) {
+                console.error('Ошибка при попытке поделиться:', error);
+            }
+        } else {
+            // Fallback для браузеров, которые не поддерживают Web Share API
+            // Вы можете скопировать URL в буфер обмена или предложить открыть в новой вкладке
+            alert(`Ваш браузер не поддерживает Web Share API. Ссылка скопирована в буфер обмена: ${fullUrl}`);
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                console.log('Ссылка скопирована в буфер обмена');
+            }).catch(err => {
+                console.error('Не удалось скопировать ссылку:', err);
+            });
+        }
+    };
+
     return (
         <div className="w-full max-w-6xl mx-auto p-4">
             {/* Форма фильтрации */}
@@ -172,11 +202,12 @@ const ProductFilterAndList = ({
                     >
                         Сбросить фильтры
                     </button>
-                    <Link href={urlForShare}
+                    <button
+                        onClick={handleShare}
                         className="button_green px-4 py-2 text-sm ml-4"
                     >
                         Поделиться
-                    </Link>
+                    </button>
                 </div>
             </div>
 
