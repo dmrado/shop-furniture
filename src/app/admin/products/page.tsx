@@ -20,7 +20,7 @@ const ProductsManagementPage = async ({ searchParams }) => {
 
     const products = await ProductModel.findAll({
         order: [ [ 'updatedAt', 'DESC' ] ],
-        where: { brandId: brand,  }
+        // where: { brandId: brand,  }
     })
         .then(data => data.map(p => p.toJSON()))
 

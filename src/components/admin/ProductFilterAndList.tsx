@@ -1,14 +1,12 @@
 'use client'
-
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import ProductForm from '@/components/admin/ProductForm' // Будет использоваться для редактирования/создания
+import { usePathname, useRouter } from 'next/navigation'
+import ProductForm from '@/components/admin/ProductForm'
 import { ProductDTO } from '@/db/models/product.model.ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import UrlParamsSelect from '@/components/ui/UrlParamsSelect'
-// import Select from '@/components/ui/Select'
 
 // Типы для справочников
 type DictionaryItem = {
@@ -28,7 +26,7 @@ type ProductFilterAndListProps = {
 
 const ProductFilterAndList = ({
     products,
-    initialBrands = [], //Добавляем дефолтное значение пустой массив
+    initialBrands = [], //дефолтное значение пустой массив
     initialCollections = [],
     initialCountries = [],
     initialStyles = [],
@@ -36,50 +34,19 @@ const ProductFilterAndList = ({
     itemsPerPage
 }: ProductFilterAndListProps) => {
     const router = useRouter()
-    console.log('initialProducts', products)
-    console.log('itemsPerPage', itemsPerPage)
-    // Состояния для фильтров
-    // const [ brandFilter, setBrandFilter ] = useState<number | null>(null)
-    const [collectionFilter, setCollectionFilter] = useState<number | ''>('')
-    const [countryFilter, setCountryFilter] = useState<number | ''>('')
-    const [styleFilter, setStyleFilter] = useState<number | ''>('')
-    const [articulFilter, setArticulFilter] = useState<string>('')
+    const path = usePathname()
+    const [ articulFilter, setArticulFilter ] = useState<string>('')
 
     // Состояние для отображаемых продуктов (после фильтрации)
     // const [ filteredProducts, setFilteredProducts ] = useState(products)
 
     // Поскольку фильтрация происходит на клиенте, пагинация также будет происходить на клиенте, по списку filteredProducts // Состояние для текущей страницы пагинации
-    const [currentPage, setCurrentPage] = useState(1)
+    const [ currentPage, setCurrentPage ] = useState(1)
 
     // Состояние для редактируемого продукта (null для создания нового)
-    const [editingProduct, setEditingProduct] = useState<ProductDTO | null>(
+    const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(
         null
     )
-
-    // Эффект для применения фильтров при изменении начальных продуктов или самих фильтров
-    // useEffect(() => {
-    //     let currentProducts = products
-    //
-    //     // if (brandFilter) {
-    //     //     currentProducts = currentProducts.filter(p => p.brandId === brandFilter)
-    //     // }
-    //     if (collectionFilter) {
-    //         currentProducts = currentProducts.filter(p => p.collectionId === collectionFilter)
-    //     }
-    //     if (countryFilter) {
-    //         currentProducts = currentProducts.filter(p => p.countryId === countryFilter)
-    //     }
-    //     if (styleFilter) {
-    //         currentProducts = currentProducts.filter(p => p.styleId === styleFilter)
-    //     }
-    //     if (articulFilter) {
-    //         // Ищем совпадения артикула, игнорируя регистр
-    //         currentProducts = currentProducts.filter(p => p.articul && p.articul.toLowerCase().includes(articulFilter.toLowerCase()))
-    //     }
-    //
-    //     setFilteredProducts(currentProducts)
-    //     setCurrentPage(1)// Сброс на первую страницу при изменении фильтров
-    // }, [ initialProducts, collectionFilter, countryFilter, styleFilter, articulFilter ])
 
     // Вычисляем продукты для текущей страницы
     const offset = (currentPage - 1) * itemsPerPage
@@ -88,12 +55,8 @@ const ProductFilterAndList = ({
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
-        // setBrandFilter(null)
-        setCollectionFilter('')
-        setCountryFilter('')
-        setStyleFilter('')
+        router.push(path + '')
         setArticulFilter('')
-        setCurrentPage(1)
     }
 
     // Обработчик изменения страницы пагинации
@@ -123,125 +86,51 @@ const ProductFilterAndList = ({
         setEditingProduct(null) // Скрываем форму
     }
 
-    // Вспомогательная функция для рендеринга опций select
-    const renderFilterOptions = (
-        items: DictionaryItem[],
-        placeholder: string
-    ) => (
-        <>
-            <option value="">{placeholder}</option>
-            {items.map((item) => (
-                <option key={item.id} value={item.id}>
-                    {item.name}
-                </option>
-            ))}
-        </>
-    )
-
-    // const selectedBrand = initialBrands.find(brand => brand.id === brandFilter) ?? null
-
     return (
         <div className="w-full max-w-6xl mx-auto p-4">
             {/* Форма фильтрации */}
-            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h3 className="text-lg font-bold mb-4">Фильтр продуктов</h3>
+            <div className="bg-white p-6 rounded-lg shadow-md mb-2">
+                <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <UrlParamsSelect
-                        label={'Выберите бренд'}
+                        label={'Бренд'}
                         options={initialBrands.map((brand) => ({
                             value: String(brand.id),
                             label: brand.name
                         }))}
                         queryKey={'brand'}
-                        placeHolder={'Выберите бренд'}
+                        placeHolder={'Все бренды'}
                     />
-                    {/*<Select value={selectedBrand ? { value: String(selectedBrand.id), label: selectedBrand.name } : null}*/}
-                    {/*    label={'Выберите бренд'}*/}
-                    {/*    options={initialBrands.map(brand => ({*/}
-                    {/*        value: String(brand.id),*/}
-                    {/*        label: brand.name*/}
-                    {/*    }))}*/}
-                    {/*    handleChange={option => {*/}
-                    {/*        if (!option) {*/}
-                    {/*            setBrandFilter(null)*/}
-                    {/*        } else{*/}
-                    {/*            setBrandFilter(Number(option.value))*/}
-                    {/*        }}}*/}
-                    {/*/>*/}
-                    {/*<div>*/}
-                    {/*    <label htmlFor="brandFilter"*/}
-                    {/*        className="block text-gray-700 text-sm font-bold mb-2">Бренд:</label>*/}
-                    {/*    <select*/}
-                    {/*        id="brandFilter"*/}
-                    {/*        value={brandFilter}*/}
-                    {/*        onChange={(e) => setBrandFilter(Number(e.target.value) || '')}*/}
-                    {/*        className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
-                    {/*    >*/}
-                    {/*        {renderFilterOptions(initialBrands, 'Все бренды')}*/}
-                    {/*    </select>*/}
-                    {/*</div>*/}
-                    <div>
-                        <label
-                            htmlFor="collectionFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                            Коллекция:
-                        </label>
-                        <select
-                            id="collectionFilter"
-                            value={collectionFilter}
-                            onChange={(e) =>
-                                setCollectionFilter(
-                                    Number(e.target.value) || ''
-                                )
-                            }
-                            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            {renderFilterOptions(
-                                initialCollections,
-                                'Все коллекции'
-                            )}
-                        </select>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="countryFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                            Страна:
-                        </label>
-                        <select
-                            id="countryFilter"
-                            value={countryFilter}
-                            onChange={(e) =>
-                                setCountryFilter(Number(e.target.value) || '')
-                            }
-                            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            {renderFilterOptions(
-                                initialCountries,
-                                'Все страны'
-                            )}
-                        </select>
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="styleFilter"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                            Стиль:
-                        </label>
-                        <select
-                            id="styleFilter"
-                            value={styleFilter}
-                            onChange={(e) =>
-                                setStyleFilter(Number(e.target.value) || '')
-                            }
-                            className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            {renderFilterOptions(initialStyles, 'Все стили')}
-                        </select>
-                    </div>
+
+                    <UrlParamsSelect
+                        label={'Коллекция'}
+                        options={initialCollections.map((brand) => ({
+                            value: String(brand.id),
+                            label: brand.name
+                        }))}
+                        queryKey={'collection'}
+                        placeHolder={'Все коллекции'}
+                    />
+
+                    <UrlParamsSelect
+                        label={'Страна'}
+                        options={initialCountries.map((brand) => ({
+                            value: String(brand.id),
+                            label: brand.name
+                        }))}
+                        queryKey={'country'}
+                        placeHolder={'Все страны'}
+                    />
+
+                    <UrlParamsSelect
+                        label={'Стиль'}
+                        options={initialStyles.map((brand) => ({
+                            value: String(brand.id),
+                            label: brand.name
+                        }))}
+                        queryKey={'style'}
+                        placeHolder={'Все стили'}
+                    />
 
                     {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
                     <div className="md:col-span-2 lg:col-span-1">
@@ -312,7 +201,8 @@ const ProductFilterAndList = ({
                                     {' '}
                                     {/* flex-grow позволит ему занять доступное пространство */}
                                     {/* Миниатюра */}
-                                    <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                    <div
+                                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
                                         <Image
                                             width={64} // 16 * 4 = 64px
                                             height={64} // 16 * 4 = 64px

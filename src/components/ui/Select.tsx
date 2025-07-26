@@ -39,9 +39,8 @@ const Select = ({
                         handleChange(null)
                         return
                     }
-                    const selectedOption = options.find(
-                        (option) => option.value === e.target.value
-                    )
+                    const selectedOption = options.find((option) => option.value === e.target.value)
+
                     if (!selectedOption)
                         throw new Error('Selected option can not be find')
                     handleChange(selectedOption)
