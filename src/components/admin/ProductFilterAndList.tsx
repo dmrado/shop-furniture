@@ -1,27 +1,25 @@
 'use client'
 import React, { useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import ProductForm from '@/components/admin/ProductForm'
 import { ProductDTO } from '@/db/models/product.model.ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import UrlParamsSelect from '@/components/ui/UrlParamsSelect'
+import { DictionaryItem } from '@/db/types/common-types'
 
 // Типы для справочников
-type DictionaryItem = {
-    id: number
-    name: string
-}
-
 type ProductFilterAndListProps = {
-    products: ProductDTO[] // Начальный список продуктов
+    products: ProductDTO[] // УЖЕ отфильтрованные и пагинированные продукты для ТЕКУЩЕЙ страницы
     initialBrands: DictionaryItem[]
     initialCollections: DictionaryItem[]
     initialCountries: DictionaryItem[]
     initialStyles: DictionaryItem[]
     removeProduct: (id: number) => Promise<void>
-    itemsPerPage: number
+    itemsPerPage: number,
+    totalProductsCount: number, // общее количество отфильтрованных продуктов
+    currentPage: number // текущая страница, полученная от сервера
 }
 
 const ProductFilterAndList = ({
@@ -31,38 +29,53 @@ const ProductFilterAndList = ({
     initialCountries = [],
     initialStyles = [],
     removeProduct,
-    itemsPerPage
+    itemsPerPage,
+    totalProductsCount,
+    currentPage,
 }: ProductFilterAndListProps) => {
     const router = useRouter()
     const path = usePathname()
-    const [ articulFilter, setArticulFilter ] = useState<string>('')
+    const searchParams = useSearchParams()
+    const articulFilterFromUrl = searchParams.get('articul') || ''
 
-    // Состояние для отображаемых продуктов (после фильтрации)
-    // const [ filteredProducts, setFilteredProducts ] = useState(products)
-
-    // Поскольку фильтрация происходит на клиенте, пагинация также будет происходить на клиенте, по списку filteredProducts // Состояние для текущей страницы пагинации
-    const [ currentPage, setCurrentPage ] = useState(1)
+    //URL для кнопки "Поделиться"
+    const currentQueryString = searchParams.toString()
+    const urlForShare = currentQueryString ? `${path}?${currentQueryString}` : path
+    console.log('currentQueryString', currentQueryString)
+    console.log('urlForShare', urlForShare)
 
     // Состояние для редактируемого продукта (null для создания нового)
     const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(
         null
     )
 
-    // Вычисляем продукты для текущей страницы
-    const offset = (currentPage - 1) * itemsPerPage
-    const currentItems = products.slice(offset, offset + itemsPerPage)
-    const pageCount = Math.ceil(products.length / itemsPerPage)
+    // для пагинации
+    const pageCount = Math.ceil(totalProductsCount / itemsPerPage)
+
+    // --- Обработчики фильтров (без изменений, они уже меняют URL) ---
+    const handleArticulChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newArticul = e.target.value
+        const currentSearchParams = new URLSearchParams(searchParams.toString())
+        console.log('currentSearchParams', currentSearchParams)
+        if (newArticul) {
+            currentSearchParams.set('articul', newArticul)
+        } else {
+            currentSearchParams.delete('articul')
+        }
+        currentSearchParams.delete('page') // Сбрасываем на первую страницу при изменении артикула
+        router.push(path + '?' + currentSearchParams.toString())
+    }
+
+    const handlePageChange = (selectedPage: { selected: number }) => {
+        const newPage = selectedPage.selected + 1 // ReactPaginate 0-индексирован, нам нужен 1-индексированный номер страницы
+        const currentSearchParams = new URLSearchParams(searchParams)
+        currentSearchParams.set('page', String(newPage)) // Устанавливаем или обновляем параметр 'page'
+        router.push(path + '?' + currentSearchParams.toString()) // Переходим на новый URL
+    }
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
-        router.push(path + '')
-        setArticulFilter('')
-    }
-
-    // Обработчик изменения страницы пагинации
-    const handlePageChange = (selectedPage: { selected: number }) => {
-        setCurrentPage(selectedPage.selected + 1)
-        // window.scrollTo({ top: 0, behavior: 'smooth' }) // Прокрутка к началу списка
+        router.push(path)
     }
 
     // Обработчик выбора продукта для редактирования
@@ -145,8 +158,8 @@ const ProductFilterAndList = ({
                         <input
                             type="text"
                             id="articulSearch"
-                            value={articulFilter}
-                            onChange={(e) => setArticulFilter(e.target.value)}
+                            value={articulFilterFromUrl}
+                            onChange={handleArticulChange}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             placeholder="Введите артикул"
                         />
@@ -159,39 +172,38 @@ const ProductFilterAndList = ({
                     >
                         Сбросить фильтры
                     </button>
-                    {/*<button*/}
-                    {/*    onClick={handleCreateNewProduct}*/}
-                    {/*    className="button_green px-4 py-2 text-sm ml-4" // Предполагается, что button_green существует*/}
-                    {/*>*/}
-                    {/*    Создать новый продукт*/}
-                    {/*</button>*/}
+                    <Link href={urlForShare}
+                        className="button_green px-4 py-2 text-sm ml-4"
+                    >
+                        Поделиться
+                    </Link>
                 </div>
             </div>
 
             {/* Список продуктов */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h3 className="text-lg font-bold mb-4">
-                    Список продуктов ({products.length})
+                    Список продуктов ({totalProductsCount})
                 </h3>
 
                 {/* Компонент пагинации */}
                 {pageCount > 1 && (
-                    <div className="mt-6">
-                        <ReactPaginateWrapper
-                            pages={pageCount}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
-                        />
-                    </div>
+                <div className="mt-6">
+                    <ReactPaginateWrapper
+                        pages={pageCount} // Передаем ВЫЧИСЛЕННОЕ pageCount
+                        currentPage={currentPage} // Передаем currentPage, который пришел с сервера
+                        onPageChange={handlePageChange}
+                    />
+                </div>
                 )}
 
-                {currentItems.length === 0 ? (
+                {products.length === 0 ? (
                     <p className="text-gray-600">
                         Нет продуктов, соответствующих фильтрам.
                     </p>
                 ) : (
                     <ul className="divide-y divide-gray-200">
-                        {currentItems.map((product) => (
+                        {products.map((product) => (
                             <li
                                 key={product.id}
                                 className="py-3 flex items-center justify-between"

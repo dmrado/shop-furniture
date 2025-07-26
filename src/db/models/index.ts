@@ -10,11 +10,13 @@ import { AccountModel } from '@/db/models/accounts.model'
 import { AuthUserModel } from '@/db/models/users.model'
 import { ProfileModel } from '@/db/models/profile.model'
 import { CategoryModel } from '@/db/models/category.model'
-// import {TagModel} from "@/db/models/tag.model";
 import { ProductCategoryModel } from '@/db/models/product_category.model'
 import { ProductVariantModel } from '@/db/models/product_variant.model'
 import { ProductModel } from '@/db/models/product.model'
 import { ImageModel } from '@/db/models/image.model'
+import { BrandModel } from '@/db/models/brand.model'
+import { CollectionModel } from '@/db/models/collection.model'
+import { CountryModel } from '@/db/models/country.model'
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
@@ -266,5 +268,8 @@ export {
     SessionModel,
     AuthUserModel,
     ProductVariantModel,
-    ImageModel
+    ImageModel,
+    BrandModel,
+    CollectionModel,
+    CountryModel,
 }
