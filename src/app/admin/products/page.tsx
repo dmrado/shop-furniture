@@ -8,40 +8,90 @@ import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { Op } from 'sequelize'
 
 export const metadata = {
     title: 'Decoro | Список продукции'
 }
 
-const ProductsManagementPage = async ({ searchParams }) => {
+// Определяем тип для searchParams, чтобы TypeScript понимал структуру
+interface ProductsManagementPageProps {
+    searchParams: {
+        brand?: string;
+        collection?: string;
+        country?: string;
+        style?: string;
+        articul?: string; // Для поиска по артикулу
+        page?: string;    // Для текущей страницы пагинации
+    };
+}
+const ProductsManagementPage = async ({ searchParams }: ProductsManagementPageProps) => {
 
-    const { brand } = await searchParams
-    console.log('brand' , brand , typeof brand)
+    // 1. Извлечение и преобразование параметров из URL
+    const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
+    const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
-    const products = await ProductModel.findAll({
-        order: [ [ 'updatedAt', 'DESC' ] ],
-        // where: { brandId: brand,  }
-    })
-        .then(data => data.map(p => p.toJSON()))
+    const brandId = searchParams.brand ? parseInt(searchParams.brand, 10) : undefined
+    const collectionId = searchParams.collection ? parseInt(searchParams.collection, 10) : undefined
+    const countryId = searchParams.country ? parseInt(searchParams.country, 10) : undefined
+    const styleId = searchParams.style ? parseInt(searchParams.style, 10) : undefined
+    const articulFilter = searchParams.articul || undefined
 
-    // Загружаем справочные данные для фильтров
-    const brands = await BrandModel.findAll()
-    const collections = await CollectionModel.findAll()
-    const countries = await CountryModel.findAll()
-    const styles = await StyleModel.findAll()
+    console.log('searchParams:', searchParams);
+    console.log('brandId:', brandId, typeof brandId);
+    console.log('collectionId:', collectionId, typeof collectionId);
+    console.log('countryId:', countryId, typeof countryId);
+    console.log('styleId:', styleId, typeof styleId);
+    console.log('articulFilter:', articulFilter, typeof articulFilter);
+    console.log('currentPage:', currentPage, typeof currentPage);
 
-    // Преобразуем в JSON для передачи на клиентскую сторону
-    // const initialProducts = products.map(p => p.toJSON())
-    const initialBrands = brands.map(b => b.toJSON())
-    const initialCollections = collections.map(col => col.toJSON())
-    const initialCountries = countries.map(c => c.toJSON())
-    const initialStyles = styles.map(s => s.toJSON())
+    // 2. Формирование объекта WHERE для Sequelize
+    const whereClause: any = {}; // Создаем пустой объект для условий
+
+    if (brandId) {
+        whereClause.brandId = brandId;
+    }
+    if (collectionId) {
+        whereClause.collectionId = collectionId;
+    }
+    if (countryId) {
+        whereClause.countryId = countryId;
+    }
+    if (styleId) {
+        whereClause.styleId = styleId;
+    }
+    if (articulFilter) {
+        // Для поиска по части строки используем Op.like (регистронезависимый поиск, если БД настроена)
+        whereClause.articul = { [Op.iLike]: `%${articulFilter}%` }; // Op.iLike для PostgreSQL, Op.like для MySQL/SQLite
+    }
+
+    //без учета limit/offset.
+        const { count: totalProductsCount, rows: products } = await ProductModel.findAndCountAll({
+        where: whereClause, // Применяем динамически сформированные условия
+        order: [['updatedAt', 'DESC']],
+        limit: itemsPerPage, // Количество записей на текущую страницу
+        offset: (currentPage - 1) * itemsPerPage, // Смещение для текущей страницы
+    }).then(result => ({
+        count: result.count,
+        rows: result.rows.map(p => p.toJSON()) // Преобразуем в JSON
+    }));
+
+    console.log('Fetched products count (for current page):', products.length);
+    console.log('Total filtered products count:', totalProductsCount);
+
+
+    // 4. Загружаем справочные данные для фильтров (они не зависят от searchParams)
+    const brands = await BrandModel.findAll().then(data => data.map(b => b.toJSON()));
+    const collections = await CollectionModel.findAll().then(data => data.map(col => col.toJSON()));
+    const countries = await CountryModel.findAll().then(data => data.map(c => c.toJSON()));
+    const styles = await StyleModel.findAll().then(data => data.map(s => s.toJSON()));
+
 
     async function removeProduct(id: number) {
         'use server'
         await ProductModel.destroy({ where: { id } })
         revalidatePath('/admin/products')
-        redirect('/admin/products')
+        // redirect('/admin/products')
     }
 
     return (<>
@@ -50,13 +100,15 @@ const ProductsManagementPage = async ({ searchParams }) => {
             <HeaderButtons/>
 
             <ProductFilterAndList
-                products={products}
-                initialBrands={initialBrands}
-                initialCollections={initialCollections}
-                initialCountries={initialCountries}
-                initialStyles={initialStyles}
+                products={products} // Уже отфильтрованные и пагинированные продукты
+                initialBrands={brands}
+                initialCollections={collections}
+                initialCountries={countries}
+                initialStyles={styles}
                 removeProduct={removeProduct}
-                itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
+                itemsPerPage={itemsPerPage}
+                totalProductsCount={totalProductsCount} // Передаем общее количество отфильтрованных продуктов
+                currentPage={currentPage} // Передаем текущую страницу
             />
         </div>
     </>)
