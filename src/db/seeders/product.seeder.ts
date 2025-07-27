@@ -1,369 +1,206 @@
+// db/seeders/product.seeder.ts
 import { ProductModel } from '@/db/models/product.model';
 import { ProductCategoryModel } from '@/db/models/product_category.model'; // Импортируем модель для связей
 
 export async function seedProducts() {
     try {
-        // Очистка таблицы продуктов перед заполнением (опционально)
-        await ProductModel.destroy({ where: {}, truncate: true });
+        console.log('Starting product seeding...');
 
-        const productSeedData = [
+        // Очистка таблиц перед заполнением
+        await ProductCategoryModel.destroy({ truncate: true, cascade: true }); // Сначала связи, чтобы избежать ошибок внешних ключей
+        await ProductModel.destroy({ truncate: true, cascade: true });
+        console.log('Product and ProductCategory tables truncated.');
+
+        const baseProductSeedData = [
             // ==================================================================================================
-            // Продукты для "Мебель для гостиной" (Category ID: 4) -> "Диваны и кресла" (ID: 7)
+            // Ваши 14 изначальных продуктов, с обновленными ID и артикулами для консистентности
             // ==================================================================================================
             {
-                id: 101, // ID продукта
-                styleId: 1, // Современный стиль
-                brandId: 1, // Бренд "Мебель-Эксперт"
-                collectionId: 1, // Коллекция "Уют"
-                countryId: 1, // Страна "Россия"
-                isActive: true,
-                isNew: true,
-                articul: 'DIV-MOD-001',
-                sku: 'MD001-BROWN',
-                name: 'Модульный диван "Лаунж Про"',
+                id: 101, styleId: 1, brandId: 1, collectionId: 1, countryId: 1, isActive: true, isNew: true,
+                articul: 'DIV-MOD-001', sku: 'MD001-BROWN', name: 'Модульный диван "Лаунж Про"',
                 descriptionShort: 'Элегантный модульный диван с регулируемыми спинками, идеален для просторной гостиной.',
                 descriptionLong: 'Модульный диван "Лаунж Про" выполнен в современном стиле, имеет прочный каркас из массива дерева и обивку из износостойкой рогожки. Секции легко перемещаются, позволяя создать идеальную конфигурацию для любого интерьера. Включает встроенные USB-порты и ниши для хранения.',
-                // image: '/images/products/divan-lounge-pro.jpg', // Пример пути, если есть
-                // old_price: 150000, // Если эти поля есть в модели
-                // new_price: 125000,
-                // primary_color: 1, // Коричневый
-                // secondary_color: 2 // Бежевый
             },
             {
-                id: 102,
-                styleId: 2, // Классический стиль
-                brandId: 2, // Бренд "КлассикХоум"
-                collectionId: 2, // Коллекция "Антик"
-                countryId: 2, // Страна "Италия"
-                isActive: true,
-                isNew: false,
-                articul: 'KRES-VEL-002',
-                sku: 'KV002-BLUE',
-                name: 'Велюровое кресло "Элегант"',
+                id: 102, styleId: 2, brandId: 2, collectionId: 2, countryId: 2, isActive: true, isNew: false,
+                articul: 'KRES-VEL-002', sku: 'KV002-BLUE', name: 'Велюровое кресло "Элегант"',
                 descriptionShort: 'Изысканное кресло из велюра с резными деревянными ножками, добавляет роскоши интерьеру.',
                 descriptionLong: 'Кресло "Элегант" — это воплощение классического стиля. Обивка из мягкого велюра синего цвета, каркас из бука, декорированные подлокотники. Идеально дополнит интерьер гостиной или кабинета, создавая атмосферу уюта и респектабельности.',
-                // image: '/images/products/kreslo-elegant.jpg',
-                // old_price: 45000,
-                // new_price: 38000,
-                // primary_color: 3, // Синий
-                // secondary_color: 4 // Золотой
             },
-            // ==================================================================================================
-            // Продукты для "Мебель для гостиной" (Category ID: 4) -> "Столы журнальные" (ID: 8)
-            // ==================================================================================================
             {
-                id: 103,
-                styleId: 1, // Современный
-                brandId: 1, // Мебель-Эксперт
-                collectionId: 1, // Уют
-                countryId: 1, // Россия
-                isActive: true,
-                isNew: true,
-                articul: 'STO-ZUR-003',
-                sku: 'SZ003-GLASS',
-                name: 'Журнальный столик "Минимал"',
+                id: 103, styleId: 1, brandId: 1, collectionId: 1, countryId: 1, isActive: true, isNew: true,
+                articul: 'STO-ZUR-003', sku: 'SZ003-GLASS', name: 'Журнальный столик "Минимал"',
                 descriptionShort: 'Современный журнальный столик со стеклянной столешницей и хромированным основанием.',
                 descriptionLong: 'Журнальный столик "Минимал" привнесет легкость в вашу гостиную. Столешница из закаленного стекла, устойчивое металлическое основание. Практичное и стильное решение для хранения книг и напитков.',
-                // image: '/images/products/stolik-minimal.jpg',
-                // old_price: 15000,
-                // new_price: 12000,
-                // primary_color: 1, // Прозрачный
-                // secondary_color: 2 // Хром
             },
-            // ==================================================================================================
-            // Продукты для "Мебель для спальни" (Category ID: 5)
-            // ==================================================================================================
             {
-                id: 104,
-                styleId: 2, // Классический
-                brandId: 2, // КлассикХоум
-                collectionId: 2, // Антик
-                countryId: 2, // Италия
-                isActive: true,
-                isNew: false,
-                articul: 'KROV-KLAS-004',
-                sku: 'KK004-WHITE',
-                name: 'Кровать двуспальная "Гармония"',
+                id: 104, styleId: 2, brandId: 2, collectionId: 2, countryId: 2, isActive: true, isNew: false,
+                articul: 'KROV-KLAS-004', sku: 'KK004-WHITE', name: 'Кровать двуспальная "Гармония"',
                 descriptionShort: 'Элегантная двуспальная кровать с мягким изголовьем и ортопедическим основанием.',
                 descriptionLong: 'Кровать "Гармония" обеспечит идеальный сон. Изготовлена из натурального дерева, обтянута мягкой тканью. Высокое изголовье с каретной стяжкой создает атмосферу уюта и комфорта.',
-                // image: '/images/products/krovat-garmoniya.jpg',
-                // old_price: 80000,
-                // new_price: 65000,
-                // primary_color: 3, // Белый
-                // secondary_color: 4 // Золотой
             },
             {
-                id: 105,
-                styleId: 1, // Современный
-                brandId: 1, // Мебель-Эксперт
-                collectionId: 1, // Уют
-                countryId: 1, // Россия
-                isActive: true,
-                isNew: true,
-                articul: 'SHKAF-KUP-005',
-                sku: 'SK005-GREY',
-                name: 'Шкаф-купе "Модерн"',
+                id: 105, styleId: 1, brandId: 1, collectionId: 1, countryId: 1, isActive: true, isNew: true,
+                articul: 'SHKAF-KUP-005', sku: 'SK005-GREY', name: 'Шкаф-купе "Модерн"',
                 descriptionShort: 'Вместительный шкаф-купе с зеркальными дверями и продуманной системой хранения.',
                 descriptionLong: 'Шкаф-купе "Модерн" — идеальное решение для спальни. Две раздвижные двери, одна из которых зеркальная, обеспечивают экономию пространства. Внутри - полки, штанги для одежды и выдвижные ящики для удобной организации.',
-                // image: '/images/products/shkaf-kupe-modern.jpg',
-                // old_price: 70000,
-                // new_price: 59000,
-                // primary_color: 1, // Серый
-                // secondary_color: 2 // Зеркало
             },
-            // ==================================================================================================
-            // Продукты для "Мебель для кухни" (Category ID: 6)
-            // ==================================================================================================
             {
-                id: 106,
-                styleId: 2, // Классический
-                brandId: 2, // КлассикХоум
-                collectionId: 2, // Антик
-                countryId: 2, // Италия
-                isActive: true,
-                isNew: false,
-                articul: 'KUX-GARN-006',
-                sku: 'KG006-WOOD',
-                name: 'Кухонный гарнитур "Прованс"',
+                id: 106, styleId: 2, brandId: 2, collectionId: 2, countryId: 2, isActive: true, isNew: false,
+                articul: 'KUX-GARN-006', sku: 'KG006-WOOD', name: 'Кухонный гарнитур "Прованс"',
                 descriptionShort: 'Уютный кухонный гарнитур в стиле прованс с элементами состаренного дерева.',
                 descriptionLong: 'Гарнитур "Прованс" создаст атмосферу французской деревни на вашей кухне. Фасады из МДФ с патиной, фурнитура под бронзу, встроенная сушка для посуды. Отличное решение для тех, кто ценит тепло и домашний уют.',
-                // image: '/images/products/kuhnya-provans.jpg',
-                // old_price: 250000,
-                // new_price: 210000,
-                // primary_color: 3, // Светлое дерево
-                // secondary_color: 4 // Кремовый
             },
-            // ==================================================================================================
-            // Продукты для "Мебель для детской" (Category ID: 18)
-            // ==================================================================================================
             {
-                id: 107,
-                styleId: 1, // Современный
-                brandId: 1, // Мебель-Эксперт
-                collectionId: 1, // Уют
-                countryId: 1, // Россия
-                isActive: true,
-                isNew: true,
-                articul: 'KROV-DET-007',
-                sku: 'KD007-PINK',
-                name: 'Детская кровать-чердак "Фантазия"',
+                id: 107, styleId: 1, brandId: 1, collectionId: 1, countryId: 1, isActive: true, isNew: true,
+                articul: 'KROV-DET-007', sku: 'KD007-PINK', name: 'Детская кровать-чердак "Фантазия"',
                 descriptionShort: 'Многофункциональная кровать-чердак со встроенным столом и шкафом для детской.',
                 descriptionLong: 'Кровать-чердак "Фантазия" — это идеальное решение для небольшой детской комнаты. Объединяет спальное место, рабочую зону и систему хранения, оставляя много места для игр. Изготовлена из безопасных материалов.',
-                // image: '/images/products/krovat-fantaziya.jpg',
-                // old_price: 60000,
-                // new_price: 52000,
-                // primary_color: 1, // Розовый
-                // secondary_color: 2 // Белый
             },
-            // ==================================================================================================
-            // Продукты для "Офисные столы" (Category ID: 12)
-            // ==================================================================================================
             {
-                id: 108,
-                styleId: 2, // Классический
-                brandId: 2, // КлассикХоум
-                collectionId: 2, // Антик
-                countryId: 2, // Италия
-                isActive: true,
-                isNew: false,
-                articul: 'STO-OFIS-008',
-                sku: 'SO008-WALNUT',
-                name: 'Офисный стол "Директор"',
+                id: 108, styleId: 2, brandId: 2, collectionId: 2, countryId: 2, isActive: true, isNew: false,
+                articul: 'STO-OFIS-008', sku: 'SO008-WALNUT', name: 'Офисный стол "Директор"',
                 descriptionShort: 'Представительный офисный стол из натурального шпона ореха с кожаной вставкой.',
                 descriptionLong: 'Стол "Директор" создан для комфортной и продуктивной работы. Массивная столешница, элегантные линии, встроенные кабель-каналы. Идеально подходит для руководителя, подчеркивая статус и вкус.',
-                // image: '/images/products/stol-direktor.jpg',
-                // old_price: 95000,
-                // new_price: 78000,
-                // primary_color: 3, // Орех
-                // secondary_color: 4 // Черный (кожа)
             },
-            // ==================================================================================================
-            // Продукты для "Освещение" (Category ID: 15)
-            // ==================================================================================================
             {
-                id: 109, // Изменен на 109, чтобы не конфликтовать с 11
-                styleId: 3, // Лофт
-                brandId: 3, // Свет-Хаус
-                collectionId: 3, // Индустриал
-                countryId: 3, // Китай
-                isActive: true,
-                isNew: true,
-                articul: 'LAMP-POT-009',
-                sku: 'LP009-BLACK',
-                name: 'Потолочная люстра "Эдисон"',
+                id: 109, styleId: 3, brandId: 3, collectionId: 3, countryId: 3, isActive: true, isNew: true,
+                articul: 'LAMP-POT-009', sku: 'LP009-BLACK', name: 'Потолочная люстра "Эдисон"',
                 descriptionShort: 'Индустриальная потолочная люстра с открытыми лампами Эдисона, идеальна для лофта.',
                 descriptionLong: 'Люстра "Эдисон" привнесет неповторимый шарм в ваш интерьер. Металлический каркас черного цвета, открытые патроны для ламп Эдисона (не входят в комплект). Создает уютное, теплое освещение.',
-                // image: '/images/products/lyustra-edison.jpg',
-                // old_price: 12000,
-                // new_price: 9500,
-                // primary_color: 1, // Черный
-                // secondary_color: 2 // Бронза
             },
-            // ==================================================================================================
-            // Продукты для "Текстиль" (Category ID: 16)
-            // ==================================================================================================
             {
-                id: 110, // Изменен на 110, чтобы не конфликтовать с 12
-                styleId: 4, // Скандинавский
-                brandId: 4, // Уютный Дом
-                collectionId: 4, // Сканди
-                countryId: 4, // Турция
-                isActive: true,
-                isNew: false,
-                articul: 'PLE-VYZ-010',
-                sku: 'PV010-GREY',
-                name: 'Плед вязаный "Сканди-Уют"',
+                id: 110, styleId: 4, brandId: 4, collectionId: 4, countryId: 4, isActive: true, isNew: false,
+                articul: 'PLE-VYZ-010', sku: 'PV010-GREY', name: 'Плед вязаный "Сканди-Уют"',
                 descriptionShort: 'Мягкий вязаный плед из натуральной шерсти, идеален для создания уюта.',
                 descriptionLong: 'Плед "Сканди-Уют" — это воплощение тепла и комфорта. Изготовлен из высококачественной шерсти мериноса, крупная вязка. Отлично подходит для прохладных вечеров и станет стильным акцентом в интерьере гостиной или спальни.',
-                // image: '/images/products/pled-skandi.jpg',
-                // old_price: 8000,
-                // new_price: 6500,
-                // primary_color: 3, // Серый
-                // secondary_color: 4 // Молочный
             },
-            // ==================================================================================================
-            // Продукты для "Декор для стен" (Category ID: 17)
-            // ==================================================================================================
             {
-                id: 111, // Изменен на 111, чтобы не конфликтовать с 13
-                styleId: 3, // Лофт
-                brandId: 3, // Арт-Декор
-                collectionId: 5, // Абстракция
-                countryId: 1, // Россия
-                isActive: true,
-                isNew: true,
-                articul: 'PAN-ABS-011',
-                sku: 'PA011-MULTI',
-                name: 'Декоративное панно "Городские ритмы"',
+                id: 111, styleId: 3, brandId: 3, collectionId: 5, countryId: 1, isActive: true, isNew: true,
+                articul: 'PAN-ABS-011', sku: 'PA011-MULTI', name: 'Декоративное панно "Городские ритмы"',
                 descriptionShort: 'Абстрактное металлическое панно на стену в стиле лофт.',
                 descriptionLong: 'Панно "Городские ритмы" выполнено из высококачественного металла, имеет многослойную покраску. Создает динамичный и современный акцент на стене. Легко монтируется.',
-                // image: '/images/products/panno-gorod.jpg',
-                // old_price: 25000,
-                // new_price: 19999,
-                // primary_color: 1, // Металлик
-                // secondary_color: 2 // Черный
             },
-            // ==================================================================================================
-            // Продукты для "Зеркала" (Category ID: 45)
-            // ==================================================================================================
             {
-                id: 112, // Изменен на 112, чтобы не конфликтовать с 14
-                styleId: 2, // Классический
-                brandId: 2, // КлассикХоум
-                collectionId: 2, // Антик
-                countryId: 2, // Италия
-                isActive: true,
-                isNew: false,
-                articul: 'ZERK-REZ-012',
-                sku: 'ZR012-GOLD',
-                name: 'Зеркало напольное "Версаль"',
+                id: 112, styleId: 2, brandId: 2, collectionId: 2, countryId: 2, isActive: true, isNew: false,
+                articul: 'ZERK-REZ-012', sku: 'ZR012-GOLD', name: 'Зеркало напольное "Версаль"',
                 descriptionShort: 'Напольное зеркало в резной золотой раме, добавляет роскоши интерьеру.',
                 descriptionLong: 'Зеркало "Версаль" с массивной рамой ручной работы. Идеально для прихожей или спальни, зрительно расширяет пространство и служит элегантным элементом декора.',
-                // image: '/images/products/zerkalo-versal.jpg',
-                // old_price: 35000,
-                // new_price: 29000,
-                // primary_color: 3, // Золото
-                // secondary_color: 4 // Бронза
             },
-            // ==================================================================================================
-            // Продукты для "Декоративные фигурки" (Category ID: 50)
-            // ==================================================================================================
             {
-                id: 113, // Изменен на 113, чтобы не конфликтовать с 15
-                styleId: 5, // Восточный
-                brandId: 5, // Восток-Декор
-                collectionId: 6, // Азия
-                countryId: 5, // Индия
-                isActive: true,
-                isNew: true,
-                articul: 'FIG-SLON-013',
-                sku: 'FS013-BRONZE',
-                name: 'Фигурка "Слон мудрости"',
+                id: 113, styleId: 5, brandId: 5, collectionId: 6, countryId: 5, isActive: true, isNew: true,
+                articul: 'FIG-SLON-013', sku: 'FS013-BRONZE', name: 'Фигурка "Слон мудрости"',
                 descriptionShort: 'Декоративная статуэтка слона из бронзы, символ мудрости и удачи.',
                 descriptionLong: 'Фигурка "Слон мудрости" выполнена из высококачественной бронзы с детальной проработкой. Идеальное дополнение для рабочего стола или книжной полки. Принесет гармонию и процветание в ваш дом.',
-                // image: '/images/products/figurka-slon.jpg',
-                // old_price: 8000,
-                // new_price: 6500,
-                // primary_color: 1, // Бронза
-                // secondary_color: 2 // Патина
             },
-            // ==================================================================================================
-            // Пример: Продукт, относящийся к нескольким категориям (Кухонный стол может быть и для кухни, и для столовой/гостиной)
-            // ==================================================================================================
             {
-                id: 114,
-                styleId: 1,
-                brandId: 1,
-                collectionId: 1,
-                countryId: 1,
-                isActive: true,
-                isNew: false,
-                articul: 'STO-KUX-014',
-                sku: 'SK014-WHITE',
-                name: 'Стол обеденный "Семейный"',
+                id: 114, styleId: 1, brandId: 1, collectionId: 1, countryId: 1, isActive: true, isNew: false,
+                articul: 'STO-KUX-014', sku: 'SK014-WHITE', name: 'Стол обеденный "Семейный"',
                 descriptionShort: 'Раздвижной обеденный стол для кухни или столовой, в современном стиле.',
                 descriptionLong: 'Стол "Семейный" — универсальное решение для любой кухни или гостиной. Прочный деревянный каркас, столешница из ЛДСП с возможностью увеличения. Идеально подходит как для повседневных обедов, так и для больших застолий.',
-                // image: '/images/products/stol-semeinyi.jpg',
-                // old_price: 40000,
-                // new_price: 32000,
-                // primary_color: 1, // Белый
-                // secondary_color: 2 // Дерево
             }
         ];
 
-        // Создаем записи продуктов в базе данных
-        await ProductModel.bulkCreate(productSeedData);
-        console.log('Продукты успешно добавлены в базу данных');
+        const productSeedDataToCreate = [...baseProductSeedData];
+        const productCategoryLinks = [];
 
-        // Теперь создадим связи между продуктами и категориями
-        await ProductCategoryModel.destroy({ where: {}, truncate: true }); // Очистка связей
+        // Добавляем связи для базовых продуктов
+        productCategoryLinks.push(
+            { productId: 101, categoryId: 4 }, { productId: 101, categoryId: 7 }, { productId: 101, categoryId: 10 },
+            { productId: 102, categoryId: 4 }, { productId: 102, categoryId: 7 }, { productId: 102, categoryId: 30 },
+            { productId: 103, categoryId: 4 }, { productId: 103, categoryId: 8 },
+            { productId: 104, categoryId: 5 },
+            { productId: 105, categoryId: 5 },
+            { productId: 106, categoryId: 6 },
+            { productId: 107, categoryId: 18 },
+            { productId: 108, categoryId: 2 }, { productId: 108, categoryId: 12 },
+            { productId: 109, categoryId: 3 }, { productId: 109, categoryId: 15 },
+            { productId: 110, categoryId: 3 }, { productId: 110, categoryId: 16 },
+            { productId: 111, categoryId: 3 }, { productId: 111, categoryId: 17 },
+            { productId: 112, categoryId: 3 }, { productId: 112, categoryId: 45 },
+            { productId: 113, categoryId: 3 }, { productId: 113, categoryId: 50 },
+            { productId: 114, categoryId: 6 }, { productId: 114, categoryId: 4 }, { productId: 114, categoryId: 26 },
+        );
 
-        const productCategoryLinks = [
-            // Связи для продуктов, созданных выше
-            { productId: 101, categoryId: 4 }, // Модульный диван -> Мебель для гостиной
-            { productId: 101, categoryId: 7 }, // Модульный диван -> Диваны и кресла
-            { productId: 101, categoryId: 10 }, // Модульный диван -> Модульные диваны
+        // ==================================================================================================
+        // Генерируем оставшиеся 126 продуктов (140 - 14)
+        // ==================================================================================================
+        const START_PRODUCT_ID = 115; // Начинаем с ID, следующего за последним из ваших примеров
+        const TOTAL_PRODUCTS_TO_GENERATE = 126; // 140 - 14 = 126
 
-            { productId: 102, categoryId: 4 }, // Велюровое кресло -> Мебель для гостиной
-            { productId: 102, categoryId: 7 }, // Велюровое кресло -> Диваны и кресла
-            { productId: 102, categoryId: 30 }, // Велюровое кресло -> Кресла
+        // Допустимые ID для внешних ключей (вам нужно убедиться, что они существуют!)
+        const styleIds = [1, 2, 3, 4, 5]; // Современный, Классический, Лофт, Скандинавский, Восточный
+        const brandIds = [1, 2, 3, 4, 5]; // Мебель-Эксперт, КлассикХоум, Свет-Хаус, Уютный Дом, Восток-Декор
+        const collectionIds = [1, 2, 3, 4, 5, 6]; // Уют, Антик, Индустриал, Сканди, Абстракция, Азия
+        const countryIds = [1, 2, 3, 4, 5]; // Россия, Италия, Китай, Турция, Индия
 
-            { productId: 103, categoryId: 4 }, // Журнальный столик -> Мебель для гостиной
-            { productId: 103, categoryId: 8 }, // Журнальный столик -> Столы журнальные
-
-            { productId: 104, categoryId: 5 }, // Кровать -> Мебель для спальни
-            { productId: 105, categoryId: 5 }, // Шкаф-купе -> Мебель для спальни
-
-            { productId: 106, categoryId: 6 }, // Кухонный гарнитур -> Мебель для кухни
-
-            { productId: 107, categoryId: 18 }, // Детская кровать -> Мебель для детской
-
-            { productId: 108, categoryId: 2 }, // Офисный стол -> Мебель для офиса
-            { productId: 108, categoryId: 12 }, // Офисный стол -> Офисные столы
-
-            { productId: 109, categoryId: 3 }, // Люстра -> Декор и Интерьер
-            { productId: 109, categoryId: 15 }, // Люстра -> Освещение
-
-            { productId: 110, categoryId: 3 }, // Плед -> Декор и Интерьер
-            { productId: 110, categoryId: 16 }, // Плед -> Текстиль
-
-            { productId: 111, categoryId: 3 }, // Панно -> Декор и Интерьер
-            { productId: 111, categoryId: 17 }, // Панно -> Декор для стен
-
-            { productId: 112, categoryId: 3 }, // Зеркало -> Декор и Интерьер
-            { productId: 112, categoryId: 45 }, // Зеркало -> Зеркала
-
-            { productId: 113, categoryId: 3 }, // Фигурка -> Декор и Интерьер
-            { productId: 113, categoryId: 50 }, // Фигурка -> Декоративные фигурки
-
-            // Пример продукта, который относится к нескольким категориям (кухня и гостиная)
-            { productId: 114, categoryId: 6 }, // Обеденный стол -> Мебель для кухни
-            { productId: 114, categoryId: 4 }, // Обеденный стол -> Мебель для гостиной (как часть обеденной группы)
-            { productId: 114, categoryId: 26 }, // Обеденный стол -> Обеденные группы (если эта категория создана)
+        // Расширенный список category IDs для генерации
+        const categoryIdsForGeneration = [
+            4, 7, 8, 10, 30, // Гостиная
+            5, // Спальня
+            6, // Кухня
+            18, // Детская
+            2, 12, // Офис
+            3, 15, 16, 17, 45, 50, // Декор, Освещение, Текстиль, Декор для стен, Зеркала, Декоративные фигурки
+            26, // Обеденные группы
+            // Добавьте сюда другие существующие Category ID, если они у вас есть
+            // Например: 1, 9, 11, 13, 14, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29...
         ];
 
+        for (let i = 0; i < TOTAL_PRODUCTS_TO_GENERATE; i++) {
+            const productId = START_PRODUCT_ID + i;
+            const styleId = styleIds[i % styleIds.length];
+            const brandId = brandIds[i % brandIds.length];
+            const collectionId = collectionIds[i % collectionIds.length];
+            const countryId = countryIds[i % countryIds.length];
+            const isNew = Math.random() > 0.5; // Случайно 50/50
+            const isActive = Math.random() > 0.1; // 90% активных
+
+            const productName = `Продукт #${productId} - ${isNew ? 'Новинка' : 'Популярное'}`;
+            const shortDesc = `Краткое описание для продукта ${productId}. Стиль: ${styleId}, Бренд: ${brandId}.`;
+            const longDesc = `Полное описание для продукта ${productId}. Это универсальный предмет мебели, который идеально впишется в современный интерьер. Изготовлен из высококачественных материалов, обеспечивает долговечность и комфорт использования.`;
+            const articul = `PROD-${String(productId).padStart(3, '0')}`;
+            const sku = `SKU-${String(productId).padStart(3, '0')}-${String(styleId).padStart(2, '0')}`;
+
+            productSeedDataToCreate.push({
+                id: productId,
+                styleId,
+                brandId,
+                collectionId,
+                countryId,
+                isActive,
+                isNew,
+                articul,
+                sku,
+                name: productName,
+                descriptionShort: shortDesc,
+                descriptionLong: longDesc,
+                // image: `/images/products/generated_product_${productId}.jpg`, // Пример генерируемого пути
+                // old_price: parseFloat((Math.random() * (100000 - 10000) + 10000).toFixed(2)),
+                // new_price: parseFloat((Math.random() * (90000 - 9000) + 9000).toFixed(2)),
+                // primary_color: Math.floor(Math.random() * 4) + 1, // Случайный цвет от 1 до 4
+                // secondary_color: Math.floor(Math.random() * 4) + 1,
+            });
+
+            // Генерируем связи с категориями (каждый продукт будет иметь 1-3 категории)
+            const numCategories = Math.floor(Math.random() * 3) + 1; // 1, 2 или 3 категории
+            const assignedCategories = new Set<number>();
+            while (assignedCategories.size < numCategories) {
+                const randomCategoryIndex = Math.floor(Math.random() * categoryIdsForGeneration.length);
+                assignedCategories.add(categoryIdsForGeneration[randomCategoryIndex]);
+            }
+            assignedCategories.forEach(catId => {
+                productCategoryLinks.push({ productId, categoryId: catId });
+            });
+        }
+
+        // Создаем записи продуктов в базе данных
+        await ProductModel.bulkCreate(productSeedDataToCreate);
+        console.log(`Продукты успешно добавлены в базу данных. Всего: ${productSeedDataToCreate.length} продуктов.`);
+
+        // Создаем связи между продуктами и категориями
         await ProductCategoryModel.bulkCreate(productCategoryLinks);
-        console.log('Связи продуктов с категориями успешно добавлены.');
+        console.log(`Связи продуктов с категориями успешно добавлены. Всего: ${productCategoryLinks.length} связей.`);
 
     } catch (error) {
         console.error('Ошибка при заполнении таблицы продуктов или связей:', error);

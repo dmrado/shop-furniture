@@ -17,10 +17,21 @@ import { ImageModel } from '@/db/models/image.model'
 import { BrandModel } from '@/db/models/brand.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { CountryModel } from '@/db/models/country.model'
+import { MaterialModel } from '@/db/models/material.model'
 
 // Установка связей
 // ProductModel.belongsTo(ColorModel, { as: 'primaryColor', foreignKey: 'primary_color' })
 // ProductModel.belongsTo(ColorModel, { as: 'secondaryColor', foreignKey: 'secondary_color' })
+
+ProductVariantModel.belongsTo(MaterialModel, {
+    foreignKey: 'materialId',
+    as: 'material' // Имя ассоциации для использования при include
+})
+MaterialModel.hasMany(ProductVariantModel, {
+    foreignKey: 'materialId', // MaterialModel.id
+    sourceKey: 'id', // ProductVariantModel.materialId
+    as: 'product_variants'
+})
 
 OrderModel.hasMany(OrderedProductsModel, {
     foreignKey: 'orderId',
@@ -272,4 +283,5 @@ export {
     BrandModel,
     CollectionModel,
     CountryModel,
+    MaterialModel
 }

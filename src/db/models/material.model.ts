@@ -1,5 +1,5 @@
-import {sequelize} from '../connection'
-import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
 export interface MaterialDTO extends InferAttributes<MaterialModel> {}
 

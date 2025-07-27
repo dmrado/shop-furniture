@@ -4,6 +4,9 @@ import { BrandModel } from '@/db/models/brand.model.ts'
 import { CollectionModel } from '@/db/models/collection.model.ts'
 import { CountryModel } from '@/db/models/country.model.ts'
 import { StyleModel } from '@/db/models/style.model.ts'
+import { ProductModel } from '@/db/models/product.model.ts' // Импортируем ProductModel
+import { ColorModel } from '@/db/models/color.model.ts'     // Импортируем ColorModel
+import { MaterialModel } from '@/db/models/material.model.ts' // НОВЫЙ ИМПОРТ: MaterialModel
 
 // Функция для получения всех активных брендов
 export async function getBrands() {
@@ -65,12 +68,6 @@ export async function getStyles() {
     }
 }
 
-// ... (существующие импорты BrandModel, CollectionModel, CountryModel, StyleModel)
-import { ProductModel } from '@/db/models/product.model.ts' // Импортируем ProductModel
-import { ColorModel } from '@/db/models/color.model.ts' // Импортируем ColorModel
-
-// ... (существующие функции getBrands, getCollections, getCountries, getStyles)
-
 // Новая функция для получения всех продуктов (например, по имени и ID)
 export async function getProducts() {
     try {
@@ -96,6 +93,21 @@ export async function getColors() {
         return colors.map(color => color.toJSON())
     } catch (error) {
         console.error('Error fetching colors:', error)
+        return []
+    }
+}
+
+// НОВАЯ ФУНКЦИЯ: для получения всех активных материалов
+export async function getMaterials() {
+    try {
+        const materials = await MaterialModel.findAll({
+            where: { isActive: true },
+            attributes: [ 'id', 'name' ], // Выбираем только id и name
+            order: [ [ 'name', 'ASC' ] ], // Сортируем по имени
+        })
+        return materials.map(material => material.toJSON()) // Преобразуем в plain объекты
+    } catch (error) {
+        console.error('Error fetching materials:', error)
         return []
     }
 }

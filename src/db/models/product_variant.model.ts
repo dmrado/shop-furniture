@@ -1,10 +1,11 @@
-import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { ProductModel } from '@/db/models/product.model'
-import { ColorModel } from '@/db/models/color.model'
-import {CartModel} from "@/db/models/cart.model";
+import {sequelize} from '../connection'
+import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import {ProductModel} from '@/db/models/product.model'
+import {ColorModel} from '@/db/models/color.model'
+import {MaterialModel} from '@/db/models/material.model'
 
-export interface ProductVariantDTO extends InferAttributes<ProductVariantModel> {}
+export interface ProductVariantDTO extends InferAttributes<ProductVariantModel> {
+}
 
 export class ProductVariantModel extends Model<InferAttributes<ProductVariantModel>, InferCreationAttributes<ProductVariantModel>> {
     declare id: CreationOptional<number>
@@ -12,7 +13,7 @@ export class ProductVariantModel extends Model<InferAttributes<ProductVariantMod
     declare articul: string
 
     declare productId: number
-    // declare materialId: number
+    declare materialId: number
     declare colorId: number
     // declare cartId: CreationOptional<number | null> // может быть null если не в корзине
 
@@ -20,10 +21,12 @@ export class ProductVariantModel extends Model<InferAttributes<ProductVariantMod
     declare width: number
     declare height: number
     declare box_length: number
+    declare box_width: number
     declare box_height: number
     declare box_weight: number
     declare weight: number
 
+    declare quantity: number
     declare price: number
 }
 
@@ -50,14 +53,14 @@ ProductVariantModel.init(
                 key: 'id'
             }
         },
-        // materialId: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: false, // или true, если продукт может не иметь категории
-        //     references: {
-        //         model: MaterialModel,
-        //         key: 'id'
-        //     }
-        // },
+        materialId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: MaterialModel,
+                key: 'id'
+            }
+        },
         colorId: {
             type: DataTypes.INTEGER,
             allowNull: false, // или true, если продукт может не иметь категории
@@ -95,11 +98,19 @@ ProductVariantModel.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        box_width: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         box_height: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
         box_weight: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        quantity: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
