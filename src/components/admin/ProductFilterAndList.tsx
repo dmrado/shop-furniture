@@ -99,7 +99,6 @@ const ProductFilterAndList = ({
         setEditingProduct(null) // Скрываем форму
     }
 
-
     const handleShare = async () => {
         // Получаем текущий полный URL страницы
         const fullUrl = window.location.origin + urlForShare
@@ -112,22 +111,22 @@ const ProductFilterAndList = ({
                     title: 'Продукты Decoro', // Заголовок, который будет отображаться
                     text: 'Посмотрите нашу продукцию с примененными фильтрами:', // Текст сообщения
                     url: fullUrl, // URL, которым делимся
-                });
-                console.log('Контент успешно опубликован');
+                })
+                console.log('Контент успешно опубликован')
             } catch (error) {
-                console.error('Ошибка при попытке поделиться:', error);
+                console.error('Ошибка при попытке поделиться:', error)
             }
         } else {
             // Fallback для браузеров, которые не поддерживают Web Share API
             // Вы можете скопировать URL в буфер обмена или предложить открыть в новой вкладке
-            alert(`Ваш браузер не поддерживает Web Share API. Ссылка скопирована в буфер обмена: ${fullUrl}`);
+            alert(`Ваш браузер не поддерживает Web Share API. Ссылка скопирована в буфер обмена: ${fullUrl}`)
             navigator.clipboard.writeText(fullUrl).then(() => {
-                console.log('Ссылка скопирована в буфер обмена');
+                console.log('Ссылка скопирована в буфер обмена')
             }).catch(err => {
-                console.error('Не удалось скопировать ссылку:', err);
-            });
+                console.error('Не удалось скопировать ссылку:', err)
+            })
         }
-    };
+    }
 
     return (
         <div className="w-full max-w-6xl mx-auto p-4">
@@ -219,13 +218,13 @@ const ProductFilterAndList = ({
 
                 {/* Компонент пагинации */}
                 {pageCount > 1 && (
-                <div className="mt-6">
-                    <ReactPaginateWrapper
-                        pages={pageCount} // Передаем ВЫЧИСЛЕННОЕ pageCount
-                        currentPage={currentPage} // Передаем currentPage, который пришел с сервера
-                        onPageChange={handlePageChange}
-                    />
-                </div>
+                    <div className="mt-6">
+                        <ReactPaginateWrapper
+                            pages={pageCount} // Передаем ВЫЧИСЛЕННОЕ pageCount
+                            currentPage={currentPage} // Передаем currentPage, который пришел с сервера
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
                 )}
 
                 {products.length === 0 ? (
@@ -237,10 +236,10 @@ const ProductFilterAndList = ({
                         {products.map((product) => (
                             <li
                                 key={product.id}
-                                className="py-3 flex items-center justify-between"
+                                className="py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
                             >
                                 {/* Контейнер для миниатюры и названия */}
-                                <div className="flex items-center gap-4 flex-grow">
+                                <div className="flex items-center gap-3 flex-grow">
                                     {' '}
                                     {/* flex-grow позволит ему занять доступное пространство */}
                                     {/* Миниатюра */}
@@ -259,25 +258,30 @@ const ProductFilterAndList = ({
                                         />
                                     </div>
                                     {/* Название продукта */}
-                                    <span className="text-gray-800 font-medium text-lg">
-                                        {product.name}
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="text-gray-800 font-medium text-lg">
+                                            {product.name}
+                                        </span>
+                                        <span className="text-gray-600 text-sm">
+                                            {product.articul}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 {/* Контейнер для кнопок */}
-                                <div className="flex items-center gap-2 flex-shrink-0">
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
                                     <button
                                         onClick={() =>
                                             handleEditProduct(product)
                                         }
-                                        className="button_blue px-3 py-1 text-sm"
+                                        className="button_blue text-sm px-3 py-1.5 w-full justify-center"
                                     >
                                         Редактировать
                                     </button>
 
                                     <Link
                                         href={`/admin/products/${product.id}`}
-                                        className="button_green px-3 py-1 text-sm"
+                                        className="button_green text-sm px-3 py-1.5 w-full justify-center"
                                     >
                                         Варианты
                                     </Link>
@@ -287,11 +291,11 @@ const ProductFilterAndList = ({
                                             e.preventDefault()
                                             removeProduct(product.id)
                                         }}
-                                        className="w-full sm:w-auto"
+                                        className="w-full"
                                     >
                                         <button
                                             type="submit"
-                                            className="button_red px-4 py-2 text-sm w-full"
+                                            className="button_red text-sm px-3 py-1.5 w-full justify-center"
                                         >
                                             Удалить
                                         </button>

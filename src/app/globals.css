@@ -70,7 +70,8 @@ html, body {
 
 /*button_blue_____________________________________*/
 .button_blue {
-  @apply relative mx-2 inline-block px-4 py-2 text-[#0285d5] border-2 border-transparent transition-colors ease-in-out duration-300;
+  /* Добавляем flex и justify-center, items-center */
+  @apply relative mx-2 flex justify-center items-center px-4 py-2 text-[#0285d5] border-2 border-transparent transition-colors ease-in-out duration-300;
 }
 
 .button_blue::before {
@@ -84,7 +85,8 @@ html, body {
 
 /*button_red______________________________________*/
 .button_red {
-  @apply relative mx-2 inline-block px-4 py-2 text-[#D50000] border-2 border-transparent transition-colors ease-in-out duration-300;
+  /* Добавляем flex и justify-center, items-center */
+  @apply relative mx-2 flex justify-center items-center px-4 py-2 text-[#D50000] border-2 border-transparent transition-colors ease-in-out duration-300;
 }
 
 .button_red::before {
@@ -98,7 +100,8 @@ html, body {
 
 /*button_green___________________________________*/
 .button_green {
-  @apply relative mx-2 inline-block px-4 py-2 text-[#02bb5f] border-2 border-transparent transition-colors ease-in-out duration-300;
+  /* Добавляем flex и justify-center */
+  @apply relative mx-2 flex justify-center items-center px-4 py-2 text-[#02bb5f] border-2 border-transparent transition-colors ease-in-out duration-300;
 }
 
 .button_green::before {
@@ -109,4 +112,3 @@ html, body {
 .button_green:hover::before {
   @apply border-[#02bb5f] rounded;
 }
-

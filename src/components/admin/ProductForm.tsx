@@ -107,11 +107,14 @@ const ProductForm = ({
 
     // Стили кнопки submit
     const buttonStyle = () => {
-        const baseStyle: string = 'border-2 border-my_white border-solid px-5 py-2 rounded '
-        if (isNameValid() && !isFileSizeError) {
-            return baseStyle + 'hover:text-my_l_green hover:border-2 hover:border-my_l_green text-[#000]'
+        // Базовые стили для кнопки "Записать", всегда будут применяться button_green
+        let classes = 'button_green px-5 py-2' // Используем button_green и необходимые padding
+
+        if (!isNameValid() || isFileSizeError) {
+            // Добавляем стили для неактивного состояния
+            classes += ' opacity-50 cursor-not-allowed'
         }
-        return baseStyle + 'text-green-600 opacity-50 cursor-not-allowed' // Добавил стили для disabled
+        return classes
     }
 
     // Вспомогательная функция для генерации опций select
