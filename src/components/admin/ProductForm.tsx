@@ -128,7 +128,7 @@ const ProductForm = ({
     }
 
     return (
-        <form className="bg-white rounded px-8 pt-6 pb-8" action={onSubmit}>
+        <form className="bg-white rounded px-1 pt-6 pb-8" action={onSubmit}>
             {/* ID продукта - скрытое поле, если редактируем */}
             <input hidden type="number" name="id" value={product?.id || ''} readOnly/>
 
