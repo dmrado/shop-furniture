@@ -8,6 +8,7 @@ import Image from 'next/image'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import UrlParamsSelect from '@/components/ui/UrlParamsSelect'
 import { DictionaryItem } from '@/db/types/common-types'
+import SearchProduct from '@/components/site/SearchProduct'
 
 // Типы для справочников
 type ProductFilterAndListProps = {
@@ -36,7 +37,7 @@ const ProductFilterAndList = ({
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
-    const articulFilterFromUrl = searchParams.get('articul') || ''
+    // const articulFilterFromUrl = searchParams.get('articul') || ''
 
     //URL для кнопки "Поделиться"
     const currentQueryString = searchParams.toString()
@@ -53,18 +54,18 @@ const ProductFilterAndList = ({
     const pageCount = Math.ceil(totalProductsCount / itemsPerPage)
 
     // --- Обработчики фильтров (без изменений, они уже меняют URL) ---
-    const handleArticulChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newArticul = e.target.value
-        const currentSearchParams = new URLSearchParams(searchParams.toString())
-        console.log('currentSearchParams', currentSearchParams)
-        if (newArticul) {
-            currentSearchParams.set('articul', newArticul)
-        } else {
-            currentSearchParams.delete('articul')
-        }
-        currentSearchParams.delete('page') // Сбрасываем на первую страницу при изменении артикула
-        router.push(path + '?' + currentSearchParams.toString())
-    }
+    // const handleArticulChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const newArticul = e.target.value
+    //     const currentSearchParams = new URLSearchParams(searchParams.toString())
+    //     console.log('currentSearchParams', currentSearchParams)
+    //     if (newArticul) {
+    //         currentSearchParams.set('articul', newArticul)
+    //     } else {
+    //         currentSearchParams.delete('articul')
+    //     }
+    //     currentSearchParams.delete('page') // Сбрасываем на первую страницу при изменении артикула
+    //     router.push(path + '?' + currentSearchParams.toString())
+    // }
 
     const handlePageChange = (selectedPage: { selected: number }) => {
         const newPage = selectedPage.selected + 1 // ReactPaginate 0-индексирован, нам нужен 1-индексированный номер страницы
@@ -75,7 +76,17 @@ const ProductFilterAndList = ({
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
-        router.push(path)
+        // Создаем новый URLSearchParams из текущих
+        const currentParams = new URLSearchParams(searchParams)
+        // Удаляем все параметры, относящиеся к фильтрам и поиску
+        currentParams.delete('page')
+        currentParams.delete('brand')
+        currentParams.delete('collection')
+        currentParams.delete('country')
+        currentParams.delete('style')
+        currentParams.delete('name') // Удаляем параметр поиска по названию
+        currentParams.delete('articul') // Удаляем параметр поиска по артикулу
+        router.push(path + '?' + currentParams.toString()) // Переходим по чистому URL
     }
 
     // Обработчик выбора продукта для редактирования
@@ -129,7 +140,7 @@ const ProductFilterAndList = ({
     }
 
     return (
-        <div className="w-full max-w-6xl mx-auto p-4">
+        <div className="w-full max-w-6xl mx-auto px-4">
             {/* Форма фильтрации */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-2">
                 <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
@@ -175,24 +186,34 @@ const ProductFilterAndList = ({
                     />
 
                     {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
-                    <div className="md:col-span-2 lg:col-span-1">
-                        {' '}
-                        {/* Растягиваем на 2 колонки на md, на 1 на lg */}
-                        <label
-                            htmlFor="articulSearch"
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                            Поиск по артикулу:
-                        </label>
-                        <input
-                            type="text"
-                            id="articulSearch"
-                            value={articulFilterFromUrl}
-                            onChange={handleArticulChange}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Введите артикул"
+                    <div className="md:col-span-2 lg:col-span-4">
+                        <SearchProduct
+                            queryKey="name" // Используем 'name' для поиска по названию продукта
+                            articulQueryKey="articul" // Используем 'articul' для поиска по артикулу продукта/варианта
+                            namePlaceholder="Поиск по названию продукта"
+                            articulPlaceholder="Поиск по артикулу"
+                            debounceTime={500}
                         />
                     </div>
+
+                    {/*<div className="md:col-span-2 lg:col-span-1">*/}
+                    {/*    {' '}*/}
+                    {/*    /!* Растягиваем на 2 колонки на md, на 1 на lg *!/*/}
+                    {/*    <label*/}
+                    {/*        htmlFor="articulSearch"*/}
+                    {/*        className="block text-gray-700 text-sm font-bold mb-2"*/}
+                    {/*    >*/}
+                    {/*        Поиск по артикулу:*/}
+                    {/*    </label>*/}
+                    {/*    <input*/}
+                    {/*        type="text"*/}
+                    {/*        id="articulSearch"*/}
+                    {/*        value={articulFilterFromUrl}*/}
+                    {/*        onChange={handleArticulChange}*/}
+                    {/*        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
+                    {/*        placeholder="Введите артикул"*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                 </div>
                 <div className="flex justify-end mt-4">
                     <button
@@ -309,7 +330,7 @@ const ProductFilterAndList = ({
 
             {/* Форма редактирования/создания продукта */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-lg font-bold mb-4">
+                <h3 className="text-lg font-bold">
                     {editingProduct
                         ? `Редактировать продукт: ${editingProduct.name}`
                         : 'Создать новый продукт'}

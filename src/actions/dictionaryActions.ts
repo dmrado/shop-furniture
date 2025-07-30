@@ -4,9 +4,9 @@ import { BrandModel } from '@/db/models/brand.model.ts'
 import { CollectionModel } from '@/db/models/collection.model.ts'
 import { CountryModel } from '@/db/models/country.model.ts'
 import { StyleModel } from '@/db/models/style.model.ts'
-import { ProductModel } from '@/db/models/product.model.ts' // Импортируем ProductModel
-import { ColorModel } from '@/db/models/color.model.ts'     // Импортируем ColorModel
-import { MaterialModel } from '@/db/models/material.model.ts' // НОВЫЙ ИМПОРТ: MaterialModel
+import { ProductModel } from '@/db/models/product.model.ts'
+import { ColorModel } from '@/db/models/color.model.ts'
+import { MaterialModel } from '@/db/models/material.model.ts'
 
 // Функция для получения всех активных брендов
 export async function getBrands() {

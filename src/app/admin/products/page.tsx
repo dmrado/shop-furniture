@@ -1,6 +1,6 @@
 import React from 'react'
 import HeaderButtons from '@/components/admin/HeaderButtons.tsx'
-import { ProductModel, ProductDTO } from '@/db/models/product.model'
+import { ProductModel } from '@/db/models/product.model'
 import { BrandModel } from '@/db/models/brand.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { CountryModel } from '@/db/models/country.model'
@@ -8,8 +8,9 @@ import { StyleModel } from '@/db/models/style.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
-import { Op } from 'sequelize'
+// import { Op } from 'sequelize'
 import { DictionaryItem } from '@/db/types/common-types'
+import { getProductList } from '@/actions/searchProduct'
 
 export const metadata = {
     title: 'Decoro | Список продукции'
@@ -22,6 +23,7 @@ interface ProductsManagementPageProps {
         collection?: string;
         country?: string;
         style?: string;
+        name?: string;
         articul?: string; // Для поиска по артикулу
         page?: string; // Для текущей страницы пагинации
     };
@@ -31,14 +33,19 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
 
     // 1. Извлечение и преобразование параметров из URL
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
-    const limit = NUMBER_OF_PRODUCTS_TO_FETCH
-    const offset = (currentPage - 1) * NUMBER_OF_PRODUCTS_TO_FETCH
+    const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
+    // const offset = (currentPage - 1) * NUMBER_OF_PRODUCTS_TO_FETCH
 
     const brandId = searchParams.brand ? parseInt(searchParams.brand, 10) : undefined
     const collectionId = searchParams.collection ? parseInt(searchParams.collection, 10) : undefined
     const countryId = searchParams.country ? parseInt(searchParams.country, 10) : undefined
     const styleId = searchParams.style ? parseInt(searchParams.style, 10) : undefined
     const articulFilter = searchParams.articul || undefined
+
+    // Извлекаем поисковые запросы
+    const nameQuery = searchParams.name || undefined // Получаем запрос по названию
+    const articulQuery = searchParams.articul || undefined // Получаем запрос по артикулу
+
 
     console.log('searchParams:', searchParams)
     console.log('brandId:', brandId, typeof brandId)
@@ -48,35 +55,50 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
     console.log('articulFilter:', articulFilter, typeof articulFilter)
     console.log('currentPage:', currentPage, typeof currentPage)
 
-    // 2. Формирование объекта WHERE для Sequelize
-    const whereClause: any = {} // Создаем пустой объект для условий
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ВЫЗЫВАЕМ getProductList <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    const { products, totalCount: totalProductsCount } = await getProductList(
+        currentPage,
+        itemsPerPage,
+        {
+            brandId,
+            collectionId,
+            countryId,
+            styleId,
+            nameQuery,
+            articulQuery,
+        }
+    )
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ВЫЗЫВАЕМ getProductList <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    if (brandId) {
-        whereClause.brandId = brandId
-    }
-    if (collectionId) {
-        whereClause.collectionId = collectionId
-    }
-    if (countryId) {
-        whereClause.countryId = countryId
-    }
-    if (styleId) {
-        whereClause.styleId = styleId
-    }
-    if (articulFilter) {
-        // Для поиска по части строки используем Op.like (регистронезависимый поиск, если БД настроена)
-        whereClause.articul = { [Op.like]: `%${articulFilter}%` } // Op.iLike для PostgreSQL, Op.like для MySQL/SQLite
-    }
-
-    const { count: totalProductsCount, rows: rawProducts } = await ProductModel.findAndCountAll({
-        where: whereClause,
-        order: [ [ 'updatedAt', 'DESC' ] ],
-        limit: limit,
-        offset: offset,
-    })
+    // Формирование объекта WHERE для Sequelize
+    // const whereClause: any = {} // Создаем пустой объект для условий
+    //
+    // if (brandId) {
+    //     whereClause.brandId = brandId
+    // }
+    // if (collectionId) {
+    //     whereClause.collectionId = collectionId
+    // }
+    // if (countryId) {
+    //     whereClause.countryId = countryId
+    // }
+    // if (styleId) {
+    //     whereClause.styleId = styleId
+    // }
+    // if (articulFilter) {
+    //     // Для поиска по части строки используем Op.like (регистронезависимый поиск, если БД настроена)
+    //     whereClause.articul = { [Op.like]: `%${articulFilter}%` } // Op.iLike для PostgreSQL, Op.like для MySQL/SQLite
+    // }
+    //
+    // const { count: totalProductsCount, rows: rawProducts } = await ProductModel.findAndCountAll({
+    //     where: whereClause,
+    //     order: [ [ 'updatedAt', 'DESC' ] ],
+    //     limit: limit,
+    //     offset: offset,
+    // })
 
     // Здесь, несмотря на InferAttributes, TypeScript все равно может требовать as ProductDTO потому что toJSON() возвращает any
-    const products: ProductDTO[] = rawProducts.map(p => p.toJSON() as ProductDTO)
+    // const products: ProductDTO[] = rawProducts.map(p => p.toJSON() as ProductDTO)
 
     const rawBrands = await BrandModel.findAll()
     const rawCollections = await CollectionModel.findAll()
@@ -100,13 +122,13 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
     }
 
     return (<>
-        <h1 className='flex flex-col text-[#505050] font-bold text-2xl justify-center items-center mt-2'> Управление
+        <h1 className='flex text-[#505050] font-bold text-2xl justify-center items-center mt-2 px-8'> Управление
             товарными позициями </h1>
-        <div className='flex flex-col justify-between items-center mt-1'>
+        <div className='flex flex-col justify-between items-center'>
             <HeaderButtons/>
 
             <ProductFilterAndList
-                products={products} // Уже отфильтрованные и пагинированные продукты
+                products={products} // Уже отфильтрованные и пагинированные продукты, полученные от getProductList
                 initialBrands={initialBrands}
                 initialCollections={initialCollections}
                 initialCountries={initialCountries}
