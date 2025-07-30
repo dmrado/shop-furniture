@@ -26,7 +26,7 @@ const CategoryPage = async ({params, searchParams}: Props) => {
     console.log('++++++++++++++++ categoryId from SlugPage', category.id)
 
     const page = Number(searchParams?.page) || 1
-    const limit = 16
+    const limit = 9
     const offset = (page - 1) * limit
 
     const categoryParents = await getCategoryParents(category.id)
@@ -101,7 +101,7 @@ const CategoryPage = async ({params, searchParams}: Props) => {
                                 <div className="mt-8">
                                     <ReactPaginateWrapper
                                         currentPage={page}
-                                        totalPages={totalPages}
+                                        pages={totalPages}
                                     />
                                 </div>
                             )}

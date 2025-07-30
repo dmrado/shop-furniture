@@ -37,13 +37,10 @@ const ProductFilterAndList = ({
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
-    // const articulFilterFromUrl = searchParams.get('articul') || ''
 
     //URL для кнопки "Поделиться"
     const currentQueryString = searchParams.toString()
     const urlForShare = currentQueryString ? `${path}?${currentQueryString}` : path
-    console.log('currentQueryString', currentQueryString)
-    console.log('urlForShare', urlForShare)
 
     // Состояние для редактируемого продукта (null для создания нового)
     const [ editingProduct, setEditingProduct ] = useState<ProductDTO | null>(
@@ -52,20 +49,6 @@ const ProductFilterAndList = ({
 
     // для пагинации
     const pageCount = Math.ceil(totalProductsCount / itemsPerPage)
-
-    // --- Обработчики фильтров (без изменений, они уже меняют URL) ---
-    // const handleArticulChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const newArticul = e.target.value
-    //     const currentSearchParams = new URLSearchParams(searchParams.toString())
-    //     console.log('currentSearchParams', currentSearchParams)
-    //     if (newArticul) {
-    //         currentSearchParams.set('articul', newArticul)
-    //     } else {
-    //         currentSearchParams.delete('articul')
-    //     }
-    //     currentSearchParams.delete('page') // Сбрасываем на первую страницу при изменении артикула
-    //     router.push(path + '?' + currentSearchParams.toString())
-    // }
 
     const handlePageChange = (selectedPage: { selected: number }) => {
         const newPage = selectedPage.selected + 1 // ReactPaginate 0-индексирован, нам нужен 1-индексированный номер страницы
@@ -260,51 +243,57 @@ const ProductFilterAndList = ({
                                 className="py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
                             >
                                 {/* Контейнер для миниатюры и названия */}
-                                <div className="flex items-center gap-3 flex-grow">
-                                    {' '}
-                                    {/* flex-grow позволит ему занять доступное пространство */}
-                                    {/* Миниатюра */}
-                                    <div
-                                        className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
-                                        <Image
-                                            width={64} // 16 * 4 = 64px
-                                            height={64} // 16 * 4 = 64px
-                                            src={
-                                                product.path
-                                                    ? product.path
-                                                    : '/spalni.png'
-                                            }
-                                            alt={`Картинка продукта ${product.name}`}
-                                            className="object-cover w-full h-full"
-                                        />
-                                    </div>
-                                    {/* Название продукта */}
-                                    <div className="flex flex-col">
-                                        <span className="text-gray-800 font-medium text-lg">
-                                            {product.name}
-                                        </span>
-                                        <span className="text-gray-600 text-sm">
-                                            {product.articul}
-                                        </span>
-                                    </div>
-                                </div>
+                                <Link href={`/product/${product.id}`} title="Перейти на страницу продукта">
+                                    <div className="flex items-center gap-3 flex-grow" aria-label="Перейти на страницу продукта">
+                                        {' '}
+                                        {/* flex-grow позволит ему занять доступное пространство */}
+                                        {/* Миниатюра */}
 
+                                        <div
+                                            className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                            <Image
+                                                width={64} // 16 * 4 = 64px
+                                                height={64} // 16 * 4 = 64px
+                                                src={
+                                                    product.path
+                                                        ? product.path
+                                                        : '/spalni.png'
+                                                }
+                                                alt={`Картинка продукта ${product.name}`}
+                                                className="object-cover w-full h-full"
+                                            />
+                                        </div>
+                                        {/* Название продукта */}
+
+                                        <div className="flex flex-col">
+
+                                            <span className="text-gray-800 font-medium text-lg">
+                                                {product.name}
+                                            </span>
+                                            <span className="text-gray-600 text-sm">
+                                                {product.articul}
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </Link>
                                 {/* Контейнер для кнопок */}
-                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+                                <div
+                                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
                                     <button
                                         onClick={() =>
                                             handleEditProduct(product)
                                         }
                                         className="button_blue text-sm px-3 py-1.5 w-full justify-center"
                                     >
-                                        Редактировать
+                                Редактировать
                                     </button>
 
                                     <Link
                                         href={`/admin/products/${product.id}`}
                                         className="button_green text-sm px-3 py-1.5 w-full justify-center"
                                     >
-                                        Варианты
+                                Варианты
                                     </Link>
 
                                     <form
@@ -318,7 +307,7 @@ const ProductFilterAndList = ({
                                             type="submit"
                                             className="button_red text-sm px-3 py-1.5 w-full justify-center"
                                         >
-                                            Удалить
+                                    Удалить
                                         </button>
                                     </form>
                                 </div>
@@ -328,7 +317,8 @@ const ProductFilterAndList = ({
                 )}
             </div>
 
-            {/* Форма редактирования/создания продукта */}
+            {/* Форма редактирования/создания продукта */
+            }
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-bold">
                     {editingProduct

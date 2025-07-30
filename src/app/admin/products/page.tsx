@@ -8,7 +8,6 @@ import { StyleModel } from '@/db/models/style.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
-// import { Op } from 'sequelize'
 import { DictionaryItem } from '@/db/types/common-types'
 import { getProductList } from '@/actions/searchProduct'
 
@@ -23,8 +22,8 @@ interface ProductsManagementPageProps {
         collection?: string;
         country?: string;
         style?: string;
-        name?: string;
-        articul?: string; // Для поиска по артикулу
+        name?: string; // Для поиска по названию продукта
+        articul?: string; // Для поиска по артикулу как артикулу продукта, так и артикулу варианта
         page?: string; // Для текущей страницы пагинации
     };
 }
@@ -34,28 +33,16 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
     // 1. Извлечение и преобразование параметров из URL
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
     const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
-    // const offset = (currentPage - 1) * NUMBER_OF_PRODUCTS_TO_FETCH
 
     const brandId = searchParams.brand ? parseInt(searchParams.brand, 10) : undefined
     const collectionId = searchParams.collection ? parseInt(searchParams.collection, 10) : undefined
     const countryId = searchParams.country ? parseInt(searchParams.country, 10) : undefined
     const styleId = searchParams.style ? parseInt(searchParams.style, 10) : undefined
-    const articulFilter = searchParams.articul || undefined
 
     // Извлекаем поисковые запросы
     const nameQuery = searchParams.name || undefined // Получаем запрос по названию
     const articulQuery = searchParams.articul || undefined // Получаем запрос по артикулу
 
-
-    console.log('searchParams:', searchParams)
-    console.log('brandId:', brandId, typeof brandId)
-    console.log('collectionId:', collectionId, typeof collectionId)
-    console.log('countryId:', countryId, typeof countryId)
-    console.log('styleId:', styleId, typeof styleId)
-    console.log('articulFilter:', articulFilter, typeof articulFilter)
-    console.log('currentPage:', currentPage, typeof currentPage)
-
-    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ВЫЗЫВАЕМ getProductList <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     const { products, totalCount: totalProductsCount } = await getProductList(
         currentPage,
         itemsPerPage,
@@ -68,51 +55,16 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
             articulQuery,
         }
     )
-    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ВЫЗЫВАЕМ getProductList <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-    // Формирование объекта WHERE для Sequelize
-    // const whereClause: any = {} // Создаем пустой объект для условий
-    //
-    // if (brandId) {
-    //     whereClause.brandId = brandId
-    // }
-    // if (collectionId) {
-    //     whereClause.collectionId = collectionId
-    // }
-    // if (countryId) {
-    //     whereClause.countryId = countryId
-    // }
-    // if (styleId) {
-    //     whereClause.styleId = styleId
-    // }
-    // if (articulFilter) {
-    //     // Для поиска по части строки используем Op.like (регистронезависимый поиск, если БД настроена)
-    //     whereClause.articul = { [Op.like]: `%${articulFilter}%` } // Op.iLike для PostgreSQL, Op.like для MySQL/SQLite
-    // }
-    //
-    // const { count: totalProductsCount, rows: rawProducts } = await ProductModel.findAndCountAll({
-    //     where: whereClause,
-    //     order: [ [ 'updatedAt', 'DESC' ] ],
-    //     limit: limit,
-    //     offset: offset,
-    // })
-
-    // Здесь, несмотря на InferAttributes, TypeScript все равно может требовать as ProductDTO потому что toJSON() возвращает any
-    // const products: ProductDTO[] = rawProducts.map(p => p.toJSON() as ProductDTO)
 
     const rawBrands = await BrandModel.findAll()
     const rawCollections = await CollectionModel.findAll()
     const rawCountries = await CountryModel.findAll()
     const rawStyles = await StyleModel.findAll()
 
-    console.log('rawBrands:', rawBrands, typeof rawBrands)
-
     const initialBrands: DictionaryItem[] = rawBrands.map(b => b.toJSON() as DictionaryItem)
     const initialCollections: DictionaryItem[] = rawCollections.map(col => col.toJSON() as DictionaryItem)
     const initialCountries: DictionaryItem[] = rawCountries.map(c => c.toJSON() as DictionaryItem)
     const initialStyles: DictionaryItem[] = rawStyles.map(s => s.toJSON() as DictionaryItem)
-
-    console.log('initialBrands:', initialBrands, typeof initialBrands)
 
     async function removeProduct(id: number) {
         'use server'
