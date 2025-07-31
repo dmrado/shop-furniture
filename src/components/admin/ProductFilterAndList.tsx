@@ -130,14 +130,15 @@ const ProductFilterAndList = ({
                 <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <AdminFilter brands={initialBrands}
-                                 collections={initialCollections}
-                                 countries={initialCountries}
-                                 styles={initialStyles}
+                        collections={initialCollections}
+                        countries={initialCountries}
+                        styles={initialStyles}
                     />
                 </div>
 
-                {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
-                <div className="md:col-span-2 lg:col-span-4">
+                {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО НАЗВАНИЮ И АРТИКУЛУ */}
+                <h3 className="text-lg font-bold mt-4">Поиск продуктов</h3>
+                <div className="md:col-span-2 lg:col-span-4 mt-2">
                     <SearchProduct
                         queryKey="name" // Используем 'name' для поиска по названию продукта
                         articulQueryKey="articul" // Используем 'articul' для поиска по артикулу продукта/варианта
