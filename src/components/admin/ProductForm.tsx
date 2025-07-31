@@ -46,6 +46,8 @@ const ProductForm = ({
     initialCountries = [],
     initialStyles = []
 }: ProductFormProps) => {
+    console.log('initialBrands', initialBrands)
+    console.log('product>>>>>>>>>>>>>>>>>', product)
     // Инициализируем состояния, используя данные из product или значения по умолчанию
     const [ name, setName ] = useState(product?.name || '')
     const [ articul, setArticul ] = useState(product?.articul || '')
@@ -82,13 +84,14 @@ const ProductForm = ({
         setIsActive(product?.isActive ?? false)
 
         // Установка значений для select-ов, учитывая переданные initialItems проверяем, что brands, collections и т.д. не undefined здесь
-        setBrandId(product?.brandId && brands.some(b => b.id === product.brandId) ? product.brandId : (brands.length > 0 ? brands[0].id : ''));
-        setCollectionId(product?.collectionId && collections.some(c => c.id === product.collectionId) ? product.collectionId : (collections.length > 0 ? collections[0].id : ''));
-        setCountryId(product?.countryId && countries.some(c => c.id === product.countryId) ? product.countryId : (countries.length > 0 ? countries[0].id : ''));
-        setStyleId(product?.styleId && styles.some(s => s.id === product.styleId) ? product.styleId : (styles.length > 0 ? styles[0].id : ''));
+        setBrandId(product?.brandId ?? '')
+        setCollectionId(product?.collectionId ?? '')
+        setCountryId(product?.countryId ?? '')
+        setStyleId(product?.styleId ?? '')
+        // setStyleId(product?.styleId && styles.some(s => s.id === product.styleId) ? product.styleId : (styles.length > 0 ? styles[0].id : ''))
 
-        setTouchedName(false);
-        setFileSizeError(false);
+        setTouchedName(false)
+        setFileSizeError(false)
     }, [ product, brands, collections, countries, styles ]) // Зависимость от product и initial-справочников
 
     const onSubmit = async (formData: FormData) => {

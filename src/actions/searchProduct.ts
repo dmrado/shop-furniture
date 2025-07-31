@@ -79,26 +79,28 @@ export async function getProductList(
             })
         }
 
+        const finalWhereConditions = {}
         // 3. Комбинируем все условия:
         // Если есть и основные фильтры, и поисковые запросы находим продукт, если его название совпадает (частично) ИЛИ его собственный артикул совпадает (частично) ИЛИ артикул его варианта совпадает (частично)
         if (Object.keys(whereConditions).length > 0 && searchConditions.length > 0) {
             // Условия будут: (основные фильтры) И (поиск1 ИЛИ поиск2 ИЛИ поиск3)
-            whereConditions[Op.and] = [
+            finalWhereConditions[Op.and] = [
                 whereConditions, // Ваши brandId, collectionId и т.д.
                 { [Op.or]: searchConditions } // nameQuery, articulQuery (для Product) и articulQuery (для ProductVariant)
             ]
         } else if (searchConditions.length > 0) {
             // Если есть только поисковые запросы (без brandId, collectionId и т.д.)
-            whereConditions[Op.or] = searchConditions
+            finalWhereConditions[Op.or] = searchConditions
         }
         // Если searchConditions пуст, то останутся только whereConditions (стандартные фильтры)
 
         const { count, rows: products } = await ProductModel.findAndCountAll({
-            where: whereConditions,
+            where: finalWhereConditions,
             include: includeConditions,
             limit: limit,
             offset: offset,
             order: [ [ 'createdAt', 'DESC' ] ],
+            // attributes: ['id', 'name', 'descriptionShort', 'isNew'],
             // Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантов
             // и получить правильный totalCount.
             distinct: true,

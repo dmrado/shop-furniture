@@ -10,6 +10,7 @@ import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
 import { DictionaryItem } from '@/db/types/common-types'
 import { getProductList } from '@/actions/searchProduct'
+import {getBrands, getCollections, getCountries, getStyles} from "@/actions/dictionaryActions";
 
 export const metadata = {
     title: 'Decoro | Список продукции'
@@ -56,15 +57,10 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
         }
     )
 
-    const rawBrands = await BrandModel.findAll()
-    const rawCollections = await CollectionModel.findAll()
-    const rawCountries = await CountryModel.findAll()
-    const rawStyles = await StyleModel.findAll()
-
-    const initialBrands: DictionaryItem[] = rawBrands.map(b => b.toJSON() as DictionaryItem)
-    const initialCollections: DictionaryItem[] = rawCollections.map(col => col.toJSON() as DictionaryItem)
-    const initialCountries: DictionaryItem[] = rawCountries.map(c => c.toJSON() as DictionaryItem)
-    const initialStyles: DictionaryItem[] = rawStyles.map(s => s.toJSON() as DictionaryItem)
+    const brands = await getBrands()
+    const collections = await getCollections()
+    const countries = await getCountries()
+    const styles = await getStyles()
 
     async function removeProduct(id: number) {
         'use server'
@@ -81,10 +77,10 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
 
             <ProductFilterAndList
                 products={products} // Уже отфильтрованные и пагинированные продукты, полученные от getProductList
-                initialBrands={initialBrands}
-                initialCollections={initialCollections}
-                initialCountries={initialCountries}
-                initialStyles={initialStyles}
+                initialBrands={brands}
+                initialCollections={collections}
+                initialCountries={countries}
+                initialStyles={styles}
                 removeProduct={removeProduct}
                 itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
                 totalProductsCount={totalProductsCount} // Передаем общее количество отфильтрованных продуктов

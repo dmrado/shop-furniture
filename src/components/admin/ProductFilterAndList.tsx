@@ -9,6 +9,7 @@ import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import UrlParamsSelect from '@/components/ui/UrlParamsSelect'
 import { DictionaryItem } from '@/db/types/common-types'
 import SearchProduct from '@/components/site/SearchProduct'
+import AdminFilter from '@/components/site/navigation/AdminFilter'
 
 // Типы для справочников
 type ProductFilterAndListProps = {
@@ -128,76 +129,24 @@ const ProductFilterAndList = ({
             <div className="bg-white p-6 rounded-lg shadow-md mb-2">
                 <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <UrlParamsSelect
-                        label={'Бренд'}
-                        options={initialBrands.map((brand) => ({
-                            value: String(brand.id),
-                            label: brand.name
-                        }))}
-                        queryKey={'brand'}
-                        placeHolder={'Все бренды'}
+                    <AdminFilter brands={initialBrands}
+                                 collections={initialCollections}
+                                 countries={initialCountries}
+                                 styles={initialStyles}
                     />
-
-                    <UrlParamsSelect
-                        label={'Коллекция'}
-                        options={initialCollections.map((brand) => ({
-                            value: String(brand.id),
-                            label: brand.name
-                        }))}
-                        queryKey={'collection'}
-                        placeHolder={'Все коллекции'}
-                    />
-
-                    <UrlParamsSelect
-                        label={'Страна'}
-                        options={initialCountries.map((brand) => ({
-                            value: String(brand.id),
-                            label: brand.name
-                        }))}
-                        queryKey={'country'}
-                        placeHolder={'Все страны'}
-                    />
-
-                    <UrlParamsSelect
-                        label={'Стиль'}
-                        options={initialStyles.map((brand) => ({
-                            value: String(brand.id),
-                            label: brand.name
-                        }))}
-                        queryKey={'style'}
-                        placeHolder={'Все стили'}
-                    />
-
-                    {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
-                    <div className="md:col-span-2 lg:col-span-4">
-                        <SearchProduct
-                            queryKey="name" // Используем 'name' для поиска по названию продукта
-                            articulQueryKey="articul" // Используем 'articul' для поиска по артикулу продукта/варианта
-                            namePlaceholder="Поиск по названию продукта"
-                            articulPlaceholder="Поиск по артикулу"
-                            debounceTime={500}
-                        />
-                    </div>
-
-                    {/*<div className="md:col-span-2 lg:col-span-1">*/}
-                    {/*    {' '}*/}
-                    {/*    /!* Растягиваем на 2 колонки на md, на 1 на lg *!/*/}
-                    {/*    <label*/}
-                    {/*        htmlFor="articulSearch"*/}
-                    {/*        className="block text-gray-700 text-sm font-bold mb-2"*/}
-                    {/*    >*/}
-                    {/*        Поиск по артикулу:*/}
-                    {/*    </label>*/}
-                    {/*    <input*/}
-                    {/*        type="text"*/}
-                    {/*        id="articulSearch"*/}
-                    {/*        value={articulFilterFromUrl}*/}
-                    {/*        onChange={handleArticulChange}*/}
-                    {/*        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
-                    {/*        placeholder="Введите артикул"*/}
-                    {/*    />*/}
-                    {/*</div>*/}
                 </div>
+
+                {/* <-- ПОЛЕ ВВОДА ДЛЯ ПОИСКА ПО АРТИКУЛУ */}
+                <div className="md:col-span-2 lg:col-span-4">
+                    <SearchProduct
+                        queryKey="name" // Используем 'name' для поиска по названию продукта
+                        articulQueryKey="articul" // Используем 'articul' для поиска по артикулу продукта/варианта
+                        namePlaceholder="Поиск по названию продукта"
+                        articulPlaceholder="Поиск по артикулу"
+                        debounceTime={500}
+                    />
+                </div>
+
                 <div className="flex justify-end mt-4">
                     <button
                         onClick={resetFilters}
@@ -214,7 +163,8 @@ const ProductFilterAndList = ({
                 </div>
             </div>
 
-            {/* Список продуктов */}
+            {/* Список продуктов */
+            }
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h3 className="text-lg font-bold mb-4">
                     Список продуктов ({totalProductsCount})
@@ -244,7 +194,8 @@ const ProductFilterAndList = ({
                             >
                                 {/* Контейнер для миниатюры и названия */}
                                 <Link href={`/product/${product.id}`} title="Перейти на страницу продукта">
-                                    <div className="flex items-center gap-3 flex-grow" aria-label="Перейти на страницу продукта">
+                                    <div className="flex items-center gap-3 flex-grow"
+                                        aria-label="Перейти на страницу продукта">
                                         {' '}
                                         {/* flex-grow позволит ему занять доступное пространство */}
                                         {/* Миниатюра */}
@@ -286,14 +237,14 @@ const ProductFilterAndList = ({
                                         }
                                         className="button_blue text-sm px-3 py-1.5 w-full justify-center"
                                     >
-                                Редактировать
+                                        Редактировать
                                     </button>
 
                                     <Link
                                         href={`/admin/products/${product.id}`}
                                         className="button_green text-sm px-3 py-1.5 w-full justify-center"
                                     >
-                                Варианты
+                                        Варианты
                                     </Link>
 
                                     <form
@@ -307,7 +258,7 @@ const ProductFilterAndList = ({
                                             type="submit"
                                             className="button_red text-sm px-3 py-1.5 w-full justify-center"
                                         >
-                                    Удалить
+                                            Удалить
                                         </button>
                                     </form>
                                 </div>

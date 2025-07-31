@@ -1,20 +1,24 @@
 import React from 'react'
-import {getCategory, getCategoryChildren, getCategoryParents, getChildrenIds} from '@/actions/categoryActions'
-import {getProducts} from '@/actions/productActions'
+import { getCategory, getCategoryChildren, getCategoryParents, getChildrenIds } from '@/actions/categoryActions'
+import { getProducts } from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
 import SideBar from '@/components/site/SideBar'
 import CategoryBar from '@/components/CategoryBar'
-import {notFound} from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Title from '@/components/site/Title'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
+import AdminFilter from '@/components/site/navigation/AdminFilter'
+import {BrandModel, CollectionModel, CountryModel, StyleModel} from "@/db/models";
+import {DictionaryItem} from "@/db/types/common-types";
+import {getBrands, getCollections, getCountries, getStyles} from "@/actions/dictionaryActions";
 
 type Props = {
     params: { slug: string };
     searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
 };
 
-const CategoryPage = async ({params, searchParams}: Props) => {
+const CategoryPage = async ({ params, searchParams, }: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
@@ -26,7 +30,7 @@ const CategoryPage = async ({params, searchParams}: Props) => {
     console.log('++++++++++++++++ categoryId from SlugPage', category.id)
 
     const page = Number(searchParams?.page) || 1
-    const limit = 9
+    const limit = 12
     const offset = (page - 1) * limit
 
     const categoryParents = await getCategoryParents(category.id)
@@ -42,12 +46,17 @@ const CategoryPage = async ({params, searchParams}: Props) => {
     const flatChilrenIds = await getChildrenIds(categoryChildren)
     console.log('flatChilrenIds', flatChilrenIds)
 
-    const {count, products} = await getProducts([category.id, ...flatChilrenIds], offset, limit)
+    const { count, products } = await getProducts([ category.id, ...flatChilrenIds ], offset, limit)
 
     // const tags = await getTags()
     // console.log('???????????? tags from SlugPage', tags)
 
     const totalPages = Math.ceil(count / limit)
+
+    const brands = await getBrands()
+    const collections = await getCollections()
+    const countries = await getCountries()
+    const styles = await getStyles()
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -83,9 +92,15 @@ const CategoryPage = async ({params, searchParams}: Props) => {
             <div className="flex flex-col md:flex-row gap-6">
                 {/* Боковая панель с фильтрами */}
                 <div className="w-full md:w-1/4">
-                    {/*<SideBar tags={tags}/>*/}
+                    <div className="flex flex-col bg-white p-6 rounded-lg shadow-md mb-2">
+                        <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
+                        <AdminFilter brands={brands}
+                            collections={collections}
+                            countries={countries}
+                            styles={styles}
+                        />
+                    </div>
                 </div>
-
                 {/* Основной контент с товарами */}
                 <div className="w-full md:w-3/4">
                     {products && products.length > 0 ? (
