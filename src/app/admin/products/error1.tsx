@@ -1,4 +1,5 @@
-'use client'
+export {}
+// 'use client'
 //
 // import { useEffect } from 'react'
 //
