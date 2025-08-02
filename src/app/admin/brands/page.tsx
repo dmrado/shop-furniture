@@ -1,6 +1,4 @@
-import { getBrands } from '@/actions/dictionaryActions'
-import { BrandModel } from '@/db/models'
-import { revalidatePath } from 'next/cache'
+import { getAllBrands } from '@/actions/dictionaryActions'
 
 import BrandManager from '@/components/admin/BrandManager'
 import Title from '@/components/site/Title'
@@ -11,7 +9,7 @@ const BrandsManagementPage = async ({ searchParams }) => {
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
     const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
-    const brands = await getBrands()
+    const brands = await getAllBrands()
 
     return <>
         <Title title="Управление брендами" />

@@ -1,16 +1,11 @@
 import React from 'react'
 import HeaderButtons from '@/components/admin/HeaderButtons.tsx'
 import { ProductModel } from '@/db/models/product.model'
-import { BrandModel } from '@/db/models/brand.model'
-import { CollectionModel } from '@/db/models/collection.model'
-import { CountryModel } from '@/db/models/country.model'
-import { StyleModel } from '@/db/models/style.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
 import { revalidatePath } from 'next/cache'
-import { DictionaryItem } from '@/db/types/common-types'
 import { getProductList } from '@/actions/searchProduct'
-import {getBrands, getCollections, getCountries, getStyles} from "@/actions/dictionaryActions";
+import { getActiveBrands, getCollections, getCountries, getStyles } from '@/actions/dictionaryActions'
 
 export const metadata = {
     title: 'Decoro | Список продукции'
@@ -30,10 +25,10 @@ interface ProductsManagementPageProps {
 }
 
 const ProductsManagementPage = async ({ searchParams }: ProductsManagementPageProps) => {
-    console.log('SERVER: ProductsManagementPage received searchParams:', searchParams);
+    console.log('SERVER: ProductsManagementPage received searchParams:', searchParams)
     // 1. Извлечение и преобразование параметров из URL
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
-    console.log('SERVER: ProductsManagementPage calculated currentPage:', currentPage);
+    console.log('SERVER: ProductsManagementPage calculated currentPage:', currentPage)
 
     const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
@@ -59,7 +54,7 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
         }
     )
 
-    const brands = await getBrands()
+    const brands = await getActiveBrands()
     const collections = await getCollections()
     const countries = await getCountries()
     const styles = await getStyles()

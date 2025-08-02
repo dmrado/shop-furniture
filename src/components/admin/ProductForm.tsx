@@ -4,11 +4,10 @@ import dynamic from 'next/dynamic'
 import { handleForm } from '@/actions/handleForm.ts'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import { ProductDTO } from '@/db/models/product.model.ts'
-import { getBrands } from '@/actions/dictionaryActions'
+import { getBrandById, getActiveBrands } from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
 import BrandFormModalContent from '@/components/admin/BrandFormModalContent'
-import { PencilIcon } from '@heroicons/react/24/outline'
-import { PlusIcon } from '@heroicons/react/16/solid'
+import ProductFormSelectWithActions from '@/components/admin/ProductFormSelectWithActions'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
@@ -25,20 +24,22 @@ const IMAGE_TYPES = [
 // Типы для PostForm меняем на ProductForm, используя ProductModel
 type ProductFormProps = {
     product?: ProductDTO // Может быть не передан при создании нового продукта
-    onSuccess?: () => void; // Добавляем колбэк для успешного сохранения
-    onCancel?: () => void; // Добавляем колбэк для отмены
+    onSuccess?: () => void // Добавляем колбэк для успешного сохранения
+    onCancel?: () => void // Добавляем колбэк для отмены
 
     // Добавляем пропсы для справочников, но делаем их опциональными и даем дефолтное значение
-    initialBrands?: DictionaryItem[];
-    initialCollections?: DictionaryItem[];
-    initialCountries?: DictionaryItem[];
-    initialStyles?: DictionaryItem[];
+    initialBrands?: DictionaryItem[]
+    initialCollections?: DictionaryItem[]
+    initialCountries?: DictionaryItem[]
+    initialStyles?: DictionaryItem[]
 }
 
 // Типы для элементов справочника
 type DictionaryItem = {
     id: number
     name: string
+    description?: string
+    isActive?: boolean
 }
 
 // тип для BrandFormState, если его нет в ProductForm
@@ -69,11 +70,11 @@ const ProductForm = ({
     const [ isNew, setIsNew ] = useState(product?.isNew || false)
     const [ isActive, setIsActive ] = useState(product?.isActive || false)
 
-    // Инициализируем 1, так как 0 может быть невалидным FK
-    const [ brandId, setBrandId ] = useState(product?.brandId || 1)
-    const [ collectionId, setCollectionId ] = useState(product?.collectionId || 1)
-    const [ countryId, setCountryId ] = useState(product?.countryId || 1)
-    const [ styleId, setStyleId ] = useState(product?.styleId || 1)
+    // Инициализируем
+    const [ brandId, setBrandId ] = useState<number | string>('') // Должен быть number или string
+    const [ collectionId, setCollectionId ] = useState<number | string>('')
+    const [ countryId, setCountryId ] = useState<number | string>('')
+    const [ styleId, setStyleId ] = useState<number | string>('')
 
     //  СОСТОЯНИЯ ДЛЯ ХРАНЕНИЯ СПИСКОВ СПРАВОЧНИКОВ
     const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands)
@@ -93,11 +94,43 @@ const ProductForm = ({
     // Функция для перезагрузки списка брендов
     const refreshBrands = async () => {
         try {
-            const updatedBrands = await getBrands() // Вызываем серверный экшен для получения обновленных данных
-            setBrands(updatedBrands) // Обновляем состояние
-            // Возможно, также нужно установить product.brandId, если созданный бренд должен быть выбран автоматически
+            const updatedBrands = await getActiveBrands()
+            setBrands(updatedBrands)
         } catch (error) {
             console.error('Ошибка при обновлении списка брендов:', error)
+        }
+    }
+
+    // Обработчик для кнопки "Добавить бренд"
+    const handleAddBrandClick = () => {
+        setCurrentBrandForEdit(null) // Важно для сброса формы на "новый бренд"
+        setShowBrandModal(true)
+    }
+
+    // Обработчик для кнопки "Редактировать бренд"
+    const handleEditBrandClick = async () => {
+        // Убедитесь, что brandId - это число и он выбран
+        if (typeof brandId === 'number' && brandId > 0) {
+            try {
+                // Загружаем полные данные бренда, включая description и isActive
+                const fullBrandData = await getBrandById(brandId)
+                if (fullBrandData) {
+                    setCurrentBrandForEdit({
+                        id: fullBrandData.id,
+                        name: fullBrandData.name,
+                        description: fullBrandData.description,
+                        isActive: fullBrandData.isActive,
+                    })
+                    setShowBrandModal(true)
+                } else {
+                    alert('Бренд не найден.')
+                }
+            } catch (error) {
+                alert('Ошибка при загрузке данных бренда.')
+                console.error(error)
+            }
+        } else {
+            alert('Пожалуйста, выберите бренд для редактирования.')
         }
     }
 
@@ -120,7 +153,7 @@ const ProductForm = ({
 
         setTouchedName(false)
         setFileSizeError(false)
-    }, [ product, brands, collections, countries, styles ]) // Зависимость от product и initial-справочников
+    }, [ product, initialBrands, initialCollections, initialCountries, initialStyles ]) // Зависимости должны быть пропсы, а не стейты, которые меняются внутри
 
     const onSubmit = async (formData: FormData) => {
         try {
@@ -148,13 +181,12 @@ const ProductForm = ({
         return classes
     }
 
-    // Вспомогательная функция для генерации опций select
+    //fixme удалить после замены коллекции страны и стиля на соответствующие компоненты ProductFormSelectWithActions
     const renderOptions = (items: DictionaryItem[]) => {
-        if (!items || items.length === 0) {
-            return <option value="">Загрузка...</option>
-        }
-        return items.map(item => (
-            <option key={item.id} value={item.id}>{item.name}</option>
+        return items.map((item) => (
+            <option key={item.id} value={item.id}>
+                {item.name}
+            </option>
         ))
     }
 
@@ -190,62 +222,75 @@ const ProductForm = ({
 
                 {/* ПОЛЯ SELECT ДЛЯ ID: */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
-                        Бренд:
-                    </label>
-                    <div
-                        className="flex items-center gap-2"> {/* контейнер select + button+добавить + button+редактировать */}
-                        <select
-                            name="brandId"
-                            id="brandId"
-                            value={brandId}
-                            onChange={(e) => setBrandId(Number(e.target.value))}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            <option value="">Выберите бренд</option>
-                            {renderOptions(brands)}
-                        </select>
 
-                        {/* Кнопка "Добавить" с PlusIcon */}
-                        <button
-                            type="button"
-                            className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                            onClick={() => {
-                                setCurrentBrandForEdit(null) // Сбрасываем для создания нового
-                                setShowBrandModal(true)
-                            }}
-                            title="Добавить новый бренд" // Подсказка при наведении
-                        >
-                            <PlusIcon className="h-5 w-5"/> {/* Иконка плюса */}
-                        </button>
+                    <ProductFormSelectWithActions
+                        label="бренд"
+                        name="brandId"
+                        id="brandId"
+                        value={brandId}
+                        options={brands}
+                        onChange={(e) => setBrandId(Number(e.target.value))}
+                        onAddClick={handleAddBrandClick} // Передаем обработчик для "Добавить"
+                        onEditClick={handleEditBrandClick} // Передаем обработчик для "Редактировать"
+                        showEditButton={!!brandId} // Кнопка "Редактировать" активна, если выбран бренд
+                    />
 
-                        {/* Кнопка "Редактировать" с PencilIcon */}
-                        {/* Убедитесь, что brandId выбран, прежде чем отображать кнопку редактирования */}
-                        {brandId ? ( // Показываем кнопку редактирования только если что-то выбрано
-                            <button
-                                type="button"
-                                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                                onClick={() => {
-                                    const selectedBrand = brands.find(b => b.id === brandId)
-                                    if (selectedBrand) {
-                                        setCurrentBrandForEdit({
-                                            id: selectedBrand.id,
-                                            name: selectedBrand.name,
-                                            description: selectedBrand?.description, // Вам нужно будет получить полное описание из базы данных
-                                            // если вы хотите его редактировать.
-                                            // Возможно, getBrandById server action
-                                            isActive: selectedBrand?.isActive
-                                        })
-                                        setShowBrandModal(true)
-                                    }
-                                }}
-                                title="Редактировать выбранный бренд" // Подсказка при наведении
-                            >
-                                <PencilIcon className="h-5 w-5"/> {/* Иконка карандаша */}
-                            </button>
-                        ) : null} {/* Если бренд не выбран, кнопку не показываем */}
+                    {/*<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">*/}
+                    {/*    Бренд:*/}
+                    {/*</label>*/}
+                    {/*<div*/}
+                    {/*    className="flex items-center gap-2"> /!* контейнер select + button+добавить + button+редактировать *!/*/}
+                    {/*    <select*/}
+                    {/*        name="brandId"*/}
+                    {/*        id="brandId"*/}
+                    {/*        value={brandId}*/}
+                    {/*        onChange={(e) => setBrandId(Number(e.target.value))}*/}
+                    {/*        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
+                    {/*    >*/}
+                    {/*        <option value="">Выберите бренд</option>*/}
+                    {/*        {renderOptions(brands)}*/}
+                    {/*    </select>*/}
 
-                    </div>
+                    {/*    /!* Кнопка "Добавить" с PlusIcon *!/*/}
+                    {/*    <button*/}
+                    {/*        type="button"*/}
+                    {/*        className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"*/}
+                    {/*        onClick={() => {*/}
+                    {/*            setCurrentBrandForEdit(null) // Сбрасываем для создания нового*/}
+                    {/*            setShowBrandModal(true)*/}
+                    {/*        }}*/}
+                    {/*        title="Добавить новый бренд" // Подсказка при наведении*/}
+                    {/*    >*/}
+                    {/*        <PlusIcon className="h-5 w-5"/> /!* Иконка плюса *!/*/}
+                    {/*    </button>*/}
+
+                    {/*    /!* Кнопка "Редактировать" с PencilIcon *!/*/}
+                    {/*    /!* Убедитесь, что brandId выбран, прежде чем отображать кнопку редактирования *!/*/}
+                    {/*    {brandId ? ( // Показываем кнопку редактирования только если что-то выбрано*/}
+                    {/*        <button*/}
+                    {/*            type="button"*/}
+                    {/*            className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"*/}
+                    {/*            onClick={() => {*/}
+                    {/*                const selectedBrand = brands.find(b => b.id === brandId)*/}
+                    {/*                if (selectedBrand) {*/}
+                    {/*                    setCurrentBrandForEdit({*/}
+                    {/*                        id: selectedBrand.id,*/}
+                    {/*                        name: selectedBrand.name,*/}
+                    {/*                        description: selectedBrand?.description, // Вам нужно будет получить полное описание из базы данных*/}
+                    {/*                        // если вы хотите его редактировать.*/}
+                    {/*                        // Возможно, getBrandById server action*/}
+                    {/*                        isActive: selectedBrand?.isActive*/}
+                    {/*                    })*/}
+                    {/*                    setShowBrandModal(true)*/}
+                    {/*                }*/}
+                    {/*            }}*/}
+                    {/*            title="Редактировать выбранный бренд" // Подсказка при наведении*/}
+                    {/*        >*/}
+                    {/*            <PencilIcon className="h-5 w-5"/> /!* Иконка карандаша *!/*/}
+                    {/*        </button>*/}
+                    {/*    ) : null} /!* Если бренд не выбран, кнопку не показываем *!/*/}
+
+                    {/*</div>*/}
                 </div>
 
                 <div className="mb-4">

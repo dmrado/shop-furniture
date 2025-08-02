@@ -9,50 +9,76 @@ import { MaterialModel } from '@/db/models/material.model.ts'
 import { DictionaryItem } from '@/db/types/common-types'
 import { revalidatePath } from 'next/cache'
 
-type BrandPayload = {
-    id?: number // Опционально для обновления
-    name: string
-    slug?: string // Предполагаем, что slug может генерироваться или быть необязательным
+// Вспомогательная функция для преобразования 'on'/null в boolean
+function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
+    // Чекбокс возвращает 'on' если отмечен, и null/undefined если не отмечен
+    return value === 'true' || value === 'on' // Предполагаем, что вы передаете 'true'/'false' или 'on'
 }
 
-// Вспомогательная функция для преобразования 'on'/null в boolean
-// function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
-//     // Чекбокс возвращает 'on' если отмечен, и null/undefined если не отмечен
-//     return value === 'true' || value === 'on' // Предполагаем, что вы передаете 'true'/'false' или 'on'
-// }
+export async function getActiveBrands(): Promise<DictionaryItem[]> {
+    try {
+        const brands = await BrandModel.findAll({
+            where: { isActive: true },
+            attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
+            order: [ [ 'name', 'ASC' ] ],
+        })
+        return brands.map(brand => brand.toJSON())
+    } catch (error) {
+        console.error('Ошибка при получении списка активных брендов:', error)
+        throw new Error('Не удалось получить список активных брендов.')
+    }
+}
 
+// 2. Функция для получения ВСЕХ брендов (для BrandManager)
+export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно также назвать getBrandsForAdminPanel
+    try {
+        const brands = await BrandModel.findAll({
+            attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
+            order: [ [ 'name', 'ASC' ] ],
+        })
+        return brands.map(brand => brand.toJSON())
+    } catch (error) {
+        console.error('Ошибка при получении полного списка брендов:', error)
+        throw new Error('Не удалось получить полный список брендов.')
+    }
+}
 
-
-// Функция для получения всех активных брендов
+// fixme used by [slug]\page.tsx а не нужна ли там getActiveBrands по логике?
 export async function getBrands() {
     const brands = await BrandModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name', 'description', 'isActive'],
+        attributes: [ 'id', 'name', 'description', 'isActive' ],
         order: [ [ 'name', 'ASC' ] ],
     })
     return brands.map(brand => brand.toJSON()) as DictionaryItem[]
 }
 
+export async function getBrandById(id: number) {
+    const brand = await BrandModel.findByPk(id)
+    if (!brand) {
+        return null
+    }
+    return brand.toJSON()
+}
+
 export async function createBrand(formData: FormData) {
     const name = formData.get('name') as string
     const description = formData.get('description') as string
-    // const isActive = parseBooleanFromFormData(formData.get('isActive'))
-
-
+    const isActive = parseBooleanFromFormData(formData.get('isActive'))
     if (!name || name.trim().length < 2) {
         throw new Error('Название бренда должно быть не менее 2 символов.')
     }
     if (!description || description.trim().length < 2) {
         throw new Error('Описание бренда должно быть не менее 2 символов.')
     }
-
     try {
         await BrandModel.create({
             name: name.trim(),
             description: description.trim(),
-            isActive: true,
+            isActive: isActive,
         })
         revalidatePath('/admin/brands')
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при создании бренда:', error)
         throw new Error('Не удалось создать бренд.')
@@ -63,8 +89,7 @@ export async function updateBrand(formData: FormData) {
     const id = Number(formData.get('id'))
     const name = formData.get('name') as string
     const description = formData.get('description') as string
-    // const isActive = parseBooleanFromFormData(formData.get('isActive'))
-
+    const isActive = parseBooleanFromFormData(formData.get('isActive'))
     if (!id) {
         throw new Error('ID бренда отсутствует для обновления.')
     }
@@ -74,7 +99,6 @@ export async function updateBrand(formData: FormData) {
     if (!description || description.trim().length < 2) {
         throw new Error('Описание бренда должно быть не менее 2 символов.')
     }
-
     try {
         const brand = await BrandModel.findByPk(id)
         if (!brand) {
@@ -83,9 +107,10 @@ export async function updateBrand(formData: FormData) {
         await brand.update({
             name: name.trim(),
             description: description.trim(),
-            isActive: true,
+            isActive: isActive,
         })
         revalidatePath('/admin/brands')
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при обновлении бренда:', error)
         throw new Error('Не удалось обновить бренд.')
@@ -98,7 +123,6 @@ export async function removeBrand(id: number) {
     revalidatePath('/admin/brands')
     // redirect('/admin/products')
 }
-
 
 // Функция для получения всех активных коллекций
 export async function getCollections() {
@@ -129,20 +153,6 @@ export async function getStyles() {
     })
     return styles.map(style => style.toJSON()) as DictionaryItem[]
 }
-
-// Новая функция для получения всех продуктов (например, по имени и ID)
-// export async function getProducts() {
-//     try {
-//         const products = await ProductModel.findAll({
-//             attributes: [ 'id', 'name' ], // Выбираем только id и name
-//             order: [ [ 'name', 'ASC' ] ],
-//         })
-//         return products.map(product => product.toJSON())
-//     } catch (error) {
-//         console.error('Error fetching products:', error)
-//         return []
-//     }
-// }
 
 // Новая функция для получения всех активных цветов
 export async function getColors() {

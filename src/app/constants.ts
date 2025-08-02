@@ -1,4 +1,4 @@
-export const NUMBER_OF_PRODUCTS_TO_FETCH = 12
+export const NUMBER_OF_PRODUCTS_TO_FETCH = 6
 export const FILE_LIMIT = 10_000_000
 
 export const TITLE_MIN_LENGTH = 3
