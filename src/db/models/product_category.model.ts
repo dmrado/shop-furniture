@@ -21,7 +21,7 @@ ProductCategoryModel.init(
             },
             primaryKey: true, // Составной первичный ключ
             onUpdate: 'RESTRICT',
-            onDelete: 'RESTRICT',
+            onDelete: 'CASCADE',
         },
         categoryId: {
             type: DataTypes.INTEGER,
@@ -31,7 +31,7 @@ ProductCategoryModel.init(
             },
             primaryKey: true, // Составной первичный ключ
             onUpdate: 'RESTRICT',
-            onDelete: 'RESTRICT',
+            onDelete: 'CASCADE',
         },
     },
     {

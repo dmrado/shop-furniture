@@ -131,6 +131,7 @@ const Header = () => {
                             {hoveredItem === item.name && (
                                 <div className="absolute left-0 mt-0 w-48 bg-[#222] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                     {item.subItems.map((subItem) => (
+                                        // fixme   ВОТ ЭТОТ ВЛОЖЕННЫЙ Link ВЫЗЫВАЕТ ОШИБКУ гидрации как а внутри Link
                                         <Link
                                             key={subItem}
                                             href={`/${subItem.toLowerCase()}`}
@@ -379,41 +380,3 @@ const Header = () => {
 }
 
 export default Header
-
-const NavSocials = () => {
-    return (
-        <>
-            <div className="menu" id="menu">
-                <ul className="flex items-center list-none p-0 m-0 absolute -translate-y-[110%] gap-1.5">
-                    <li className="flex justify-center items-center m-0 mr-0 bg-white w-[47px] h-[47px] rounded-full">
-                        <Link
-                            className="flex justify-center items-center m-0 menu__link mr-5"
-                            target="_blank"
-                            href="https://t.me/+79146520955"
-                        >
-                            {/*<i className="fa-brands fa-telegram" />*/}
-                        </Link>
-                    </li>
-                    <li className="mr-0 bg-white w-[47px] h-[47px] rounded-full">
-                        <Link
-                            className="menu__link"
-                            target="_blank"
-                            href="https://api.whatsapp.com/send/?phone=79242693005"
-                        >
-                            {/*<i className="fa-brands fa-square-whatsapp" />*/}
-                        </Link>
-                    </li>
-                    <li className="mr-0 bg-white w-[47px] h-[47px] rounded-full">
-                        <Link
-                            className="menu__link"
-                            target="_blank"
-                            href="https://www.youtube.com/@Stranger-pilgrim"
-                        >
-                            {/*<i className="fa-brands fa-square-youtube"></i>*/}
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-        </>
-    )
-}

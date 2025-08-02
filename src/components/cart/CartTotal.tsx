@@ -1,7 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import CartTotalAmount from '@/components/cart/CartTotalAmount'
-import { useCartContext } from '@/components/cart/CartContext'
+import {useCartContext} from '@/components/cart/CartContext'
 import Link from 'next/link'
 
 // interface Product {
@@ -108,7 +108,11 @@ const CartTotal = () => {
                         </label>
                         <button
                             className="px-4 py-2 rounded transition-all duration-200 text-red-600 hover:bg-red-50 active:bg-red-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
-                            onClick={deleteSelectedCartRows}
+                            onClick={() => {
+                                if (confirm('Вы уверены, что хотите удалить выбранные?')) {
+                                    deleteSelectedCartRows()
+                                }
+                            }}
                             disabled={selectedItems.size === 0}
                         >
                             <span

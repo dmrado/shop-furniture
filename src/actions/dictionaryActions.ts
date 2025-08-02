@@ -7,8 +7,7 @@ import { StyleModel } from '@/db/models/style.model.ts'
 import { ColorModel } from '@/db/models/color.model.ts'
 import { MaterialModel } from '@/db/models/material.model.ts'
 import { DictionaryItem } from '@/db/types/common-types'
-import { revalidatePath, unstable_noStore as noStore } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 type BrandPayload = {
     id?: number // Опционально для обновления
@@ -18,7 +17,6 @@ type BrandPayload = {
 
 // Функция для получения всех активных брендов
 export async function getBrands() {
-    noStore()
     const brands = await BrandModel.findAll({
         where: { isActive: true },
         // attributes: [ 'id', 'name', 'description' ],
@@ -82,6 +80,14 @@ export async function updateBrand(formData: FormData) {
         throw new Error('Не удалось обновить бренд.')
     }
 }
+
+export async function removeBrand(id: number) {
+    'use server'
+    await BrandModel.destroy({ where: { id } })
+    revalidatePath('/admin/brands')
+    // redirect('/admin/products')
+}
+
 
 // Функция для получения всех активных коллекций
 export async function getCollections() {

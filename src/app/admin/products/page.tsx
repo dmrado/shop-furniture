@@ -30,9 +30,11 @@ interface ProductsManagementPageProps {
 }
 
 const ProductsManagementPage = async ({ searchParams }: ProductsManagementPageProps) => {
-
+    console.log('SERVER: ProductsManagementPage received searchParams:', searchParams);
     // 1. Извлечение и преобразование параметров из URL
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
+    console.log('SERVER: ProductsManagementPage calculated currentPage:', currentPage);
+
     const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
     const brandId = searchParams.brand ? parseInt(searchParams.brand, 10) : undefined
@@ -85,6 +87,7 @@ const ProductsManagementPage = async ({ searchParams }: ProductsManagementPagePr
                 itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
                 totalProductsCount={totalProductsCount} // Передаем общее количество отфильтрованных продуктов
                 currentPage={currentPage} // Передаем текущую страницу
+                key={currentPage}
             />
         </div>
     </>)

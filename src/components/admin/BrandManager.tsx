@@ -2,16 +2,17 @@
 
 import React, { useState } from 'react'
 import { DictionaryItem } from '@/db/types/common-types' // Предполагаем, что этот тип у вас есть
-import { createBrand, updateBrand } from '@/actions/dictionaryActions' // Импортируем actions
+import { createBrand, removeBrand, updateBrand } from '@/actions/dictionaryActions' // Импортируем actions
 import Modal from '@/components/ui/Modal' // Вам понадобится компонент модального окна
-import {usePathname, useRouter, useSearchParams} from 'next/navigation' // Для router.refresh()
+import { usePathname, useRouter, useSearchParams } from 'next/navigation' // Для router.refresh()
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
-import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper"; // <-- ИМПОРТ ИКОНОК
+import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper' // <-- ИМПОРТ ИКОНОК
 
 // Пропсы для компонента
 type BrandManagementClientProps = {
     initialBrands: DictionaryItem[]
-    removeBrand: (id: number) => Promise<void> // Функция удаления передается из Server Component
+    itemsPerPage: number
+    currentPage: number
 }
 
 // Интерфейс для формы бренда
@@ -21,8 +22,10 @@ interface BrandFormState {
     description: string;
 }
 
-const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProps) => {
+const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: BrandManagementClientProps) => {
     const router = useRouter()
+    const path = usePathname()
+    const searchParams = useSearchParams()
 
     const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands) // Состояние для брендов
     const [ showModal, setShowModal ] = useState(false) // Состояние для модального окна
@@ -30,6 +33,13 @@ const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProp
 
     //для подсчета символов в description
     const [ descriptionCharCount, setDescriptionCharCount ] = useState(0)
+
+    // для пагинации
+    const pageCount = Math.ceil(totalCount / itemsPerPage)
+
+    // Для модального окна подтверждения удаления
+    const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState(false)
+    const [ brandToDelete, setBrandToDelete ] = useState<DictionaryItem | null>(null)
 
     // Функция для обновления счетчика символов при изменении textarea
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,6 +79,27 @@ const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProp
         }
     }
 
+    // Показать модальное окно подтверждения
+    const handleDeleteClick = (brand: DictionaryItem) => {
+        setBrandToDelete(brand)
+        setShowConfirmDeleteModal(true)
+    }
+
+    // Выполнить удаление после подтверждения
+    const handleConfirmDelete = async () => {
+        if (brandToDelete?.id) {
+            try {
+                // Вызываем Server Action напрямую
+                await removeBrand(brandToDelete.id)
+                setShowConfirmDeleteModal(false) // Закрываем модалку подтверждения
+                setBrandToDelete(null) // Очищаем выбранный бренд
+                router.refresh() // Обновляем список
+            } catch (error: any) {
+                console.error('Ошибка при удалении бренда:', error)
+                alert(`Ошибка при удалении: ${error.message}`)
+            }
+        }
+    }
 
     const handlePageChange = (selectedPage: { selected: number }) => {
         const newPage = selectedPage.selected + 1 // ReactPaginate 0-индексирован, нам нужен 1-индексированный номер страницы
@@ -101,6 +132,15 @@ const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProp
             >
                 Добавить новый бренд
             </button>
+            {/*{pageCount > 1 && (*/}
+            <div className="my-6">
+                <ReactPaginateWrapper
+                    pages={pageCount} // Передаем ВЫЧИСЛЕННОЕ pageCount
+                    currentPage={currentPage} // Передаем currentPage, который пришел с сервера
+                    onPageChange={handlePageChange}
+                />
+            </div>
+            {/*)}*/}
 
             {/* Список брендов в виде карточек */}
             <div
@@ -127,15 +167,10 @@ const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProp
                                     className={brandActionButtonStyle}
                                 >
                                     <PencilIcon className="h-4 w-4 mr-1"/>
-                                                Редактировать
+                                    Редактировать
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        if (confirm(`Вы уверены, что хотите удалить бренд "${brand.name}"?`)) {
-                                            removeBrand(brand.id!)
-                                            router.refresh()
-                                        }
-                                    }}
+                                    onClick={() => handleDeleteClick(brand)}
                                     className={brandDeleteButtonStyle}
                                 >
                                     <TrashIcon className="h-4 w-4 mr-1"/>
@@ -213,6 +248,39 @@ const BrandManager = ({ initialBrands, removeBrand, }: BrandManagementClientProp
                             </button>
                         </div>
                     </form>
+                </Modal>
+            )}
+
+            {/* НОВОЕ: Модальное окно подтверждения удаления */}
+            {showConfirmDeleteModal && brandToDelete && (
+                <Modal onClose={() => {
+                    setShowConfirmDeleteModal(false)
+                    setBrandToDelete(null)
+                }}>
+                    <h3 className="text-xl font-bold mb-4 text-red-700">Подтвердите удаление</h3>
+                    <p className="mb-6 text-gray-700">
+                        Вы уверены, что хотите удалить бренд "<span className="font-semibold">{brandToDelete.name}</span>"?
+                        Это действие нельзя отменить.
+                    </p>
+                    <div className="flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowConfirmDeleteModal(false)
+                                setBrandToDelete(null)
+                            }}
+                            className="button_blue px-4 py-2"
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            type="button" // Важно: type="button", чтобы не отправлять форму случайно
+                            onClick={handleConfirmDelete}
+                            className="button_red px-4 py-2"
+                        >
+                            Да, удалить
+                        </button>
+                    </div>
                 </Modal>
             )}
         </div>

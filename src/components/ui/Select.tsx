@@ -1,6 +1,6 @@
 'use client'
-import React from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useId } from 'react'
+// import { v4 as uuidv4 } from 'uuid' // вызывает проблему гидрации из-за несовпадения динамически генерируемых идентификаторов
 
 export type Option = {
     value: string
@@ -22,7 +22,8 @@ const Select = ({
     placeHolder,
     label = ''
 }: Props) => {
-    const selectId = uuidv4()
+    // const selectId = uuidv4()
+    const selectId = useId()
     return (
         <div>
             <label

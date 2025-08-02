@@ -4,17 +4,12 @@ import { revalidatePath } from 'next/cache'
 
 import BrandManager from '@/components/admin/BrandManager'
 import Title from '@/components/site/Title'
-import {NUMBER_OF_PRODUCTS_TO_FETCH} from "@/app/constants";
+import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants'
 
-async function removeBrand(id: number) {
-    'use server'
-    await BrandModel.destroy({ where: { id } })
-    revalidatePath('/admin/brands')
-    // redirect('/admin/products')
-}
-const BrandsManagementPage = async ({}) => {
+const BrandsManagementPage = async ({ searchParams }) => {
 
-
+    const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
+    const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
     const brands = await getBrands()
 
@@ -22,8 +17,8 @@ const BrandsManagementPage = async ({}) => {
         <Title title="Управление брендами" />
         <BrandManager
             initialBrands={brands}
-            removeBrand={removeBrand} // Передаем Server Action как пропс
-
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
         />
     </>
 
