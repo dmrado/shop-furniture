@@ -2,9 +2,13 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { handleForm } from '@/actions/handleForm.ts'
-// import { getBrands, getCollections, getCountries, getStyles } from '@/actions/dictionaryActions.ts'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import { ProductDTO } from '@/db/models/product.model.ts'
+import { getBrands } from '@/actions/dictionaryActions'
+import Modal from '@/components/ui/Modal'
+import BrandFormModalContent from '@/components/admin/BrandFormModalContent'
+import { PencilIcon } from '@heroicons/react/24/outline'
+import { PlusIcon } from '@heroicons/react/16/solid'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
@@ -35,6 +39,14 @@ type ProductFormProps = {
 type DictionaryItem = {
     id: number
     name: string
+}
+
+// тип для BrandFormState, если его нет в ProductForm
+type BrandFormState = {
+    id?: number
+    name: string
+    description: string
+    isActive: boolean
 }
 
 const ProductForm = ({
@@ -73,6 +85,22 @@ const ProductForm = ({
     const [ touchedName, setTouchedName ] = useState(false)
     const [ isFileSizeError, setFileSizeError ] = useState(false)
 
+    //для модального окна
+    const [ showBrandModal, setShowBrandModal ] = useState(false)
+    // Для передачи данных в модалку при редактировании
+    const [ currentBrandForEdit, setCurrentBrandForEdit ] = useState<BrandFormState | null>(null)
+
+    // Функция для перезагрузки списка брендов
+    const refreshBrands = async () => {
+        try {
+            const updatedBrands = await getBrands() // Вызываем серверный экшен для получения обновленных данных
+            setBrands(updatedBrands) // Обновляем состояние
+            // Возможно, также нужно установить product.brandId, если созданный бренд должен быть выбран автоматически
+        } catch (error) {
+            console.error('Ошибка при обновлении списка брендов:', error)
+        }
+    }
+
     // useEffect для установки начальных значений или обновления при смене product
     useEffect(() => {
         setName(product?.name || '')
@@ -95,7 +123,7 @@ const ProductForm = ({
     }, [ product, brands, collections, countries, styles ]) // Зависимость от product и initial-справочников
 
     const onSubmit = async (formData: FormData) => {
-        try{
+        try {
             await handleForm(formData)
             if (onSuccess) { // Проверка для TS опциональной функции
                 onSuccess() // Вызываем переданный колбэк при успехе
@@ -130,7 +158,7 @@ const ProductForm = ({
         ))
     }
 
-    return (
+    return (<>
         <form className="bg-white rounded px-1 pt-6 pb-8" action={onSubmit}>
             {/* ID продукта - скрытое поле, если редактируем */}
             <input hidden type="number" name="id" value={product?.id || ''} readOnly/>
@@ -165,64 +193,134 @@ const ProductForm = ({
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">
                         Бренд:
                     </label>
-                    <select
-                        name="brandId"
-                        id="brandId"
-                        value={brandId}
-                        onChange={(e) => setBrandId(Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                        <option value="">Выберите бренд</option>
-                        {renderOptions(brands)}
-                    </select>
+                    <div
+                        className="flex items-center gap-2"> {/* контейнер select + button+добавить + button+редактировать */}
+                        <select
+                            name="brandId"
+                            id="brandId"
+                            value={brandId}
+                            onChange={(e) => setBrandId(Number(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="">Выберите бренд</option>
+                            {renderOptions(brands)}
+                        </select>
+
+                        {/* Кнопка "Добавить" с PlusIcon */}
+                        <button
+                            type="button"
+                            className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                            onClick={() => {
+                                setCurrentBrandForEdit(null) // Сбрасываем для создания нового
+                                setShowBrandModal(true)
+                            }}
+                            title="Добавить новый бренд" // Подсказка при наведении
+                        >
+                            <PlusIcon className="h-5 w-5"/> {/* Иконка плюса */}
+                        </button>
+
+                        {/* Кнопка "Редактировать" с PencilIcon */}
+                        {/* Убедитесь, что brandId выбран, прежде чем отображать кнопку редактирования */}
+                        {brandId ? ( // Показываем кнопку редактирования только если что-то выбрано
+                            <button
+                                type="button"
+                                className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                                onClick={() => {
+                                    const selectedBrand = brands.find(b => b.id === brandId)
+                                    if (selectedBrand) {
+                                        setCurrentBrandForEdit({
+                                            id: selectedBrand.id,
+                                            name: selectedBrand.name,
+                                            description: selectedBrand?.description, // Вам нужно будет получить полное описание из базы данных
+                                            // если вы хотите его редактировать.
+                                            // Возможно, getBrandById server action
+                                            isActive: selectedBrand?.isActive
+                                        })
+                                        setShowBrandModal(true)
+                                    }
+                                }}
+                                title="Редактировать выбранный бренд" // Подсказка при наведении
+                            >
+                                <PencilIcon className="h-5 w-5"/> {/* Иконка карандаша */}
+                            </button>
+                        ) : null} {/* Если бренд не выбран, кнопку не показываем */}
+
+                    </div>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
                         Коллекция:
                     </label>
-                    <select
-                        name="collectionId"
-                        id="collectionId"
-                        value={collectionId}
-                        onChange={(e) => setCollectionId(Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                        <option value="">Выберите коллекцию</option>
-                        {renderOptions(collections)}
-                    </select>
+                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
+                        <select
+                            name="collectionId"
+                            id="collectionId"
+                            value={collectionId}
+                            onChange={(e) => setCollectionId(Number(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="">Выберите коллекцию</option>
+                            {renderOptions(collections)}
+                        </select>
+                        <button
+                            type="button"
+                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
+                            onClick={() => console.log('Add collection')}
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
                         Страна:
                     </label>
-                    <select
-                        name="countryId"
-                        id="countryId"
-                        value={countryId}
-                        onChange={(e) => setCountryId(Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                        <option value="">Выберите страну</option>
-                        {renderOptions(countries)}
-                    </select>
+                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
+                        <select
+                            name="countryId"
+                            id="countryId"
+                            value={countryId}
+                            onChange={(e) => setCountryId(Number(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="">Выберите страну</option>
+                            {renderOptions(countries)}
+                        </select>
+                        <button
+                            type="button"
+                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
+                            onClick={() => console.log('Add country  clicked')}
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
                         Стиль:
                     </label>
-                    <select
-                        name="styleId"
-                        id="styleId"
-                        value={styleId}
-                        onChange={(e) => setStyleId(Number(e.target.value))}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                        <option value="">Выберите стиль</option>
-                        {renderOptions(styles)}
-                    </select>
+                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
+                        <select
+                            name="styleId"
+                            id="styleId"
+                            value={styleId}
+                            onChange={(e) => setStyleId(Number(e.target.value))}
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        >
+                            <option value="">Выберите стиль</option>
+                            {renderOptions(styles)}
+                        </select>
+                        <button
+                            type="button"
+                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
+                            onClick={() => console.log('Add countryId  clicked')}
+                        >
+                            +
+                        </button>
+                    </div>
                 </div>
 
                 {/* Поле 'articul' */}
@@ -346,7 +444,19 @@ const ProductForm = ({
                 )}
             </div>
         </form>
-    )
+        {showBrandModal && (
+            <Modal onClose={() => {
+                setShowBrandModal(false)
+                // Сброс счетчика символов описания должен быть в BrandFormModalContent
+            }}>
+                <BrandFormModalContent
+                    onClose={() => setShowBrandModal(false)} // Пропс для закрытия модалки
+                    onSuccess={refreshBrands} // Вызываем refreshBrands при успешном добавлении/обновлении
+                    initialData={currentBrandForEdit} // Передаем данные для редактирования
+                />
+            </Modal>
+        )}
+    </>)
 }
 
 export default ProductForm

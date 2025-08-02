@@ -15,11 +15,19 @@ type BrandPayload = {
     slug?: string // Предполагаем, что slug может генерироваться или быть необязательным
 }
 
+// Вспомогательная функция для преобразования 'on'/null в boolean
+// function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
+//     // Чекбокс возвращает 'on' если отмечен, и null/undefined если не отмечен
+//     return value === 'true' || value === 'on' // Предполагаем, что вы передаете 'true'/'false' или 'on'
+// }
+
+
+
 // Функция для получения всех активных брендов
 export async function getBrands() {
     const brands = await BrandModel.findAll({
         where: { isActive: true },
-        // attributes: [ 'id', 'name', 'description' ],
+        attributes: ['id', 'name', 'description', 'isActive'],
         order: [ [ 'name', 'ASC' ] ],
     })
     return brands.map(brand => brand.toJSON()) as DictionaryItem[]
@@ -28,6 +36,8 @@ export async function getBrands() {
 export async function createBrand(formData: FormData) {
     const name = formData.get('name') as string
     const description = formData.get('description') as string
+    // const isActive = parseBooleanFromFormData(formData.get('isActive'))
+
 
     if (!name || name.trim().length < 2) {
         throw new Error('Название бренда должно быть не менее 2 символов.')
@@ -53,6 +63,7 @@ export async function updateBrand(formData: FormData) {
     const id = Number(formData.get('id'))
     const name = formData.get('name') as string
     const description = formData.get('description') as string
+    // const isActive = parseBooleanFromFormData(formData.get('isActive'))
 
     if (!id) {
         throw new Error('ID бренда отсутствует для обновления.')

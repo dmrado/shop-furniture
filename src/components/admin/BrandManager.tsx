@@ -182,7 +182,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                 )}
             </div>
 
-            {/* Модальное окно без изменений */}
+            {/* Модальное окно добавления редактирования */}
             {showModal && (
                 <Modal onClose={() => {
                     setShowModal(false)
