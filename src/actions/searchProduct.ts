@@ -3,7 +3,6 @@
 import { Op } from 'sequelize'
 import { ProductModel, ProductDTO } from '@/db/models/product.model'
 import { ProductVariantModel } from '@/db/models/product_variant.model' // Убедитесь, что импорт есть
-import { revalidatePath } from 'next/cache' // Может не понадобиться, если только читаем
 
 interface GetProductListFilters {
     brandId?: number
@@ -18,7 +17,7 @@ export async function getProductList(
     page: number = 1,
     limit: number = 10,
     filters: GetProductListFilters = {}
-): Promise<{ products: ProductDTO[], totalCount: number }> {
+): Promise<{ products: ProductDTO[]; totalCount: number }> {
     try {
         const offset = (page - 1) * limit
         const whereConditions: any = {}
@@ -39,15 +38,14 @@ export async function getProductList(
         }
 
         // 2. Добавляем условия поиска по nameQuery и articulQuery
-        // Мы будем использовать OR-условие на верхнем уровне,
-        // чтобы продукт находился, если он соответствует ЛЮБОМУ из поисковых критериев.
+        // Мы будем использовать OR-условие на верхнем уровне, чтобы продукт находился, если он соответствует ЛЮБОМУ из поисковых критериев.
         const searchConditions: any[] = []
 
         if (filters.nameQuery) {
             searchConditions.push({
                 name: {
-                    [Op.like]: `%${filters.nameQuery}%`,
-                },
+                    [Op.like]: `%${filters.nameQuery}%`
+                }
             })
         }
 
@@ -55,8 +53,8 @@ export async function getProductList(
             // Условие для поиска по артикулу самого продукта
             searchConditions.push({
                 articul: {
-                    [Op.like]: `%${filters.articulQuery}%`,
-                },
+                    [Op.like]: `%${filters.articulQuery}%`
+                }
             })
 
             // Условие для поиска по артикулу в ProductVariantModel
@@ -66,8 +64,8 @@ export async function getProductList(
             // `'$variants.articul$'` позволяет обращаться к полю связанной таблицы.
             searchConditions.push({
                 '$variants.articul$': {
-                    [Op.like]: `%${filters.articulQuery}%`,
-                },
+                    [Op.like]: `%${filters.articulQuery}%`
+                }
             })
 
             // Добавляем ProductVariantModel в include, если ищем по артикулу варианта
@@ -75,14 +73,17 @@ export async function getProductList(
                 model: ProductVariantModel,
                 as: 'variants', // Важно: используйте тот же alias, что и в вашей ассоциации
                 attributes: [], // Не выбираем данные вариантов в конечный результат
-                required: false, // LEFT JOIN
+                required: false // LEFT JOIN
             })
         }
 
         const finalWhereConditions = {}
         // 3. Комбинируем все условия:
         // Если есть и основные фильтры, и поисковые запросы находим продукт, если его название совпадает (частично) ИЛИ его собственный артикул совпадает (частично) ИЛИ артикул его варианта совпадает (частично)
-        if (Object.keys(whereConditions).length > 0 && searchConditions.length > 0) {
+        if (
+            Object.keys(whereConditions).length > 0 &&
+            searchConditions.length > 0
+        ) {
             // Условия будут: (основные фильтры) И (поиск1 ИЛИ поиск2 ИЛИ поиск3)
             finalWhereConditions[Op.and] = [
                 whereConditions, // Ваши brandId, collectionId и т.д.
@@ -99,7 +100,7 @@ export async function getProductList(
             include: includeConditions,
             limit: limit,
             offset: offset,
-            order: [ [ 'createdAt', 'DESC' ] ],
+            order: [['createdAt', 'DESC']],
             // attributes: ['id', 'name', 'descriptionShort', 'isNew'],
             // Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантов
             // и получить правильный totalCount.
@@ -108,9 +109,14 @@ export async function getProductList(
             subQuery: false //Sequelize будет генерировать SQL-запрос без подзапросов для подсчета общего количества (count), что в некоторых случаях также влияет на корректность объединения таблиц и доступность полей в основном WHERE условии для MySQL.
         })
 
-        return { products: products.map(p => p.toJSON() as ProductDTO), totalCount: count }
+        return {
+            products: products.map((p) => p.toJSON() as ProductDTO),
+            totalCount: count
+        }
     } catch (error: any) {
         console.error('Ошибка в getProductList:', error)
-        throw new Error(`Не удалось получить список продуктов: ${error.message}`)
+        throw new Error(
+            `Не удалось получить список продуктов: ${error.message}`
+        )
     }
 }
