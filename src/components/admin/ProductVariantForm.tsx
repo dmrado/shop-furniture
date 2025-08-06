@@ -433,7 +433,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
                 <button
                     disabled={!isArticulValid()}
                     className={buttonStyle()}
-                    type="submit">Записать
+                    type="submit">Записать ✅
                 </button>
                 {productVariant && ( // Показываем кнопку "Отмена" только если productVariant передан (т.е. в режиме редактирования)
                     <button
@@ -441,7 +441,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
                         onClick={onCancel}
                         className="button_red ml-4"
                     >
-                        Отмена
+                        Отмена 🚫
                     </button>
                 )}
             </div>

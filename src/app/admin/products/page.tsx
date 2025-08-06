@@ -106,7 +106,7 @@ const ProductsManagementPage = async ({
                     itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
                     totalProductsCount={totalProductsCount} // Передаем общее количество отфильтрованных продуктов
                     currentPage={currentPage} // Передаем текущую страницу
-                    key={currentPage}
+                    // key={currentPage}
                 />
             </div>
         </>

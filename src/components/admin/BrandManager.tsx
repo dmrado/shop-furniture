@@ -134,7 +134,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                 onClick={handleAddClick}
                 className="button_green mb-6 px-5 py-2"
             >
-                Добавить новый бренд
+                Добавить новый бренд 👈
             </button>
 
             {/*fixme не работает*/}
@@ -260,13 +260,13 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                                 }} // Сброс счетчика и закрытие
                                 className="button_red px-4 py-2"
                             >
-                                Отмена
+                                Отмена 🚫
                             </button>
                             <button
                                 type="submit"
                                 className="button_green px-4 py-2"
                             >
-                                {currentBrand ? 'Сохранить изменения' : 'Создать бренд'}
+                                {currentBrand ? 'Сохранить изменения' : 'Создать бренд'} ✅
                             </button>
                         </div>
                     </form>
@@ -283,7 +283,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                     <p className="mb-6 text-gray-700">
                         Вы уверены, что хотите удалить бренд "<span
                             className="font-semibold">{brandToDelete.name}</span>"?
-                        Это действие нельзя отменить.
+                        Это действие нельзя отменить. 💡
                     </p>
                     <div className="flex justify-end gap-3">
                         <button
@@ -294,7 +294,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                             }}
                             className="button_blue px-4 py-2"
                         >
-                            Отмена
+                            Отмена 🚫
                         </button>
                         <button
                             type="button" // Важно: type="button", чтобы не отправлять форму случайно

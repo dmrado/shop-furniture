@@ -214,7 +214,7 @@ const ProductForm = ({
                     maxLength={180}
                 />
                 {!isNameValid() &&
-                    <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
+                    <span style={{color: 'red'}}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
             </div>
 
             {/* Контейнер для полей в три колонки на md и выше */}
@@ -459,16 +459,16 @@ const ProductForm = ({
                     Изображение товара:
                 </label>
                 <input type='file' name='product_picture' id='product_picture'
-                    accept={IMAGE_TYPES.join(',')}
-                    onChange={(e) => {
-                        if (!e.target.files) return
-                        const fileSize = e.target?.files[0]?.size
-                        setFileSizeError(fileSize > FILE_LIMIT)
-                    }}
+                       accept={IMAGE_TYPES.join(',')}
+                       onChange={(e) => {
+                           if (!e.target.files) return
+                           const fileSize = e.target?.files[0]?.size
+                           setFileSizeError(fileSize > FILE_LIMIT)
+                       }}
                 />
-                {isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}
+                {isFileSizeError && <span style={{color: 'red'}}>Размер файла слишком большой.</span>}
                 <label htmlFor="product_picture"
-                    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
+                       className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
                     .tiff, .heic</label>
             </div>
 
@@ -476,7 +476,7 @@ const ProductForm = ({
                 <button
                     disabled={!isNameValid() || isFileSizeError} // Валидация по имени и размеру файла
                     className={buttonStyle()}
-                    type="submit">Записать
+                    type="submit">Записать ✅
                 </button>
                 {product && ( // Добавляем кнопку отмены только если редактируем
                     <button
@@ -484,7 +484,7 @@ const ProductForm = ({
                         onClick={onCancel}
                         className="button_red ml-4"
                     >
-                        Отмена
+                        Отмена 🚫
                     </button>
                 )}
             </div>

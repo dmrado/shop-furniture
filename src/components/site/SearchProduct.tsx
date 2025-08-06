@@ -38,6 +38,36 @@ const SearchProduct = ({
         setArticulSearchTerm(searchParams.get(articulQueryKey) || '')
     }, [ searchParams, queryKey, articulQueryKey ])
 
+    // Объединенный useEffect URL обновляется только один раз, когда пользователь перестаёт вводить текст в любом из полей заменяет два нижних отдельных но он вообще ломает пагинацию строкой current.delete('page')
+    // useEffect(() => {
+    //     const handler = setTimeout(() => {
+    //         const current = new URLSearchParams(searchParams.toString())
+    //
+    //         // Обновляем параметр поиска по названию
+    //         if (nameSearchTerm) {
+    //             current.set(queryKey, nameSearchTerm)
+    //         } else {
+    //             current.delete(queryKey)
+    //         }
+    //
+    //         // Обновляем параметр поиска по артикулу
+    //         if (articulSearchTerm) {
+    //             current.set(articulQueryKey, articulSearchTerm)
+    //         } else {
+    //             current.delete(articulQueryKey)
+    //         }
+    //
+    //         // Сбрасываем на первую страницу при любом изменении поиска
+    //         current.delete('page')
+    //
+    //         router.push(`${pathname}?${current.toString()}`)
+    //     }, debounceTime)
+    //
+    //     return () => {
+    //         clearTimeout(handler)
+    //     }
+    // }, [ nameSearchTerm, articulSearchTerm, debounceTime, router, pathname, searchParams, queryKey, articulQueryKey ])
+
     // Эффект для debounce-поиска по названию
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -47,7 +77,7 @@ const SearchProduct = ({
             } else {
                 current.delete(queryKey)
             }
-            current.delete('page') // Сбрасываем на первую страницу при любом изменении поиска
+            current.delete('page') // Сбрасываем на первую страницу при любом изменении поиска именно здесь оставляем
             router.push(`${pathname}?${current.toString()}`)
         }, debounceTime)
 
@@ -65,7 +95,7 @@ const SearchProduct = ({
             } else {
                 current.delete(articulQueryKey)
             }
-            current.delete('page') // Сбрасываем на первую страницу при любом изменении поиска
+            //current.delete('page') // fixme Сбрасываем на первую страницу при любом изменении поиска надо ли именно из за это строки пагинация перелетает на первую страницу все время?
             router.push(`${pathname}?${current.toString()}`)
         }, debounceTime)
 

@@ -152,14 +152,14 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                         className="button_red px-4 py-2"
                         disabled={isLoading}
                     >
-                        Отмена
+                        Отмена 🚫
                     </button>
                     <button
                         type="submit"
                         className="button_green px-4 py-2"
                         disabled={isLoading}
                     >
-                        {initialData ? 'Сохранить изменения' : 'Создать бренд'}
+                        {initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅
                     </button>
                 </div>
             </form>
