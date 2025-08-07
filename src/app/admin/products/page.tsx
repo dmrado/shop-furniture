@@ -1,10 +1,10 @@
 import React from 'react'
-import HeaderButtons from '@/components/admin/HeaderButtons.tsx'
+import HeaderButtons from '@/components/admin/HeaderButtons'
 import { ProductModel } from '@/db/models/product.model'
 import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
-import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants.ts'
+import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants'
 import { revalidatePath } from 'next/cache'
-import { getProductList } from '@/actions/searchProductsExperimental'
+import { getProductList } from '@/actions/searchProducts'
 import {
     getActiveBrands,
     getCollections,

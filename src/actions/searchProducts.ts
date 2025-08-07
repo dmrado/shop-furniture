@@ -47,13 +47,13 @@ export async function getProductList(
                 }
             })
 
-            // `'$variants.articul$'` позволяет обращаться к полю связанной таблицы.
+            // `'$variants.articul$'` позволяет обращаться к полю связанной таблицы. используем LEFT JOIN (`required: false`), чтобы продукты, у которых нет вариантов или совпадающих вариантов, не отфильтровывались, если они соответствуют другим условиям поиска (например, по названию).
             searchConditions.push({
                 '$variants.articul$': {
                     [Op.like]: `%${filters.articulQuery}%`
                 }
             })
-            //Добавляеем ProductVariantModel в include если ищем по артикулу варианта
+            //Добавляем ProductVariantModel в include если ищем по артикулу варианта
             includeConditions.push({
                 model: ProductVariantModel,
                 as: 'variants',
@@ -61,14 +61,14 @@ export async function getProductList(
                 required: false
             })
         }
-        //комбинируем все условия для окончательного объекта where
+        //комбинируем все условия для окончательного объекта where Если есть и основные фильтры, и поисковые запросы находим продукт, если его название совпадает (частично) ИЛИ его собственный артикул совпадает (частично) ИЛИ артикул его варианта совпадает (частично)
         let finalWhereConditions: any = baseWhereConditions
         if (searchConditions.length > 0) {
             if (Object.keys(baseWhereConditions).length > 0) {
                 finalWhereConditions = {
-                    [Op.or]: [
+                    [Op.and]: [
                         baseWhereConditions,
-                        { [Op.or]: searchConditions }
+                        { [Op.or]: searchConditions } // nameQuery, articulQuery (для Product) и articulQuery (для ProductVariant)
                     ]
                 }
             } else {
@@ -85,8 +85,7 @@ export async function getProductList(
             offset: offset,
             order: [['createdAt', 'DESC']],
             // attributes: ['id', 'name', 'descriptionShort', 'isNew'],
-            // Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантови получить правильный totalCount.
-            distinct: true,
+            distinct: true, // Возвращает только уникальные строки. Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантови получить правильный totalCount.
             col: 'id', // Считать уникальные продукты по их ID
             subQuery: false //Sequelize будет генерировать SQL-запрос без подзапросов для подсчета общего количества (count), что в некоторых случаях также влияет на корректность объединения таблиц и доступность полей в основном WHERE условии для MySQL.
         })

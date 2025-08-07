@@ -19,6 +19,7 @@ type ProductVariantManagerProps = {
     initialVariants: any[] // Варианты, переданные с сервера (уже сериализованные)
     productId: number // ID продукта, к которому относятся варианты
     allColors: ColorItem[]
+    itemsPerPage: number
 }
 
 const ProductVariantManager = ({
