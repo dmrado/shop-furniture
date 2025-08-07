@@ -23,9 +23,9 @@ export async function getProductList(
 
         const baseWhereConditions = {
             ...(filters.brandId && { brandId: filters.brandId }),
-            ...(filters.collectionId && { brandId: filters.collectionId }),
-            ...(filters.countryId && { brandId: filters.countryId }),
-            ...(filters.styleId && { brandId: filters.styleId })
+            ...(filters.collectionId && { collectionId: filters.collectionId }),
+            ...(filters.countryId && { countryId: filters.countryId }),
+            ...(filters.styleId && { styleId: filters.styleId })
         }
 
         //Условия поиска по nameQuery и articulQuery
