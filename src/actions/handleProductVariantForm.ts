@@ -26,7 +26,9 @@ interface ProductVariantFormData {
     quantity: number // НОВОЕ ПОЛЕ: количество
 }
 
-const cleanProductVariantFormData = (formData: FormData): ProductVariantFormData => {
+const cleanProductVariantFormData = (
+    formData: FormData
+): ProductVariantFormData => {
     const id = formData.get('id') ? Number(formData.get('id')) : undefined
     const isActive = formData.get('isActive') === 'true'
     const articul = formData.get('articul') as string
@@ -65,7 +67,6 @@ const cleanProductVariantFormData = (formData: FormData): ProductVariantFormData
     const price = Number(formData.get('price'))
     const quantity = Number(formData.get('quantity')) // НОВОЕ: quantity
 
-
     return {
         id,
         isActive,
@@ -82,61 +83,73 @@ const cleanProductVariantFormData = (formData: FormData): ProductVariantFormData
         box_weight,
         weight,
         price,
-        quantity, // НОВОЕ: quantity
+        quantity // НОВОЕ: quantity
     }
 }
 
 export async function handleProductVariantForm(formData: FormData) {
-    try {
-        const parsedData = cleanProductVariantFormData(formData)
+    // try {
+    const parsedData = cleanProductVariantFormData(formData)
 
-        // Объект upsertData теперь включает все новые поля
-        const upsertData = {
-            id: parsedData.id,
-            isActive: parsedData.isActive,
-            articul: parsedData.articul,
-            productId: parsedData.productId,
-            colorId: parsedData.colorId,
-            materialId: parsedData.materialId, // НОВОЕ: materialId
-            length: parsedData.length,
-            width: parsedData.width,
-            height: parsedData.height,
-            box_length: parsedData.box_length,
-            box_width: parsedData.box_width, // НОВОЕ: box_width
-            box_height: parsedData.box_height,
-            box_weight: parsedData.box_weight,
-            weight: parsedData.weight,
-            price: parsedData.price,
-            quantity: parsedData.quantity, // НОВОЕ: quantity
-        }
+    // Объект upsertData теперь включает все новые поля
+    const upsertData = {
+        id: parsedData.id,
+        isActive: parsedData.isActive,
+        articul: parsedData.articul,
+        productId: parsedData.productId,
+        colorId: parsedData.colorId,
+        materialId: parsedData.materialId, // НОВОЕ: materialId
+        length: parsedData.length,
+        width: parsedData.width,
+        height: parsedData.height,
+        box_length: parsedData.box_length,
+        box_width: parsedData.box_width, // НОВОЕ: box_width
+        box_height: parsedData.box_height,
+        box_weight: parsedData.box_weight,
+        weight: parsedData.weight,
+        price: parsedData.price,
+        quantity: parsedData.quantity // НОВОЕ: quantity
+    }
 
-        // Проверка существования внешних ключей
-        const productExists = await ProductModel.findByPk(parsedData.productId)
-        if (!productExists) {
-            throw new Error(`Product with ID ${parsedData.productId} does not exist.`)
-        }
+    // Проверка существования внешних ключей
+    const productExists = await ProductModel.findByPk(parsedData.productId)
+    if (!productExists) {
+        throw new Error(
+            `Product with ID ${parsedData.productId} does not exist.`
+        )
+    }
 
-        // Проверка Color
-        if (parsedData.colorId === 0 || isNaN(parsedData.colorId)) {
-            throw new Error('Цвет не выбран или некорректен.')
-        }
-        const colorExists = await ColorModel.findByPk(parsedData.colorId)
-        if (!colorExists) {
-            throw new Error(`Color with ID ${parsedData.colorId} does not exist.`)
-        }
+    //Проверка уникальности артикула варианта
+    const unicArticul = await ProductVariantModel.findOne({
+        where: { articul: parsedData.articul }
+    })
+    if (unicArticul) {
+        throw new Error(
+            `Вариант с артикулом ${parsedData.articul} уже существует.`
+        )
+    }
 
-        // НОВОЕ: Проверка Material
-        if (parsedData.materialId === 0 || isNaN(parsedData.materialId)) {
-            throw new Error('Материал не выбран или некорректен.')
-        }
-        const materialExists = await MaterialModel.findByPk(parsedData.materialId)
-        if (!materialExists) {
-            throw new Error(`Material with ID ${parsedData.materialId} does not exist.`)}
+    // Проверка Color
+    if (parsedData.colorId === 0 || isNaN(parsedData.colorId)) {
+        throw new Error('Цвет не выбран или некорректен.')
+    }
+    const colorExists = await ColorModel.findByPk(parsedData.colorId)
+    if (!colorExists) {
+        throw new Error(`Color with ID ${parsedData.colorId} does not exist.`)
+    }
 
-
-        const [ productVariant, created ] = await ProductVariantModel.upsert(upsertData, {
-            returning: true, // Возвращает обновленную/созданную запись
-        })
+    // НОВОЕ: Проверка Material
+    if (parsedData.materialId === 0 || isNaN(parsedData.materialId)) {
+        throw new Error('Материал не выбран или некорректен.')
+    }
+    const materialExists = await MaterialModel.findByPk(parsedData.materialId)
+    if (!materialExists) {
+        const [productVariant, created] = await ProductVariantModel.upsert(
+            upsertData,
+            {
+                returning: true // Возвращает обновленную/созданную запись
+            }
+        )
 
         if (created) {
             console.log('Product variant created:', productVariant.toJSON())
@@ -145,8 +158,8 @@ export async function handleProductVariantForm(formData: FormData) {
         }
         revalidatePath(`/admin/products/${upsertData.productId}`)
         return { success: true, variant: productVariant.toJSON() }
-    } catch (e: any) {
-        console.error('Ошибка обработки формы варианта продукта:', e.message)
-        throw new Error(`Ошибка сохранения варианта: ${e.message}`)
+        // } catch (e: any) {
+        //     console.error('Ошибка обработки формы варианта продукта:', e.message)
+        //     throw new Error(`Ошибка сохранения варианта: ${e.message}`)
     }
 }
