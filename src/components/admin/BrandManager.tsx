@@ -128,13 +128,11 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Управление брендами</h2>
-
             <button
                 onClick={handleAddClick}
                 className="button_green mb-6 px-5 py-2"
             >
-                Добавить новый бренд 👈
+                Добавить новый бренд 🛠️
             </button>
 
             {/*fixme не работает*/}

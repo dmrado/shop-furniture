@@ -100,9 +100,8 @@ const CountryManager = ({ initialCountries, itemsPerPage, currentPage, totalCoun
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Управление странами</h2>
             <button onClick={handleAddClick} className="button_green mb-6 px-5 py-2">
-                Добавить новую страну 👈
+                Добавить новую страну 🛠️
             </button>
             <div className="my-6">
                 <ReactPaginateWrapper pages={pageCount} currentPage={currentPage} onPageChange={handlePageChange} />

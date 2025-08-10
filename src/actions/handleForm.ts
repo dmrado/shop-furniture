@@ -107,27 +107,43 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     }
 
     // FormData.get() для <select> всегда возвращает строку, даже если это число
-    const parsedBrandId = Number(brandId)
-    const parsedCollectionId = Number(collectionId)
-    const parsedCountryId = Number(countryId)
-    const parsedStyleId = Number(styleId)
+    // ИСПРАВЛЕНИЕ: Превращаем пустые строки в null для числовых ID
+    const parsedBrandId = brandId ? Number(brandId) : null
+    const parsedCollectionId = collectionId ? Number(collectionId) : null
+    const parsedCountryId = countryId ? Number(countryId) : null
+    const parsedStyleId = styleId ? Number(styleId) : null
 
-    if (
-        isNaN(parsedBrandId) ||
-        isNaN(parsedCollectionId) ||
-        isNaN(parsedCountryId) ||
-        isNaN(parsedStyleId)
-    ) {
-        throw new ValidationError('Invalid data type for ID fields')
+    //fixme требуется что бы brandId collectionId countryId styleId мог быть null в БД иначе см ниже
+    //более мягкая проверка (старая ниже) иначе падает сохранение продукта если каждый раз не выбирать все поля форме, так как форма незримо отправляет пустую строку соответствующую "все бренды"
+    if (parsedBrandId !== null && parsedBrandId <= 0) {
+        throw new ValidationError('ID бренда не может быть нулем или отрицательным')
     }
-    if (
-        parsedBrandId <= 0 ||
-        parsedCollectionId <= 0 ||
-        parsedCountryId <= 0 ||
-        parsedStyleId <= 0
-    ) {
-        throw new ValidationError('ID fields cannot be zero or negative')
+    if (parsedCollectionId !== null && parsedCollectionId <= 0) {
+        throw new ValidationError('ID коллекции не может быть нулем или отрицательным')
     }
+    if (parsedCountryId !== null && parsedCountryId <= 0) {
+        throw new ValidationError('ID страны не может быть нулем или отрицательным')
+    }
+    if (parsedStyleId !== null && parsedStyleId <= 0) {
+        throw new ValidationError('ID стиля не может быть нулем или отрицательным')
+    }
+
+    // if (
+    //     isNaN(parsedBrandId) ||
+    //     isNaN(parsedCollectionId) ||
+    //     isNaN(parsedCountryId) ||
+    //     isNaN(parsedStyleId)
+    // ) {
+    //     throw new ValidationError('Invalid data type for ID fields')
+    // }
+    // if (
+    //     parsedBrandId <= 0 ||
+    //     parsedCollectionId <= 0 ||
+    //     parsedCountryId <= 0 ||
+    //     parsedStyleId <= 0
+    // ) {
+    //     throw new ValidationError('ID fields cannot be zero or negative')
+    // }
 
     // Проверяем обязательные поля (например, name)
     if (!name || name.trim().length === 0) {
