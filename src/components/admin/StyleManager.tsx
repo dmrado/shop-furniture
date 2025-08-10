@@ -1,0 +1,205 @@
+'use client'
+
+import React, { useState } from 'react'
+import { DictionaryItem } from '@/db/types/common-types'
+import { createStyle, getAllStyles, removeStyle, updateStyle } from '@/actions/dictionaryActions'
+import Modal from '@/components/ui/Modal'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
+
+type StyleManagementClientProps = {
+    initialStyles: DictionaryItem[]
+    itemsPerPage: number
+    currentPage: number
+    totalCount: number
+}
+
+const StyleManager = ({ initialStyles, itemsPerPage, currentPage, totalCount }: StyleManagementClientProps) => {
+    const router = useRouter()
+    const path = usePathname()
+    const searchParams = useSearchParams()
+
+    const [ styles, setStyles ] = useState<DictionaryItem[]>(initialStyles)
+    const [ showModal, setShowModal ] = useState(false)
+    const [ currentStyle, setCurrentStyle ] = useState<DictionaryItem | null>(null)
+    const [ descriptionCharCount, setDescriptionCharCount ] = useState(0)
+
+    const pageCount = Math.ceil(totalCount / itemsPerPage)
+
+    const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState(false)
+    const [ styleToDelete, setStyleToDelete ] = useState<DictionaryItem | null>(null)
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescriptionCharCount(e.target.value.length)
+    }
+
+    const handleEditClick = (style: DictionaryItem) => {
+        const desc = style.description || ''
+        setCurrentStyle({ id: style.id, name: style.name, description: desc, isActive: style.isActive ?? true })
+        setDescriptionCharCount(desc.length)
+        setShowModal(true)
+    }
+
+    const handleAddClick = () => {
+        setCurrentStyle(null)
+        setDescriptionCharCount(0)
+        setShowModal(true)
+    }
+
+    const handleSubmit = async (formData: FormData) => {
+        try {
+            if (currentStyle?.id) {
+                await updateStyle(formData)
+            } else {
+                await createStyle(formData)
+            }
+            setShowModal(false)
+            setDescriptionCharCount(0)
+            const updatedStyles = await getAllStyles()
+            setStyles(updatedStyles)
+            router.refresh()
+        } catch (error: any) {
+            alert(`Ошибка: ${error.message}`)
+        }
+    }
+
+    const handleDeleteClick = (style: DictionaryItem) => {
+        setStyleToDelete(style)
+        setShowConfirmDeleteModal(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (styleToDelete?.id) {
+            try {
+                await removeStyle(styleToDelete.id)
+                setShowConfirmDeleteModal(false)
+                setStyleToDelete(null)
+                router.refresh()
+            } catch (error: any) {
+                console.error('Ошибка при удалении стиля:', error)
+                alert(`Ошибка при удалении: ${error.message}`)
+            }
+        }
+    }
+
+    const handlePageChange = (selectedPage: { selected: number }) => {
+        const newPage = selectedPage.selected + 1
+        const currentSearchParams = new URLSearchParams(searchParams)
+        currentSearchParams.set('page', String(newPage))
+        router.push(path + '?' + currentSearchParams.toString())
+    }
+
+    const cardStyle = 'relative flex flex-col justify-between p-3 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group w-full h-44'
+    const nameStyle = 'text-lg font-semibold text-gray-800 group-hover:text-[#E99C28] mb-1 text-center truncate break-words'
+    const descriptionStyle = 'text-sm text-gray-600 overflow-hidden text-center flex-grow line-clamp-3 break-words'
+    const idStyle = 'absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-75 text-white text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg'
+    const actionsContainerStyle = 'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
+    const actionButtonStyle = 'w-full button_blue text-xs px-2 py-1.5 justify-center'
+    const deleteButtonStyle = 'w-full button_red text-xs px-2 py-1.5 justify-center'
+
+    return (
+        <div className="p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Управление стилями</h2>
+            <button onClick={handleAddClick} className="button_green mb-6 px-5 py-2">
+                Добавить новый стиль 👈
+            </button>
+            <div className="my-6">
+                <ReactPaginateWrapper pages={pageCount} currentPage={currentPage} onPageChange={handlePageChange} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                {styles.length === 0 ? (
+                    <p className="col-span-full text-gray-600">Стили не найдены.</p>
+                ) : (
+                    styles.map((style) => (
+                        <div key={style.id} className={cardStyle}>
+                            <div className="relative flex flex-col items-center flex-grow">
+                                <div className={idStyle.replace('rounded-lg', '') + ' rounded-t-lg'}>
+                                    <span className="p-2">ID: {style.id}</span>
+                                </div>
+                                <span className={nameStyle} title={style.name}>{style.name}</span>
+                                <span className={descriptionStyle} title={style.description || ''}>{style.description}</span>
+                            </div>
+                            <div className={actionsContainerStyle}>
+                                <button onClick={() => handleEditClick(style)} className={actionButtonStyle}>
+                                    <PencilIcon className="h-4 w-4 mr-1"/> Редактировать
+                                </button>
+                                <button onClick={() => handleDeleteClick(style)} className={deleteButtonStyle}>
+                                    <TrashIcon className="h-4 w-4 mr-1"/> Удалить
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+            {showModal && (
+                <Modal onClose={() => { setShowModal(false); setDescriptionCharCount(0) }}>
+                    <h3 className="text-xl font-bold mb-4">
+                        {currentStyle ? 'Редактировать стиль' : 'Добавить новый стиль'}
+                    </h3>
+                    <form action={handleSubmit} className="space-y-4">
+                        {currentStyle?.id && (<input type="hidden" name="id" value={currentStyle.id}/>)}
+                        <div>
+                            <label htmlFor="styleName" className="block text-sm font-medium text-gray-700">Название стиля</label>
+                            <input
+                                type="text"
+                                placeholder={'введите от 2-х символов'}
+                                id="styleName"
+                                name="name"
+                                defaultValue={currentStyle?.name || ''}
+                                required
+                                minLength={2}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="styleDescription" className="block text-sm font-medium text-gray-700">Описание
+                                <span className="ml-2 text-gray-500 text-xs">({descriptionCharCount}/255 символов)</span>
+                            </label>
+                            <textarea
+                                rows={5}
+                                placeholder={'введите от 2-х до 255 символов'}
+                                id="styleDescription"
+                                name="description"
+                                defaultValue={currentStyle?.description || ''}
+                                required
+                                minLength={2}
+                                maxLength={255}
+                                onChange={handleDescriptionChange}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                        </div>
+                        <div className="mb-4 flex items-center">
+                            <input
+                                id="isActive"
+                                type="checkbox"
+                                name="isActive"
+                                defaultChecked={currentStyle?.isActive ?? true}
+                                className="mr-2 leading-tight"
+                            />
+                            <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">Активен</label>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button type="button" onClick={() => { setShowModal(false); setDescriptionCharCount(0) }} className="button_red px-4 py-2">Отмена 🚫</button>
+                            <button type="submit" className="button_green px-4 py-2">
+                                {currentStyle ? 'Сохранить изменения' : 'Создать стиль'} ✅
+                            </button>
+                        </div>
+                    </form>
+                </Modal>
+            )}
+            {showConfirmDeleteModal && styleToDelete && (
+                <Modal onClose={() => { setShowConfirmDeleteModal(false); setStyleToDelete(null) }}>
+                    <h3 className="text-xl font-bold mb-4 text-red-700">Подтвердите удаление</h3>
+                    <p className="mb-6 text-gray-700">Вы уверены, что хотите удалить стиль "<span className="font-semibold">{styleToDelete.name}</span>"? Это действие нельзя отменить. 💡</p>
+                    <div className="flex justify-end gap-3">
+                        <button type="button" onClick={() => { setShowConfirmDeleteModal(false); setStyleToDelete(null) }} className="button_blue px-4 py-2">Отмена 🚫</button>
+                        <button type="button" onClick={handleConfirmDelete} className="button_red px-4 py-2">Да, удалить</button>
+                    </div>
+                </Modal>
+            )}
+        </div>
+    )
+}
+
+export default StyleManager

@@ -1,13 +1,13 @@
 'use server'
 
-import {BrandModel} from '@/db/models/brand.model.ts'
-import {CollectionModel} from '@/db/models/collection.model.ts'
-import {CountryModel} from '@/db/models/country.model.ts'
-import {StyleModel} from '@/db/models/style.model.ts'
-import {ColorModel} from '@/db/models/color.model.ts'
-import {MaterialModel} from '@/db/models/material.model.ts'
-import {DictionaryItem} from '@/db/types/common-types'
-import {revalidatePath} from 'next/cache'
+import { BrandModel } from '@/db/models/brand.model.ts'
+import { CollectionModel } from '@/db/models/collection.model.ts'
+import { CountryModel } from '@/db/models/country.model.ts'
+import { StyleModel } from '@/db/models/style.model.ts'
+import { ColorModel } from '@/db/models/color.model.ts'
+import { MaterialModel } from '@/db/models/material.model.ts'
+import { DictionaryItem } from '@/db/types/common-types'
+import { revalidatePath } from 'next/cache'
 
 // Вспомогательная функция для преобразования 'on'/null в boolean
 function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
@@ -19,9 +19,9 @@ function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
 export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
         const brands = await BrandModel.findAll({
-            where: {isActive: true},
-            attributes: ['id', 'name'], // Здесь достаточно id и name для выбора в ProductForm
-            order: [['name', 'ASC']],
+            where: { isActive: true },
+            attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
+            order: [ [ 'name', 'ASC' ] ],
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -34,8 +34,8 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
 export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно также назвать getBrandsForAdminPanel
     try {
         const brands = await BrandModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'], // Для BrandManager нужны все атрибуты
-            order: [['name', 'ASC']],
+            attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
+            order: [ [ 'name', 'ASC' ] ],
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -47,9 +47,9 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
 // fixme used by [slug]\page.tsx а не нужна ли там getActiveBrands по логике?
 export async function getBrands(): Promise<DictionaryItem[]> {
     const brands = await BrandModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name', 'description', 'isActive'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name', 'description', 'isActive' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return brands.map(brand => brand.toJSON()) as DictionaryItem[]
 }
@@ -79,7 +79,7 @@ export async function createBrand(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/brands')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при создании бренда:', error)
         throw new Error('Не удалось создать бренд.')
@@ -111,7 +111,7 @@ export async function updateBrand(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/brands')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при обновлении бренда:', error)
         throw new Error('Не удалось обновить бренд.')
@@ -120,7 +120,7 @@ export async function updateBrand(formData: FormData) {
 
 export async function removeBrand(id: number) {
     'use server'
-    await BrandModel.destroy({where: {id}})
+    await BrandModel.destroy({ where: { id } })
     revalidatePath('/admin/brands')
     // redirect('/admin/products')
 }
@@ -129,9 +129,9 @@ export async function removeBrand(id: number) {
 // Функция для получения всех активных коллекций
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return collections.map(collection => collection.toJSON()) as DictionaryItem[]
 }
@@ -139,8 +139,8 @@ export async function getActiveCollections(): Promise<DictionaryItem[]> {
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']],
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ],
         })
         return collections.map(collection => collection.toJSON())
     } catch (error) {
@@ -174,7 +174,7 @@ export async function createCollection(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/collections')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при создании коллекции:', error)
         throw new Error('Не удалось создать коллекцию.')
@@ -206,7 +206,7 @@ export async function updateCollection(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/collections')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при обновлении коллекции:', error)
         throw new Error('Не удалось обновить коллекцию.')
@@ -215,7 +215,7 @@ export async function updateCollection(formData: FormData) {
 
 export async function removeCollection(id: number) {
     'use server'
-    await CollectionModel.destroy({where: {id}})
+    await CollectionModel.destroy({ where: { id } })
     revalidatePath('/admin/collections')
 }
 
@@ -223,9 +223,9 @@ export async function removeCollection(id: number) {
 // Функция для получения всех активных стран
 export async function getActiveCountries(): Promise<DictionaryItem[]> {
     const countries = await CountryModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return countries.map(country => country.toJSON()) as DictionaryItem[]
 }
@@ -233,8 +233,8 @@ export async function getActiveCountries(): Promise<DictionaryItem[]> {
 export async function getAllCountries(): Promise<DictionaryItem[]> {
     try {
         const countries = await CountryModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']],
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ],
         })
         return countries.map(country => country.toJSON())
     } catch (error) {
@@ -268,7 +268,7 @@ export async function createCountry(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/countries')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при создании страны:', error)
         throw new Error('Не удалось создать страну.')
@@ -300,7 +300,7 @@ export async function updateCountry(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/countries')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при обновлении страны:', error)
         throw new Error('Не удалось обновить страну.')
@@ -309,7 +309,7 @@ export async function updateCountry(formData: FormData) {
 
 export async function removeCountry(id: number) {
     'use server'
-    await CountryModel.destroy({where: {id}})
+    await CountryModel.destroy({ where: { id } })
     revalidatePath('/admin/countries')
 }
 
@@ -317,19 +317,18 @@ export async function removeCountry(id: number) {
 // Функция для получения всех активных стилей
 export async function getActiveStyles(): Promise<DictionaryItem[]> {
     const styles = await StyleModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return styles.map(style => style.toJSON()) as DictionaryItem[]
 }
 
-
 export async function getAllStyles(): Promise<DictionaryItem[]> {
     try {
         const styles = await StyleModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']],
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ],
         })
         return styles.map(style => style.toJSON())
     } catch (error) {
@@ -363,7 +362,7 @@ export async function createStyle(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/styles')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при создании стиля:', error)
         throw new Error('Не удалось создать стиль.')
@@ -395,7 +394,7 @@ export async function updateStyle(formData: FormData) {
             isActive: isActive,
         })
         revalidatePath('/admin/styles')
-        return {success: true}
+        return { success: true }
     } catch (error) {
         console.error('Ошибка при обновлении стиля:', error)
         throw new Error('Не удалось обновить стиль.')
@@ -404,29 +403,27 @@ export async function updateStyle(formData: FormData) {
 
 export async function removeStyle(id: number) {
     'use server'
-    await StyleModel.destroy({where: {id}})
+    await StyleModel.destroy({ where: { id } })
     revalidatePath('/admin/styles')
 }
-
 
 // ------------------- Функции для Цветов и Материалов -------------------
 // Новая функция для получения всех активных цветов
 export async function getActiveColors() {
     const colors = await ColorModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name', 'code'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name', 'code' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return colors.map(color => color.toJSON()) as DictionaryItem[]
 }
 
-
 // НОВАЯ ФУНКЦИЯ: для получения всех активных материалов
 export async function getMaterials() {
     const materials = await MaterialModel.findAll({
-        where: {isActive: true},
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']],
+        where: { isActive: true },
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ],
     })
     return materials.map(material => material.toJSON()) as DictionaryItem[]
 }
