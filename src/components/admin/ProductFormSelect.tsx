@@ -33,7 +33,7 @@ type ProductFormSelectWithActionsProps = {
     // renderOptions: (options: DictionaryItem[]) => JSX.Element[]; // Если хотите передавать
 };
 
-const ProductFormSelectWithActions = ({
+const ProductFormSelect = ({
     label,
     name,
     id,
@@ -47,6 +47,9 @@ const ProductFormSelectWithActions = ({
 
     // Вспомогательная функция для рендеринга опций
     const renderOptions = (items: DictionaryItem[]) => {
+        if (!items) {
+            return null // или пустой массив []
+        }
         return items.map((item) => (
             <option key={item.id} value={item.id}>
                 {item.name}
@@ -97,4 +100,4 @@ const ProductFormSelectWithActions = ({
     )
 }
 
-export default ProductFormSelectWithActions
+export default ProductFormSelect

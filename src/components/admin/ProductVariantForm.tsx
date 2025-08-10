@@ -1,7 +1,7 @@
 'use client'
 import React, {useState, useEffect} from 'react'
 import {handleProductVariantForm as handleProductVariantFormAction} from '@/actions/handleProductVariantForm.ts'
-import {getColors, getMaterials} from '@/actions/dictionaryActions.ts'
+import {getActiveColors, getMaterials} from '@/actions/dictionaryActions.ts'
 
 // Типы для элементов справочника (Product, Color)
 type DictionaryItem = {
@@ -61,7 +61,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
     // useEffect для загрузки данных при монтировании компонента
     useEffect(() => {
         const loadDictionaryData = async () => {
-            const fetchedColors = await getColors()
+            const fetchedColors = await getActiveColors()
             setColors(fetchedColors)
 
             const fetchedMaterials = await getMaterials()

@@ -1,40 +1,38 @@
-// components/admin/BrandFormModalContent.tsx
-'use client' // Этот компонент должен быть клиентским
+'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createBrand, updateBrand } from '@/actions/dictionaryActions'
-import {DictionaryItem} from "@/db/types/common-types"; // Ваши серверные экшены
+import { createCountry, updateCountry } from '@/actions/dictionaryActions'
+import { DictionaryItem } from '@/db/types/common-types'
 
-
-type BrandFormModalContentProps = {
-    onClose: () => void // Функция для закрытия модалки, передаваемая из обертки Modal
-    onSuccess: () => void // Функция, вызываемая при успешном сохранении/обновлении
-    initialData?: DictionaryItem | null // Данные для редактирования
+type CountryFormModalContentProps = {
+    onClose: () => void
+    onSuccess: () => void
+    initialData?: DictionaryItem | null
 }
 
-const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormModalContentProps) => {
-    const [ name, setName ] = useState(initialData?.name || '')
-    const [ description, setDescription ] = useState(initialData?.description || '')
-    const [ isActive, setIsActive ] = useState(initialData?.isActive ?? true)
-    const [ descriptionCharCount, setDescriptionCharCount ] = useState(initialData?.description.length || 0)
+const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFormModalContentProps) => {
+    const [name, setName] = useState(initialData?.name || '')
+    const [description, setDescription] = useState(initialData?.description || '')
+    const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(initialData?.description?.length || 0)
 
-    const [ error, setError ] = useState<string | null>(null)
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         if (initialData) {
             setName(initialData.name)
-            setDescription(initialData.description)
+            setDescription(initialData.description || '')
             setIsActive(initialData.isActive ?? true)
-            setDescriptionCharCount(initialData.description.length)
+            setDescriptionCharCount(initialData.description?.length || 0)
         } else {
             setName('')
             setDescription('')
             setIsActive(true)
             setDescriptionCharCount(0)
         }
-        setError(null) // Сброс ошибок при каждом открытии
-    }, [ initialData ])
+        setError(null)
+    }, [initialData])
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value
@@ -46,50 +44,37 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
         setIsLoading(true)
         setError(null)
         try {
-            // FormData.append() нужно использовать, чтобы добавить стейты,
-            // которые не привязаны напрямую к name input, или для переопределения.
-            // В данном случае, name, description и isActive уже имеют name-атрибуты в JSX,
-            // поэтому formData.get() их сам подхватит.
-            // Но isActive лучше явно добавить, чтобы быть уверенным в булевом значении.
-            // Или использовать helper из actions.
-
-            // Если вы используете helper parseBooleanFromFormData в экшенах, то
-            // isActive в FormData будет автоматически 'on' или null.
-            // Если вы хотите передать строковое "true"/"false" явно, как я писал ранее:
-            // formData.append('isActive', isActive ? 'true' : 'false');
-
             if (initialData?.id) {
                 formData.append('id', initialData.id.toString())
-                await updateBrand(formData)
+                await updateCountry(formData)
             } else {
-                await createBrand(formData)
+                await createCountry(formData)
             }
-            onSuccess() // Вызываем колбэк при успехе
-            onClose() // Модалка будет закрыта родительским компонентом после onSuccess
+            onSuccess()
+            onClose()
         } catch (error: any) {
-            console.error('Ошибка в модалке BrandFormModalContent:', error)
-            setError(error.message || 'Произошла ошибка при сохранении бренда.')
+            console.error('Ошибка в модалке CountryFormModalContent:', error)
+            setError(error.message || 'Произошла ошибка при сохранении страны.')
         } finally {
             setIsLoading(false)
         }
     }
 
     return (
-        <> {/* Заменил div на React.Fragment, так как это только содержимое для Modal */}
+        <>
             <h3 className="text-xl font-bold mb-4">
-                {initialData ? 'Редактировать бренд' : 'Добавить новый бренд'}
+                {initialData ? 'Редактировать страну' : 'Добавить новую страну'}
             </h3>
             <form action={handleSubmit} className="space-y-4">
                 {initialData?.id && (
                     <input type="hidden" name="id" value={initialData.id}/>
                 )}
                 <div>
-                    <label htmlFor="brandName" className="block text-sm font-medium text-gray-700">Название
-                        бренда</label>
+                    <label htmlFor="countryName" className="block text-sm font-medium text-gray-700">Название страны</label>
                     <input
                         type="text"
                         placeholder={'введите от 2-х символов'}
-                        id="brandName"
+                        id="countryName"
                         name="name"
                         defaultValue={initialData?.name || ''}
                         required
@@ -99,16 +84,16 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                     />
                 </div>
                 <div>
-                    <label htmlFor="brandDescription"
-                        className="block text-sm font-medium text-gray-700">Описание
+                    <label htmlFor="countryDescription" className="block text-sm font-medium text-gray-700">
+                        Описание
                         <span className="ml-2 text-gray-500 text-xs">
-                                ({descriptionCharCount}/255 символов)
+                            ({descriptionCharCount}/255 символов)
                         </span>
                     </label>
                     <textarea
                         rows={5}
                         placeholder={'введите от 2-х до 255 символов'}
-                        id="brandDescription"
+                        id="countryDescription"
                         name="description"
                         defaultValue={initialData?.description || ''}
                         required
@@ -141,7 +126,7 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                         type="button"
                         onClick={() => {
                             onClose()
-                            setDescriptionCharCount(0) // Сброс при закрытии
+                            setDescriptionCharCount(0)
                         }}
                         className="button_red px-4 py-2"
                         disabled={isLoading}
@@ -153,7 +138,7 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                         className="button_green px-4 py-2"
                         disabled={isLoading}
                     >
-                        {initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅
+                        {initialData ? 'Сохранить изменения' : 'Создать страну'} ✅
                     </button>
                 </div>
             </form>
@@ -161,4 +146,4 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
     )
 }
 
-export default BrandFormModalContent
+export default CountryFormModalContent

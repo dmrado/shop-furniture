@@ -11,7 +11,7 @@ import Breadcrumbs from '@/components/site/Breadcrumbs'
 import AdminFilter from '@/components/site/navigation/AdminFilter'
 import {BrandModel, CollectionModel, CountryModel, StyleModel} from "@/db/models";
 import {DictionaryItem} from "@/db/types/common-types";
-import {getBrands, getCollections, getCountries, getStyles} from "@/actions/dictionaryActions";
+import {getBrands, getActiveCollections, getActiveCountries, getActiveStyles} from "@/actions/dictionaryActions";
 
 type Props = {
     params: { slug: string };
@@ -54,9 +54,9 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
     const totalPages = Math.ceil(count / limit)
 
     const brands = await getBrands()
-    const collections = await getCollections()
-    const countries = await getCountries()
-    const styles = await getStyles()
+    const collections = await getActiveCollections()
+    const countries = await getActiveCountries()
+    const styles = await getActiveStyles()
 
     return (
         <div className="container mx-auto px-4 py-8">

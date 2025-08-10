@@ -7,9 +7,9 @@ import { revalidatePath } from 'next/cache'
 import { getProductList } from '@/actions/searchProducts'
 import {
     getActiveBrands,
-    getCollections,
-    getCountries,
-    getStyles
+    getActiveCollections,
+    getActiveCountries,
+    getActiveStyles
 } from '@/actions/dictionaryActions'
 
 export const metadata = {
@@ -76,9 +76,9 @@ const ProductsManagementPage = async ({
     )
 
     const brands = await getActiveBrands()
-    const collections = await getCollections()
-    const countries = await getCountries()
-    const styles = await getStyles()
+    const collections = await getActiveCollections()
+    const countries = await getActiveCountries()
+    const styles = await getActiveStyles()
 
     async function removeProduct(id: number) {
         'use server'

@@ -4,10 +4,21 @@ import dynamic from 'next/dynamic'
 import { handleForm } from '@/actions/handleForm.ts'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import { ProductDTO } from '@/db/models/product.model.ts'
-import { getBrandById, getActiveBrands } from '@/actions/dictionaryActions'
+import {
+    getBrandById,
+    getActiveBrands,
+    getCollectionById,
+    getCountryById,
+    getStyleById, getActiveCollections, getActiveCountries, getActiveStyles
+} from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
+import ProductFormSelect from '@/components/admin/ProductFormSelect'
 import BrandFormModalContent from '@/components/admin/BrandFormModalContent'
-import ProductFormSelectWithActions from '@/components/admin/ProductFormSelectWithActions'
+import CollectionFormModalContent from '@/components/admin/CollectionFormModalContent'
+import CountryFormModalContent from '@/components/admin/CountryFormModalContent'
+import StyleFormModalContent from '@/components/admin/StyleFormModalContent'
+import { DictionaryItem, ModalState } from '@/db/types/common-types'
+import { addHandler, editHandler } from '@/app/handlers/productFormHandlers'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
@@ -32,22 +43,6 @@ type ProductFormProps = {
     initialCollections?: DictionaryItem[]
     initialCountries?: DictionaryItem[]
     initialStyles?: DictionaryItem[]
-}
-
-// Типы для элементов справочника
-type DictionaryItem = {
-    id: number
-    name: string
-    description?: string
-    isActive?: boolean
-}
-
-// тип для BrandFormState, если его нет в ProductForm
-type BrandFormState = {
-    id?: number
-    name: string
-    description: string
-    isActive: boolean
 }
 
 const ProductForm = ({
@@ -86,12 +81,14 @@ const ProductForm = ({
     const [ touchedName, setTouchedName ] = useState(false)
     const [ isFileSizeError, setFileSizeError ] = useState(false)
 
-    //для модального окна
-    const [ showBrandModal, setShowBrandModal ] = useState(false)
-    // Для передачи данных в модалку при редактировании
-    const [ currentBrandForEdit, setCurrentBrandForEdit ] = useState<BrandFormState | null>(null)
+    // Универсальный стейт для модального окна
+    const [ modalState, setModalState ] = useState<ModalState>({
+        isOpen: false,
+        type: null,
+        initialData: null,
+    })
 
-    // Функция для перезагрузки списка брендов
+    // Функция для обновления списка брендов
     const refreshBrands = async () => {
         try {
             const updatedBrands = await getActiveBrands()
@@ -101,36 +98,33 @@ const ProductForm = ({
         }
     }
 
-    // Обработчик для кнопки "Добавить бренд"
-    const handleAddBrandClick = () => {
-        setCurrentBrandForEdit(null) // Важно для сброса формы на "новый бренд"
-        setShowBrandModal(true)
+    // Функция для обновления списка коллекций
+    const refreshCollections = async () => {
+        try {
+            const updatedCollections = await getActiveCollections() // Используем вашу функцию
+            setCollections(updatedCollections)
+        } catch (error) {
+            console.error('Ошибка при обновлении списка коллекций:', error)
+        }
     }
 
-    // Обработчик для кнопки "Редактировать бренд"
-    const handleEditBrandClick = async () => {
-        // Убедитесь, что brandId - это число и он выбран
-        if (typeof brandId === 'number' && brandId > 0) {
-            try {
-                // Загружаем полные данные бренда, включая description и isActive
-                const fullBrandData = await getBrandById(brandId)
-                if (fullBrandData) {
-                    setCurrentBrandForEdit({
-                        id: fullBrandData.id,
-                        name: fullBrandData.name,
-                        description: fullBrandData.description,
-                        isActive: fullBrandData.isActive,
-                    })
-                    setShowBrandModal(true)
-                } else {
-                    alert('Бренд не найден.')
-                }
-            } catch (error) {
-                alert('Ошибка при загрузке данных бренда.')
-                console.error(error)
-            }
-        } else {
-            alert('Пожалуйста, выберите бренд для редактирования.')
+    // Функция для обновления списка стран
+    const refreshCountries = async () => {
+        try {
+            const updatedCountries = await getActiveCountries() // Используем вашу функцию
+            setCountries(updatedCountries)
+        } catch (error) {
+            console.error('Ошибка при обновлении списка стран:', error)
+        }
+    }
+
+    // Функция для обновления списка стилей
+    const refreshStyles = async () => {
+        try {
+            const updatedStyles = await getActiveStyles() // Используем вашу функцию
+            setStyles(updatedStyles)
+        } catch (error) {
+            console.error('Ошибка при обновлении списка стилей:', error)
         }
     }
 
@@ -169,6 +163,53 @@ const ProductForm = ({
     // Валидация для 'name'
     const isNameValid = () => !touchedName || (touchedName && name.length >= TITLE_MIN_LENGTH)
 
+    const productFormSelect = [
+        {
+            label: 'Бренд',
+            name: 'brandId',
+            id: 'brandId',
+            value: brandId,
+            options: brands,
+            onChange: (e) => setBrandId(Number(e.target.value)),
+            onAddClick: () => addHandler('brand', setModalState),
+            onEditClick: () => editHandler(brandId, 'brand', setModalState, getBrandById),
+            showEditButton: !!brandId,
+        },
+        {
+            label: 'Коллекция',
+            name: 'collectionId',
+            id: 'collectionId',
+            value: collectionId,
+            options: collections,
+            onChange: (e) => setCollectionId(Number(e.target.value)),
+            onAddClick: () => addHandler('collection', setModalState),
+            onEditClick: () => editHandler(collectionId, 'collection', setModalState, getCollectionById),
+            showEditButton: !!collectionId,
+        },
+        {
+            label: 'Страна',
+            name: 'countryId',
+            id: 'countryId',
+            value: countryId,
+            options: countries,
+            onChange: (e) => setCountryId(Number(e.target.value)),
+            onAddClick: () => addHandler('country', setModalState),
+            onEditClick: () => editHandler(countryId, 'country', setModalState, getCountryById),
+            showEditButton: !!countryId,
+        },
+        {
+            label: 'Стиль',
+            name: 'styleId',
+            id: 'styleId',
+            value: styleId,
+            options: styles,
+            onChange: (e) => setStyleId(Number(e.target.value)),
+            onAddClick: () => addHandler('style', setModalState),
+            onEditClick: () => editHandler(styleId, 'style', setModalState, getStyleById),
+            showEditButton: !!styleId,
+        },
+    ]
+
     // Стили кнопки submit
     const buttonStyle = () => {
         // Базовые стили для кнопки "Записать", всегда будут применяться button_green
@@ -179,15 +220,6 @@ const ProductForm = ({
             classes += ' opacity-50 cursor-not-allowed'
         }
         return classes
-    }
-
-    //fixme удалить после замены коллекции страны и стиля на соответствующие компоненты ProductFormSelectWithActions
-    const renderOptions = (items: DictionaryItem[]) => {
-        return items.map((item) => (
-            <option key={item.id} value={item.id}>
-                {item.name}
-            </option>
-        ))
     }
 
     return (<>
@@ -214,159 +246,19 @@ const ProductForm = ({
                     maxLength={180}
                 />
                 {!isNameValid() &&
-                    <span style={{color: 'red'}}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
+                    <span style={{ color: 'red' }}>Название должно быть не менее {TITLE_MIN_LENGTH} символов.</span>}
             </div>
 
             {/* Контейнер для полей в три колонки на md и выше */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 
                 {/* ПОЛЯ SELECT ДЛЯ ID: */}
-                <div className="mb-4">
-
-                    <ProductFormSelectWithActions
-                        label="бренд"
-                        name="brandId"
-                        id="brandId"
-                        value={brandId}
-                        options={brands}
-                        onChange={(e) => setBrandId(Number(e.target.value))}
-                        onAddClick={handleAddBrandClick} // Передаем обработчик для "Добавить"
-                        onEditClick={handleEditBrandClick} // Передаем обработчик для "Редактировать"
-                        showEditButton={!!brandId} // Кнопка "Редактировать" активна, если выбран бренд
+                {productFormSelect.map((fieldProps, index) => (
+                    <ProductFormSelect
+                        key={index}
+                        {...fieldProps}
                     />
-
-                    {/*<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="brandId">*/}
-                    {/*    Бренд:*/}
-                    {/*</label>*/}
-                    {/*<div*/}
-                    {/*    className="flex items-center gap-2"> /!* контейнер select + button+добавить + button+редактировать *!/*/}
-                    {/*    <select*/}
-                    {/*        name="brandId"*/}
-                    {/*        id="brandId"*/}
-                    {/*        value={brandId}*/}
-                    {/*        onChange={(e) => setBrandId(Number(e.target.value))}*/}
-                    {/*        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
-                    {/*    >*/}
-                    {/*        <option value="">Выберите бренд</option>*/}
-                    {/*        {renderOptions(brands)}*/}
-                    {/*    </select>*/}
-
-                    {/*    /!* Кнопка "Добавить" с PlusIcon *!/*/}
-                    {/*    <button*/}
-                    {/*        type="button"*/}
-                    {/*        className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"*/}
-                    {/*        onClick={() => {*/}
-                    {/*            setCurrentBrandForEdit(null) // Сбрасываем для создания нового*/}
-                    {/*            setShowBrandModal(true)*/}
-                    {/*        }}*/}
-                    {/*        title="Добавить новый бренд" // Подсказка при наведении*/}
-                    {/*    >*/}
-                    {/*        <PlusIcon className="h-5 w-5"/> /!* Иконка плюса *!/*/}
-                    {/*    </button>*/}
-
-                    {/*    /!* Кнопка "Редактировать" с PencilIcon *!/*/}
-                    {/*    /!* Убедитесь, что brandId выбран, прежде чем отображать кнопку редактирования *!/*/}
-                    {/*    {brandId ? ( // Показываем кнопку редактирования только если что-то выбрано*/}
-                    {/*        <button*/}
-                    {/*            type="button"*/}
-                    {/*            className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-gray-50 text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"*/}
-                    {/*            onClick={() => {*/}
-                    {/*                const selectedBrand = brands.find(b => b.id === brandId)*/}
-                    {/*                if (selectedBrand) {*/}
-                    {/*                    setCurrentBrandForEdit({*/}
-                    {/*                        id: selectedBrand.id,*/}
-                    {/*                        name: selectedBrand.name,*/}
-                    {/*                        description: selectedBrand?.description, // Вам нужно будет получить полное описание из базы данных*/}
-                    {/*                        // если вы хотите его редактировать.*/}
-                    {/*                        // Возможно, getBrandById server action*/}
-                    {/*                        isActive: selectedBrand?.isActive*/}
-                    {/*                    })*/}
-                    {/*                    setShowBrandModal(true)*/}
-                    {/*                }*/}
-                    {/*            }}*/}
-                    {/*            title="Редактировать выбранный бренд" // Подсказка при наведении*/}
-                    {/*        >*/}
-                    {/*            <PencilIcon className="h-5 w-5"/> /!* Иконка карандаша *!/*/}
-                    {/*        </button>*/}
-                    {/*    ) : null} /!* Если бренд не выбран, кнопку не показываем *!/*/}
-
-                    {/*</div>*/}
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="collectionId">
-                        Коллекция:
-                    </label>
-                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
-                        <select
-                            name="collectionId"
-                            id="collectionId"
-                            value={collectionId}
-                            onChange={(e) => setCollectionId(Number(e.target.value))}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            <option value="">Выберите коллекцию</option>
-                            {renderOptions(collections)}
-                        </select>
-                        <button
-                            type="button"
-                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
-                            onClick={() => console.log('Add collection')}
-                        >
-                            +
-                        </button>
-                    </div>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="countryId">
-                        Страна:
-                    </label>
-                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
-                        <select
-                            name="countryId"
-                            id="countryId"
-                            value={countryId}
-                            onChange={(e) => setCountryId(Number(e.target.value))}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            <option value="">Выберите страну</option>
-                            {renderOptions(countries)}
-                        </select>
-                        <button
-                            type="button"
-                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
-                            onClick={() => console.log('Add country  clicked')}
-                        >
-                            +
-                        </button>
-                    </div>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="styleId">
-                        Стиль:
-                    </label>
-                    <div className="flex items-center gap-2"> {/* контейнер select  + button-добавить */}
-                        <select
-                            name="styleId"
-                            id="styleId"
-                            value={styleId}
-                            onChange={(e) => setStyleId(Number(e.target.value))}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        >
-                            <option value="">Выберите стиль</option>
-                            {renderOptions(styles)}
-                        </select>
-                        <button
-                            type="button"
-                            className="shadow appearance-none border rounded bg-gray-200 text-gray-700 flex items-center justify-center w-10 h-10 flex-shrink-0"
-                            onClick={() => console.log('Add countryId  clicked')}
-                        >
-                            +
-                        </button>
-                    </div>
-                </div>
+                ))}
 
                 {/* Поле 'articul' */}
                 <div className="mb-4">
@@ -459,16 +351,16 @@ const ProductForm = ({
                     Изображение товара:
                 </label>
                 <input type='file' name='product_picture' id='product_picture'
-                       accept={IMAGE_TYPES.join(',')}
-                       onChange={(e) => {
-                           if (!e.target.files) return
-                           const fileSize = e.target?.files[0]?.size
-                           setFileSizeError(fileSize > FILE_LIMIT)
-                       }}
+                    accept={IMAGE_TYPES.join(',')}
+                    onChange={(e) => {
+                        if (!e.target.files) return
+                        const fileSize = e.target?.files[0]?.size
+                        setFileSizeError(fileSize > FILE_LIMIT)
+                    }}
                 />
-                {isFileSizeError && <span style={{color: 'red'}}>Размер файла слишком большой.</span>}
+                {isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}
                 <label htmlFor="product_picture"
-                       className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
+                    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
                     .tiff, .heic</label>
             </div>
 
@@ -489,16 +381,37 @@ const ProductForm = ({
                 )}
             </div>
         </form>
-        {showBrandModal && (
-            <Modal onClose={() => {
-                setShowBrandModal(false)
-                // Сброс счетчика символов описания должен быть в BrandFormModalContent
-            }}>
-                <BrandFormModalContent
-                    onClose={() => setShowBrandModal(false)} // Пропс для закрытия модалки
-                    onSuccess={refreshBrands} // Вызываем refreshBrands при успешном добавлении/обновлении
-                    initialData={currentBrandForEdit} // Передаем данные для редактирования
-                />
+
+        {modalState.isOpen && (
+            <Modal onClose={() => setModalState({ ...modalState, isOpen: false })}>
+                {modalState.type === 'brand' && (
+                    <BrandFormModalContent
+                        onClose={() => setModalState({ ...modalState, isOpen: false })}
+                        onSuccess={refreshBrands}
+                        initialData={modalState.initialData}
+                    />
+                )}
+                {modalState.type === 'collection' && (
+                    <CollectionFormModalContent
+                        onClose={() => setModalState({ ...modalState, isOpen: false })}
+                        onSuccess={refreshCollections}
+                        initialData={modalState.initialData}
+                    />
+                )}
+                {modalState.type === 'country' && (
+                    <CountryFormModalContent
+                        onClose={() => setModalState({ ...modalState, isOpen: false })}
+                        onSuccess={refreshCountries}
+                        initialData={modalState.initialData}
+                    />
+                )}
+                {modalState.type === 'style' && (
+                    <StyleFormModalContent
+                        onClose={() => setModalState({ ...modalState, isOpen: false })}
+                        onSuccess={refreshStyles}
+                        initialData={modalState.initialData}
+                    />
+                )}
             </Modal>
         )}
     </>)
