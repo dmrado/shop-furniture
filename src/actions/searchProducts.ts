@@ -25,35 +25,16 @@ export async function getProductList(
             ...(filters.brandId && { brandId: filters.brandId }),
             ...(filters.collectionId && { collectionId: filters.collectionId }),
             ...(filters.countryId && { countryId: filters.countryId }),
-            ...(filters.styleId && { styleId: filters.styleId })
+            ...(filters.styleId && { styleId: filters.styleId }),
+            ...(filters.nameQuery && { name: { [Op.like]: `%${filters.nameQuery}%` } }),
+            ...(filters.articulQuery && { [Op.or]: {
+                articul: { [Op.like]: `%${filters.articulQuery}%` },
+                '$variants.articul$': { [Op.like]: `%${filters.articulQuery}%` }
+            } })
         }
 
-        //Условия поиска по nameQuery и articulQuery
-        const searchConditions: any[] = []
-
-        if (filters.nameQuery) {
-            searchConditions.push({
-                name: {
-                    [Op.like]: `%${filters.nameQuery}%`
-                }
-            })
-        }
         const includeConditions: any[] = []
         if (filters.articulQuery) {
-            // Условие для поиска по артикулу самого продукта
-            searchConditions.push({
-                articul: {
-                    [Op.like]: `%${filters.articulQuery}%`
-                }
-            })
-
-            // `'$variants.articul$'` позволяет обращаться к полю связанной таблицы. используем LEFT JOIN (`required: false`), чтобы продукты, у которых нет вариантов или совпадающих вариантов, не отфильтровывались, если они соответствуют другим условиям поиска (например, по названию).
-            searchConditions.push({
-                '$variants.articul$': {
-                    [Op.like]: `%${filters.articulQuery}%`
-                }
-            })
-            //Добавляем ProductVariantModel в include если ищем по артикулу варианта
             includeConditions.push({
                 model: ProductVariantModel,
                 as: 'variants',
@@ -61,25 +42,9 @@ export async function getProductList(
                 required: false
             })
         }
-        //комбинируем все условия для окончательного объекта where Если есть и основные фильтры, и поисковые запросы находим продукт, если его название совпадает (частично) ИЛИ его собственный артикул совпадает (частично) ИЛИ артикул его варианта совпадает (частично)
-        let finalWhereConditions: any = baseWhereConditions
-        if (searchConditions.length > 0) {
-            if (Object.keys(baseWhereConditions).length > 0) {
-                finalWhereConditions = {
-                    [Op.and]: [
-                        baseWhereConditions,
-                        { [Op.or]: searchConditions } // nameQuery, articulQuery (для Product) и articulQuery (для ProductVariant)
-                    ]
-                }
-            } else {
-                finalWhereConditions = {
-                    [Op.or]: searchConditions
-                }
-            }
-        }
-        // Если searchConditions пуст, то finalWhereConditions останется равным baseWhereConditions (стандартные фильтры)
+
         const { count, rows: products } = await ProductModel.findAndCountAll({
-            where: finalWhereConditions,
+            where: baseWhereConditions,
             include: includeConditions,
             limit: limit,
             offset: offset,
