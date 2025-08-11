@@ -1,8 +1,8 @@
 'use server'
-import {redirect} from "next/navigation";
-import {revalidatePath} from "next/cache";
-import {OrderModel} from "@/db/models";
-const validPaymentMethods = ['cash', 'card', 'online'] as const;
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+import { OrderModel } from '@/db/models'
+const validPaymentMethods = [ 'cash', 'card', 'online' ] as const
 type PaymentMethod = typeof validPaymentMethods[number]
 
 interface CleanedFormData {
@@ -14,8 +14,8 @@ interface CleanedFormData {
 
 class ValidationError extends Error {
     constructor(message: string) {
-        super(message);
-        this.name = 'ValidationError';
+        super(message)
+        this.name = 'ValidationError'
     }
 }
 
@@ -51,19 +51,19 @@ const cleanFormData = (formData: FormData) : CleanedFormData => {
     }
 
     if (deliveryTime.length === 0) {
-        deliveryTime = "19:00"
+        deliveryTime = '19:00'
     }
 
-    const deliveryDateObj = new Date(`${deliveryDate}T${deliveryTime}:00`);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const deliveryDateObj = new Date(`${deliveryDate}T${deliveryTime}:00`)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
 
     if (isNaN(deliveryDateObj.getTime())) {
-        throw new ValidationError('Неверный формат даты');
+        throw new ValidationError('Неверный формат даты')
     }
 
     if (deliveryDateObj < today) {
-        throw new ValidationError('Дата доставки не может быть в прошлом');
+        throw new ValidationError('Дата доставки не может быть в прошлом')
     }
 
     if (isNaN(Number(addressId)) || Number(addressId) <= 0) {
@@ -81,9 +81,9 @@ const cleanFormData = (formData: FormData) : CleanedFormData => {
 export const handleOrderToDB = async (formData: FormData) => {
     try {
         const userId = 1 // todo: брать пользователя из кукис
-        const {addressId, comment, deliveryDate} = cleanFormData(formData)
+        const { addressId, comment, deliveryDate } = cleanFormData(formData)
 
-        await OrderModel.create({userId, addressId, comment, orderDate: new Date(), cartPrice: 999, deliveryDate})
+        await OrderModel.create({ userId, addressId, comment, orderDate: new Date(), cartPrice: 999, deliveryDate })
     } catch (err) {
         console.error('Error on handleForm:  ', err)
         if (err instanceof ValidationError) {

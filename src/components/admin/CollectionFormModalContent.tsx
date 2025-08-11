@@ -11,13 +11,13 @@ type CollectionFormModalContentProps = {
 }
 
 const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: CollectionFormModalContentProps) => {
-    const [name, setName] = useState(initialData?.name || '')
-    const [description, setDescription] = useState(initialData?.description || '')
-    const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
-    const [descriptionCharCount, setDescriptionCharCount] = useState(initialData?.description?.length || 0)
+    const [ name, setName ] = useState(initialData?.name || '')
+    const [ description, setDescription ] = useState(initialData?.description || '')
+    const [ isActive, setIsActive ] = useState(initialData?.isActive ?? true)
+    const [ descriptionCharCount, setDescriptionCharCount ] = useState(initialData?.description?.length || 0)
 
-    const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [ error, setError ] = useState<string | null>(null)
+    const [ isLoading, setIsLoading ] = useState(false)
 
     useEffect(() => {
         if (initialData) {
@@ -32,7 +32,7 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
             setDescriptionCharCount(0)
         }
         setError(null)
-    }, [initialData])
+    }, [ initialData ])
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value

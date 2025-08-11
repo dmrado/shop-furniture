@@ -1,7 +1,6 @@
 'use server'
-import {AddressModel} from "@/db/models"
-import {revalidatePath} from "next/cache";
-
+import { AddressModel } from '@/db/models'
+import { revalidatePath } from 'next/cache'
 
 // Определение типа AddressRow
 interface AddressRow {
@@ -23,7 +22,7 @@ interface AddressRow {
  */
 const mapAddressRow = (address: AddressModel): AddressRow => {
     if (!address) {
-        throw new Error(`Address with id ${address.id} does not exist`);
+        throw new Error(`Address with id ${address.id} does not exist`)
     }
 
     return {
@@ -36,8 +35,8 @@ const mapAddressRow = (address: AddressModel): AddressRow => {
         corps: address.corps,
         appart: address.appart,
         isMain: address.isMain
-    };
-};
+    }
+}
 
 export const getAddressListAction = async (): Promise<AddressRow[]> => {
     const result = await AddressModel.findAndCountAll()
@@ -60,6 +59,6 @@ export const getAddressByIdAction = async (id: number) => {
 
 export const deleteAddressRowAction = async (id: number) => {
     await AddressModel.destroy({
-        where: {id}
+        where: { id }
     })
 }

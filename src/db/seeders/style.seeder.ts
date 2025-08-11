@@ -1,4 +1,4 @@
-import { StyleModel } from '@/db/models/style.model';
+import { StyleModel } from '@/db/models/style.model'
 
 const styleSeedData = [
     {
@@ -32,13 +32,13 @@ const styleSeedData = [
         isActive: true,
     },
     // Добавьте другие стили по мере необходимости
-];
+]
 
 export async function seedStyles() {
     try {
-        await StyleModel.bulkCreate(styleSeedData, { ignoreDuplicates: true }); // Добавлена опция ignoreDuplicates
-        console.log('Styles seeded successfully');
+        await StyleModel.bulkCreate(styleSeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        console.log('Styles seeded successfully')
     } catch (error) {
-        console.error('Error seeding styles:', error);
+        console.error('Error seeding styles:', error)
     }
 }

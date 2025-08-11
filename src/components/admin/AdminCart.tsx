@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
-import Link from "next/link"
-import {useState} from 'react'
+import Link from 'next/link'
+import { useState } from 'react'
 
 interface cartProducts {
     id: number;
@@ -40,46 +40,46 @@ interface UserCartProps {
     cartItems: cartProducts[]
 }
 
-const UserCart = ({cartProducts}: UserCartProps) => {
+const UserCart = ({ cartProducts }: UserCartProps) => {
 
-    const [quantities, setQuantities] = useState<Quantities>(
-        cartProducts.reduce((acc, item) => ({...acc, [item.id]: 1}), {})
+    const [ quantities, setQuantities ] = useState<Quantities>(
+        cartProducts.reduce((acc, item) => ({ ...acc, [item.id]: 1 }), {})
     )
     console.log('>>>> this is cartProducts on Next-14', cartProducts)
     const calculateItemTotal = (item: cartProducts): number => {
-        const quantity = quantities[item.id];
-        const discount = item.discount || 0;
-        const priceWithDiscount = item.new_price * (1 - discount / 100);
-        return priceWithDiscount * quantity;
-    };
+        const quantity = quantities[item.id]
+        const discount = item.discount || 0
+        const priceWithDiscount = item.new_price * (1 - discount / 100)
+        return priceWithDiscount * quantity
+    }
 
     const calculateTotalItems = (): number => {
-        return Object.values(quantities).reduce((acc, quantity) => acc + quantity, 0);
-    };
+        return Object.values(quantities).reduce((acc, quantity) => acc + quantity, 0)
+    }
 
     const calculateTotalWeight = (): number => {
         return cartProducts.reduce((acc, item) => {
-            const itemWeight = item.weight || 0;
-            return acc + (itemWeight * quantities[item.id]);
-        }, 0);
-    };
+            const itemWeight = item.weight || 0
+            return acc + (itemWeight * quantities[item.id])
+        }, 0)
+    }
 
     const totalDiscount: number = cartProducts.reduce((acc, item) => {
-        const quantity = quantities[item.id];
-        const itemDiscount = (item.discount || 0) * item.new_price * quantity / 100;
-        return acc + itemDiscount;
-    }, 0);
+        const quantity = quantities[item.id]
+        const itemDiscount = (item.discount || 0) * item.new_price * quantity / 100
+        return acc + itemDiscount
+    }, 0)
 
-    const promoCodeDiscount: number = cartProducts[0]?.promoDiscount || 0;
+    const promoCodeDiscount: number = cartProducts[0]?.promoDiscount || 0
 
-    const subtotal: number = cartProducts.reduce((acc, item) => acc + calculateItemTotal(item), 0);
-    const totalAmount: number = subtotal - promoCodeDiscount;
-    const totalItems: number = calculateTotalItems();
-    const totalWeight: number = calculateTotalWeight();
+    const subtotal: number = cartProducts.reduce((acc, item) => acc + calculateItemTotal(item), 0)
+    const totalAmount: number = subtotal - promoCodeDiscount
+    const totalItems: number = calculateTotalItems()
+    const totalWeight: number = calculateTotalWeight()
 
     const handleQuantityChange = (id: number, value: number): void => {
-        const newValue = Math.max(0, Math.min(300, value));
-        setQuantities(prev => ({...prev, [id]: newValue}));
+        const newValue = Math.max(0, Math.min(300, value))
+        setQuantities(prev => ({ ...prev, [id]: newValue }))
     }
 
     const formatWeight = (weight: number): string => {
@@ -87,7 +87,7 @@ const UserCart = ({cartProducts}: UserCartProps) => {
             return `${(weight / 1000).toFixed(2)} кг`
         }
         return `${weight} г`
-    };
+    }
 
     return (
         <div className="max-w-6xl mx-auto">

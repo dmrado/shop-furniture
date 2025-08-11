@@ -1,8 +1,8 @@
-import {sequelize} from '../connection'
-import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
-import {ProductModel} from '@/db/models/product.model'
-import {ColorModel} from '@/db/models/color.model'
-import {MaterialModel} from '@/db/models/material.model'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import { ProductModel } from '@/db/models/product.model'
+import { ColorModel } from '@/db/models/color.model'
+import { MaterialModel } from '@/db/models/material.model'
 
 export interface ProductVariantDTO extends InferAttributes<ProductVariantModel> {
 }

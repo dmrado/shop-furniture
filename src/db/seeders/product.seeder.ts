@@ -1,15 +1,15 @@
 // db/seeders/product.seeder.ts
-import { ProductModel } from '@/db/models/product.model';
-import { ProductCategoryModel } from '@/db/models/product_category.model'; // Импортируем модель для связей
+import { ProductModel } from '@/db/models/product.model'
+import { ProductCategoryModel } from '@/db/models/product_category.model' // Импортируем модель для связей
 
 export async function seedProducts() {
     try {
-        console.log('Starting product seeding...');
+        console.log('Starting product seeding...')
 
         // Очистка таблиц перед заполнением
-        await ProductCategoryModel.destroy({ truncate: true, cascade: true }); // Сначала связи, чтобы избежать ошибок внешних ключей
-        await ProductModel.destroy({ truncate: true, cascade: true });
-        console.log('Product and ProductCategory tables truncated.');
+        await ProductCategoryModel.destroy({ truncate: true, cascade: true }) // Сначала связи, чтобы избежать ошибок внешних ключей
+        await ProductModel.destroy({ truncate: true, cascade: true })
+        console.log('Product and ProductCategory tables truncated.')
 
         const baseProductSeedData = [
             // ==================================================================================================
@@ -99,10 +99,10 @@ export async function seedProducts() {
                 descriptionShort: 'Раздвижной обеденный стол для кухни или столовой, в современном стиле.',
                 descriptionLong: 'Стол "Семейный" — универсальное решение для любой кухни или гостиной. Прочный деревянный каркас, столешница из ЛДСП с возможностью увеличения. Идеально подходит как для повседневных обедов, так и для больших застолий.',
             }
-        ];
+        ]
 
-        const productSeedDataToCreate = [...baseProductSeedData];
-        const productCategoryLinks = [];
+        const productSeedDataToCreate = [ ...baseProductSeedData ]
+        const productCategoryLinks = []
 
         // Добавляем связи для базовых продуктов
         productCategoryLinks.push(
@@ -120,19 +120,19 @@ export async function seedProducts() {
             { productId: 112, categoryId: 3 }, { productId: 112, categoryId: 45 },
             { productId: 113, categoryId: 3 }, { productId: 113, categoryId: 50 },
             { productId: 114, categoryId: 6 }, { productId: 114, categoryId: 4 }, { productId: 114, categoryId: 26 },
-        );
+        )
 
         // ==================================================================================================
         // Генерируем оставшиеся 126 продуктов (140 - 14)
         // ==================================================================================================
-        const START_PRODUCT_ID = 115; // Начинаем с ID, следующего за последним из ваших примеров
-        const TOTAL_PRODUCTS_TO_GENERATE = 126; // 140 - 14 = 126
+        const START_PRODUCT_ID = 115 // Начинаем с ID, следующего за последним из ваших примеров
+        const TOTAL_PRODUCTS_TO_GENERATE = 126 // 140 - 14 = 126
 
         // Допустимые ID для внешних ключей (вам нужно убедиться, что они существуют!)
-        const styleIds = [1, 2, 3, 4, 5]; // Современный, Классический, Лофт, Скандинавский, Восточный
-        const brandIds = [1, 2, 3, 4, 5]; // Мебель-Эксперт, КлассикХоум, Свет-Хаус, Уютный Дом, Восток-Декор
-        const collectionIds = [1, 2, 3, 4, 5, 6]; // Уют, Антик, Индустриал, Сканди, Абстракция, Азия
-        const countryIds = [1, 2, 3, 4, 5]; // Россия, Италия, Китай, Турция, Индия
+        const styleIds = [ 1, 2, 3, 4, 5 ] // Современный, Классический, Лофт, Скандинавский, Восточный
+        const brandIds = [ 1, 2, 3, 4, 5 ] // Мебель-Эксперт, КлассикХоум, Свет-Хаус, Уютный Дом, Восток-Декор
+        const collectionIds = [ 1, 2, 3, 4, 5, 6 ] // Уют, Антик, Индустриал, Сканди, Абстракция, Азия
+        const countryIds = [ 1, 2, 3, 4, 5 ] // Россия, Италия, Китай, Турция, Индия
 
         // Расширенный список category IDs для генерации
         const categoryIdsForGeneration = [
@@ -145,22 +145,22 @@ export async function seedProducts() {
             26, // Обеденные группы
             // Добавьте сюда другие существующие Category ID, если они у вас есть
             // Например: 1, 9, 11, 13, 14, 19, 20, 21, 22, 23, 24, 25, 27, 28, 29...
-        ];
+        ]
 
         for (let i = 0; i < TOTAL_PRODUCTS_TO_GENERATE; i++) {
-            const productId = START_PRODUCT_ID + i;
-            const styleId = styleIds[i % styleIds.length];
-            const brandId = brandIds[i % brandIds.length];
-            const collectionId = collectionIds[i % collectionIds.length];
-            const countryId = countryIds[i % countryIds.length];
-            const isNew = Math.random() > 0.5; // Случайно 50/50
-            const isActive = Math.random() > 0.1; // 90% активных
+            const productId = START_PRODUCT_ID + i
+            const styleId = styleIds[i % styleIds.length]
+            const brandId = brandIds[i % brandIds.length]
+            const collectionId = collectionIds[i % collectionIds.length]
+            const countryId = countryIds[i % countryIds.length]
+            const isNew = Math.random() > 0.5 // Случайно 50/50
+            const isActive = Math.random() > 0.1 // 90% активных
 
-            const productName = `Продукт #${productId} - ${isNew ? 'Новинка' : 'Популярное'}`;
-            const shortDesc = `Краткое описание для продукта ${productId}. Стиль: ${styleId}, Бренд: ${brandId}.`;
-            const longDesc = `Полное описание для продукта ${productId}. Это универсальный предмет мебели, который идеально впишется в современный интерьер. Изготовлен из высококачественных материалов, обеспечивает долговечность и комфорт использования.`;
-            const articul = `PROD-${String(productId).padStart(3, '0')}`;
-            const sku = `SKU-${String(productId).padStart(3, '0')}-${String(styleId).padStart(2, '0')}`;
+            const productName = `Продукт #${productId} - ${isNew ? 'Новинка' : 'Популярное'}`
+            const shortDesc = `Краткое описание для продукта ${productId}. Стиль: ${styleId}, Бренд: ${brandId}.`
+            const longDesc = `Полное описание для продукта ${productId}. Это универсальный предмет мебели, который идеально впишется в современный интерьер. Изготовлен из высококачественных материалов, обеспечивает долговечность и комфорт использования.`
+            const articul = `PROD-${String(productId).padStart(3, '0')}`
+            const sku = `SKU-${String(productId).padStart(3, '0')}-${String(styleId).padStart(2, '0')}`
 
             productSeedDataToCreate.push({
                 id: productId,
@@ -180,29 +180,29 @@ export async function seedProducts() {
                 // new_price: parseFloat((Math.random() * (90000 - 9000) + 9000).toFixed(2)),
                 // primary_color: Math.floor(Math.random() * 4) + 1, // Случайный цвет от 1 до 4
                 // secondary_color: Math.floor(Math.random() * 4) + 1,
-            });
+            })
 
             // Генерируем связи с категориями (каждый продукт будет иметь 1-3 категории)
-            const numCategories = Math.floor(Math.random() * 3) + 1; // 1, 2 или 3 категории
-            const assignedCategories = new Set<number>();
+            const numCategories = Math.floor(Math.random() * 3) + 1 // 1, 2 или 3 категории
+            const assignedCategories = new Set<number>()
             while (assignedCategories.size < numCategories) {
-                const randomCategoryIndex = Math.floor(Math.random() * categoryIdsForGeneration.length);
-                assignedCategories.add(categoryIdsForGeneration[randomCategoryIndex]);
+                const randomCategoryIndex = Math.floor(Math.random() * categoryIdsForGeneration.length)
+                assignedCategories.add(categoryIdsForGeneration[randomCategoryIndex])
             }
             assignedCategories.forEach(catId => {
-                productCategoryLinks.push({ productId, categoryId: catId });
-            });
+                productCategoryLinks.push({ productId, categoryId: catId })
+            })
         }
 
         // Создаем записи продуктов в базе данных
-        await ProductModel.bulkCreate(productSeedDataToCreate);
-        console.log(`Продукты успешно добавлены в базу данных. Всего: ${productSeedDataToCreate.length} продуктов.`);
+        await ProductModel.bulkCreate(productSeedDataToCreate)
+        console.log(`Продукты успешно добавлены в базу данных. Всего: ${productSeedDataToCreate.length} продуктов.`)
 
         // Создаем связи между продуктами и категориями
-        await ProductCategoryModel.bulkCreate(productCategoryLinks);
-        console.log(`Связи продуктов с категориями успешно добавлены. Всего: ${productCategoryLinks.length} связей.`);
+        await ProductCategoryModel.bulkCreate(productCategoryLinks)
+        console.log(`Связи продуктов с категориями успешно добавлены. Всего: ${productCategoryLinks.length} связей.`)
 
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы продуктов или связей:', error);
+        console.error('Ошибка при заполнении таблицы продуктов или связей:', error)
     }
 }

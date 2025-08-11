@@ -23,5 +23,5 @@ export const Arrow: React.FC<ArrowProps> = ({ width = 16, height = 6, className 
                 fill={fill} // Используем пропс fill
             />
         </svg>
-    );
-};
+    )
+}

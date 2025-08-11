@@ -157,6 +157,7 @@ const ProductForm = ({
             }
         } catch (error) {
             console.error('Ошибка при сохранении продукта:', error)
+            alert(`Ошибка при сохранении продукта: ${error.message}`)
         }
     }
 
@@ -266,6 +267,7 @@ const ProductForm = ({
                         Артикул:
                     </label>
                     <input
+                        required
                         value={articul}
                         onChange={(e) => setArticul(e.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -281,6 +283,7 @@ const ProductForm = ({
                         SKU:
                     </label>
                     <input
+                        required
                         value={sku}
                         onChange={(e) => setSku(e.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

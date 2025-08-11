@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 const PaymentMethods = () => {
     // Существующее состояние заказа
-    const [order, setOrder] = useState({
+    const [ order, setOrder ] = useState({
         productName: '',
         quantity: '',
         customerName: '',
@@ -64,16 +64,16 @@ const PaymentMethods = () => {
 
     // Статусы заказа
     const orderStatuses = [
-        {id: 1, title: 'Lorem ipsum dolor si', status: 'completed'},
-        {id: 2, title: 'Consectetur adipisci', status: 'active'},
-        {id: 3, title: 'Sed do eiusmod temp', status: 'pending'},
-        {id: 4, title: 'Ut labore et dolore', status: 'pending'},
-        {id: 5, title: 'Magna aliqua ut eni', status: 'pending'},
-        {id: 6, title: 'Quis nostrud exerci', status: 'pending'},
-        {id: 7, title: 'Ullamco laboris nis', status: 'pending'},
-        {id: 8, title: 'Duis aute irure dol', status: 'pending'},
-        {id: 9, title: 'Reprehenderit in vo', status: 'pending'},
-        {id: 10, title: 'Excepteur sint occ', status: 'pending'}
+        { id: 1, title: 'Lorem ipsum dolor si', status: 'completed' },
+        { id: 2, title: 'Consectetur adipisci', status: 'active' },
+        { id: 3, title: 'Sed do eiusmod temp', status: 'pending' },
+        { id: 4, title: 'Ut labore et dolore', status: 'pending' },
+        { id: 5, title: 'Magna aliqua ut eni', status: 'pending' },
+        { id: 6, title: 'Quis nostrud exerci', status: 'pending' },
+        { id: 7, title: 'Ullamco laboris nis', status: 'pending' },
+        { id: 8, title: 'Duis aute irure dol', status: 'pending' },
+        { id: 9, title: 'Reprehenderit in vo', status: 'pending' },
+        { id: 10, title: 'Excepteur sint occ', status: 'pending' }
     ]
 
     // Существующие обработчики...
@@ -89,7 +89,7 @@ const PaymentMethods = () => {
                         <div
                             key={method.id}
                             className="flex items-center p-3 sm:p-4 lg:p-6 border rounded-lg cursor-pointer hover:bg-gray-50"
-                            onClick={() => setOrder(prev => ({...prev, paymentMethod: method.id}))}
+                            onClick={() => setOrder(prev => ({ ...prev, paymentMethod: method.id }))}
                         >
                             <div className="w-10 sm:w-16 lg:w-24 h-10 sm:h-14 lg:h-20 relative mr-3 sm:mr-4 lg:mr-6">
                                 <Image
@@ -116,38 +116,32 @@ const PaymentMethods = () => {
             </div>
         </div>
 
-    <div className="my-6">
-        <h3 className="text-lg font-semibold mb-3">Статус заказа</h3>
-        <div className="flex flex-wrap gap-4 justify-between">
-            {orderStatuses.map((status, index) => (
-                <div key={status.id}
-                     className={`p - 4 rounded-lg flex-1 min-w-[200px] ${index >= 6 ? 'mt-4' : ''} ${
-                         status.status === 'completed'
-                             ? 'bg-green-100 text-green-800'
-                             : status.status === 'active'
-                                 ? 'bg-blue-100 text-blue-800'
-                                 : 'bg-gray-100 text-gray-800'
-                     } ${
-                         index < orderStatuses.length - 1
-                             ? 'clip-path-arrow'
-                             : ''
-                     }`}
-                >
-                    <div>
-                        <p className="font-medium">{status.title}</p>
-                        <p className="text-xs mt-1 capitalize">{status.status}</p>
+        <div className="my-6">
+            <h3 className="text-lg font-semibold mb-3">Статус заказа</h3>
+            <div className="flex flex-wrap gap-4 justify-between">
+                {orderStatuses.map((status, index) => (
+                    <div key={status.id}
+                        className={`p - 4 rounded-lg flex-1 min-w-[200px] ${index >= 6 ? 'mt-4' : ''} ${
+                            status.status === 'completed'
+                                ? 'bg-green-100 text-green-800'
+                                : status.status === 'active'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : 'bg-gray-100 text-gray-800'
+                        } ${
+                            index < orderStatuses.length - 1
+                                ? 'clip-path-arrow'
+                                : ''
+                        }`}
+                    >
+                        <div>
+                            <p className="font-medium">{status.title}</p>
+                            <p className="text-xs mt-1 capitalize">{status.status}</p>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
-    </div>
-</>)
+    </>)
 }
 
 export default PaymentMethods
-
-
-
-
-
-

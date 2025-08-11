@@ -31,18 +31,18 @@ const ProductVariantManager = ({
     console.log('initialVariants 3', initialVariants)
     const router = useRouter()
     // хранит текущий список вариантов на клиенте
-    const [variants, setVariants] = useState(initialVariants)
+    const [ variants, setVariants ] = useState(initialVariants)
     // хранит вариант, который сейчас редактируется (или null, если создается новый)
-    const [editingVariant, setEditingVariant] = useState<any | null>(null)
+    const [ editingVariant, setEditingVariant ] = useState<any | null>(null)
 
     // Состояние для текущей страницы пагинации
-    const [currentPage, setCurrentPage] = useState(1)
+    const [ currentPage, setCurrentPage ] = useState(1)
 
     // useEffect для синхронизации initialVariants с внутренним состоянием,
     // если initialVariants изменяются (например, после router.refresh() на родительской странице)
     useEffect(() => {
         setVariants(initialVariants)
-    }, [initialVariants])
+    }, [ initialVariants ])
 
     // Обработчик нажатия кнопки "Редактировать"
     const handleEditClick = (variant: any) => {

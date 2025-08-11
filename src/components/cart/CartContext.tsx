@@ -15,9 +15,9 @@ import {
     updateQuantityAction,
     addProductToCartAction, // Это действие используется внутри CartProvider
 } from '@/actions/cartActions'
-import {getCurrentUserAction} from '@/actions/userActions'
-import {AuthUser} from '@/db/models/users.model'
-import {UnauthorizedError} from "@/errors";
+import { getCurrentUserAction } from '@/actions/userActions'
+import { AuthUser } from '@/db/models/users.model'
+import { UnauthorizedError } from '@/errors'
 
 const CartContext = createContext({
     finalAmount: 0,
@@ -115,8 +115,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                 setSelectedItems(rows.map((row) => row.id))
             } catch (error) {
                 console.error('Ошибка при загрузке корзины:', error)
-                setCartRows([]); // Очищаем корзину при ошибке
-                setSelectedItems([]); // Очищаем выбранные элементы при ошибке
+                setCartRows([]) // Очищаем корзину при ошибке
+                setSelectedItems([]) // Очищаем выбранные элементы при ошибке
             } finally {
                 setIsLoading(false)
             }

@@ -1,5 +1,5 @@
 // material.seeder.ts
-import { MaterialModel } from '@/db/models/material.model';
+import { MaterialModel } from '@/db/models/material.model'
 
 const materialSeedData = [
     {
@@ -33,13 +33,13 @@ const materialSeedData = [
         isActive: true,
     },
     // Добавьте другие материалы по мере необходимости
-];
+]
 
 export async function seedMaterials() {
     try {
-        await MaterialModel.bulkCreate(materialSeedData, { ignoreDuplicates: true }); // Добавлена опция ignoreDuplicates
-        console.log('Materials seeded successfully');
+        await MaterialModel.bulkCreate(materialSeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        console.log('Materials seeded successfully')
     } catch (error) {
-        console.error('Error seeding materials:', error);
+        console.error('Error seeding materials:', error)
     }
 }

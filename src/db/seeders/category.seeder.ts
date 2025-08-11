@@ -352,21 +352,21 @@ export async function seedCategories() {
                 image: '/images/categories/chasy.jpg',
                 parentId: 3
             }
-        ];
+        ]
 
         // Создаем записи в базе данных
-        await CategoryModel.bulkCreate(categories);
+        await CategoryModel.bulkCreate(categories)
 
-        console.log('Категории успешно добавлены в базу данных');
+        console.log('Категории успешно добавлены в базу данных')
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы категорий:', error);
+        console.error('Ошибка при заполнении таблицы категорий:', error)
     }
 }
 
 export async function seedProductCategories() {
     try {
         // Очистка таблицы перед заполнением (опционально)
-        await ProductCategoryModel.destroy({ where: {}, truncate: true });
+        await ProductCategoryModel.destroy({ where: {}, truncate: true })
 
         const productCategoryLinks: ProductCategoryDTO[] = [
             // Пример связей:

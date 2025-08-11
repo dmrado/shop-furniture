@@ -3,12 +3,12 @@ import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, 
 import { OrderedProducts } from '../types/interfaces'
 // import {OrderModel} from "@/db/models";
 
-export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>>{
-    declare id: CreationOptional<number>;
-    declare orderId: number;
-    declare product: number;
-    declare quantity: number;
-    declare status: number;
+export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>> {
+    declare id: CreationOptional<number>
+    declare orderId: number
+    declare product: number
+    declare quantity: number
+    declare status: number
 }
 
 OrderedProductsModel.init(

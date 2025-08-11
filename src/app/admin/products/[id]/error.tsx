@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-
+//fixme не работает, да и не нужен
 export default function Error({
     error, //в error.message попдает строка из  throw new Error (message:'...')
     reset //функция, котороая при вызове пытается повторно отрендерить родительский компонент, полезно если ошибка временная
@@ -12,7 +12,7 @@ export default function Error({
     useEffect(() => {
         // Optionally log the error to an error reporting service
         console.error(error)
-    }, [error])
+    }, [ error ])
 
     return (
         <main className="flex ">

@@ -1,4 +1,3 @@
-// src/components/ui/ProductSearch.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -70,6 +69,7 @@ const SearchProduct = ({
 
     // Эффект для debounce-поиска по названию
     useEffect(() => {
+        console.log('useEffect 1')
         const handler = setTimeout(() => {
             const current = new URLSearchParams(searchParams.toString())
             if (nameSearchTerm) {
@@ -88,6 +88,7 @@ const SearchProduct = ({
 
     // Эффект для debounce-поиска по артикулу
     useEffect(() => {
+        console.log('useEffect 2')
         const handler = setTimeout(() => {
             const current = new URLSearchParams(searchParams.toString())
             if (articulSearchTerm) {

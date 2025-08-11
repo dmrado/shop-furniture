@@ -1,4 +1,4 @@
-import { CollectionModel } from '@/db/models/collection.model';
+import { CollectionModel } from '@/db/models/collection.model'
 
 const collectionSeedData = [
     {
@@ -32,13 +32,13 @@ const collectionSeedData = [
         isActive: true,
     },
     // Добавьте другие коллекции по мере необходимости
-];
+]
 
 export async function seedCollections() {
     try {
-        await CollectionModel.bulkCreate(collectionSeedData, { ignoreDuplicates: true }); // Добавлена опция ignoreDuplicates
-        console.log('Collections seeded successfully');
+        await CollectionModel.bulkCreate(collectionSeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        console.log('Collections seeded successfully')
     } catch (error) {
-        console.error('Error seeding collections:', error);
+        console.error('Error seeding collections:', error)
     }
 }

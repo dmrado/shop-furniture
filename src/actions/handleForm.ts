@@ -12,6 +12,7 @@ import {
     InferCreationAttributes,
     CreationOptional
 } from 'sequelize'
+import { ProductVariantModel } from '@/db/models'
 
 class ValidationError extends Error {}
 
@@ -67,12 +68,12 @@ type ProductFormData = {
 }
 
 const cleanFormData = (formData: FormData): ProductFormData => {
-    const id = formData.get('id')
-    const name = formData.get('name')
-    const articul = formData.get('articul')
-    const sku = formData.get('sku')
-    const descriptionShort = formData.get('descriptionShort')
-    const descriptionLong = formData.get('descriptionLong')
+    const id = (formData.get('id') as string).trim()
+    const name = (formData.get('name') as string).trim()
+    const articul = (formData.get('articul') as string).trim()
+    const sku = (formData.get('sku') as string).trim()
+    const descriptionShort = (formData.get('descriptionShort') as string).trim()
+    const descriptionLong = (formData.get('descriptionLong') as string).trim()
     const isNew = formData.get('isNew') // Чекбокс будет 'on' или null/undefined
     const isActive = formData.get('isActive') // Чекбокс будет 'on' или null/undefined
     const brandId = formData.get('brandId')
@@ -220,6 +221,17 @@ export const handleForm = async (formData: FormData) => {
                 .slice(0, 100)
         }
 
+        //Проверка уникальности артикула варианта
+        const unicArticul = await ProductModel.findOne({
+            where: { articul: productData.articul }
+        })
+        if (unicArticul) {
+            throw new Error(
+                `Продукт с артикулом ${productData.articul} уже существует.`
+            )
+        }
+
+
         // Подключаем ProductModel
         // Создаем объект для upsert
         const upsertData: InferCreationAttributes<ProductModel> = {
@@ -255,7 +267,7 @@ export const handleForm = async (formData: FormData) => {
         }
 
         // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
-        const [product, created] = await ProductModel.upsert(upsertData)
+        const [ product, created ] = await ProductModel.upsert(upsertData)
 
         if (created) {
             console.log(`Product with ID ${product.id} was created.`)

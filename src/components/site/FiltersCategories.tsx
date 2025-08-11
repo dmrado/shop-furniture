@@ -1,9 +1,9 @@
 'use client'
-import React, {useState} from 'react';
-import CartTotalAmount from '../cart/CartTotalAmount';
+import React, { useState } from 'react'
+import CartTotalAmount from '../cart/CartTotalAmount'
 
 const FiltersCategories = () => {
-    const [filters, setFilters] = useState({
+    const [ filters, setFilters ] = useState({
         category: 'all',
         priceRange: 'all',
         sortBy: 'newest'
@@ -24,7 +24,7 @@ const FiltersCategories = () => {
                         <select
                             className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             value={filters.category}
-                            onChange={(e) => setFilters({...filters, category: e.target.value})}
+                            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
                         >
                             {categories.map(category => (
                                 <option key={category} value={category.toLowerCase()}>
@@ -36,7 +36,7 @@ const FiltersCategories = () => {
                         <select
                             className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             value={filters.priceRange}
-                            onChange={(e) => setFilters({...filters, priceRange: e.target.value})}
+                            onChange={(e) => setFilters({ ...filters, priceRange: e.target.value })}
                         >
                             <option value="all">Все цены</option>
                             <option value="0-100">До 100₽</option>
@@ -48,7 +48,7 @@ const FiltersCategories = () => {
                     <select
                         className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         value={filters.sortBy}
-                        onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
+                        onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
                     >
                         <option value="newest">Сначала новые</option>
                         <option value="price-low">Сначала дешевле</option>

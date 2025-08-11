@@ -9,9 +9,9 @@ import { notFound } from 'next/navigation'
 import Title from '@/components/site/Title'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 import AdminFilter from '@/components/site/navigation/AdminFilter'
-import {BrandModel, CollectionModel, CountryModel, StyleModel} from "@/db/models";
-import {DictionaryItem} from "@/db/types/common-types";
-import {getBrands, getActiveCollections, getActiveCountries, getActiveStyles} from "@/actions/dictionaryActions";
+import { BrandModel, CollectionModel, CountryModel, StyleModel } from '@/db/models'
+import { DictionaryItem } from '@/db/types/common-types'
+import { getBrands, getActiveCollections, getActiveCountries, getActiveStyles } from '@/actions/dictionaryActions'
 
 type Props = {
     params: { slug: string };

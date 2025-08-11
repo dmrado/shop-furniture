@@ -1,33 +1,33 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import QuantitySelector from '@/components/site/QuantitySelector'
-import {useCartContext} from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 import Link from 'next/link'
 import Image from 'next/image'
 // import UserAddressForm from '@/components/user/UserAddressForm'
-import {InstantOrderForm} from '@/components/site/InstantOrderForm'
+import { InstantOrderForm } from '@/components/site/InstantOrderForm'
 import Modal from '@/components/site/Modal'
-import {Product} from '@/actions/productActions'
-import {ProductVariantDTO} from '@/db/models/product_variant.model'
-import {useRouter} from 'next/navigation'
-import {UnauthorizedError} from "@/errors";
+import { Product } from '@/actions/productActions'
+import { ProductVariantDTO } from '@/db/models/product_variant.model'
+import { useRouter } from 'next/navigation'
+import { UnauthorizedError } from '@/errors'
 
-const ProductFullDescription = ({product}: { product: Product }) => {
+const ProductFullDescription = ({ product }: { product: Product }) => {
     const router = useRouter()
-    const {addProductToCart} = useCartContext()
+    const { addProductToCart } = useCartContext()
     // const [ selectedImage, setSelectedImage ] = useState(0)
 
     // for select Variants with useMemo ==========================================
     // хранят выбранное значение свойств
-    const [selectedColorId, setSelectedColorId] = useState<number | null>(null)
-    const [selectedLength, setSelectedLength] = useState<number | null>(null)
+    const [ selectedColorId, setSelectedColorId ] = useState<number | null>(null)
+    const [ selectedLength, setSelectedLength ] = useState<number | null>(null)
 
     // Отфильтрованные варианты на основе свойств выше
     const filteredVariants: ProductVariantDTO[] = product.variants
         .filter(variant => selectedColorId === null || variant.colorId === selectedColorId)
         .filter(variant => selectedLength === null || variant.length === selectedLength)
 
-    const allColors = filteredVariants.map(variant => ({id: variant.color.id, label: variant.color.code}))
+    const allColors = filteredVariants.map(variant => ({ id: variant.color.id, label: variant.color.code }))
 
     const uniqueColors = Object.values(
         allColors.reduce((acc, obj) => {
@@ -37,18 +37,18 @@ const ProductFullDescription = ({product}: { product: Product }) => {
     )
 
     const allLength = Array.from(new Set(filteredVariants.map(variant => variant.length)))
-        .map(length => ({id: length, label: length}))
+        .map(length => ({ id: length, label: length }))
 
     // хранит финально выбранный пользователем вариант продукта по умолчанию первый
-    const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(product.variants[0] || null)
+    const [ selectedVariant, setSelectedVariant ] = useState<ProductVariantDTO | null>(product.variants[0] || null)
     console.log('selectedVariant', selectedVariant)
     //============================================================================
 
-    const [quantitySelectorCount, setQuantitySelectorCount] = useState(1)
-    const [isCartUpdating, setIsCartUpdating] = useState(false)
+    const [ quantitySelectorCount, setQuantitySelectorCount ] = useState(1)
+    const [ isCartUpdating, setIsCartUpdating ] = useState(false)
 
     // for InstantOrderModal
-    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [ isOpenModal, setIsOpenModal ] = useState(false)
 
     // useEffect(() => {
     //     const defaultVariant = product.variants?.[0]
@@ -81,7 +81,7 @@ const ProductFullDescription = ({product}: { product: Product }) => {
         }
         // Если selectedVariant уже установлен и все еще находится в filteredVariants,
         // ничего не делаем. Выбор пользователя сохраняется.
-    }, [filteredVariants, selectedVariant]) // Зависимости: изменения filteredVariants или selectedVariant.
+    }, [ filteredVariants, selectedVariant ]) // Зависимости: изменения filteredVariants или selectedVariant.
 
     // Находим cartRow для текущего продукта
     // const cartRow = cartRows.find(row => row.product.id === product.id) || null

@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 
 // Правая часть с товарами
 
 const CatalogSection = () => {
     return <>
         <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1">
-            {/* Информация о количестве найденных товаров */}
-            <div className="text-sm text-gray-700 mb-4">
+            <div className="flex-1">
+                {/* Информация о количестве найденных товаров */}
+                <div className="text-sm text-gray-700 mb-4">
                 Найдено товаров: 1578
-            </div>
+                </div>
 
-            {/* Контейнер для карточек товаров (здесь будет использоваться map) */}
-            {/*<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">*/}
+                {/* Контейнер для карточек товаров (здесь будет использоваться map) */}
+                {/*<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">*/}
 
                 {/* Шаблон карточки товара, который будет использоваться в map */}
                 {/* v-for="product in products" :key="product.id" */}
@@ -21,7 +21,7 @@ const CatalogSection = () => {
                     {/* Изображение товара */}
                     <div className="relative">
                         <img src="path/to/image.jpg" alt="Диван Monusom Large Flexform"
-                             className="w-full h-64 object-cover"/>
+                            className="w-full h-64 object-cover"/>
                         {/* Статус наличия */}
 
                         <div className="absolute bottom-2 left-2 flex items-center">
@@ -42,21 +42,21 @@ const CatalogSection = () => {
                                 {/* Кнопка добавления в корзину */}
 
                                 <button className="bg-amber-500 hover:bg-amber-600 text-white p-1 rounded"
-                                        // onClick={() => addToCart(product.id)}
+                                    // onClick={() => addToCart(product.id)}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                                         viewBox="0 0 24 24" stroke="currentColor">
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                                     </svg>
                                 </button>
 
                                 {/* Кнопка добавления в избранное */}
                                 <button className="text-gray-400 hover:text-amber-500 p-1"
-                                        // onClick={() => toggleFavorite(product.id)}
+                                    // onClick={() => toggleFavorite(product.id)}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                                         viewBox="0 0 24 24" stroke="currentColor">
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                     </svg>
                                 </button>
                             </div>
@@ -64,8 +64,8 @@ const CatalogSection = () => {
                     </div>
 
                 </div>
-            {/*</div>*/}
-        </div>
+                {/*</div>*/}
+            </div>
         </div>
     </>
 }

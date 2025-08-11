@@ -1,6 +1,6 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import {AuthUserModel} from "@/db/models/users.model";
+import { AuthUserModel } from '@/db/models/users.model'
 
 export interface Address extends InferAttributes<AddressModel> {}
 export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> {

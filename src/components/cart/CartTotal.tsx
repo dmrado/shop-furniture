@@ -1,7 +1,7 @@
 'use client'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import CartTotalAmount from '@/components/cart/CartTotalAmount'
-import {useCartContext} from '@/components/cart/CartContext'
+import { useCartContext } from '@/components/cart/CartContext'
 import Link from 'next/link'
 
 // interface Product {
@@ -160,7 +160,7 @@ const CartTotal = () => {
                     {/*    </div>*/}
                     {/*)}*/}
                     <div className="text-sm text-gray-600 mt-1">
-                        Товарных позиций: {isLoading ? "..." : count}
+                        Товарных позиций: {isLoading ? '...' : count}
                     </div>
 
                     <button

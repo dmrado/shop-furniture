@@ -1,5 +1,5 @@
 // country.seeder.ts
-import { CountryModel } from '@/db/models/country.model';
+import { CountryModel } from '@/db/models/country.model'
 
 const countrySeedData = [
     {
@@ -33,13 +33,13 @@ const countrySeedData = [
         isActive: true,
     },
     // Добавьте другие страны по мере необходимости
-];
+]
 
 export async function seedCountries() {
     try {
-        await CountryModel.bulkCreate(countrySeedData, { ignoreDuplicates: true }); // Добавлена опция ignoreDuplicates
-        console.log('Countries seeded successfully');
+        await CountryModel.bulkCreate(countrySeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        console.log('Countries seeded successfully')
     } catch (error) {
-        console.error('Error seeding countries:', error);
+        console.error('Error seeding countries:', error)
     }
 }

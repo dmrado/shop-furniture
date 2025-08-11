@@ -31,7 +31,7 @@ const cleanProductVariantFormData = (
 ): ProductVariantFormData => {
     const id = formData.get('id') ? Number(formData.get('id')) : undefined
     const isActive = formData.get('isActive') === 'true'
-    const articul = formData.get('articul') as string
+    const articul = (formData.get('articul') as string).trim()
 
     const productId = Number(formData.get('productId'))
 
@@ -144,7 +144,7 @@ export async function handleProductVariantForm(formData: FormData) {
     }
     const materialExists = await MaterialModel.findByPk(parsedData.materialId)
     if (!materialExists) {
-        const [productVariant, created] = await ProductVariantModel.upsert(
+        const [ productVariant, created ] = await ProductVariantModel.upsert(
             upsertData,
             {
                 returning: true // Возвращает обновленную/созданную запись

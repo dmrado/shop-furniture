@@ -1,4 +1,4 @@
-import { BrandModel } from '@/db/models/brand.model';
+import { BrandModel } from '@/db/models/brand.model'
 
 const brandSeedData = [
     {
@@ -32,13 +32,13 @@ const brandSeedData = [
         isActive: true,
     },
     // Добавьте другие бренды по мере необходимости
-];
+]
 
 export async function seedBrands() {
     try {
-        await BrandModel.bulkCreate(brandSeedData, { ignoreDuplicates: true }); // Добавлена опция ignoreDuplicates
-        console.log('Brands seeded successfully');
+        await BrandModel.bulkCreate(brandSeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        console.log('Brands seeded successfully')
     } catch (error) {
-        console.error('Error seeding brands:', error);
+        console.error('Error seeding brands:', error)
     }
 }

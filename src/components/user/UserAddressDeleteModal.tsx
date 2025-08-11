@@ -1,19 +1,19 @@
 'use client'
-import React, {useEffect, useState} from 'react'
-import {userAddressFormAction} from '@/actions/user/userAddressFormAction'
-import {Description, Dialog} from '@headlessui/react'
+import React, { useEffect, useState } from 'react'
+import { userAddressFormAction } from '@/actions/user/userAddressFormAction'
+import { Description, Dialog } from '@headlessui/react'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from '@/components/site/Success'
 import Modal from '@/components/site/Modal'
-import {deleteAddressRowAction, getAddressByIdAction, getAddressListAction} from '@/actions/addressActions'
+import { deleteAddressRowAction, getAddressByIdAction, getAddressListAction } from '@/actions/addressActions'
 
 //пользователь хочет удалить адрес
 
-const UserAddressDeleteModal = ({id, setAddressList, isOpenModal, onClose}) => {
+const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) => {
 
-    const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
-    const [errorMessage, setErrorMessage] = useState('')
-    const [address, setAddress] = useState(null)
+    const [ status, setStatus ] = useState('idle') // 'idle', 'loading', 'success', 'error'
+    const [ errorMessage, setErrorMessage ] = useState('')
+    const [ address, setAddress ] = useState(null)
 
     const fetchAddress = async (id: number) => {
         try {
@@ -31,7 +31,7 @@ const UserAddressDeleteModal = ({id, setAddressList, isOpenModal, onClose}) => {
         if (id) {
             fetchAddress(id)
         }
-    }, [id])
+    }, [ id ])
 
     // Функция для обработки формы удаления адреса
     const onSubmit = async (formData) => {

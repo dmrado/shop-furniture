@@ -1,11 +1,11 @@
-import {ColorModel} from '@/db/models/color.model'
+import { ColorModel } from '@/db/models/color.model'
 
 export async function seedColors() {
     try {
-        console.log('Starting color seeding...');
+        console.log('Starting color seeding...')
         // Очистка таблицы цветов перед заполнением (опционально, но рекомендуется для сидеров)
-        await ColorModel.destroy({ truncate: true, cascade: true });
-        console.log('Color table truncated.');
+        await ColorModel.destroy({ truncate: true, cascade: true })
+        console.log('Color table truncated.')
 
         const colors = [
             {
@@ -58,15 +58,15 @@ export async function seedColors() {
                 code: '#800080',
                 name: 'Фиолетовый'
             },
-        ];
+        ]
 
         // Используем bulkCreate для более эффективного добавления нескольких записей
-        await ColorModel.bulkCreate(colors);
+        await ColorModel.bulkCreate(colors)
 
-        console.log('Colors seeded successfully');
+        console.log('Colors seeded successfully')
     } catch (error) {
-        console.error('Error seeding colors:', error);
-        throw error;
+        console.error('Error seeding colors:', error)
+        throw error
     }
 }
 
@@ -74,11 +74,11 @@ export async function seedColors() {
 if (require.main === module) {
     seedColors()
         .then(() => {
-            console.log('Seeding completed');
-            process.exit(0);
+            console.log('Seeding completed')
+            process.exit(0)
         })
         .catch((error) => {
-            console.error('Seeding failed:', error);
-            process.exit(1);
-        });
+            console.error('Seeding failed:', error)
+            process.exit(1)
+        })
 }

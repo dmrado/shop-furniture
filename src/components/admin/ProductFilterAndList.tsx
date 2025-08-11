@@ -38,7 +38,7 @@ const ProductFilterAndList = ({
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
-    console.log('ProductFilterAndList - received currentPage prop:', currentPage);
+    console.log('ProductFilterAndList - received currentPage prop:', currentPage)
     //URL для кнопки "Поделиться"
     const currentQueryString = searchParams.toString()
     const urlForShare = currentQueryString ? `${path}?${currentQueryString}` : path
@@ -55,7 +55,7 @@ const ProductFilterAndList = ({
         const newPage = selectedPage.selected + 1 // ReactPaginate 0-индексирован, нам нужен 1-индексированный номер страницы
         const currentSearchParams = new URLSearchParams(searchParams)
         currentSearchParams.set('page', String(newPage)) // Устанавливаем или обновляем параметр 'page'
-        console.log('ProductFilterAndList - pushing new URL:', path + '?' + currentSearchParams.toString());
+        console.log('ProductFilterAndList - pushing new URL:', path + '?' + currentSearchParams.toString())
         router.push(path + '?' + currentSearchParams.toString()) // Переходим на новый URL
     }
 

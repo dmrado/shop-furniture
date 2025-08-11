@@ -3,8 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { createBrand, updateBrand } from '@/actions/dictionaryActions'
-import {DictionaryItem} from "@/db/types/common-types"; // Ваши серверные экшены
-
+import { DictionaryItem } from '@/db/types/common-types' // Ваши серверные экшены
 
 type BrandFormModalContentProps = {
     onClose: () => void // Функция для закрытия модалки, передаваемая из обертки Modal

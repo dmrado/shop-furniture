@@ -61,7 +61,7 @@ const UserOrdersHistory: React.FC<UserDashboardProps> = ({ user, previousOrders 
                 ))}
             </div>
         </div>
-    );
+    )
 }
 
 export default UserOrdersHistory

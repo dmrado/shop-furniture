@@ -1,16 +1,16 @@
-import {sequelize} from '../connection'
-import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from 'sequelize'
+import { sequelize } from '../connection'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 // import {AddressModel} from "@/db/models"
 // import {OuruserModel} from "@/db/models"
 
 export class OrderModel extends Model<InferAttributes<OrderModel>, InferCreationAttributes<OrderModel>> {
-    declare id: CreationOptional<number>;
-    declare userId: string;
-    declare addressId: number;
-    declare comment: string;
-    declare orderDate: Date;
-    declare deliveryDate: Date;
-    declare cartPrice: number;
+    declare id: CreationOptional<number>
+    declare userId: string
+    declare addressId: number
+    declare comment: string
+    declare orderDate: Date
+    declare deliveryDate: Date
+    declare cartPrice: number
 }
 
 OrderModel.init(

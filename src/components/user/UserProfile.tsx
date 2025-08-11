@@ -184,8 +184,8 @@ const UserProfile = ({ user, previousOrders, ad }: UserProfileProps) => {
             </Modal>
 
             <Modal isOpenModal={isOpenNameModal} onClose={() => setIsOpenNameModal(false)}
-                   title='Изменение имени пользователя'
-                   description='Если Вы не хотите что бы зарегистрированный никнейм отображался в счет-фактуре, пожалуйста введите верное ФИО'>
+                title='Изменение имени пользователя'
+                description='Если Вы не хотите что бы зарегистрированный никнейм отображался в счет-фактуре, пожалуйста введите верное ФИО'>
                 <UserNameForm user={user} onClose={() => setIsOpenNameModal(false)}/>
             </Modal>
             {/*<UserOrdersHistory previousOrders={previousOrders}/>*/}

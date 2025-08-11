@@ -20,15 +20,15 @@ const CountryManager = ({ initialCountries, itemsPerPage, currentPage, totalCoun
     const path = usePathname()
     const searchParams = useSearchParams()
 
-    const [countries, setCountries] = useState<DictionaryItem[]>(initialCountries)
-    const [showModal, setShowModal] = useState(false)
-    const [currentCountry, setCurrentCountry] = useState<DictionaryItem | null>(null)
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0)
+    const [ countries, setCountries ] = useState<DictionaryItem[]>(initialCountries)
+    const [ showModal, setShowModal ] = useState(false)
+    const [ currentCountry, setCurrentCountry ] = useState<DictionaryItem | null>(null)
+    const [ descriptionCharCount, setDescriptionCharCount ] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
 
-    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
-    const [countryToDelete, setCountryToDelete] = useState<DictionaryItem | null>(null)
+    const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState(false)
+    const [ countryToDelete, setCountryToDelete ] = useState<DictionaryItem | null>(null)
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescriptionCharCount(e.target.value.length)
@@ -132,7 +132,7 @@ const CountryManager = ({ initialCountries, itemsPerPage, currentPage, totalCoun
                 )}
             </div>
             {showModal && (
-                <Modal onClose={() => { setShowModal(false); setDescriptionCharCount(0); }}>
+                <Modal onClose={() => { setShowModal(false); setDescriptionCharCount(0) }}>
                     <h3 className="text-xl font-bold mb-4">
                         {currentCountry ? 'Редактировать страну' : 'Добавить новую страну'}
                     </h3>
@@ -179,7 +179,7 @@ const CountryManager = ({ initialCountries, itemsPerPage, currentPage, totalCoun
                             <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">Активен</label>
                         </div>
                         <div className="flex justify-end gap-3">
-                            <button type="button" onClick={() => { setShowModal(false); setDescriptionCharCount(0); }} className="button_red px-4 py-2">Отмена 🚫</button>
+                            <button type="button" onClick={() => { setShowModal(false); setDescriptionCharCount(0) }} className="button_red px-4 py-2">Отмена 🚫</button>
                             <button type="submit" className="button_green px-4 py-2">
                                 {currentCountry ? 'Сохранить изменения' : 'Создать страну'} ✅
                             </button>
@@ -188,11 +188,11 @@ const CountryManager = ({ initialCountries, itemsPerPage, currentPage, totalCoun
                 </Modal>
             )}
             {showConfirmDeleteModal && countryToDelete && (
-                <Modal onClose={() => { setShowConfirmDeleteModal(false); setCountryToDelete(null); }}>
+                <Modal onClose={() => { setShowConfirmDeleteModal(false); setCountryToDelete(null) }}>
                     <h3 className="text-xl font-bold mb-4 text-red-700">Подтвердите удаление</h3>
                     <p className="mb-6 text-gray-700">Вы уверены, что хотите удалить страну "<span className="font-semibold">{countryToDelete.name}</span>"? Это действие нельзя отменить. 💡</p>
                     <div className="flex justify-end gap-3">
-                        <button type="button" onClick={() => { setShowConfirmDeleteModal(false); setCountryToDelete(null); }} className="button_blue px-4 py-2">Отмена 🚫</button>
+                        <button type="button" onClick={() => { setShowConfirmDeleteModal(false); setCountryToDelete(null) }} className="button_blue px-4 py-2">Отмена 🚫</button>
                         <button type="button" onClick={handleConfirmDelete} className="button_red px-4 py-2">Да, удалить</button>
                     </div>
                 </Modal>

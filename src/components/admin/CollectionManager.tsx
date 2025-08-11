@@ -20,15 +20,15 @@ const CollectionManager = ({ initialCollections, itemsPerPage, currentPage, tota
     const path = usePathname()
     const searchParams = useSearchParams()
 
-    const [collections, setCollections] = useState<DictionaryItem[]>(initialCollections)
-    const [showModal, setShowModal] = useState(false)
-    const [currentCollection, setCurrentCollection] = useState<DictionaryItem | null>(null)
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0)
+    const [ collections, setCollections ] = useState<DictionaryItem[]>(initialCollections)
+    const [ showModal, setShowModal ] = useState(false)
+    const [ currentCollection, setCurrentCollection ] = useState<DictionaryItem | null>(null)
+    const [ descriptionCharCount, setDescriptionCharCount ] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
 
-    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
-    const [collectionToDelete, setCollectionToDelete] = useState<DictionaryItem | null>(null)
+    const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState(false)
+    const [ collectionToDelete, setCollectionToDelete ] = useState<DictionaryItem | null>(null)
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescriptionCharCount(e.target.value.length)
@@ -132,7 +132,7 @@ const CollectionManager = ({ initialCollections, itemsPerPage, currentPage, tota
                 )}
             </div>
             {showModal && (
-                <Modal onClose={() => { setShowModal(false); setDescriptionCharCount(0); }}>
+                <Modal onClose={() => { setShowModal(false); setDescriptionCharCount(0) }}>
                     <h3 className="text-xl font-bold mb-4">
                         {currentCollection ? 'Редактировать коллекцию' : 'Добавить новую коллекцию'}
                     </h3>
@@ -179,7 +179,7 @@ const CollectionManager = ({ initialCollections, itemsPerPage, currentPage, tota
                             <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">Активен</label>
                         </div>
                         <div className="flex justify-end gap-3">
-                            <button type="button" onClick={() => { setShowModal(false); setDescriptionCharCount(0); }} className="button_red px-4 py-2">Отмена 🚫</button>
+                            <button type="button" onClick={() => { setShowModal(false); setDescriptionCharCount(0) }} className="button_red px-4 py-2">Отмена 🚫</button>
                             <button type="submit" className="button_green px-4 py-2">
                                 {currentCollection ? 'Сохранить изменения' : 'Создать коллекцию'} ✅
                             </button>
@@ -188,11 +188,11 @@ const CollectionManager = ({ initialCollections, itemsPerPage, currentPage, tota
                 </Modal>
             )}
             {showConfirmDeleteModal && collectionToDelete && (
-                <Modal onClose={() => { setShowConfirmDeleteModal(false); setCollectionToDelete(null); }}>
+                <Modal onClose={() => { setShowConfirmDeleteModal(false); setCollectionToDelete(null) }}>
                     <h3 className="text-xl font-bold mb-4 text-red-700">Подтвердите удаление</h3>
                     <p className="mb-6 text-gray-700">Вы уверены, что хотите удалить коллекцию "<span className="font-semibold">{collectionToDelete.name}</span>"? Это действие нельзя отменить. 💡</p>
                     <div className="flex justify-end gap-3">
-                        <button type="button" onClick={() => { setShowConfirmDeleteModal(false); setCollectionToDelete(null); }} className="button_blue px-4 py-2">Отмена 🚫</button>
+                        <button type="button" onClick={() => { setShowConfirmDeleteModal(false); setCollectionToDelete(null) }} className="button_blue px-4 py-2">Отмена 🚫</button>
                         <button type="button" onClick={handleConfirmDelete} className="button_red px-4 py-2">Да, удалить</button>
                     </div>
                 </Modal>

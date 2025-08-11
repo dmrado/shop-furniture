@@ -83,7 +83,7 @@ export async function getProductList(
             include: includeConditions,
             limit: limit,
             offset: offset,
-            order: [['createdAt', 'DESC']],
+            order: [ [ 'createdAt', 'DESC' ] ],
             // attributes: ['id', 'name', 'descriptionShort', 'isNew'],
             distinct: true, // Возвращает только уникальные строки. Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантови получить правильный totalCount.
             col: 'id', // Считать уникальные продукты по их ID

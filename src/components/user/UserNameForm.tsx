@@ -1,16 +1,16 @@
 'use client'
-import React, {useState, Fragment} from 'react'
-import {nodeMailerInstantOrder} from '@/actions/NodeMailerInstantOrder'
-import {Description, Dialog} from '@headlessui/react'
+import React, { useState, Fragment } from 'react'
+import { nodeMailerInstantOrder } from '@/actions/NodeMailerInstantOrder'
+import { Description, Dialog } from '@headlessui/react'
 import Success from '@/components/site/Success'
 import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
-import {updateUserNameAction} from '@/actions/userActions'
+import { updateUserNameAction } from '@/actions/userActions'
 import Modal from '@/components/site/Modal'
-import {Profile} from '@/db/models/profile.model'
+import { Profile } from '@/db/models/profile.model'
 
-export const InputField = ({label, autoComplete, type, value, onChange, required = true, name, id}) => {
-    const [isFocused, setIsFocused] = useState(false)
+export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
+    const [ isFocused, setIsFocused ] = useState(false)
     // todo: make autocomplete
     return (
         <div className="relative">
@@ -30,7 +30,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
                     focus:pt-4 focus:border-indigo-600`}
             />
             <label htmlFor={id}
-                   className={`absolute left-4 transition-all pointer-events-none
+                className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
             >
@@ -40,7 +40,7 @@ export const InputField = ({label, autoComplete, type, value, onChange, required
     )
 }
 //пользователь хочет изменить имя в провайдере на ФИО.
-const UserNameForm = ({user, onClose}: {
+const UserNameForm = ({ user, onClose }: {
     user: Pick<Profile, 'name' | 'surName' | 'fatherName' | 'isAgreed' | 'id'> & {
         email: string
         photo: string
@@ -49,17 +49,17 @@ const UserNameForm = ({user, onClose}: {
     onClose: () => void;
 }) => {
 
-    const [captchaToken, setCaptchaToken] = useState<string>('')
+    const [ captchaToken, setCaptchaToken ] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [agreed, setAgreed] = useState<boolean>(false)
+    const [ agreed, setAgreed ] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [success, setSuccess] = useState<boolean>(false)
+    const [ success, setSuccess ] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [isClosing, setIsClosing] = useState<boolean>(false)
+    const [ isClosing, setIsClosing ] = useState<boolean>(false)
 
     //+++++++start validation формы отправки мгновенного заказа+++++
     class ValidationError extends Error {
@@ -94,7 +94,7 @@ const UserNameForm = ({user, onClose}: {
         try {
             setIsClosing(true)
             const userId = user.id
-            await updateUserNameAction({userId, name, fatherName, surName})
+            await updateUserNameAction({ userId, name, fatherName, surName })
         } catch (error) {
             console.error('Ошибка:', error)
         } finally {
@@ -187,9 +187,9 @@ const UserNameForm = ({user, onClose}: {
                     className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
                                     ${agreed
-                        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }
+        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+}
                                 `}
                 >
                     {isClosing ? 'Отправка...' : 'Отправить'}

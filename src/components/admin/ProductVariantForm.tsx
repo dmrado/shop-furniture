@@ -1,7 +1,7 @@
 'use client'
-import React, {useState, useEffect} from 'react'
-import {handleProductVariantForm as handleProductVariantFormAction} from '@/actions/handleProductVariantForm.ts'
-import {getActiveColors, getMaterials} from '@/actions/dictionaryActions.ts'
+import React, { useState, useEffect } from 'react'
+import { handleProductVariantForm as handleProductVariantFormAction } from '@/actions/handleProductVariantForm.ts'
+import { getActiveColors, getMaterials } from '@/actions/dictionaryActions.ts'
 
 // Типы для элементов справочника (Product, Color)
 type DictionaryItem = {
@@ -26,36 +26,36 @@ type ProductVariantFormProps = {
     onCancel?: () => void // функция, вызываемая при отмене редактирования
 }
 
-const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: ProductVariantFormProps) => {
+const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: ProductVariantFormProps) => {
     console.log('ProductVariantForm received productVariant:', productVariant)
 
     // Инициализируем состояния, используя данные из productVariant или значения по умолчанию
     // Используем ?? '' для числовых полей, чтобы избежать 0 при отсутствии значения
-    const [isActive, setIsActive] = useState(productVariant?.isActive ?? true)
-    const [articul, setArticul] = useState(productVariant?.articul ?? '')
+    const [ isActive, setIsActive ] = useState(productVariant?.isActive ?? true)
+    const [ articul, setArticul ] = useState(productVariant?.articul ?? '')
 
     // ID внешних ключей
-    const [colorId, setColorId] = useState(productVariant?.colorId ?? '') // Используем '' для пустого/невыбранного
-    const [materialId, setMaterialId] = useState(productVariant?.materialId ?? '')
+    const [ colorId, setColorId ] = useState(productVariant?.colorId ?? '') // Используем '' для пустого/невыбранного
+    const [ materialId, setMaterialId ] = useState(productVariant?.materialId ?? '')
 
     // Числовые поля - могут быть числом или пустой строкой
-    const [length, setLength] = useState<number | ''>(productVariant?.length ?? '')
-    const [width, setWidth] = useState<number | ''>(productVariant?.width ?? '')
-    const [height, setHeight] = useState<number | ''>(productVariant?.height ?? '')
-    const [box_length, setBoxLength] = useState<number | ''>(productVariant?.box_length ?? '')
-    const [box_width, setBoxWidth] = useState<number | ''>(productVariant?.box_width ?? '')
-    const [box_height, setBoxHeight] = useState<number | ''>(productVariant?.box_height ?? '')
-    const [box_weight, setBoxWeight] = useState<number | ''>(productVariant?.box_weight ?? '')
-    const [weight, setWeight] = useState<number | ''>(productVariant?.weight ?? '')
-    const [price, setPrice] = useState<number | ''>(productVariant?.price ?? '')
-    const [quantity, setQuantity] = useState<number | ''>(productVariant?.quantity ?? '')
+    const [ length, setLength ] = useState<number | ''>(productVariant?.length ?? '')
+    const [ width, setWidth ] = useState<number | ''>(productVariant?.width ?? '')
+    const [ height, setHeight ] = useState<number | ''>(productVariant?.height ?? '')
+    const [ box_length, setBoxLength ] = useState<number | ''>(productVariant?.box_length ?? '')
+    const [ box_width, setBoxWidth ] = useState<number | ''>(productVariant?.box_width ?? '')
+    const [ box_height, setBoxHeight ] = useState<number | ''>(productVariant?.box_height ?? '')
+    const [ box_weight, setBoxWeight ] = useState<number | ''>(productVariant?.box_weight ?? '')
+    const [ weight, setWeight ] = useState<number | ''>(productVariant?.weight ?? '')
+    const [ price, setPrice ] = useState<number | ''>(productVariant?.price ?? '')
+    const [ quantity, setQuantity ] = useState<number | ''>(productVariant?.quantity ?? '')
 
     // Состояния для хранения списков справочников
-    const [colors, setColors] = useState<ColorItem[]>([])
-    const [materials, setMaterials] = useState<MaterialItem[]>([])
+    const [ colors, setColors ] = useState<ColorItem[]>([])
+    const [ materials, setMaterials ] = useState<MaterialItem[]>([])
 
     // Состояния для валидации
-    const [touchedArticul, setTouchedArticul] = useState(false)
+    const [ touchedArticul, setTouchedArticul ] = useState(false)
     const isArticulValid = () => !touchedArticul || (touchedArticul && articul.length > 0) // Простая валидация
 
     // useEffect для загрузки данных при монтировании компонента
@@ -109,7 +109,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
         setPrice(productVariant?.price ?? '')
         setQuantity(productVariant?.quantity ?? '')
         setTouchedArticul(false) // Сбрасываем состояние валидации при смене варианта
-    }, [productVariant, colors, materials])
+    }, [ productVariant, colors, materials ])
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -151,6 +151,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
             }
         } catch (error) {
             console.error('Ошибка при сохранении варианта:', error)
+            alert(`Ошибка при сохранении варианта: ${error.message}`)
         }
     }
 
@@ -187,13 +188,13 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
 
     // ФУНКЦИЯ ДЛЯ ОБРАБОТКИ КОЛИЧЕСТВА (аналогично цене, но без дробных)
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let value = e.target.value
+        const value = e.target.value
         setQuantity(value === '' ? '' : Number(value))
     }
 
     return (
         <form className="bg-white rounded px-8 pt-6 pb-8"
-              onSubmit={onSubmit}> {/* Используем onSubmit для client-side */}
+            onSubmit={onSubmit}> {/* Используем onSubmit для client-side */}
             {/* ID варианта продукта - скрытое поле, если редактируем */}
             {/* id будет добавляться в formData вручную в onSubmit */}
             {/* productId также будет добавляться в formData вручную */}
@@ -248,7 +249,7 @@ const ProductVariantForm = ({productVariant, productId, onSuccess, onCancel}: Pr
                     name='articul'
                     placeholder="Артикул для данного варианта"
                 />
-                {!isArticulValid() && <span style={{color: 'red'}}>Артикул не может быть пустым.</span>}
+                {!isArticulValid() && <span style={{ color: 'red' }}>Артикул не может быть пустым.</span>}
             </div>
 
             {/* Числовые поля */}

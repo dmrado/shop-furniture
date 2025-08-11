@@ -128,8 +128,8 @@ const mapCartRow = (cartItem: CartModel) => {
                 }
             })
         }
-    };
-};
+    }
+}
 
 export async function getCartAction(): Promise<CartRow[]> {
     const session = await getServerSession(authOptions)
@@ -164,17 +164,17 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
     const userId = session.user.id
     if (newQuantity <= 1) {
         await CartModel.update(
-            {quantity: 1},
-            {where: {id}}
+            { quantity: 1 },
+            { where: { id } }
         )
     } else {
         await CartModel.update(
-            {quantity: newQuantity},
-            {where: {id}}
+            { quantity: newQuantity },
+            { where: { id } }
         )
     }
 
-    const updatedCart = await CartModel.findAll({where: {userId}, include: CART_INCLUDE})
+    const updatedCart = await CartModel.findAll({ where: { userId }, include: CART_INCLUDE })
     if (!updatedCart.length) {
         throw new Error('updated cart not found')
     }

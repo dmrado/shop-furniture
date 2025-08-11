@@ -1,5 +1,5 @@
-import {Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes} from 'sequelize'
-import {sequelize} from '../connection'
+import { Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes } from 'sequelize'
+import { sequelize } from '../connection'
 
 export class Admin extends Model<InferAttributes<Admin>, InferCreationAttributes<Admin>> {
     declare id: CreationOptional<number>
@@ -9,24 +9,24 @@ export class Admin extends Model<InferAttributes<Admin>, InferCreationAttributes
 }
 
 Admin.init({
-        id: {
+    id: {
 
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        name: {
-            type: DataTypes.STRING
-        },
-        surname: {
-            type: DataTypes.STRING
-        },
-        email: {
-            type: DataTypes.STRING(128),
-            allowNull: false,
-        },
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    {
-        sequelize,
-        tableName: 'admins',
-    })
+    name: {
+        type: DataTypes.STRING
+    },
+    surname: {
+        type: DataTypes.STRING
+    },
+    email: {
+        type: DataTypes.STRING(128),
+        allowNull: false,
+    },
+},
+{
+    sequelize,
+    tableName: 'admins',
+})

@@ -76,11 +76,11 @@ const productVariantSeedData = [
     // Генерация дополнительных 50 вариантов (всего 60)
     ...Array.from({ length: 50 }).map((_, i) => {
         // Начинаем productId со 101 и идем до 120 (101 + 20 - 1 = 120)
-        const productId = (i % 40) + 101;
-        const colorId = (i % 4) + 1;     // Цвета от 1 до 4
-        const materialId = (i % 5) + 1;  // Материалы от 1 до 5
-        const baseArticul = `PV${String(productId).padStart(3, '0')}-${String(colorId).padStart(3, '0')}-${String(materialId).padStart(3, '0')}`;
-        const suffix = String(i + 11).padStart(2, '0');
+        const productId = (i % 40) + 101
+        const colorId = (i % 4) + 1 // Цвета от 1 до 4
+        const materialId = (i % 5) + 1 // Материалы от 1 до 5
+        const baseArticul = `PV${String(productId).padStart(3, '0')}-${String(colorId).padStart(3, '0')}-${String(materialId).padStart(3, '0')}`
+        const suffix = String(i + 11).padStart(2, '0')
 
         return {
             productId,
@@ -98,19 +98,19 @@ const productVariantSeedData = [
             box_weight: Math.floor(Math.random() * (4500 - 1200 + 1)) + 1200,
             quantity: Math.floor(Math.random() * 100) + 1,
             price: parseFloat((Math.random() * (2000 - 200) + 200).toFixed(2)),
-        };
+        }
     })
-];
+]
 
 export async function seedProductVariants() {
     try {
-        console.log('Starting product_variants seeding...');
-        await ProductVariantModel.destroy({ truncate: true, cascade: true });
-        console.log('product_variants table truncated.');
+        console.log('Starting product_variants seeding...')
+        await ProductVariantModel.destroy({ truncate: true, cascade: true })
+        console.log('product_variants table truncated.')
 
-        await ProductVariantModel.bulkCreate(productVariantSeedData);
-        console.log(`product_variants seeded successfully. Total ${productVariantSeedData.length} variants created.`);
+        await ProductVariantModel.bulkCreate(productVariantSeedData)
+        console.log(`product_variants seeded successfully. Total ${productVariantSeedData.length} variants created.`)
     } catch (error) {
-        console.error('Error seeding product_variants:', error);
+        console.error('Error seeding product_variants:', error)
     }
 }

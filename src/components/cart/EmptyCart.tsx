@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from 'next/image'
+import Link from 'next/link'
 
 const EmptyCart = () => {
     return (
@@ -94,7 +94,7 @@ const EmptyCart = () => {
                 </Link>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default EmptyCart;
+export default EmptyCart

@@ -64,6 +64,7 @@ const ProductFormSelect = ({
             </label>
             <div className="flex items-center gap-2"> {/* контейнер select + button+добавить + button+редактировать */}
                 <select
+                    required
                     name={name}
                     id={id}
                     value={value}

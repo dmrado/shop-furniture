@@ -1,9 +1,9 @@
 'use server'
-import {ColorModel, ProductModel} from '@/db/models'
-import {InferAttributes, Op} from 'sequelize'
-import {ProductVariantModel} from '@/db/models/product_variant.model'
-import {CategoryModel} from '@/db/models/category.model'
-import {models} from "@auth/sequelize-adapter";
+import { ColorModel, ProductModel } from '@/db/models'
+import { InferAttributes, Op } from 'sequelize'
+import { ProductVariantModel } from '@/db/models/product_variant.model'
+import { CategoryModel } from '@/db/models/category.model'
+import { models } from '@auth/sequelize-adapter'
 
 export type Product = InferAttributes<ProductModel>
 export type ProductListItem =
@@ -38,20 +38,20 @@ export const getProductBiId = async (id: number): Promise<Product | null> => {
 
 export const getProducts = async (categoryIds: number[], offset: number, limit: number):
     Promise<{ count: number, products: ProductListItem[] }> => {
-    const {count, rows} = await ProductModel.findAndCountAll({
+    const { count, rows } = await ProductModel.findAndCountAll({
         limit,
         offset,
         where: {
             isActive: true
         },
-        attributes: ['id', 'name', 'descriptionShort', 'isNew'],
+        attributes: [ 'id', 'name', 'descriptionShort', 'isNew' ],
         include: [{
             model: CategoryModel,
             as: 'categories',
-            attributes: ['name'],
-            through: {attributes: []}, // Исключаем атрибуты промежуточной таблицы
+            attributes: [ 'name' ],
+            through: { attributes: [] }, // Исключаем атрибуты промежуточной таблицы
             where: {
-                id: {[Op.in]: categoryIds}, // Фильтрация связанных категорий
+                id: { [Op.in]: categoryIds }, // Фильтрация связанных категорий
             },
             required: true, // Обязательно наличие связи с указанными категориями
         }]

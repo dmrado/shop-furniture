@@ -37,7 +37,7 @@ const UrlParamsSelect = ({ options, label, queryKey, placeHolder }: Props) => {
         } else {
             searchParams.delete(queryKey)
         }
-        searchParams.delete('page') // Сбрасываем на первую страницу при любом изменении поискаc здесь оставить нужна!
+        searchParams.delete('page') // Сбрасываем на первую страницу при любом изменении поиска здесь оставить нужна!
         router.push(path + '?' + searchParams.toString())
     }
 

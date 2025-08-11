@@ -245,7 +245,7 @@ const MainPage = () => {
                     </div>
                     <div className="text-right">
                         <button type="submit"
-                                className="bg-[#171613] text-white px-6 py-2 rounded hover:bg-[#E99C28] transition-colors duration-200 flex items-center cursor-pointer">
+                            className="bg-[#171613] text-white px-6 py-2 rounded hover:bg-[#E99C28] transition-colors duration-200 flex items-center cursor-pointer">
                             Отправить →
                         </button>
                     </div>

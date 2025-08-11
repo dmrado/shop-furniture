@@ -1,7 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import ReactPaginateWrapper from "@/components/site/ReactPaginateWrapper";
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 
 // В файле CategoryBar.tsx
 

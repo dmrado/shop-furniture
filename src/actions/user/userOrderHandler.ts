@@ -12,24 +12,24 @@ const userOrderHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
-        });
+        })
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_RECEIVER,
             subject: 'Новый заказ',
             text: `Получатель: ${fullName}nТелефон: ${phoneNumber}nАдрес: ${selectedAddress}`,
-    };
+        }
 
         try {
             await transporter.sendMail(mailOptions)
             res.status(200).json({ message: 'Заказ успешно отправлен' })
         } catch (error) {
-            console.error(error);
+            console.error(error)
             res.status(500).json({ message: 'Ошибка при отправке заказа' })
         }
     } else {
-        res.setHeader('Allow', ['POST']);
+        res.setHeader('Allow', [ 'POST' ])
         res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }
