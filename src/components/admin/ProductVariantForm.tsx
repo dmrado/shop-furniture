@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { handleProductVariantForm as handleProductVariantFormAction } from '@/actions/handleProductVariantForm.ts'
-import { getActiveColors, getMaterials } from '@/actions/dictionaryActions.ts'
+import { getActiveColors, getActiveMaterials } from '@/actions/dictionaryActions.ts'
 
 // Типы для элементов справочника (Product, Color)
 type DictionaryItem = {
@@ -63,9 +63,10 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
         const loadDictionaryData = async () => {
             const fetchedColors = await getActiveColors()
             setColors(fetchedColors)
-
-            const fetchedMaterials = await getMaterials()
+            console.log('Загруженные цвета:', fetchedColors)
+            const fetchedMaterials = await getActiveMaterials()
             setMaterials(fetchedMaterials)
+            console.log('Загруженные материалы:', fetchedMaterials)
 
             // Установка выбранных значений для редактирования
             if (productVariant?.colorId) {

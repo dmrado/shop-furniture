@@ -419,7 +419,7 @@ export async function getActiveColors() {
 }
 
 // НОВАЯ ФУНКЦИЯ: для получения всех активных материалов
-export async function getMaterials() {
+export async function getActiveMaterials() {
     const materials = await MaterialModel.findAll({
         where: { isActive: true },
         attributes: [ 'id', 'name' ],

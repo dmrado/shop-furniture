@@ -24,7 +24,7 @@ type ProductFilterAndListProps = {
     currentPage: number // текущая страница, полученная от сервера
 }
 
-const ProductFilterAndList = ({
+const ProductFilterListForm = ({
     products,
     initialBrands = [], //дефолтное значение пустой массив
     initialCollections = [],
@@ -293,4 +293,4 @@ const ProductFilterAndList = ({
     )
 }
 
-export default ProductFilterAndList
+export default ProductFilterListForm

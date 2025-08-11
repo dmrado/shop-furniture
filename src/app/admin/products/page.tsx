@@ -1,7 +1,7 @@
 import React from 'react'
 import HeaderButtons from '@/components/admin/HeaderButtons'
 import { ProductModel } from '@/db/models/product.model'
-import ProductFilterAndList from '@/components/admin/ProductFilterAndList'
+import ProductFilterListForm from '@/components/admin/ProductFilterAndList'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants'
 import { revalidatePath } from 'next/cache'
 import { getProductList } from '@/actions/searchProducts'
@@ -96,7 +96,7 @@ const ProductsManagementPage = async ({
             <div className="flex flex-col justify-between items-center">
                 <HeaderButtons />
 
-                <ProductFilterAndList
+                <ProductFilterListForm
                     products={products} // Уже отфильтрованные и пагинированные продукты, полученные от getProductList
                     initialBrands={brands}
                     initialCollections={collections}
