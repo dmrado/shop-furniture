@@ -8,6 +8,7 @@ export class BrandModel extends Model<InferAttributes<BrandModel>, InferCreation
     declare name: string
     declare description: string
     declare isActive: boolean
+    declare isDeleted: boolean
 }
 
 BrandModel.init(
@@ -29,6 +30,11 @@ BrandModel.init(
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true
+        },
+        isDeleted: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     },
     {

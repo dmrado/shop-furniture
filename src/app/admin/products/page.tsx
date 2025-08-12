@@ -1,7 +1,7 @@
 import React from 'react'
 import HeaderButtons from '@/components/admin/HeaderButtons'
 import { ProductModel } from '@/db/models/product.model'
-import ProductFilterListForm from '@/components/admin/ProductFilterAndList'
+import ProductFilterListForm from '@/components/admin/ProductFilterListForm'
 import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants'
 import { revalidatePath } from 'next/cache'
 import { getProductList } from '@/actions/searchProducts'

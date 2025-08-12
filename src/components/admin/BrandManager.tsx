@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { DictionaryItem } from '@/db/types/common-types'
-import { createBrand, getAllBrands, removeBrand, updateBrand } from '@/actions/dictionaryActions'
+import { createBrand, getAllBrands, softDeleteBrand, updateBrand } from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation' // Для router.refresh()
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -94,7 +94,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
         if (brandToDelete?.id) {
             try {
                 // Вызываем Server Action напрямую
-                await removeBrand(brandToDelete.id)
+                await softDeleteBrand(brandToDelete.id)
                 setShowConfirmDeleteModal(false) // Закрываем модалку подтверждения
                 setBrandToDelete(null) // Очищаем выбранный бренд
                 router.refresh() // Обновляем список

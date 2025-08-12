@@ -16,10 +16,11 @@ function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
 }
 
 // ------------------- Функции для Брендов -------------------
+//1. Функция для получения ТОЛЬКО АКТИВНЫХ брендов (для фильтров, ProductFilterListForm)
 export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
         const brands = await BrandModel.findAll({
-            where: { isActive: true },
+            where: [{ isActive: true }, { isDeleted: false }],
             attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
             order: [ [ 'name', 'ASC' ] ],
         })
@@ -34,6 +35,7 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
 export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно также назвать getBrandsForAdminPanel
     try {
         const brands = await BrandModel.findAll({
+            where: { isDeleted: false },
             attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
             order: [ [ 'name', 'ASC' ] ],
         })
@@ -115,6 +117,26 @@ export async function updateBrand(formData: FormData) {
     } catch (error) {
         console.error('Ошибка при обновлении бренда:', error)
         throw new Error('Не удалось обновить бренд.')
+    }
+}
+
+// ФУНКЦИЯ ДЛЯ "МЯГКОГО" УДАЛЕНИЯ БРЕНДА
+export async function softDeleteBrand(id: number) {
+    if (!id) {
+        throw new Error('ID бренда отсутствует для удаления.')
+    }
+    try {
+        const brand = await BrandModel.findByPk(id)
+        if (!brand) {
+            throw new Error(`Бренд с ID ${id} не найден.`)
+        }
+        // ✅ Обновляем поле isDeleted на true вместо удаления
+        await brand.update({ isDeleted: true })
+        revalidatePath('/admin/brands')
+        return { success: true }
+    } catch (error) {
+        console.error('Ошибка при мягком удалении бренда:', error)
+        throw new Error('Не удалось удалить бренд.')
     }
 }
 
