@@ -5,7 +5,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { ProductModel } from '@/db/models/product.model.ts'
 import { revalidatePath } from 'next/cache'
 import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
-import fs from 'fs'
+import fs from 'fs/promises'
+import slugify from 'slugify'
+import path from 'path'
 // Импортируем типы для InferAttributes, InferCreationAttributes, CreationOptional
 import {
     InferAttributes,
@@ -14,38 +16,69 @@ import {
 } from 'sequelize'
 import { ProductVariantModel } from '@/db/models'
 
-class ValidationError extends Error {}
+class ValidationError extends Error {
+}
 
-const saveFile = async (file: File): Promise<string> => {
+const saveFile = async (file: File, productName: string): Promise<string> => {
     const buffer = Buffer.from(await file.arrayBuffer())
-    const uniqueFilename = uuidv4()
-    const fileExtension = '.' + file.name.split('.').pop()
-    const uniqueFullFilename = uniqueFilename + fileExtension
-    console.log('uniqueFilename with fileExtension', uniqueFullFilename)
-    const outputImagePath = `public/img/${uniqueFullFilename}`
+
+    // 1. Создаём "slug" из имени продукта с транслитерацией Пример: "Диван-кровать Венеция" -> "divan-krovat-venetsiia"
+    const slug = slugify(productName, {
+        lower: true, // перевести в нижний регистр
+        strict: true, // удалить специальные символы
+        locale: 'ru' // включить правила транслитерации для русского
+    })
+    // 2. Добавляем короткий уникальный идентификатор (первая часть UUID)
+    const uniqueId = uuidv4().split('-')[0]
+
+    // 3. Получаем расширение файла
+    const fileExtension = path.extname(file.name)
+
+    // 4. Формируем финальное имя файла
+    const uniqueFullFilename = `${slug}-${uniqueId}${fileExtension}`
+
+    const uploadDir = path.join(process.cwd(), 'public', 'img')
+    const outputImagePath = path.join(uploadDir, uniqueFullFilename)
+
+    await fs.mkdir(uploadDir, { recursive: true })
+
+    //
+    // const uniqueFilename = uuidv4()
+    // const fileExtension = '.' + file.name.split('.').pop()
+    // const uniqueFullFilename = uniqueFilename + fileExtension
+    // console.log('uniqueFilename with fileExtension', uniqueFullFilename)
+    // const outputImagePath = `public/img/${uniqueFullFilename}`
 
     //fixme `.then(buffer => buffer)` после `.toBuffer()` избыточно, `.toBuffer()` уже возвращает Promise с буфером. Если `sharp` выдаст ошибку, `resizedBuffer` будет `undefined` из-за `.catch()`, что корректно обрабатывается.
     const resizedBuffer = await sharp(buffer)
-        .resize(1356, 668)
+        .resize(1920, 1080)
+        .toFormat('jpeg') // Конвертируем в JPEG
         .toBuffer()
-        .then((buffer) => buffer)
-        .catch((err) => console.error(err))
+        // .then((buffer) => buffer)
+        .catch((err) => {
+            console.error(err)
+            return undefined
+        })
 
     if (!resizedBuffer) {
-        throw new ValidationError('File format not supported')
+        throw new ValidationError('Формат файла не поддерживается или обработка изображения не удалась.')
     }
 
     // Сохранение обработанного буфера в файл
-    await new Promise<void>((resolve, reject) => {
-        fs.writeFile(outputImagePath, resizedBuffer, (err) => {
-            if (err) {
-                console.error('Error saving the image:', err)
-                reject(err)
-            }
-            console.log('Image saved successfully:', outputImagePath)
-            resolve()
-        })
-    })
+    // await new Promise<void>((resolve, reject) => {
+    //     fs.writeFile(outputImagePath, resizedBuffer, (err) => {
+    //         if (err) {
+    //             console.error('Error saving the image:', err)
+    //             reject(err)
+    //         }
+    //         console.log('Image saved successfully:', outputImagePath)
+    //         resolve()
+    //     })
+    // })
+
+    await fs.writeFile(outputImagePath, resizedBuffer)
+    console.log('Изображение успешно сохранено:', outputImagePath)
+
     return uniqueFullFilename
 }
 
@@ -199,13 +232,14 @@ export const handleForm = async (formData: FormData) => {
     try {
         // Очищаем и получаем данные формы
         const productData = cleanFormData(formData)
+        const formFile = cleanFormFile(formData)
 
         // Получаем и сохраняем файл
         //todo в какую модель добавить поле path для изображения
-        const formFile = cleanFormFile(formData)
-        if (formFile) {
-            await saveFile(formFile)
-        }
+        // const formFile = cleanFormFile(formData)
+        // if (formFile) {
+        //     await saveFile(formFile)
+        // }
 
         //ВНИМАНИЕ: нужно сохранить форматирование (жирный, курсив и т.д.) в descriptionLong, то удалять все HTML-теги не стоит. В таком случае ReactQuill поступает правильно, оборачивая в <p>. Если ты хочешь сохранить HTML, просто не делай replace(/<[^>]+>/g, '').
 
@@ -232,8 +266,7 @@ export const handleForm = async (formData: FormData) => {
         }
 
 
-        // Подключаем ProductModel
-        // Создаем объект для upsert
+        // Подключаем ProductModel Создаем объект для upsert
         const upsertData: InferCreationAttributes<ProductModel> = {
             brandId: productData.brandId,
             collectionId: productData.collectionId,
@@ -267,12 +300,19 @@ export const handleForm = async (formData: FormData) => {
         }
 
         // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
-        const [ product, created ] = await ProductModel.upsert(upsertData)
+        const [product, created] = await ProductModel.upsert(upsertData)
 
         if (created) {
             console.log(`Product with ID ${product.id} was created.`)
         } else {
             console.log(`Product with ID ${product.id} was updated.`)
+        }
+
+        if (formFile) {
+            // ✅ Теперь передаём имя продукта в saveFile
+            const fileName = await saveFile(formFile, productData.name)
+            // ✅ Обновляем запись в БД, добавляя путь к изображению
+            await ProductModel.update({ path: `/img/${fileName}` }, { where: { id: product.id } })
         }
 
         //todo разобраться с хранением ссылок на картинки в БД и раскомментировать
