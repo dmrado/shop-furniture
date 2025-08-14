@@ -97,7 +97,8 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                 await softDeleteBrand(brandToDelete.id)
                 setShowConfirmDeleteModal(false) // Закрываем модалку подтверждения
                 setBrandToDelete(null) // Очищаем выбранный бренд
-                router.refresh() // Обновляем список
+                const updatedBrands = await getAllBrands() // Получаем актуальный список брендов
+                setBrands(updatedBrands) // Обновляем стейт
             } catch (error: any) {
                 console.error('Ошибка при удалении бренда:', error)
                 alert(`Ошибка при удалении: ${error.message}`)

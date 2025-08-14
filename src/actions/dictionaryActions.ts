@@ -21,8 +21,8 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
         const brands = await BrandModel.findAll({
             where: [{ isActive: true }, { isDeleted: false }],
-            attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
-            order: [ [ 'name', 'ASC' ] ],
+            attributes: ['id', 'name'], // Здесь достаточно id и name для выбора в ProductForm
+            order: [['name', 'ASC']]
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -36,8 +36,8 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
     try {
         const brands = await BrandModel.findAll({
             where: { isDeleted: false },
-            attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
-            order: [ [ 'name', 'ASC' ] ],
+            attributes: ['id', 'name', 'description', 'isActive'], // Для BrandManager нужны все атрибуты
+            order: [['name', 'ASC']]
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -50,8 +50,8 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
 export async function getBrands(): Promise<DictionaryItem[]> {
     const brands = await BrandModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name', 'description', 'isActive' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name', 'description', 'isActive'],
+        order: [['name', 'ASC']]
     })
     return brands.map(brand => brand.toJSON()) as DictionaryItem[]
 }
@@ -78,7 +78,7 @@ export async function createBrand(formData: FormData) {
         await BrandModel.create({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/brands')
         return { success: true }
@@ -110,7 +110,7 @@ export async function updateBrand(formData: FormData) {
         await brand.update({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/brands')
         return { success: true }
@@ -130,9 +130,9 @@ export async function softDeleteBrand(id: number) {
         if (!brand) {
             throw new Error(`Бренд с ID ${id} не найден.`)
         }
-        // ✅ Обновляем поле isDeleted на true вместо удаления
+        // Обновляем поле isDeleted на true вместо удаления
         await brand.update({ isDeleted: true })
-        revalidatePath('/admin/brands')
+        // revalidatePath('/admin/brands')
         return { success: true }
     } catch (error) {
         console.error('Ошибка при мягком удалении бренда:', error)
@@ -144,7 +144,6 @@ export async function removeBrand(id: number) {
     'use server'
     await BrandModel.destroy({ where: { id } })
     revalidatePath('/admin/brands')
-    // redirect('/admin/products')
 }
 
 // ------------------- Функции для Коллекций -------------------
@@ -152,8 +151,8 @@ export async function removeBrand(id: number) {
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
     return collections.map(collection => collection.toJSON()) as DictionaryItem[]
 }
@@ -161,8 +160,8 @@ export async function getActiveCollections(): Promise<DictionaryItem[]> {
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ],
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
         return collections.map(collection => collection.toJSON())
     } catch (error) {
@@ -193,7 +192,7 @@ export async function createCollection(formData: FormData) {
         await CollectionModel.create({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/collections')
         return { success: true }
@@ -225,7 +224,7 @@ export async function updateCollection(formData: FormData) {
         await collection.update({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/collections')
         return { success: true }
@@ -246,8 +245,8 @@ export async function removeCollection(id: number) {
 export async function getActiveCountries(): Promise<DictionaryItem[]> {
     const countries = await CountryModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
     return countries.map(country => country.toJSON()) as DictionaryItem[]
 }
@@ -255,8 +254,8 @@ export async function getActiveCountries(): Promise<DictionaryItem[]> {
 export async function getAllCountries(): Promise<DictionaryItem[]> {
     try {
         const countries = await CountryModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ],
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
         return countries.map(country => country.toJSON())
     } catch (error) {
@@ -287,7 +286,7 @@ export async function createCountry(formData: FormData) {
         await CountryModel.create({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/countries')
         return { success: true }
@@ -319,7 +318,7 @@ export async function updateCountry(formData: FormData) {
         await country.update({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/countries')
         return { success: true }
@@ -340,8 +339,8 @@ export async function removeCountry(id: number) {
 export async function getActiveStyles(): Promise<DictionaryItem[]> {
     const styles = await StyleModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
     return styles.map(style => style.toJSON()) as DictionaryItem[]
 }
@@ -349,8 +348,8 @@ export async function getActiveStyles(): Promise<DictionaryItem[]> {
 export async function getAllStyles(): Promise<DictionaryItem[]> {
     try {
         const styles = await StyleModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ],
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
         return styles.map(style => style.toJSON())
     } catch (error) {
@@ -381,7 +380,7 @@ export async function createStyle(formData: FormData) {
         await StyleModel.create({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/styles')
         return { success: true }
@@ -413,7 +412,7 @@ export async function updateStyle(formData: FormData) {
         await style.update({
             name: name.trim(),
             description: description.trim(),
-            isActive: isActive,
+            isActive: isActive
         })
         revalidatePath('/admin/styles')
         return { success: true }
@@ -434,8 +433,8 @@ export async function removeStyle(id: number) {
 export async function getActiveColors() {
     const colors = await ColorModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name', 'code' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name', 'code'],
+        order: [['name', 'ASC']]
     })
     return colors.map(color => color.toJSON()) as DictionaryItem[]
 }
@@ -444,8 +443,8 @@ export async function getActiveColors() {
 export async function getActiveMaterials() {
     const materials = await MaterialModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ],
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
     return materials.map(material => material.toJSON()) as DictionaryItem[]
 }

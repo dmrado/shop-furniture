@@ -29,6 +29,7 @@ const saveFile = async (file: File, productName: string): Promise<string> => {
         locale: 'ru' // включить правила транслитерации для русского
     })
     // 2. Добавляем короткий уникальный идентификатор (первая часть UUID)
+    //todo добавить проверку на наличие такого имени и добавлять только если уже есть
     const uniqueId = uuidv4().split('-')[0]
 
     // 3. Получаем расширение файла
@@ -299,6 +300,8 @@ export const handleForm = async (formData: FormData) => {
             // countryId: productData.countryId || 1, // Пример
         }
 
+        //todo сделать отдельно create и  update в зависимости от наличия id
+
         // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
         const [product, created] = await ProductModel.upsert(upsertData)
 
@@ -308,10 +311,12 @@ export const handleForm = async (formData: FormData) => {
             console.log(`Product with ID ${product.id} was updated.`)
         }
 
+
+
         if (formFile) {
-            // ✅ Теперь передаём имя продукта в saveFile
+            // Теперь передаём имя продукта в saveFile
             const fileName = await saveFile(formFile, productData.name)
-            // ✅ Обновляем запись в БД, добавляя путь к изображению
+            // Обновляем запись в БД, добавляя путь к изображению
             await ProductModel.update({ path: `/img/${fileName}` }, { where: { id: product.id } })
         }
 
