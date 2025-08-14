@@ -7,6 +7,7 @@ import { CountryModel } from '@/db/models/country.model'
 // import { CategoryModel } from '@/db/models/category.model'
 import { ProductVariantDTO, ProductVariantModel } from '@/db/models/product_variant.model'
 import { CategoryModel } from '@/db/models/category.model'
+import { ImageDTO } from '@/db/models/image.model'
 
 export interface ProductDTO extends InferAttributes<ProductModel> {
 }
@@ -33,6 +34,7 @@ export class ProductModel extends Model<InferAttributes<ProductModel>, InferCrea
     declare variants?: ProductVariantDTO[] // Опционально для TypeScript
     declare style?: StyleModel
     declare categories?: CategoryModel[]
+    declare images: ImageDTO[]
     static associate: (models: any) => void
 }
 

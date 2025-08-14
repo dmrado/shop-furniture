@@ -2,7 +2,8 @@
 
 import { Op } from 'sequelize'
 import { ProductModel, ProductDTO } from '@/db/models/product.model'
-import { ProductVariantModel } from '@/db/models/product_variant.model' // Убедитесь, что импорт есть
+import { ProductVariantModel } from '@/db/models/product_variant.model'
+import { ImageModel } from '@/db/models' // Убедитесь, что импорт есть
 
 interface GetProductListFilters {
     brandId?: number
@@ -33,7 +34,10 @@ export async function getProductList(
             } })
         }
 
-        const includeConditions: any[] = []
+        const includeConditions: any[] = [{
+            model: ImageModel,
+            as: 'images',
+        }]
         if (filters.articulQuery) {
             includeConditions.push({
                 model: ProductVariantModel,

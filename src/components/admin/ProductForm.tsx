@@ -19,6 +19,8 @@ import CountryFormModalContent from '@/components/admin/CountryFormModalContent'
 import StyleFormModalContent from '@/components/admin/StyleFormModalContent'
 import { DictionaryItem, ModalState } from '@/db/types/common-types'
 import { addHandler, editHandler } from '@/app/handlers/productFormHandlers'
+import ProductImagePicker from '@/components/ui/ProductImagePicker'
+import { ImageDTO } from '@/db/models/image.model'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
@@ -64,6 +66,7 @@ const ProductForm = ({
     const [ descriptionLong, setDescriptionLong ] = useState(product?.descriptionLong || '')
     const [ isNew, setIsNew ] = useState(product?.isNew || false)
     const [ isActive, setIsActive ] = useState(product?.isActive || false)
+    const [ productImages, setProductImages ] = useState<ImageDTO[]>(product?.images || [])
 
     // Инициализируем
     const [ brandId, setBrandId ] = useState<number | string>('') // Должен быть number или string
@@ -150,6 +153,7 @@ const ProductForm = ({
     }, [ product, initialBrands, initialCollections, initialCountries, initialStyles ]) // Зависимости должны быть пропсы, а не стейты, которые меняются внутри
 
     const onSubmit = async (formData: FormData) => {
+        formData.delete('file') // Удаляем поле файл, так как они уже загружены и мы передаем их айдишники
         try {
             await handleForm(formData)
             if (onSuccess) { // Проверка для TS опциональной функции
@@ -350,21 +354,31 @@ const ProductForm = ({
 
             {/* Поле для загрузки файла */}
             <div className="flex flex-col my-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">
-                    Изображение товара:
-                </label>
-                <input type='file' name='product_picture' id='product_picture'
-                    accept={IMAGE_TYPES.join(',')}
-                    onChange={(e) => {
-                        if (!e.target.files) return
-                        const fileSize = e.target?.files[0]?.size
-                        setFileSizeError(fileSize > FILE_LIMIT)
+                <ProductImagePicker
+                    value={productImages}
+                    label='Product images'
+                    productName={product?.name ?? 'Unknown product'}
+                    onFilesReady={(fileDto) => {
+                        // alert(`Uploaded ${fileDto.length} files`)
+                        setProductImages(fileDto)
                     }}
+                    multiple
                 />
-                {isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}
-                <label htmlFor="product_picture"
-                    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,
-                    .tiff, .heic</label>
+                {/*<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">*/}
+                {/*    Изображение товара:*/}
+                {/*</label>*/}
+                {/*<input type='file' name='product_picture' id='product_picture'*/}
+                {/*    accept={IMAGE_TYPES.join(',')}*/}
+                {/*    onChange={(e) => {*/}
+                {/*        if (!e.target.files) return*/}
+                {/*        const fileSize = e.target?.files[0]?.size*/}
+                {/*        setFileSizeError(fileSize > FILE_LIMIT)*/}
+                {/*    }}*/}
+                {/*/>*/}
+                {/*{isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}*/}
+                {/*<label htmlFor="product_picture"*/}
+                {/*    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,*/}
+                {/*    .tiff, .heic</label>*/}
             </div>
 
             <div className="flex items-center justify-center mt-2">
