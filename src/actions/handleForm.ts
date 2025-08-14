@@ -232,6 +232,8 @@ const cleanFormFile = (formData: FormData): File | undefined => {
 export const handleForm = async (formData: FormData) => {
     try {
         // Очищаем и получаем данные формы
+        // todo: 1. Никаких файлов мы тут не получаем, мы получаем только их айдишники
+        // поэтому нам надо - в модели файла переназначить поле productId на айдишник, который нам тут приходит
         const productData = cleanFormData(formData)
         const formFile = cleanFormFile(formData)
 
@@ -265,7 +267,6 @@ export const handleForm = async (formData: FormData) => {
                 `Продукт с артикулом ${productData.articul} уже существует.`
             )
         }
-
 
         // Подключаем ProductModel Создаем объект для upsert
         const upsertData: InferCreationAttributes<ProductModel> = {
@@ -303,15 +304,13 @@ export const handleForm = async (formData: FormData) => {
         //todo сделать отдельно create и  update в зависимости от наличия id
 
         // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
-        const [product, created] = await ProductModel.upsert(upsertData)
+        const [ product, created ] = await ProductModel.upsert(upsertData)
 
         if (created) {
             console.log(`Product with ID ${product.id} was created.`)
         } else {
             console.log(`Product with ID ${product.id} was updated.`)
         }
-
-
 
         if (formFile) {
             // Теперь передаём имя продукта в saveFile

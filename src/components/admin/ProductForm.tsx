@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { handleForm } from '@/actions/handleForm.ts'
-import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
+import {
+    // FILE_LIMIT,
+    TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import { ProductDTO } from '@/db/models/product.model.ts'
 import {
     getBrandById,
@@ -26,13 +28,13 @@ const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false,
 })
 
-const IMAGE_TYPES = [
-    'image/png',
-    'image/jpeg',
-    'image/gif',
-    'image/tiff',
-    '.heic'
-]
+// const IMAGE_TYPES = [
+//     'image/png',
+//     'image/jpeg',
+//     'image/gif',
+//     'image/tiff',
+//     '.heic'
+// ]
 
 // Типы для PostForm меняем на ProductForm, используя ProductModel
 type ProductFormProps = {

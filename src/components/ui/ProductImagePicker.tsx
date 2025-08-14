@@ -30,6 +30,8 @@ const ProductImagePicker = (props: Props) => {
         multiple = false,
         onFilesReady
     } = props
+    // todo: нам нужно проверить, что у продукта, который уже имеет файлы - они отображются корретно
+    // нам надо еще сделать ссылочку на картинку, чтобы админ мог ее открыть и удалить если нужно (должно работать)
     console.log('ProductImagePicker', value)
     const [ isSubmitting, setSubmitting ] = useState(false)
 
