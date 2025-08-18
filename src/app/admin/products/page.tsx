@@ -9,7 +9,8 @@ import {
     getActiveBrands,
     getActiveCollections,
     getActiveCountries,
-    getActiveStyles
+    getActiveStyles,
+    getActiveCategories
 } from '@/actions/dictionaryActions'
 
 export const metadata = {
@@ -26,6 +27,7 @@ interface ProductsManagementPageProps {
         name?: string // Для поиска по названию продукта
         articul?: string // Для поиска по артикулу как артикулу продукта, так и артикулу варианта
         page?: string // Для текущей страницы пагинации
+        category?: string
     }
 }
 
@@ -57,6 +59,9 @@ const ProductsManagementPage = async ({
     const styleId = searchParams.style
         ? parseInt(searchParams.style, 10)
         : undefined
+    const categoryId = searchParams.category
+        ? parseInt(searchParams.category, 10)
+        : undefined
 
     // Извлекаем поисковые запросы
     const nameQuery = searchParams.name || undefined // Получаем запрос по названию
@@ -70,6 +75,7 @@ const ProductsManagementPage = async ({
             collectionId,
             countryId,
             styleId,
+            categoryId,
             nameQuery,
             articulQuery
         }
@@ -79,12 +85,13 @@ const ProductsManagementPage = async ({
     const collections = await getActiveCollections()
     const countries = await getActiveCountries()
     const styles = await getActiveStyles()
+    const categories = await getActiveCategories()
+    // console.log('Categories array', categories)
 
     async function removeProduct(id: number) {
         'use server'
         await ProductModel.destroy({ where: { id } })
         revalidatePath('/admin/products')
-        // redirect('/admin/products')
     }
 
     return (
@@ -102,6 +109,7 @@ const ProductsManagementPage = async ({
                     initialCollections={collections}
                     initialCountries={countries}
                     initialStyles={styles}
+                    initialCategories={categories}
                     removeProduct={removeProduct}
                     itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
                     totalProductsCount={totalProductsCount} // Передаем общее количество отфильтрованных продуктов

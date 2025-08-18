@@ -17,6 +17,7 @@ type ProductFilterAndListProps = {
     initialCollections: DictionaryItem[]
     initialCountries: DictionaryItem[]
     initialStyles: DictionaryItem[]
+    initialCategories: DictionaryItem[]
     removeProduct: (id: number) => Promise<void>
     itemsPerPage: number,
     totalProductsCount: number, // общее количество отфильтрованных продуктов
@@ -29,15 +30,17 @@ const ProductFilterListForm = ({
     initialCollections = [],
     initialCountries = [],
     initialStyles = [],
+    initialCategories = [],
     removeProduct,
     itemsPerPage,
     totalProductsCount,
     currentPage,
 }: ProductFilterAndListProps) => {
+    console.log('initialCategories array', initialCategories)
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
-    console.log('ProductFilterAndList - received currentPage prop:', currentPage)
+
     //URL для кнопки "Поделиться"
     const currentQueryString = searchParams.toString()
     const urlForShare = currentQueryString ? `${path}?${currentQueryString}` : path
@@ -60,7 +63,7 @@ const ProductFilterListForm = ({
 
     // Функция для сброса всех фильтров
     const resetFilters = () => {
-        // Создаем новый URLSearchParams из текущих
+        // Создаем новый URLSearchParams из текущих для получения метода delete из URLSearchParams
         const currentParams = new URLSearchParams(searchParams)
         // Удаляем все параметры, относящиеся к фильтрам и поиску
         currentParams.delete('page')
@@ -68,6 +71,7 @@ const ProductFilterListForm = ({
         currentParams.delete('collection')
         currentParams.delete('country')
         currentParams.delete('style')
+        currentParams.delete('category')
         currentParams.delete('name') // Удаляем параметр поиска по названию
         currentParams.delete('articul') // Удаляем параметр поиска по артикулу
         router.push(path + '?' + currentParams.toString()) // Переходим по чистому URL
@@ -77,11 +81,6 @@ const ProductFilterListForm = ({
     const handleEditProduct = (product: ProductDTO) => {
         setEditingProduct(product)
     }
-
-    // Обработчик для создания нового продукта кнопка на котроой он висит по-моему не требуется? проверить и удалить
-    // const handleCreateNewProduct = () => {
-    //     setEditingProduct(null) // Передаем null, чтобы ProductForm знал, что это новый продукт
-    // }
 
     // Обработчик успешного сохранения формы (из ProductForm)
     const handleFormSuccess = () => {
@@ -140,11 +139,17 @@ const ProductFilterListForm = ({
                 <h3 className="text-lg font-bold mt-4">Поиск продуктов</h3>
                 <div className="md:col-span-2 lg:col-span-4 mt-2">
                     <SearchProduct
-                        queryKey="name" // Используем 'name' для поиска по названию продукта
+                        nameQueryKey="name" // Используем 'name' для поиска по названию продукта
                         articulQueryKey="articul" // Используем 'articul' для поиска по артикулу продукта/варианта
+                        categoryQueryKey = 'category'
                         namePlaceholder="Поиск по названию продукта"
                         articulPlaceholder="Поиск по артикулу"
+                        categoryPlaceholder = 'Поиск по категории'
                         debounceTime={500}
+                        categoryOptions={initialCategories.map(cat => ({
+                            label: cat.name,
+                            value: String(cat.id),
+                        }))}
                     />
                 </div>
 
@@ -277,6 +282,7 @@ const ProductFilterListForm = ({
                         ? `Редактировать продукт: ${editingProduct.name}`
                         : 'Создать новый продукт'}
                 </h3>
+                {/*todo добавить выбор категории для продукта*/}
                 <ProductForm
                     product={editingProduct} // Передаем продукт для редактирования или null для создания
                     onSuccess={handleFormSuccess}

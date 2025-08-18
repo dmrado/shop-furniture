@@ -8,6 +8,7 @@ import { ColorModel } from '@/db/models/color.model.ts'
 import { MaterialModel } from '@/db/models/material.model.ts'
 import { DictionaryItem } from '@/db/types/common-types'
 import { revalidatePath } from 'next/cache'
+import { CategoryModel } from '@/db/models/category.model'
 
 // Вспомогательная функция для преобразования 'on'/null в boolean
 function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
@@ -21,8 +22,8 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
         const brands = await BrandModel.findAll({
             where: [{ isActive: true }, { isDeleted: false }],
-            attributes: ['id', 'name'], // Здесь достаточно id и name для выбора в ProductForm
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
+            order: [ [ 'name', 'ASC' ] ]
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -36,8 +37,8 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
     try {
         const brands = await BrandModel.findAll({
             where: { isDeleted: false },
-            attributes: ['id', 'name', 'description', 'isActive'], // Для BrandManager нужны все атрибуты
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
+            order: [ [ 'name', 'ASC' ] ]
         })
         return brands.map(brand => brand.toJSON())
     } catch (error) {
@@ -50,8 +51,8 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
 export async function getBrands(): Promise<DictionaryItem[]> {
     const brands = await BrandModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name', 'description', 'isActive'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name', 'description', 'isActive' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return brands.map(brand => brand.toJSON()) as DictionaryItem[]
 }
@@ -151,8 +152,8 @@ export async function removeBrand(id: number) {
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return collections.map(collection => collection.toJSON()) as DictionaryItem[]
 }
@@ -160,8 +161,8 @@ export async function getActiveCollections(): Promise<DictionaryItem[]> {
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ]
         })
         return collections.map(collection => collection.toJSON())
     } catch (error) {
@@ -245,8 +246,8 @@ export async function removeCollection(id: number) {
 export async function getActiveCountries(): Promise<DictionaryItem[]> {
     const countries = await CountryModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return countries.map(country => country.toJSON()) as DictionaryItem[]
 }
@@ -254,8 +255,8 @@ export async function getActiveCountries(): Promise<DictionaryItem[]> {
 export async function getAllCountries(): Promise<DictionaryItem[]> {
     try {
         const countries = await CountryModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ]
         })
         return countries.map(country => country.toJSON())
     } catch (error) {
@@ -339,8 +340,8 @@ export async function removeCountry(id: number) {
 export async function getActiveStyles(): Promise<DictionaryItem[]> {
     const styles = await StyleModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return styles.map(style => style.toJSON()) as DictionaryItem[]
 }
@@ -348,8 +349,8 @@ export async function getActiveStyles(): Promise<DictionaryItem[]> {
 export async function getAllStyles(): Promise<DictionaryItem[]> {
     try {
         const styles = await StyleModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ]
         })
         return styles.map(style => style.toJSON())
     } catch (error) {
@@ -428,13 +429,29 @@ export async function removeStyle(id: number) {
     revalidatePath('/admin/styles')
 }
 
+// ------------------- Функции для Категорий -------------------
+
+export async function getActiveCategories():Promise<DictionaryItem[]> {
+    try {
+        const categories = await CategoryModel.findAll({
+            attributes: [ 'id', 'name' ],
+            order: [ [ 'name', 'ASC' ] ]
+        })
+        // findAll без raw:true возвращает экземпляры моделей, у которых есть метод toJSON(), а при использовании raw:true - простые объекты у которых нет метода toJSON()
+        return categories.map(category => category.toJSON()) as DictionaryItem[]
+    } catch (error) {
+        console.error('Ошибка при получении списка активных категорий:', error)
+        throw new Error('Не удалось получить список активных категорий.')
+    }
+}
+
 // ------------------- Функции для Цветов и Материалов -------------------
 // Новая функция для получения всех активных цветов
 export async function getActiveColors() {
     const colors = await ColorModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name', 'code'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name', 'code' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return colors.map(color => color.toJSON()) as DictionaryItem[]
 }
@@ -443,8 +460,8 @@ export async function getActiveColors() {
 export async function getActiveMaterials() {
     const materials = await MaterialModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return materials.map(material => material.toJSON()) as DictionaryItem[]
 }

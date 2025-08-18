@@ -3,13 +3,15 @@
 import { Op } from 'sequelize'
 import { ProductModel, ProductDTO } from '@/db/models/product.model'
 import { ProductVariantModel } from '@/db/models/product_variant.model'
-import { ImageModel } from '@/db/models' // Убедитесь, что импорт есть
+import { ImageModel } from '@/db/models'
+import { CategoryModel } from '@/db/models/category.model'
 
 interface GetProductListFilters {
     brandId?: number
     collectionId?: number
     countryId?: number
     styleId?: number
+    categoryId?: number
     nameQuery?: string // Добавляем
     articulQuery?: string // Добавляем
 }
@@ -28,16 +30,31 @@ export async function getProductList(
             ...(filters.countryId && { countryId: filters.countryId }),
             ...(filters.styleId && { styleId: filters.styleId }),
             ...(filters.nameQuery && { name: { [Op.like]: `%${filters.nameQuery}%` } }),
-            ...(filters.articulQuery && { [Op.or]: {
-                articul: { [Op.like]: `%${filters.articulQuery}%` },
-                '$variants.articul$': { [Op.like]: `%${filters.articulQuery}%` }
-            } })
+            ...(filters.articulQuery && {
+                [Op.or]: {
+                    articul: { [Op.like]: `%${filters.articulQuery}%` },
+                    '$variants.articul$': { [Op.like]: `%${filters.articulQuery}%` }
+                }
+            })
         }
 
-        const includeConditions: any[] = [{
-            model: ImageModel,
-            as: 'images',
-        }]
+        const includeConditions: any[] = [
+            {
+                model: ImageModel,
+                as: 'images'
+            },
+            {
+                // Когда вы делаете include, вы должны ссылаться на это имя и на конечную модель: include: { model: CategoryModel, as: 'categories' }
+                model: CategoryModel,
+                as: 'categories',
+                required: !!filters.categoryId, // Делаем обязательным только если есть фильтр, логика: filters.categoryId ? true : false
+                through: {
+                    where: {
+                        ...(filters.categoryId && { categoryId: filters.categoryId }) // <-- Условие фильтрации внутри include
+                    }
+                }
+            }
+        ]
         if (filters.articulQuery) {
             includeConditions.push({
                 model: ProductVariantModel,
