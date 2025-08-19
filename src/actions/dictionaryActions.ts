@@ -22,10 +22,10 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
         const brands = await BrandModel.findAll({
             where: [{ isActive: true }, { isDeleted: false }],
-            attributes: [ 'id', 'name' ], // Здесь достаточно id и name для выбора в ProductForm
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name'], // Здесь достаточно id и name для выбора в ProductForm
+            order: [['name', 'ASC']]
         })
-        return brands.map(brand => brand.toJSON())
+        return brands.map((brand) => brand.toJSON())
     } catch (error) {
         console.error('Ошибка при получении списка активных брендов:', error)
         throw new Error('Не удалось получить список активных брендов.')
@@ -33,14 +33,15 @@ export async function getActiveBrands(): Promise<DictionaryItem[]> {
 }
 
 // 2. Функция для получения ВСЕХ брендов (для BrandManager)
-export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно также назвать getBrandsForAdminPanel
+export async function getAllBrands(): Promise<DictionaryItem[]> {
+    // Можно также назвать getBrandsForAdminPanel
     try {
         const brands = await BrandModel.findAll({
             where: { isDeleted: false },
-            attributes: [ 'id', 'name', 'description', 'isActive' ], // Для BrandManager нужны все атрибуты
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name', 'description', 'isActive'], // Для BrandManager нужны все атрибуты
+            order: [['name', 'ASC']]
         })
-        return brands.map(brand => brand.toJSON())
+        return brands.map((brand) => brand.toJSON())
     } catch (error) {
         console.error('Ошибка при получении полного списка брендов:', error)
         throw new Error('Не удалось получить полный список брендов.')
@@ -51,10 +52,10 @@ export async function getAllBrands(): Promise<DictionaryItem[]> { // Можно 
 export async function getBrands(): Promise<DictionaryItem[]> {
     const brands = await BrandModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name', 'description', 'isActive' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name', 'description', 'isActive'],
+        order: [['name', 'ASC']]
     })
-    return brands.map(brand => brand.toJSON()) as DictionaryItem[]
+    return brands.map((brand) => brand.toJSON()) as DictionaryItem[]
 }
 
 export async function getBrandById(id: number): Promise<DictionaryItem | null> {
@@ -152,19 +153,19 @@ export async function removeBrand(id: number) {
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
-    return collections.map(collection => collection.toJSON()) as DictionaryItem[]
+    return collections.map((collection) => collection.toJSON()) as DictionaryItem[]
 }
 
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
-        return collections.map(collection => collection.toJSON())
+        return collections.map((collection) => collection.toJSON())
     } catch (error) {
         console.error('Ошибка при получении полного списка коллекций:', error)
         throw new Error('Не удалось получить полный список коллекций.')
@@ -246,19 +247,19 @@ export async function removeCollection(id: number) {
 export async function getActiveCountries(): Promise<DictionaryItem[]> {
     const countries = await CountryModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
-    return countries.map(country => country.toJSON()) as DictionaryItem[]
+    return countries.map((country) => country.toJSON()) as DictionaryItem[]
 }
 
 export async function getAllCountries(): Promise<DictionaryItem[]> {
     try {
         const countries = await CountryModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
-        return countries.map(country => country.toJSON())
+        return countries.map((country) => country.toJSON())
     } catch (error) {
         console.error('Ошибка при получении полного списка стран:', error)
         throw new Error('Не удалось получить полный список стран.')
@@ -340,19 +341,19 @@ export async function removeCountry(id: number) {
 export async function getActiveStyles(): Promise<DictionaryItem[]> {
     const styles = await StyleModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
-    return styles.map(style => style.toJSON()) as DictionaryItem[]
+    return styles.map((style) => style.toJSON()) as DictionaryItem[]
 }
 
 export async function getAllStyles(): Promise<DictionaryItem[]> {
     try {
         const styles = await StyleModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
-        return styles.map(style => style.toJSON())
+        return styles.map((style) => style.toJSON())
     } catch (error) {
         console.error('Ошибка при получении полного списка стилей:', error)
         throw new Error('Не удалось получить полный список стилей.')
@@ -431,17 +432,34 @@ export async function removeStyle(id: number) {
 
 // ------------------- Функции для Категорий -------------------
 
-export async function getActiveCategories():Promise<DictionaryItem[]> {
+export async function getAllCategories(): Promise<DictionaryItem[]> {
     try {
         const categories = await CategoryModel.findAll({
-            attributes: [ 'id', 'name' ],
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name'],
+            order: [['name', 'ASC']]
         })
         // findAll без raw:true возвращает экземпляры моделей, у которых есть метод toJSON(), а при использовании raw:true - простые объекты у которых нет метода toJSON()
-        return categories.map(category => category.toJSON()) as DictionaryItem[]
+        return categories.map((category) => category.toJSON()) as DictionaryItem[]
     } catch (error) {
         console.error('Ошибка при получении списка активных категорий:', error)
         throw new Error('Не удалось получить список активных категорий.')
+    }
+}
+
+export async function getCategoryByProductid(id): Promise<DictionaryItem | null> {
+    try {
+        const category = await CategoryModel.findOne({
+            where: {
+                productid: id
+            }
+        })
+        if (!category) {
+            throw new Error('Категория для данного продукта не определена')
+        }
+        console.log('++++++++++++++++++++++++ category from :', category.toJSON())
+        return category.toJSON()
+    } catch (error) {
+        console.error('Не удалось получить категорию для данного продукта.')
     }
 }
 
@@ -450,18 +468,18 @@ export async function getActiveCategories():Promise<DictionaryItem[]> {
 export async function getActiveColors() {
     const colors = await ColorModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name', 'code' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name', 'code'],
+        order: [['name', 'ASC']]
     })
-    return colors.map(color => color.toJSON()) as DictionaryItem[]
+    return colors.map((color) => color.toJSON()) as DictionaryItem[]
 }
 
 // НОВАЯ ФУНКЦИЯ: для получения всех активных материалов
 export async function getActiveMaterials() {
     const materials = await MaterialModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
-    return materials.map(material => material.toJSON()) as DictionaryItem[]
+    return materials.map((material) => material.toJSON()) as DictionaryItem[]
 }

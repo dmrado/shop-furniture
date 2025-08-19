@@ -10,7 +10,7 @@ import {
     getActiveCollections,
     getActiveCountries,
     getActiveStyles,
-    getActiveCategories
+    getAllCategories
 } from '@/actions/dictionaryActions'
 
 export const metadata = {
@@ -31,37 +31,21 @@ interface ProductsManagementPageProps {
     }
 }
 
-const ProductsManagementPage = async ({
-    searchParams
-}: ProductsManagementPageProps) => {
-    console.log(
-        'SERVER: ProductsManagementPage received searchParams:',
-        searchParams
-    )
+const ProductsManagementPage = async ({ searchParams }: ProductsManagementPageProps) => {
+    console.log('SERVER: ProductsManagementPage received searchParams:', searchParams)
     // 1. Извлечение и преобразование параметров из URL
     const currentPage = parseInt(searchParams.page || '1', 10) // Текущая страница, по умолчанию 1
-    console.log(
-        'SERVER: ProductsManagementPage calculated currentPage:',
-        currentPage
-    )
+    console.log('SERVER: ProductsManagementPage calculated currentPage:', currentPage)
 
     const itemsPerPage = NUMBER_OF_PRODUCTS_TO_FETCH
 
-    const brandId = searchParams.brand
-        ? parseInt(searchParams.brand, 10)
-        : undefined
+    const brandId = searchParams.brand ? parseInt(searchParams.brand, 10) : undefined
     const collectionId = searchParams.collection
         ? parseInt(searchParams.collection, 10)
         : undefined
-    const countryId = searchParams.country
-        ? parseInt(searchParams.country, 10)
-        : undefined
-    const styleId = searchParams.style
-        ? parseInt(searchParams.style, 10)
-        : undefined
-    const categoryId = searchParams.category
-        ? parseInt(searchParams.category, 10)
-        : undefined
+    const countryId = searchParams.country ? parseInt(searchParams.country, 10) : undefined
+    const styleId = searchParams.style ? parseInt(searchParams.style, 10) : undefined
+    const categoryId = searchParams.category ? parseInt(searchParams.category, 10) : undefined
 
     // Извлекаем поисковые запросы
     const nameQuery = searchParams.name || undefined // Получаем запрос по названию
@@ -85,7 +69,7 @@ const ProductsManagementPage = async ({
     const collections = await getActiveCollections()
     const countries = await getActiveCountries()
     const styles = await getActiveStyles()
-    const categories = await getActiveCategories()
+    const categories = await getAllCategories()
     // console.log('Categories array', categories)
 
     async function removeProduct(id: number) {

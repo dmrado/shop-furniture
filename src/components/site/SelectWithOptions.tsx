@@ -10,9 +10,14 @@ interface SelectWithOptionsProps {
     onChange: (value: string) => void
 }
 
-const SelectWithOptions = ({ options, placeholder, value, onChange }: SelectWithOptionsProps) => {
-    const [ isOpen, setIsOpen ] = useState(false)
-    const [ searchTerm, setSearchTerm ] = useState('') // <-- Новое состояние для поиска
+const SelectWithOptions = ({
+    options,
+    placeholder,
+    value,
+    onChange
+}: SelectWithOptionsProps) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('') // <-- Новое состояние для поиска
     const selectRef = useRef<HTMLDivElement | null>(null)
     const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -30,7 +35,7 @@ const SelectWithOptions = ({ options, placeholder, value, onChange }: SelectWith
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
-    }, [ selectRef ])
+    }, [selectRef])
 
     // Открываем список и фокусируемся на поле поиска
     const toggleOpen = () => {
@@ -51,11 +56,11 @@ const SelectWithOptions = ({ options, placeholder, value, onChange }: SelectWith
     }
 
     // Фильтруем опции на основе поискового запроса
-    const filteredOptions = options.filter(option =>
-        option.label.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    // const filteredOptions = options.filter((option) =>
+    //     option.label.toLowerCase().includes(searchTerm.toLowerCase())
+    // )
 
-    const selectedLabel = options.find(opt => opt.value === value)?.label || placeholder
+    const selectedLabel = options.find((opt) => opt.value === value)?.label || placeholder
 
     return (
         <div className="relative w-full sm:w-auto" ref={selectRef}>
@@ -85,8 +90,8 @@ const SelectWithOptions = ({ options, placeholder, value, onChange }: SelectWith
                     >
                         {placeholder}
                     </div>
-                    {filteredOptions.length > 0 ? (
-                        filteredOptions.map((option) => (
+                    {options.length > 0 ? (
+                        options.map((option) => (
                             <div
                                 key={option.value}
                                 className="cursor-pointer py-2 px-3 text-gray-700 hover:bg-gray-100"
@@ -96,9 +101,7 @@ const SelectWithOptions = ({ options, placeholder, value, onChange }: SelectWith
                             </div>
                         ))
                     ) : (
-                        <div className="p-3 text-gray-500 text-sm">
-                            Ничего не найдено
-                        </div>
+                        <div className="p-3 text-gray-500 text-sm">Ничего не найдено</div>
                     )}
                 </div>
             )}
