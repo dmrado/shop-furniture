@@ -2,36 +2,38 @@
 
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { PencilIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import React from 'react'
 
 // Общий тип для элементов справочника (бренды, коллекции и т.д.)
 type DictionaryItem = {
-    id: number;
-    name: string;
-    description?: string;
-    isActive?: boolean;
-};
+    id: number
+    name: string
+    description?: string
+    isActive?: boolean
+}
 
 // Тип для пропсов компонента
 type ProductFormSelectWithActionsProps = {
-    label: string; // "Бренд:", "Коллекция:" и т.д.
-    name: string; // Имя для атрибута 'name' у select (e.g., "brandId")
-    id: string; // ID для атрибута 'id' у select (e.g., "brandId")
-    value: number | string; // Текущее выбранное значение (number для ID, string для placeholder)
-    options: DictionaryItem[]; // Массив объектов { id: number, name: string }
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // Обработчик изменения select
+    label: string // "Бренд:", "Коллекция:" и т.д.
+    name: string // Имя для атрибута 'name' у select (e.g., "brandId")
+    id: string // ID для атрибута 'id' у select (e.g., "brandId")
+    value: number | string // Текущее выбранное значение (number для ID, string для placeholder)
+    options: DictionaryItem[] // Массив объектов { id: number, name: string }
+    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void // Обработчик изменения select
 
     // Пропсы для кнопки "Добавить"
-    onAddClick: () => void;
+    onAddClick: () => void
 
     // Пропсы для кнопки "Редактировать"
-    onEditClick: () => void;
+    onEditClick: () => void
     // Флаг, указывающий, нужно ли отображать кнопку редактирования
-    showEditButton: boolean;
-
+    showEditButton: boolean
+    href: string
     // Функция для рендеринга опций (если она общая и вынесена)
     // Но лучше сделать её частью этого компонента, чтобы он был самодостаточным
     // renderOptions: (options: DictionaryItem[]) => JSX.Element[]; // Если хотите передавать
-};
+}
 
 const ProductFormSelect = ({
     label,
@@ -43,8 +45,8 @@ const ProductFormSelect = ({
     onAddClick,
     onEditClick,
     showEditButton,
+    href
 }: ProductFormSelectWithActionsProps) => {
-
     // Вспомогательная функция для рендеринга опций
     const renderOptions = (items: DictionaryItem[]) => {
         if (!items) {
@@ -59,10 +61,16 @@ const ProductFormSelect = ({
 
     return (
         <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={id}>
-                {label}:
-            </label>
-            <div className="flex items-center gap-2"> {/* контейнер select + button+добавить + button+редактировать */}
+            <div className="flex flex-row">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={id}>
+                    {label}:
+                </label>
+                <Link href={`/admin/${href}`} className="text-xs">
+                    &nbsp; &nbsp; 👈 управлять
+                </Link>
+            </div>
+            <div className="flex items-center gap-2">
+                {/* контейнер select + button+добавить + button+редактировать */}
                 <select
                     required
                     name={name}
@@ -74,7 +82,6 @@ const ProductFormSelect = ({
                     <option value="">Выберите {label}</option>
                     {renderOptions(options)}
                 </select>
-
                 {/* Кнопка "Добавить" с PlusIcon */}
                 <button
                     type="button"
@@ -84,7 +91,6 @@ const ProductFormSelect = ({
                 >
                     <PlusIcon className="h-5 w-5" />
                 </button>
-
                 {/* Кнопка "Редактировать" с PencilIcon */}
                 {showEditButton && (
                     <button

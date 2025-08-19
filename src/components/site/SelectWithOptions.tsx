@@ -57,7 +57,7 @@ const SelectWithOptions = ({
 
     // Фильтруем опции на основе поискового запроса
     const filteredOptions = options.filter((option) =>
-        option.label.toLowerCase().includes(searchTerm.toLowerCase())
+        option?.label?.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     const selectedLabel = options.find((opt) => opt.value === value)?.label || placeholder

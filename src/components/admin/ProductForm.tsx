@@ -30,6 +30,7 @@ import { addHandler, editHandler } from '@/app/handlers/productFormHandlers'
 import ProductImagePicker from '@/components/ui/ProductImagePicker'
 import { ImageDTO } from '@/db/models/image.model'
 import SelectWithOptions from '@/components/site/SelectWithOptions'
+import Link from 'next/link'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false
@@ -223,7 +224,8 @@ const ProductForm = ({
             onChange: (e) => setBrandId(Number(e.target.value)),
             onAddClick: () => addHandler('brand', setModalState),
             onEditClick: () => editHandler(brandId, 'brand', setModalState, getBrandById),
-            showEditButton: !!brandId
+            showEditButton: !!brandId,
+            href: 'brands'
         },
         {
             label: 'Коллекция',
@@ -235,7 +237,8 @@ const ProductForm = ({
             onAddClick: () => addHandler('collection', setModalState),
             onEditClick: () =>
                 editHandler(collectionId, 'collection', setModalState, getCollectionById),
-            showEditButton: !!collectionId
+            showEditButton: !!collectionId,
+            href: 'collections'
         },
         {
             label: 'Страна',
@@ -246,7 +249,8 @@ const ProductForm = ({
             onChange: (e) => setCountryId(Number(e.target.value)),
             onAddClick: () => addHandler('country', setModalState),
             onEditClick: () => editHandler(countryId, 'country', setModalState, getCountryById),
-            showEditButton: !!countryId
+            showEditButton: !!countryId,
+            href: 'countries'
         },
         {
             label: 'Стиль',
@@ -257,7 +261,8 @@ const ProductForm = ({
             onChange: (e) => setStyleId(Number(e.target.value)),
             onAddClick: () => addHandler('style', setModalState),
             onEditClick: () => editHandler(styleId, 'style', setModalState, getStyleById),
-            showEditButton: !!styleId
+            showEditButton: !!styleId,
+            href: 'styles'
         }
     ]
 
@@ -361,12 +366,14 @@ const ProductForm = ({
 
                     {/* Поле 'articul' */}
                     <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="articul"
-                        >
-                            Артикул:
-                        </label>
+                        <div className="flex flex-row">
+                            <label
+                                className="block text-gray-700 text-sm font-bold mb-2"
+                                htmlFor="articul"
+                            >
+                                Артикул:
+                            </label>
+                        </div>
                         <input
                             required
                             value={articul}

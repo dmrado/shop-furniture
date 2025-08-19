@@ -2,11 +2,17 @@
 
 import React, { useState } from 'react'
 import { DictionaryItem } from '@/db/types/common-types'
-import { createBrand, getAllBrands, softDeleteBrand, updateBrand } from '@/actions/dictionaryActions'
+import {
+    createBrand,
+    getAllBrands,
+    softDeleteBrand,
+    updateBrand
+} from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation' // Для router.refresh()
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
+import Link from 'next/link'
 
 // Пропсы для компонента
 type BrandManagementClientProps = {
@@ -18,30 +24,35 @@ type BrandManagementClientProps = {
 
 // Интерфейс для формы бренда
 interface BrandFormState {
-    id?: number | null;
-    name: string;
-    description: string;
+    id?: number | null
+    name: string
+    description: string
     isActive?: boolean
 }
 
-const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: BrandManagementClientProps) => {
+const BrandManager = ({
+    initialBrands,
+    itemsPerPage,
+    currentPage,
+    totalCount
+}: BrandManagementClientProps) => {
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
 
-    const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands) // Состояние для брендов
-    const [ showModal, setShowModal ] = useState(false) // Состояние для модального окна
-    const [ currentBrand, setCurrentBrand ] = useState<BrandFormState | null>(null) // Для редактирования/создания
-    const [ isActive, setIsActive ] = useState(true)
+    const [brands, setBrands] = useState<DictionaryItem[]>(initialBrands) // Состояние для брендов
+    const [showModal, setShowModal] = useState(false) // Состояние для модального окна
+    const [currentBrand, setCurrentBrand] = useState<BrandFormState | null>(null) // Для редактирования/создания
+    const [isActive, setIsActive] = useState(true)
     //для подсчета символов в description
-    const [ descriptionCharCount, setDescriptionCharCount ] = useState(0)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(0)
 
     // для пагинации
     const pageCount = Math.ceil(totalCount / itemsPerPage)
 
     // Для модального окна подтверждения удаления
-    const [ showConfirmDeleteModal, setShowConfirmDeleteModal ] = useState(false)
-    const [ brandToDelete, setBrandToDelete ] = useState<DictionaryItem | null>(null)
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
+    const [brandToDelete, setBrandToDelete] = useState<DictionaryItem | null>(null)
 
     // Функция для обновления счетчика символов при изменении textarea
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,7 +61,12 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
 
     const handleEditClick = (brand: DictionaryItem) => {
         const desc = brand.description || ''
-        setCurrentBrand({ id: brand.id, name: brand.name, description: desc, isActive: brand.isActive ?? true })
+        setCurrentBrand({
+            id: brand.id,
+            name: brand.name,
+            description: desc,
+            isActive: brand.isActive ?? true
+        })
         setIsActive(brand.isActive ?? true)
         setDescriptionCharCount(desc.length) // Устанавливаем начальное значение счетчика
         setShowModal(true)
@@ -114,28 +130,32 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
     }
 
     // Базовый стиль карточки
-    const brandCardStyle = 'relative flex flex-col justify-between p-3 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group w-full h-44'
+    const brandCardStyle =
+        'relative flex flex-col justify-between p-3 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group w-full h-44'
     // Стили для имени бренда
-    const brandNameStyle = 'text-lg font-semibold text-gray-800 group-hover:text-[#E99C28] mb-1 text-center truncate break-words'
+    const brandNameStyle =
+        'text-lg font-semibold text-gray-800 group-hover:text-[#E99C28] mb-1 text-center truncate break-words'
     // Стили для описания бренда
-    const brandDescriptionStyle = 'text-sm text-gray-600 overflow-hidden text-center flex-grow line-clamp-3 break-words'
+    const brandDescriptionStyle =
+        'text-sm text-gray-600 overflow-hidden text-center flex-grow line-clamp-3 break-words'
     // Стили для ID при ховере - НЕТ, ЭТОТ БУДЕТ ПРИМЕНЕН К ОВЕРЛЕЮ ВНУТРИ!
-    const brandIdStyle = 'absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-75 text-white text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg'
+    const brandIdStyle =
+        'absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-75 text-white text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg'
     // Стили для контейнера кнопок действий
-    const brandActionsContainerStyle = 'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
+    const brandActionsContainerStyle =
+        'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
     // Стили для кнопок внутри карточки
     const brandActionButtonStyle = 'w-full button_blue text-xs px-2 py-1.5 justify-center'
     const brandDeleteButtonStyle = 'w-full button_red text-xs px-2 py-1.5 justify-center'
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <button
-                onClick={handleAddClick}
-                className="button_green mb-6 px-5 py-2"
-            >
-                Добавить новый бренд 🛠️
-            </button>
-
+            <div className="flex flex-col sm:flex-row w-full justify-between align-center px-12 gap-2">
+                <button onClick={handleAddClick} className="button_green mb-6 px-5 py-2">
+                    Добавить новый бренд 🛠️
+                </button>
+                <Link href={'/admin/products'}>Вернуться</Link>
+            </div>
             {/*fixme не работает*/}
             {/*{pageCount > 1 && (*/}
             <div className="my-6">
@@ -148,8 +168,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
             {/*)}*/}
 
             {/* Список брендов в виде карточек */}
-            <div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 {brands.length === 0 ? (
                     <p className="col-span-full text-gray-600">Бренды не найдены.</p>
                 ) : (
@@ -157,14 +176,23 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                         <div key={brand.id} className={brandCardStyle}>
                             <div className="relative flex flex-col items-center flex-grow">
                                 <div
-                                    className={brandIdStyle.replace('rounded-lg', '') + ' rounded-t-lg'}>
+                                    className={
+                                        brandIdStyle.replace('rounded-lg', '') + ' rounded-t-lg'
+                                    }
+                                >
                                     <span className="p-2">ID: {brand.id}</span>
                                 </div>
 
                                 {/* Название и описание */}
-                                <span className={brandNameStyle} title={brand.name}>{brand.name}</span>
-                                <span className={brandDescriptionStyle}
-                                    title={brand.description || ''}>{brand.description}</span>
+                                <span className={brandNameStyle} title={brand.name}>
+                                    {brand.name}
+                                </span>
+                                <span
+                                    className={brandDescriptionStyle}
+                                    title={brand.description || ''}
+                                >
+                                    {brand.description}
+                                </span>
                             </div>
 
                             {/* Кнопки действий */}
@@ -173,14 +201,14 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                                     onClick={() => handleEditClick(brand)}
                                     className={brandActionButtonStyle}
                                 >
-                                    <PencilIcon className="h-4 w-4 mr-1"/>
+                                    <PencilIcon className="h-4 w-4 mr-1" />
                                     Редактировать
                                 </button>
                                 <button
                                     onClick={() => handleDeleteClick(brand)}
                                     className={brandDeleteButtonStyle}
                                 >
-                                    <TrashIcon className="h-4 w-4 mr-1"/>
+                                    <TrashIcon className="h-4 w-4 mr-1" />
                                     Удалить
                                 </button>
                             </div>
@@ -191,20 +219,28 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
 
             {/* Модальное окно добавления редактирования */}
             {showModal && (
-                <Modal onClose={() => {
-                    setShowModal(false)
-                    setDescriptionCharCount(0)
-                }}> {/* Сброс счетчика при закрытии модалки */}
+                <Modal
+                    onClose={() => {
+                        setShowModal(false)
+                        setDescriptionCharCount(0)
+                    }}
+                >
+                    {' '}
+                    {/* Сброс счетчика при закрытии модалки */}
                     <h3 className="text-xl font-bold mb-4">
                         {currentBrand ? 'Редактировать бренд' : 'Добавить новый бренд'}
                     </h3>
                     <form action={handleSubmit} className="space-y-4">
                         {currentBrand?.id && (
-                            <input type="hidden" name="id" value={currentBrand.id}/>
+                            <input type="hidden" name="id" value={currentBrand.id} />
                         )}
                         <div>
-                            <label htmlFor="brandName" className="block text-sm font-medium text-gray-700">Название
-                                бренда</label>
+                            <label
+                                htmlFor="brandName"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Название бренда
+                            </label>
                             <input
                                 type="text"
                                 placeholder={'введите от 2-х символов'}
@@ -217,8 +253,11 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                             />
                         </div>
                         <div>
-                            <label htmlFor="brandDescription"
-                                className="block text-sm font-medium text-gray-700">Описание
+                            <label
+                                htmlFor="brandDescription"
+                                className="block text-sm font-medium text-gray-700"
+                            >
+                                Описание
                                 <span className="ml-2 text-gray-500 text-xs">
                                     ({descriptionCharCount}/255 символов)
                                 </span>
@@ -246,7 +285,10 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                                 className="mr-2 leading-tight"
                                 // disabled={isLoading}
                             />
-                            <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                            <label
+                                htmlFor="isActive"
+                                className="text-gray-700 text-sm font-bold"
+                            >
                                 Активен
                             </label>
                         </div>
@@ -261,10 +303,7 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
                             >
                                 Отмена 🚫
                             </button>
-                            <button
-                                type="submit"
-                                className="button_green px-4 py-2"
-                            >
+                            <button type="submit" className="button_green px-4 py-2">
                                 {currentBrand ? 'Сохранить изменения' : 'Создать бренд'} ✅
                             </button>
                         </div>
@@ -274,15 +313,19 @@ const BrandManager = ({ initialBrands, itemsPerPage, currentPage, totalCount }: 
 
             {/* НОВОЕ: Модальное окно подтверждения удаления */}
             {showConfirmDeleteModal && brandToDelete && (
-                <Modal onClose={() => {
-                    setShowConfirmDeleteModal(false)
-                    setBrandToDelete(null)
-                }}>
-                    <h3 className="text-xl font-bold mb-4 text-red-700">Подтвердите удаление</h3>
+                <Modal
+                    onClose={() => {
+                        setShowConfirmDeleteModal(false)
+                        setBrandToDelete(null)
+                    }}
+                >
+                    <h3 className="text-xl font-bold mb-4 text-red-700">
+                        Подтвердите удаление
+                    </h3>
                     <p className="mb-6 text-gray-700">
-                        Вы уверены, что хотите удалить бренд "<span
-                            className="font-semibold">{brandToDelete.name}</span>"?
-                        Это действие нельзя отменить. 💡
+                        Вы уверены, что хотите удалить бренд "
+                        <span className="font-semibold">{brandToDelete.name}</span>"? Это
+                        действие нельзя отменить. 💡
                     </p>
                     <div className="flex justify-end gap-3">
                         <button
