@@ -99,6 +99,7 @@ type ProductFormData = {
     collectionId: number
     countryId: number
     styleId: number
+    categoryId: number
 }
 
 const cleanFormData = (formData: FormData): ProductFormData => {
@@ -114,6 +115,7 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     const collectionId = formData.get('collectionId')
     const countryId = formData.get('countryId')
     const styleId = formData.get('styleId')
+    const categoryId = formData.get('categoryId')
 
     console.log('--- FormData contents ---')
     console.log('id:', id, typeof id)
@@ -128,6 +130,7 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     console.log('collectionId:', collectionId, typeof collectionId)
     console.log('countryId:', countryId, typeof countryId)
     console.log('styleId:', styleId, typeof styleId)
+    console.log('categoryId:', categoryId, typeof categoryId)
     console.log('-------------------------')
 
     // Проверяем типы полученных данных
@@ -147,6 +150,7 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     const parsedCollectionId = collectionId ? Number(collectionId) : null
     const parsedCountryId = countryId ? Number(countryId) : null
     const parsedStyleId = styleId ? Number(styleId) : null
+    const parsedCategoryId = categoryId ? Number(categoryId) : null // Парсим categoryId
 
     //fixme требуется что бы brandId collectionId countryId styleId мог быть null в БД иначе см ниже
     //более мягкая проверка (старая ниже) иначе падает сохранение продукта если каждый раз не выбирать все поля форме, так как форма незримо отправляет пустую строку соответствующую "все бренды"
@@ -161,6 +165,9 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     }
     if (parsedStyleId !== null && parsedStyleId <= 0) {
         throw new ValidationError('ID стиля не может быть нулем или отрицательным')
+    }
+    if (parsedCategoryId === null || parsedCategoryId <= 0) {
+        throw new ValidationError('ID категории не может быть пустым или отрицательным.')
     }
 
     // if (
@@ -206,7 +213,8 @@ const cleanFormData = (formData: FormData): ProductFormData => {
         brandId: parsedBrandId,
         collectionId: parsedCollectionId,
         countryId: parsedCountryId,
-        styleId: parsedStyleId
+        styleId: parsedStyleId,
+        categoryId: parsedCategoryId
     }
 }
 
@@ -258,55 +266,68 @@ export const handleForm = async (formData: FormData) => {
                 .slice(0, 100)
         }
 
-        //Проверка уникальности артикула варианта
-        const unicArticul = await ProductModel.findOne({
-            where: { articul: productData.articul }
-        })
-        if (unicArticul) {
-            throw new Error(
-                `Продукт с артикулом ${productData.articul} уже существует.`
-            )
-        }
-
-        // Подключаем ProductModel Создаем объект для upsert
-        const upsertData: InferCreationAttributes<ProductModel> = {
+        const productDataToSave = {
             brandId: productData.brandId,
             collectionId: productData.collectionId,
             countryId: productData.countryId,
             styleId: productData.styleId,
-
-            id: productData.id,
             name: productData.name,
             articul: productData.articul,
             sku: productData.sku,
-
             descriptionShort: productData.descriptionShort,
             descriptionLong: productData.descriptionLong,
-
             isNew: productData.isNew,
             isActive: productData.isActive,
-            // Добавляем preview, если оно требуется в ProductModel
-            // Если в ProductModel нет поля 'preview', это поле нужно будет удалить или добавить в модель
-            preview: preview // Предполагаем, что ProductModel может иметь поле 'preview'
+            preview: productData.descriptionShort || productData.descriptionLong
+        }
+        let product
 
-            // Если есть обязательные поля без значений (например, categoryId, styleId и т.д.)
-            // и они не приходят из формы, вам нужно будет либо:
-            // 1. Добавить их в форму
-            // 2. Установить значения по умолчанию здесь
-            // 3. Убедиться, что они могут быть nullable в вашей модели, или что Sequelize их автогенерирует
-            // Пример (если бы styleId был необязательным или имел дефолтное значение 1):
-            // styleId: productData.styleId || 1, // Пример, если бы styleId приходил из формы
-            // brandId: productData.brandId || 1, // Пример
-            // collectionId: productData.collectionId || 1, // Пример
-            // countryId: productData.countryId || 1, // Пример
+        if (productData.id) {
+            const existingProduct = await ProductModel.findByPk(productData.id)
+            if (!existingProduct) {
+                throw new Error(`Продукт с ID ${productData.id} не найден.`)
+            }
+
+            // Проверяем, что новый артикул не используется другим продуктом
+            const articulExists = await ProductModel.findOne({
+                where: { articul: productData.articul }
+            })
+            if (articulExists && articulExists.id !== productData.id) {
+                throw new Error(`Артикул ${productData.articul} уже используется другим продуктом.`)
+            }
+
+            // Обновляем данные
+            await ProductModel.update(productDataToSave, {
+                where: { id: productData.id }
+            })
+
+            // Находим обновлённый продукт, чтобы работать с ассоциациями
+            product = await ProductModel.findByPk(productData.id)
+            if (!product) {
+                throw new Error('Не удалось найти обновленный продукт для работы с категориями.')
+            }
+            console.log(`Продукт с ID ${product.id} был обновлен.`)
+        } else {
+            // ✅ Логика создания
+            const existingArticul = await ProductModel.findOne({
+                where: { articul: productData.articul }
+            })
+            if (existingArticul) {
+                throw new Error(`Продукт с артикулом ${productData.articul} уже существует.`)
+            }
+
+            product = await ProductModel.create(productDataToSave)
+            console.log(`Продукт с ID ${product.id} был создан.`)
         }
 
-        //todo сделать отдельно create и  update в зависимости от наличия id
+        // Работаем с категориями, так как "product" теперь всегда полноценный экземпляр
+        if (productData.categoryId) {
+            console.log(`Попытка привязать категорию с ID: ${productData.categoryId} к продукту ID: ${product.id}`)
+            await product.setCategories([ productData.categoryId ])
+            console.log('Категория успешно привязана.')
+        }
 
-        // Используем ProductModel [created] (раньше назывался isNew или isUpdated в старых версиях): Это булево значение (true или false), которое указывает, была ли запись создана (true) или обновлена (false).
-        const [ product, created ] = await ProductModel.upsert(upsertData)
-
-        if (created) {
+        if (product) {
             console.log(`Product with ID ${product.id} was created.`)
         } else {
             console.log(`Product with ID ${product.id} was updated.`)
@@ -326,7 +347,6 @@ export const handleForm = async (formData: FormData) => {
         // }
 
         revalidatePath('/admin/products')
-        // redirect(`/admin/products/${product.id}`) // Перенаправляем на страницу нового продукта
         return { success: true, product: product.toJSON() }
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)

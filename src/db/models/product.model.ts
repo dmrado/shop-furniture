@@ -1,12 +1,12 @@
 import { sequelize } from '../connection'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { StyleModel } from '@/db/models/style.model'
+import { StyleDTO, StyleModel } from '@/db/models/style.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { BrandModel } from '@/db/models/brand.model'
 import { CountryModel } from '@/db/models/country.model'
 // import { CategoryModel } from '@/db/models/category.model'
 import { ProductVariantDTO, ProductVariantModel } from '@/db/models/product_variant.model'
-import { CategoryModel } from '@/db/models/category.model'
+import { CategoryDTO } from '@/db/models/category.model'
 import { ImageDTO } from '@/db/models/image.model'
 
 export interface ProductDTO extends InferAttributes<ProductModel> {
@@ -32,8 +32,8 @@ export class ProductModel extends Model<InferAttributes<ProductModel>, InferCrea
 
     // Определение ассоциации с ProductVariantModel
     declare variants?: ProductVariantDTO[] // Опционально для TypeScript
-    declare style?: StyleModel
-    declare categories?: CategoryModel[]
+    declare style?: StyleDTO[]
+    declare categories?: CategoryDTO[]
     declare images: ImageDTO[]
     static associate: (models: any) => void
 }

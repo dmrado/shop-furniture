@@ -15,9 +15,7 @@ import {
     getStyleById,
     getActiveCollections,
     getActiveCountries,
-    getActiveStyles,
-    getAllCategories,
-    getCategoryByProductid
+    getActiveStyles
 } from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
 import ProductFormSelect from '@/components/admin/ProductFormSelect'
@@ -30,7 +28,6 @@ import { addHandler, editHandler } from '@/app/handlers/productFormHandlers'
 import ProductImagePicker from '@/components/ui/ProductImagePicker'
 import { ImageDTO } from '@/db/models/image.model'
 import SelectWithOptions from '@/components/site/SelectWithOptions'
-import Link from 'next/link'
 
 const Editor = dynamic(() => import('@/components/admin/Editor.tsx'), {
     ssr: false
@@ -68,54 +65,46 @@ const ProductForm = ({
     initialStyles = [],
     initialCategories = []
 }: ProductFormProps) => {
-    console.log('initialBrands', initialBrands)
-    console.log('product>>>>>>>>>>>>>>>>>', product)
 
     // Инициализируем состояния, используя данные из product или значения по умолчанию
-    const [name, setName] = useState(product?.name || '')
-    const [articul, setArticul] = useState(product?.articul || '')
-    const [sku, setSku] = useState(product?.sku || '')
-    const [descriptionShort, setDescriptionShort] = useState(product?.descriptionShort || '')
-    const [descriptionLong, setDescriptionLong] = useState(product?.descriptionLong || '')
-    const [isNew, setIsNew] = useState(product?.isNew || false)
-    const [isActive, setIsActive] = useState(product?.isActive || false)
-    const [productImages, setProductImages] = useState<ImageDTO[]>(product?.images || [])
-    const [category, setCategory] = useState(product?.categories || [])
+    const [ name, setName ] = useState(product?.name || '')
+    const [ articul, setArticul ] = useState(product?.articul || '')
+    const [ sku, setSku ] = useState(product?.sku || '')
+    const [ descriptionShort, setDescriptionShort ] = useState(product?.descriptionShort || '')
+    const [ descriptionLong, setDescriptionLong ] = useState(product?.descriptionLong || '')
+    const [ isNew, setIsNew ] = useState(product?.isNew || false)
+    const [ isActive, setIsActive ] = useState(product?.isActive || false)
+    const [ productImages, setProductImages ] = useState<ImageDTO[]>(product?.images || [])
 
     // Инициализируем
-    const [brandId, setBrandId] = useState<number | string>('') // Должен быть number или string
-    const [collectionId, setCollectionId] = useState<number | string>('')
-    const [countryId, setCountryId] = useState<number | string>('')
-    const [styleId, setStyleId] = useState<number | string>('')
-    const [categoryId, setCategoryId] = useState<number | string>('')
+    const [ brandId, setBrandId ] = useState<number | string>('') // Должен быть number или string
+    const [ collectionId, setCollectionId ] = useState<number | string>('')
+    const [ countryId, setCountryId ] = useState<number | string>('')
+    const [ styleId, setStyleId ] = useState<number | string>('')
+
+    // ИНИЦИАЛИЗАЦИЯ CATEGORY ID. Если массив не пустой, берём id первой категории.
+    const initialCategoryId = product?.categories?.length
+        ? String(product.categories[0].id)
+        : ''
+    const [ categoryId, setCategoryId ] = useState<string | number>(initialCategoryId)
 
     //  СОСТОЯНИЯ ДЛЯ ХРАНЕНИЯ СПИСКОВ СПРАВОЧНИКОВ
-    const [brands, setBrands] = useState<DictionaryItem[]>(initialBrands)
-    const [collections, setCollections] = useState<DictionaryItem[]>(initialCollections)
-    const [countries, setCountries] = useState<DictionaryItem[]>(initialCountries)
-    const [styles, setStyles] = useState<DictionaryItem[]>(initialStyles)
-    const [categories, setCategories] = useState<DictionaryItem[]>(initialCategories)
+    const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands)
+    const [ collections, setCollections ] = useState<DictionaryItem[]>(initialCollections)
+    const [ countries, setCountries ] = useState<DictionaryItem[]>(initialCountries)
+    const [ styles, setStyles ] = useState<DictionaryItem[]>(initialStyles)
+    const [ categories, setCategories ] = useState<DictionaryItem[]>(initialCategories)
 
     // Состояния для валидации
-    const [touchedName, setTouchedName] = useState(false)
-    const [isFileSizeError, setFileSizeError] = useState(false)
+    const [ touchedName, setTouchedName ] = useState(false)
+    const [ isFileSizeError, setFileSizeError ] = useState(false)
 
     // Универсальный стейт для модального окна
-    const [modalState, setModalState] = useState<ModalState>({
+    const [ modalState, setModalState ] = useState<ModalState>({
         isOpen: false,
         type: null,
         initialData: null
     })
-
-    const searchCategory = async () => {
-        await getCategoryByProductid(product?.id)
-    }
-
-    // Находим категорию по id продукта
-    useEffect(() => {
-        const editingCategory = searchCategory()
-        setCategoryId(editingCategory)
-    }, [product])
 
     // Функция для обновления списка брендов
     const refreshBrands = async () => {
@@ -177,13 +166,19 @@ const ProductForm = ({
         setIsNew(product?.isNew ?? false)
         setIsActive(product?.isActive ?? false)
         setCategories(product?.category || '')
+        setProductImages(product?.images || [])
 
-        // Установка значений для select-ов, учитывая переданные initialItems проверяем, что brands, collections и т.д. не undefined здесь
+        // Обновляем значения для select-ов, учитывая переданные initialItems проверяем, что brands, collections и т.д. не undefined здесь
         setBrandId(product?.brandId ?? '')
         setCollectionId(product?.collectionId ?? '')
         setCountryId(product?.countryId ?? '')
         setStyleId(product?.styleId ?? '')
-        setCategories(product?.categoryId ?? '')
+        // Обновляем категорию, если она есть
+        const categoryIdToSet = product?.categories?.length
+            ? String(product.categories[0].id)
+            : ''
+        setCategoryId(categoryIdToSet)
+
         // setStyleId(product?.styleId && styles.some(s => s.id === product.styleId) ? product.styleId : (styles.length > 0 ? styles[0].id : ''))
 
         setTouchedName(false)
@@ -273,7 +268,7 @@ const ProductForm = ({
 
         if (!isNameValid() || isFileSizeError) {
             // Добавляем стили для неактивного состояния
-            classes += ' opacity-50 cursor-not-allowed'
+            classes += 'opacity-50 cursor-not-allowed'
         }
         return classes
     }
@@ -316,15 +311,7 @@ const ProductForm = ({
 
                     {/* Поле 'category'*/}
                     <div className="mb-4">
-                        {/* Добавляем селект для категорий */}
-                        {/* todo добавить скрытое поле как с react Quill */}
-                        <input
-                            hidden
-                            type="text"
-                            name="categoryValue"
-                            value={category}
-                            readOnly
-                        />
+                        {/* селект для категорий */}
                         <div className="flex-grow w-full sm:w-auto">
                             <label
                                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -332,12 +319,16 @@ const ProductForm = ({
                             >
                                 Категория товара:
                             </label>
-
+                            <input hidden type="text" name="categoryId" value={categoryId} readOnly />
+                            {/*кастомный React-компонент, я сам определяю, какие пропсы он принимает и что он с ними делает, я решил абстрагироваться от деталей HTML и передавать в пропс onChange сразу готовое значение value, а не объект события event.*/}
                             <SelectWithOptions
-                                options={categories || []}
+                                options={initialCategories.map(cat => ({
+                                    label: cat.name,
+                                    value: String(cat.id)
+                                }))}
                                 placeholder={'Выбрать категорию'}
-                                value={name}
-                                onChange={(e) => setCategory(e.target.value)}
+                                value={categoryId}
+                                onChange={(value) => setCategoryId(value)}
                             />
                         </div>
 

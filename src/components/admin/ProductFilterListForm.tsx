@@ -25,17 +25,17 @@ type ProductFilterAndListProps = {
 }
 
 const ProductFilterListForm = ({
-    products,
-    initialBrands = [], //дефолтное значение пустой массив
-    initialCollections = [],
-    initialCountries = [],
-    initialStyles = [],
-    initialCategories = [],
-    removeProduct,
-    itemsPerPage,
-    totalProductsCount,
-    currentPage
-}: ProductFilterAndListProps) => {
+                                   products,
+                                   initialBrands = [], //дефолтное значение пустой массив
+                                   initialCollections = [],
+                                   initialCountries = [],
+                                   initialStyles = [],
+                                   initialCategories = [],
+                                   removeProduct,
+                                   itemsPerPage,
+                                   totalProductsCount,
+                                   currentPage
+                               }: ProductFilterAndListProps) => {
     console.log('initialCategories array', initialCategories)
     const router = useRouter()
     const path = usePathname()
@@ -211,7 +211,8 @@ const ProductFilterListForm = ({
                                         {' '}
                                         {/* flex-grow позволит ему занять доступное пространство */}
                                         {/* Миниатюра */}
-                                        <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                        <div
+                                            className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
                                             <Image
                                                 width={64} // 16 * 4 = 64px
                                                 height={64} // 16 * 4 = 64px
@@ -234,7 +235,8 @@ const ProductFilterListForm = ({
                                     </div>
                                 </Link>
                                 {/* Контейнер для кнопок */}
-                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+                                <div
+                                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
                                     <button
                                         onClick={() => handleEditProduct(product)}
                                         className="button_blue text-sm px-3 py-1.5 w-full justify-center"
