@@ -56,9 +56,9 @@ const SelectWithOptions = ({
     }
 
     // Фильтруем опции на основе поискового запроса
-    // const filteredOptions = options.filter((option) =>
-    //     option.label.toLowerCase().includes(searchTerm.toLowerCase())
-    // )
+    const filteredOptions = options.filter((option) =>
+        option.label.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     const selectedLabel = options.find((opt) => opt.value === value)?.label || placeholder
 
@@ -90,8 +90,8 @@ const SelectWithOptions = ({
                     >
                         {placeholder}
                     </div>
-                    {options.length > 0 ? (
-                        options.map((option) => (
+                    {filteredOptions.length > 0 ? (
+                        filteredOptions.map((option) => (
                             <div
                                 key={option.value}
                                 className="cursor-pointer py-2 px-3 text-gray-700 hover:bg-gray-100"
