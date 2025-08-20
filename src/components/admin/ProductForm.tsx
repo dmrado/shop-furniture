@@ -56,51 +56,51 @@ type ProductFormProps = {
 }
 
 const ProductForm = ({
-    product,
-    onSuccess,
-    onCancel,
-    initialBrands = [],
-    initialCollections = [],
-    initialCountries = [],
-    initialStyles = [],
-    initialCategories = []
-}: ProductFormProps) => {
+                         product,
+                         onSuccess,
+                         onCancel,
+                         initialBrands = [],
+                         initialCollections = [],
+                         initialCountries = [],
+                         initialStyles = [],
+                         initialCategories = []
+                     }: ProductFormProps) => {
 
     // Инициализируем состояния, используя данные из product или значения по умолчанию
-    const [ name, setName ] = useState(product?.name || '')
-    const [ articul, setArticul ] = useState(product?.articul || '')
-    const [ sku, setSku ] = useState(product?.sku || '')
-    const [ descriptionShort, setDescriptionShort ] = useState(product?.descriptionShort || '')
-    const [ descriptionLong, setDescriptionLong ] = useState(product?.descriptionLong || '')
-    const [ isNew, setIsNew ] = useState(product?.isNew || false)
-    const [ isActive, setIsActive ] = useState(product?.isActive || false)
-    const [ productImages, setProductImages ] = useState<ImageDTO[]>(product?.images || [])
+    const [name, setName] = useState(product?.name || '')
+    const [articul, setArticul] = useState(product?.articul || '')
+    const [sku, setSku] = useState(product?.sku || '')
+    const [descriptionShort, setDescriptionShort] = useState(product?.descriptionShort || '')
+    const [descriptionLong, setDescriptionLong] = useState(product?.descriptionLong || '')
+    const [isNew, setIsNew] = useState(product?.isNew || false)
+    const [isActive, setIsActive] = useState(product?.isActive || true)
+    const [productImages, setProductImages] = useState<ImageDTO[]>(product?.images || [])
 
     // Инициализируем
-    const [ brandId, setBrandId ] = useState<number | string>('') // Должен быть number или string
-    const [ collectionId, setCollectionId ] = useState<number | string>('')
-    const [ countryId, setCountryId ] = useState<number | string>('')
-    const [ styleId, setStyleId ] = useState<number | string>('')
+    const [brandId, setBrandId] = useState<number | string>('') // Должен быть number или string
+    const [collectionId, setCollectionId] = useState<number | string>('')
+    const [countryId, setCountryId] = useState<number | string>('')
+    const [styleId, setStyleId] = useState<number | string>('')
 
     // ИНИЦИАЛИЗАЦИЯ CATEGORY ID. Если массив не пустой, берём id первой категории.
     const initialCategoryId = product?.categories?.length
         ? String(product.categories[0].id)
         : ''
-    const [ categoryId, setCategoryId ] = useState<string | number>(initialCategoryId)
+    const [categoryId, setCategoryId] = useState<string | number>(initialCategoryId)
 
     //  СОСТОЯНИЯ ДЛЯ ХРАНЕНИЯ СПИСКОВ СПРАВОЧНИКОВ
-    const [ brands, setBrands ] = useState<DictionaryItem[]>(initialBrands)
-    const [ collections, setCollections ] = useState<DictionaryItem[]>(initialCollections)
-    const [ countries, setCountries ] = useState<DictionaryItem[]>(initialCountries)
-    const [ styles, setStyles ] = useState<DictionaryItem[]>(initialStyles)
-    const [ categories, setCategories ] = useState<DictionaryItem[]>(initialCategories)
+    const [brands, setBrands] = useState<DictionaryItem[]>(initialBrands)
+    const [collections, setCollections] = useState<DictionaryItem[]>(initialCollections)
+    const [countries, setCountries] = useState<DictionaryItem[]>(initialCountries)
+    const [styles, setStyles] = useState<DictionaryItem[]>(initialStyles)
+    const [categories, setCategories] = useState<DictionaryItem[]>(initialCategories)
 
     // Состояния для валидации
-    const [ touchedName, setTouchedName ] = useState(false)
-    const [ isFileSizeError, setFileSizeError ] = useState(false)
+    const [touchedName, setTouchedName] = useState(false)
+    const [isFileSizeError, setFileSizeError] = useState(false)
 
     // Универсальный стейт для модального окна
-    const [ modalState, setModalState ] = useState<ModalState>({
+    const [modalState, setModalState] = useState<ModalState>({
         isOpen: false,
         type: null,
         initialData: null
@@ -164,7 +164,7 @@ const ProductForm = ({
         setDescriptionShort(product?.descriptionShort || '')
         setDescriptionLong(product?.descriptionLong || '')
         setIsNew(product?.isNew ?? false)
-        setIsActive(product?.isActive ?? false)
+        setIsActive(product?.isActive ?? true)
         setCategories(product?.category || '')
         setProductImages(product?.images || [])
 
@@ -438,7 +438,7 @@ const ProductForm = ({
                         onChange={(e) => setIsNew(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
-                    <label htmlFor="isNew" className="text-gray-700 text-sm font-bold">
+                    <label htmlFor="isNew" className="text-gray-700 text-lg font-medium">
                         Новинка
                     </label>
                 </div>
@@ -451,39 +451,65 @@ const ProductForm = ({
                         onChange={(e) => setIsActive(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                    <label htmlFor="isActive" className="text-gray-700 text-lg font-medium">
                         Активен (отображать на сайте)
                     </label>
                 </div>
 
-                {/* Поле для загрузки файла */}
+                {/* Поле для загрузки файла ---------------------------------------------------*/}
+                {/*todo перенести в отдельный компонент DragAndDropFileUploader там все функции есть*/}
                 <div className="flex flex-col my-4">
-                    <ProductImagePicker
-                        value={productImages}
-                        label="Product images"
-                        productName={product?.name ?? 'Unknown product'}
-                        onFilesReady={(fileDto) => {
-                            // alert(`Uploaded ${fileDto.length} files`)
-                            setProductImages(fileDto)
-                        }}
-                        multiple
-                    />
-                    {/*<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">*/}
-                    {/*    Изображение товара:*/}
-                    {/*</label>*/}
-                    {/*<input type='file' name='product_picture' id='product_picture'*/}
-                    {/*    accept={IMAGE_TYPES.join(',')}*/}
-                    {/*    onChange={(e) => {*/}
-                    {/*        if (!e.target.files) return*/}
-                    {/*        const fileSize = e.target?.files[0]?.size*/}
-                    {/*        setFileSizeError(fileSize > FILE_LIMIT)*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-                    {/*{isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}*/}
-                    {/*<label htmlFor="product_picture"*/}
-                    {/*    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,*/}
-                    {/*    .tiff, .heic</label>*/}
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">
+                        Изображение товара:
+                    </label>
+                    <div
+                        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors duration-200">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-12 w-12 text-gray-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L15 13m-4 5v-4l4-4m2 4h4a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                        </svg>
+                        <p className="mt-2 text-sm font-medium text-gray-600">
+                            Перетащите сюда файлы с расширением:
+                        </p>
+                        <p className="text-xs text-blue-500 font-medium my-2">PNG, JPEG, JPG, GIF, TIFF, HEIC до 2МБ</p>
+                        <div className="text-sm font-medium text-gray-600">
+                            <ProductImagePicker
+                                value={productImages}
+                                label="или нажмите для загрузки"
+                                productName={product?.name ?? 'Неизвестный товар'}
+                                onFilesReady={(fileDto) => {
+                                    // alert(`Uploaded ${fileDto.length} files`)
+                                    setProductImages(fileDto)
+                                }}
+                                multiple
+                            />
+                        </div>
+                    </div>
                 </div>
+                {/* Поле для загрузки файла ---------------------------------------------------*/}
+
+                {/*<input type='file' name='product_picture' id='product_picture'*/}
+                {/*    accept={IMAGE_TYPES.join(',')}*/}
+                {/*    onChange={(e) => {*/}
+                {/*        if (!e.target.files) return*/}
+                {/*        const fileSize = e.target?.files[0]?.size*/}
+                {/*        setFileSizeError(fileSize > FILE_LIMIT)*/}
+                {/*    }}*/}
+                {/*/>*/}
+                {/*{isFileSizeError && <span style={{ color: 'red' }}>Размер файла слишком большой.</span>}*/}
+                {/*<label htmlFor="product_picture"*/}
+                {/*    className="text-gray-500 mt-1">Пожалуйста выберите файл с расширением .png, .jpeg, .jpg, .gif,*/}
+                {/*    .tiff, .heic</label>*/}
 
                 <div className="flex items-center justify-center mt-2">
                     <button
@@ -501,38 +527,40 @@ const ProductForm = ({
                 </div>
             </form>
 
-            {modalState.isOpen && (
-                <Modal onClose={() => setModalState({ ...modalState, isOpen: false })}>
-                    {modalState.type === 'brand' && (
-                        <BrandFormModalContent
-                            onClose={() => setModalState({ ...modalState, isOpen: false })}
-                            onSuccess={refreshBrands}
-                            initialData={modalState.initialData}
-                        />
-                    )}
-                    {modalState.type === 'collection' && (
-                        <CollectionFormModalContent
-                            onClose={() => setModalState({ ...modalState, isOpen: false })}
-                            onSuccess={refreshCollections}
-                            initialData={modalState.initialData}
-                        />
-                    )}
-                    {modalState.type === 'country' && (
-                        <CountryFormModalContent
-                            onClose={() => setModalState({ ...modalState, isOpen: false })}
-                            onSuccess={refreshCountries}
-                            initialData={modalState.initialData}
-                        />
-                    )}
-                    {modalState.type === 'style' && (
-                        <StyleFormModalContent
-                            onClose={() => setModalState({ ...modalState, isOpen: false })}
-                            onSuccess={refreshStyles}
-                            initialData={modalState.initialData}
-                        />
-                    )}
-                </Modal>
-            )}
+            {
+                modalState.isOpen && (
+                    <Modal onClose={() => setModalState({ ...modalState, isOpen: false })}>
+                        {modalState.type === 'brand' && (
+                            <BrandFormModalContent
+                                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                                onSuccess={refreshBrands}
+                                initialData={modalState.initialData}
+                            />
+                        )}
+                        {modalState.type === 'collection' && (
+                            <CollectionFormModalContent
+                                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                                onSuccess={refreshCollections}
+                                initialData={modalState.initialData}
+                            />
+                        )}
+                        {modalState.type === 'country' && (
+                            <CountryFormModalContent
+                                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                                onSuccess={refreshCountries}
+                                initialData={modalState.initialData}
+                            />
+                        )}
+                        {modalState.type === 'style' && (
+                            <StyleFormModalContent
+                                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                                onSuccess={refreshStyles}
+                                initialData={modalState.initialData}
+                            />
+                        )}
+                    </Modal>
+                )
+            }
         </>
     )
 }

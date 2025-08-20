@@ -283,6 +283,7 @@ export const handleForm = async (formData: FormData) => {
         let product
 
         if (productData.id) {
+            // Логика изменения
             const existingProduct = await ProductModel.findByPk(productData.id)
             if (!existingProduct) {
                 throw new Error(`Продукт с ID ${productData.id} не найден.`)
@@ -308,7 +309,7 @@ export const handleForm = async (formData: FormData) => {
             }
             console.log(`Продукт с ID ${product.id} был обновлен.`)
         } else {
-            // ✅ Логика создания
+            // Логика создания
             const existingArticul = await ProductModel.findOne({
                 where: { articul: productData.articul }
             })
