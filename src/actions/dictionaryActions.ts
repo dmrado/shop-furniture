@@ -9,6 +9,7 @@ import { MaterialModel } from '@/db/models/material.model.ts'
 import { DictionaryItem } from '@/db/types/common-types'
 import { revalidatePath } from 'next/cache'
 import { CategoryModel } from '@/db/models/category.model'
+import { Op } from 'sequelize'
 
 // Вспомогательная функция для преобразования 'on'/null в boolean
 function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
@@ -20,6 +21,7 @@ function parseBooleanFromFormData(value: FormDataEntryValue | null): boolean {
 //1. Функция для получения ТОЛЬКО АКТИВНЫХ брендов (для фильтров, ProductFilterListForm)
 export async function getActiveBrands(): Promise<DictionaryItem[]> {
     try {
+        // todo заменить where на три состояния актив, moderate, deleted
         const brands = await BrandModel.findAll({
             where: [{ isActive: true }, { isDeleted: false }],
             attributes: ['id', 'name'], // Здесь достаточно id и name для выбора в ProductForm
@@ -148,13 +150,42 @@ export async function removeBrand(id: number) {
     revalidatePath('/admin/brands')
 }
 
+/**
+ * Ищет бренды по названию, используя частичное совпадение.
+ * @param {string} name - Часть названия бренда для поиска.
+ * @returns {Promise<DictionaryItem[]>} - Найденные бренды.
+ */
+// для модальных окон в форме доавления продукта
+export async function searchBrandByName(name: string) {
+    try {
+        console.log('Поиск брендов по названию:', name)
+        const brands = await BrandModel.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name.toLowerCase()}%`
+                },
+                isDeleted: false
+            },
+            attributes: [ 'id', 'name', 'isActive' ],
+            limit: 10,
+            order: [ [ 'name', 'ASC' ] ]
+        })
+        console.log('Результаты поиска стран:', brands.map(c => c.toJSON()))
+
+        return brands.map(brand => brand.toJSON()) as DictionaryItem[]
+    } catch (error) {
+        console.error('Ошибка при поиске брендов по названию:', error)
+        return []
+    }
+}
+
 // ------------------- Функции для Коллекций -------------------
 // Функция для получения всех активных коллекций
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
         where: { isActive: true },
-        attributes: ['id', 'name'],
-        order: [['name', 'ASC']]
+        attributes: [ 'id', 'name' ],
+        order: [ [ 'name', 'ASC' ] ]
     })
     return collections.map((collection) => collection.toJSON()) as DictionaryItem[]
 }
@@ -162,8 +193,8 @@ export async function getActiveCollections(): Promise<DictionaryItem[]> {
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: ['id', 'name', 'description', 'isActive'],
-            order: [['name', 'ASC']]
+            attributes: [ 'id', 'name', 'description', 'isActive' ],
+            order: [ [ 'name', 'ASC' ] ]
         })
         return collections.map((collection) => collection.toJSON())
     } catch (error) {
@@ -237,9 +268,34 @@ export async function updateCollection(formData: FormData) {
 }
 
 export async function removeCollection(id: number) {
+    //fixme удалить   'use server'
     'use server'
     await CollectionModel.destroy({ where: { id } })
     revalidatePath('/admin/collections')
+}
+
+//для модального окна для исключения дубликатов
+export async function searchCollectionsByName(name: string) {
+    try {
+        const collections = await CollectionModel.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name.toLowerCase()}%`
+                },
+                //todo раскомментировать после добавлления функционала как для collections
+                // isDeleted: false // Исключаем "мягко" удаленные записи
+            },
+            attributes: [ 'id', 'name', 'isActive' ],
+            limit: 10,
+            order: [ [ 'name', 'ASC' ] ]
+        })
+        console.log('Результаты поиска коллекций:', collections.map(c => c.toJSON()))
+
+        return collections.map((collection) => collection.toJSON()) as DictionaryItem[]
+    } catch (error) {
+        console.error('Ошибка при поиске коллекций по названию:', error)
+        return []
+    }
 }
 
 // ------------------- Функции для Стран -------------------
@@ -330,10 +386,51 @@ export async function updateCountry(formData: FormData) {
     }
 }
 
-export async function removeCountry(id: number) {
-    'use server'
-    await CountryModel.destroy({ where: { id } })
-    revalidatePath('/admin/countries')
+// ФУНКЦИЯ ДЛЯ "МЯГКОГО" УДАЛЕНИЯ Страны
+// todo добавить в модель состояние isDeleted
+export async function softDeleteCountry(id: number) {
+    if (!id) {
+        throw new Error('ID страны отсутствует для удаления.')
+    }
+    try {
+        const country = await CountryModel.findByPk(id)
+        if (!country) {
+            throw new Error(`Страна с ID ${id} не найдена.`)
+        }
+        // Обновляем поле isDeleted на true вместо удаления
+        await country.update({ isDeleted: true })
+        revalidatePath('/admin/countries')
+        return { success: true }
+    } catch (error) {
+        console.error('Ошибка при мягком удалении страны:', error)
+        throw new Error('Не удалось удалить страну.')
+    }
+}
+
+//для модального окна для исключения дубликатов
+export async function searchCountriesByName(name: string) {
+    try {
+        console.log('Поиск стран по названию:', name)
+        const countries = await CountryModel.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name.toLowerCase()}%`
+                },
+                //todo раскомментировать после добавлления функционала как для брендов
+                // isDeleted: false // Исключаем "мягко" удаленные записи
+            },
+            attributes: [ 'id', 'name', 'isActive' ],
+            limit: 10,
+            order: [ [ 'name', 'ASC' ] ]
+        })
+
+        console.log('Результаты поиска стран:', countries.map(c => c.toJSON()))
+
+        return countries.map((country) => country.toJSON()) as DictionaryItem[]
+    } catch (error) {
+        console.error('Ошибка при поиске стран по названию:', error)
+        return []
+    }
 }
 
 // ------------------- Функции для Стилей -------------------
@@ -428,6 +525,30 @@ export async function removeStyle(id: number) {
     'use server'
     await StyleModel.destroy({ where: { id } })
     revalidatePath('/admin/styles')
+}
+
+//для модального окна для исключения дубликатов
+export async function searchStylesByName(name: string) {
+    try {
+        const styles = await StyleModel.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name.toLowerCase()}%`
+                },
+                //todo раскомментировать после добавлления функционала как для collections
+                // isDeleted: false // Исключаем "мягко" удаленные записи
+            },
+            attributes: [ 'id', 'name', 'isActive' ],
+            limit: 10,
+            order: [ [ 'name', 'ASC' ] ]
+        })
+        console.log('Результаты поиска стилей:', styles.map(c => c.toJSON()))
+
+        return styles.map((style) => style.toJSON()) as DictionaryItem[]
+    } catch (error) {
+        console.error('Ошибка при поиске стилей по названию:', error)
+        return []
+    }
 }
 
 // ------------------- Функции для Категорий -------------------

@@ -3,6 +3,8 @@ import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, 
 
 export interface CountryDTO extends InferAttributes<CountryModel> {}
 
+// todo добавить для моделей брендов, коллекций, стран и стилей поле status со значением: active, moderate, deleted и преписать соотв функции здесь вообще отсутствует
+
 export class CountryModel extends Model<InferAttributes<CountryModel>, InferCreationAttributes<CountryModel>> {
     declare id: CreationOptional<number>
     declare name: string

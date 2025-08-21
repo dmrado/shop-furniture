@@ -287,20 +287,20 @@ const CollectionManager = ({
                     <div className="flex justify-end gap-3">
                         <button
                             type="button"
+                            onClick={handleConfirmDelete}
+                            className="button_red px-4 py-2"
+                        >
+                            Да, удалить ❌
+                        </button>
+                        <button
+                            type="button"
                             onClick={() => {
                                 setShowConfirmDeleteModal(false)
                                 setCollectionToDelete(null)
                             }}
-                            className="button_blue px-4 py-2"
+                            className="button_green px-4 py-2 font-medium"
                         >
-                            Отмена 🚫
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleConfirmDelete}
-                            className="button_red px-4 py-2"
-                        >
-                            Да, удалить
+                            Отмена
                         </button>
                     </div>
                 </Modal>

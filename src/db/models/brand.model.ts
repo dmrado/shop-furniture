@@ -10,7 +10,7 @@ export class BrandModel extends Model<InferAttributes<BrandModel>, InferCreation
     declare isActive: boolean
     declare isDeleted: boolean
 }
-
+// todo добавить для моделей брендов, коллекций, стран и стилей поле status со значением: active, moderate, deleted и преписать соотв функции здесь поменять isDeleted на status
 BrandModel.init(
     {
         id: {

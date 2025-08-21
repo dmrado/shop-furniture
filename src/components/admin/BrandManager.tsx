@@ -90,7 +90,7 @@ const BrandManager = ({
             }
             setShowModal(false) // Закрываем модальное окно
             setDescriptionCharCount(0)
-            const updatedBrands = await getAllBrands() // Получаем актуальный список брендов
+            const updatedBrands = await getAllBrands() // Получаем полный список брендов ща исключением мягко-удаленных
             setBrands(updatedBrands) // Обновляем стейт
             router.refresh() // Перезагружаем данные на странице через Server Component
             // В реальном приложении можно было бы обновить только стейт brands, но refresh проще
@@ -329,21 +329,21 @@ const BrandManager = ({
                     </p>
                     <div className="flex justify-end gap-3">
                         <button
+                            type="button" // Важно: type="button", чтобы не отправлять форму случайно
+                            onClick={handleConfirmDelete}
+                            className="button_red px-4 py-2"
+                        >
+                            Да, удалить ❌
+                        </button>
+                        <button
                             type="button"
                             onClick={() => {
                                 setShowConfirmDeleteModal(false)
                                 setBrandToDelete(null)
                             }}
-                            className="button_blue px-4 py-2"
+                            className="button_green px-4 py-2 font-medium"
                         >
-                            Отмена 🚫
-                        </button>
-                        <button
-                            type="button" // Важно: type="button", чтобы не отправлять форму случайно
-                            onClick={handleConfirmDelete}
-                            className="button_red px-4 py-2"
-                        >
-                            Да, удалить
+                            Отмена
                         </button>
                     </div>
                 </Modal>

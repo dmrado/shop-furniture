@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createCountry, updateCountry } from '@/actions/dictionaryActions'
+import { createCountry, updateCountry, searchCountriesByName } from '@/actions/dictionaryActions'
 import { DictionaryItem } from '@/db/types/common-types'
+import DictionarySearchDeduplicator from '@/components/admin/DictionarySearchDeduplicator'
 
 type CountryFormModalContentProps = {
     onClose: () => void
@@ -11,13 +12,63 @@ type CountryFormModalContentProps = {
 }
 
 const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFormModalContentProps) => {
-    const [ name, setName ] = useState(initialData?.name || '')
-    const [ description, setDescription ] = useState(initialData?.description || '')
-    const [ isActive, setIsActive ] = useState(initialData?.isActive ?? true)
-    const [ descriptionCharCount, setDescriptionCharCount ] = useState(initialData?.description?.length || 0)
+    const [name, setName] = useState(initialData?.name || '')
+    const [description, setDescription] = useState(initialData?.description || '')
+    const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(initialData?.description?.length || 0)
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const [ error, setError ] = useState<string | null>(null)
-    const [ isLoading, setIsLoading ] = useState(false)
+    //-----блок для поиска похожих значений по name для избегания дубликатов start---------------
+    //массив значений стран из БД
+    const [searchResults, setSearchResults] = useState<DictionaryItem[]>([])
+    // для отслеживания дубликатов
+    const [isDuplicate, setIsDuplicate] = useState(false)
+    const debounceTime = 300
+
+    useEffect(() => {
+        // Дебаунсер  300 мс
+        const handler = setTimeout(async () => {
+            if (name.length >= 3) {
+                const results = await searchCountriesByName(name)
+                setSearchResults(results)
+                //Проверяем, есть ли точное совпадение
+                const exactMatch = results.find(
+                    (c) => c.name.toLowerCase() === name.toLowerCase()
+                )
+                // Проверяем дубликат только в режиме создания
+                if (!initialData && exactMatch) {
+                    setIsDuplicate(true)
+                    setError('❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.')
+                } else {
+                    // если дубликата нет
+                    setIsDuplicate(false)
+                    setError(null)
+                }
+            } else {
+                setSearchResults([])
+                setIsDuplicate(false)
+                setError(null) // Сбрасываем ошибку
+            }
+        }, debounceTime)
+        // Очистка таймера при каждом новом вводе
+        return () => clearTimeout(handler)
+    }, [name, initialData])
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = e.target.value
+        setName(newName)
+        if (newName === '') {
+            setIsActive(true)
+        }
+    }
+
+    const handleSelectExisting = (country: DictionaryItem) => {
+        setError('❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.')
+        setIsDuplicate(true)
+        setSearchResults([]) // Скрываем результаты поиска после выбора
+    }
+    // -----блок для поиска похожих значений по name для избегания дубликатов end---------------
 
     useEffect(() => {
         if (initialData) {
@@ -32,7 +83,7 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
             setDescriptionCharCount(0)
         }
         setError(null)
-    }, [ initialData ])
+    }, [initialData])
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value
@@ -40,6 +91,7 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
         setDescriptionCharCount(value.length)
     }
 
+    //  с логикой дедупликации
     const handleSubmit = async (formData: FormData) => {
         setIsLoading(true)
         setError(null)
@@ -67,22 +119,35 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
             </h3>
             <form action={handleSubmit} className="space-y-4">
                 {initialData?.id && (
-                    <input type="hidden" name="id" value={initialData.id}/>
+                    <input type="hidden" name="id" value={initialData.id} />
                 )}
                 <div>
-                    <label htmlFor="countryName" className="block text-sm font-medium text-gray-700">Название страны</label>
+                    <label htmlFor="countryName" className="block text-sm font-medium text-gray-700">Название
+                        страны</label>
                     <input
+                        onChange={handleNameChange}
                         type="text"
-                        placeholder={'введите от 2-х символов'}
+                        placeholder={'введите от 3-х символов'}
                         id="countryName"
                         name="name"
-                        defaultValue={initialData?.name || ''}
+                        value={name} // Управляем значением через состояние
+                        // defaultValue={initialData?.name || ''}
                         required
-                        minLength={2}
+                        minLength={3}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                         disabled={isLoading}
                     />
                 </div>
+
+                {/* Компонент для дедупликации */}
+                {name.length >= 3 && (
+                    <DictionarySearchDeduplicator
+                        searchResults={searchResults}
+                        onSelectExisting={handleSelectExisting}
+                        label="страны"
+                    />
+                )}
+
                 <div>
                     <label htmlFor="countryDescription" className="block text-sm font-medium text-gray-700">
                         Описание
@@ -95,7 +160,8 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                         placeholder={'введите от 2-х до 255 символов'}
                         id="countryDescription"
                         name="description"
-                        defaultValue={initialData?.description || ''}
+                        value={description}
+                        // defaultValue={initialData?.description || ''}
                         required
                         minLength={2}
                         maxLength={255}
@@ -114,7 +180,7 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                         className="mr-2 leading-tight"
                         disabled={isLoading}
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                    <label htmlFor="isActive" className="text-gray-700 text-lg font-bold">
                         Активен
                     </label>
                 </div>
@@ -136,10 +202,13 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                     <button
                         type="submit"
                         className="button_green px-4 py-2"
-                        disabled={isLoading}
+                        disabled={isLoading || isDuplicate}
                     >
-                        {initialData ? 'Сохранить изменения' : 'Создать страну'} ✅
+
+                        {isDuplicate ? '🐛' : `${initialData ? 'Сохранить изменения' : 'Создать'} ✅`}
                     </button>
+
+
                 </div>
             </form>
         </>

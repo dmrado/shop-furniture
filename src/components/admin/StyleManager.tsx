@@ -22,11 +22,11 @@ type StyleManagementClientProps = {
 }
 
 const StyleManager = ({
-    initialStyles,
-    itemsPerPage,
-    currentPage,
-    totalCount
-}: StyleManagementClientProps) => {
+                          initialStyles,
+                          itemsPerPage,
+                          currentPage,
+                          totalCount
+                      }: StyleManagementClientProps) => {
     const router = useRouter()
     const path = usePathname()
     const searchParams = useSearchParams()
@@ -282,20 +282,20 @@ const StyleManager = ({
                     <div className="flex justify-end gap-3">
                         <button
                             type="button"
+                            onClick={handleConfirmDelete}
+                            className="button_red px-4 py-2"
+                        >
+                            Да, удалить ❌
+                        </button>
+                        <button
+                            type="button"
                             onClick={() => {
                                 setShowConfirmDeleteModal(false)
                                 setStyleToDelete(null)
                             }}
-                            className="button_blue px-4 py-2"
+                            className="button_green px-4 py-2 font-medium"
                         >
-                            Отмена 🚫
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleConfirmDelete}
-                            className="button_red px-4 py-2"
-                        >
-                            Да, удалить
+                            Отмена
                         </button>
                     </div>
                 </Modal>
