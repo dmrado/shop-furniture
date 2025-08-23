@@ -1,4 +1,4 @@
-export{}
+export {}
 
 // import { Adapter, AdapterUser, AdapterAccount, AdapterSession } from 'next-auth/adapters'
 // import { AddressModel, ProfileModel } from '@/db/models'

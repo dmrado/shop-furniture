@@ -103,9 +103,7 @@ export async function handleProductVariantForm(formData: FormData) {
     // Проверка существования внешних ключей
     const productExists = await ProductModel.findByPk(parsedData.productId)
     if (!productExists) {
-        throw new Error(
-            `Продукт с ID ${parsedData.productId}  не существует.`
-        )
+        throw new Error(`Продукт с ID ${parsedData.productId}  не существует.`)
     }
 
     const unicArticul = await ProductVariantModel.findOne({
@@ -135,7 +133,7 @@ export async function handleProductVariantForm(formData: FormData) {
         throw new Error(`Материал c ID ${parsedData.materialId} не существует.`)
     }
 
-    const [ productVariant, created ] = await ProductVariantModel.upsert(
+    const [productVariant, created] = await ProductVariantModel.upsert(
         upsertData,
         {
             returning: true // Возвращает обновленную/созданную запись

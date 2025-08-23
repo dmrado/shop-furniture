@@ -6,38 +6,40 @@ const materialSeedData = [
         id: 1, // Можно указать ID явно или позволить автоинкременту
         code: 'WOOD-OAK',
         name: 'Дуб',
-        isActive: true,
+        isActive: true
     },
     {
         id: 2,
         code: 'METAL-STL',
         name: 'Сталь',
-        isActive: true,
+        isActive: true
     },
     {
         id: 3,
         code: 'TEXT-COT',
         name: 'Хлопок',
-        isActive: true,
+        isActive: true
     },
     {
         id: 4,
         code: 'PLAST-ABS',
         name: 'ABS-пластик',
-        isActive: true,
+        isActive: true
     },
     {
         id: 5,
         code: 'GLASS-TMP',
         name: 'Закаленное стекло',
-        isActive: true,
-    },
+        isActive: true
+    }
     // Добавьте другие материалы по мере необходимости
 ]
 
 export async function seedMaterials() {
     try {
-        await MaterialModel.bulkCreate(materialSeedData, { ignoreDuplicates: true }) // Добавлена опция ignoreDuplicates
+        await MaterialModel.bulkCreate(materialSeedData, {
+            ignoreDuplicates: true
+        }) // Добавлена опция ignoreDuplicates
         console.log('Materials seeded successfully')
     } catch (error) {
         console.error('Error seeding materials:', error)

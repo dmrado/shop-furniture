@@ -6,11 +6,14 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Каталог товаров - Decoro',
-    description: 'Каталог мебели и товаров для дома',
+    description: 'Каталог мебели и товаров для дома'
 }
 
 // Next.js автоматически передает объект params
-export default function CatalogLayout({ children, params }: Readonly<{ children: React.ReactNode }>) {
+export default function CatalogLayout({
+    children,
+    params
+}: Readonly<{ children: React.ReactNode }>) {
     return (
         <div className="container mx-auto px-4 py-8">
             {/*<Breadcrumbs/>*/}

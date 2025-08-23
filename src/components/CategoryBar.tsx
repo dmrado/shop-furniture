@@ -6,16 +6,16 @@ import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 // В файле CategoryBar.tsx
 
 interface CategoryChild {
-    id: number;
-    name: string;
-    slug: string;
-    image?: string;
+    id: number
+    name: string
+    slug: string
+    image?: string
 
-    children?: CategoryChild[];
+    children?: CategoryChild[]
 }
 
 interface CategoryBarProps {
-    categoryChildren: CategoryChild[];
+    categoryChildren: CategoryChild[]
 }
 
 const CategoryBar = ({ categoryChildren }: CategoryBarProps) => {
@@ -52,7 +52,6 @@ const CategoryBar = ({ categoryChildren }: CategoryBarProps) => {
             {/*<div className="mt-6">*/}
             {/*    <ReactPaginateWrapper pages={totalPages} currentPage={page}/>*/}
             {/*</div>*/}
-
         </div>
     )
 }

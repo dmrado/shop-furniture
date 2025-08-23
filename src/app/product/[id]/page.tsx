@@ -9,7 +9,6 @@ type Props = {
 }
 
 const ProductPage = async ({ params }: Props) => {
-
     //todo добавить в таблицу продуктов id зависимость с каталогом
 
     const id = Number(params.id)
@@ -24,14 +23,16 @@ const ProductPage = async ({ params }: Props) => {
         return notFound()
     }
 
-    return <>
-        {/*<div className='flex justify-center text-4xl text-red-500 font-extrabold'>*/}
-        {/*    Product slug &nbsp;<span className="text-green-600">{params.slug}</span>&nbsp;&nbsp;*/}
-        {/*    Product id &nbsp;<span className="text-green-600">{params.id}</span>*/}
-        {/*</div>*/}
+    return (
+        <>
+            {/*<div className='flex justify-center text-4xl text-red-500 font-extrabold'>*/}
+            {/*    Product slug &nbsp;<span className="text-green-600">{params.slug}</span>&nbsp;&nbsp;*/}
+            {/*    Product id &nbsp;<span className="text-green-600">{params.id}</span>*/}
+            {/*</div>*/}
 
-        <ProductFullDescription product={product}/>
-    </>
+            <ProductFullDescription product={product} />
+        </>
+    )
 }
 
 export default ProductPage

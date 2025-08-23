@@ -1,7 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createCountry, updateCountry, searchCountriesByName } from '@/actions/dictionaryActions'
+import {
+    createCountry,
+    updateCountry,
+    searchCountriesByName
+} from '@/actions/dictionaryActions'
 import { DictionaryItem } from '@/db/types/common-types'
 import DictionarySearchDeduplicator from '@/components/admin/DictionarySearchDeduplicator'
 
@@ -11,11 +15,19 @@ type CountryFormModalContentProps = {
     initialData?: DictionaryItem | null
 }
 
-const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFormModalContentProps) => {
+const CountryFormModalContent = ({
+    onClose,
+    onSuccess,
+    initialData
+}: CountryFormModalContentProps) => {
     const [name, setName] = useState(initialData?.name || '')
-    const [description, setDescription] = useState(initialData?.description || '')
+    const [description, setDescription] = useState(
+        initialData?.description || ''
+    )
     const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
-    const [descriptionCharCount, setDescriptionCharCount] = useState(initialData?.description?.length || 0)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(
+        initialData?.description?.length || 0
+    )
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -39,7 +51,9 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                 // Проверяем дубликат только в режиме создания
                 if (!initialData && exactMatch) {
                     setIsDuplicate(true)
-                    setError('❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.')
+                    setError(
+                        '❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.'
+                    )
                 } else {
                     // если дубликата нет
                     setIsDuplicate(false)
@@ -64,7 +78,9 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
     }
 
     const handleSelectExisting = (country: DictionaryItem) => {
-        setError('❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.')
+        setError(
+            '❌ Такая страна уже существует. Пожалуйста, выберите ее из списка.'
+        )
         setIsDuplicate(true)
         setSearchResults([]) // Скрываем результаты поиска после выбора
     }
@@ -85,7 +101,9 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
         setError(null)
     }, [initialData])
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const value = e.target.value
         setDescription(value)
         setDescriptionCharCount(value.length)
@@ -122,8 +140,12 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                     <input type="hidden" name="id" value={initialData.id} />
                 )}
                 <div>
-                    <label htmlFor="countryName" className="block text-sm font-medium text-gray-700">Название
-                        страны</label>
+                    <label
+                        htmlFor="countryName"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Название страны
+                    </label>
                     <input
                         onChange={handleNameChange}
                         type="text"
@@ -149,7 +171,10 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                 )}
 
                 <div>
-                    <label htmlFor="countryDescription" className="block text-sm font-medium text-gray-700">
+                    <label
+                        htmlFor="countryDescription"
+                        className="block text-sm font-medium text-gray-700"
+                    >
                         Описание
                         <span className="ml-2 text-gray-500 text-xs">
                             ({descriptionCharCount}/255 символов)
@@ -180,7 +205,10 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                         className="mr-2 leading-tight"
                         disabled={isLoading}
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-lg font-bold">
+                    <label
+                        htmlFor="isActive"
+                        className="text-gray-700 text-lg font-bold"
+                    >
                         Активен
                     </label>
                 </div>
@@ -204,11 +232,10 @@ const CountryFormModalContent = ({ onClose, onSuccess, initialData }: CountryFor
                         className="button_green px-4 py-2"
                         disabled={isLoading || isDuplicate}
                     >
-
-                        {isDuplicate ? '🐛' : `${initialData ? 'Сохранить изменения' : 'Создать'} ✅`}
+                        {isDuplicate
+                            ? '🐛'
+                            : `${initialData ? 'Сохранить изменения' : 'Создать'} ✅`}
                     </button>
-
-
                 </div>
             </form>
         </>

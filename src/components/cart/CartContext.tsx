@@ -5,7 +5,7 @@ import {
     useContext,
     useState,
     useEffect,
-    useCallback,
+    useCallback
 } from 'react'
 import {
     CartRow,
@@ -13,7 +13,7 @@ import {
     deleteCartRowAction,
     deleteSelectedCartRowsAction,
     updateQuantityAction,
-    addProductToCartAction, // Это действие используется внутри CartProvider
+    addProductToCartAction // Это действие используется внутри CartProvider
 } from '@/actions/cartActions'
 import { getCurrentUserAction } from '@/actions/userActions'
 import { AuthUser } from '@/db/models/users.model'
@@ -27,45 +27,42 @@ const CartContext = createContext({
     count: 0,
     cartRows: [] as CartRow[],
     isLoading: false,
-    updateQuantity: async (cartId: number, quantity: number) => {
-    },
-    deleteCartRow: async (cartId: number) => {
-    },
-    addProductToCart: async (productId: number, quantity?: number) => {
-    },
+    updateQuantity: async (cartId: number, quantity: number) => {},
+    deleteCartRow: async (cartId: number) => {},
+    addProductToCart: async (productId: number, quantity?: number) => {},
     selectedItems: [], // храним ID выбранных элементов
-    toggleSelection: (id: number) => {
-    }, // функция для переключения выбора
+    toggleSelection: (id: number) => {}, // функция для переключения выбора
     //   setSelectedItems: Set<number>,
     onSelect: true,
-    setOnSelect: () => {
-    },
+    setOnSelect: () => {},
     selectedTotalAmount: 0,
     selectAll: () => {
         id: Number
     },
     unselectAll: () => {
         id: Number
-    },
+    }
 })
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [ cartRows, setCartRows ] = useState<CartRow[]>([])
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [cartRows, setCartRows] = useState<CartRow[]>([])
+    const [isLoading, setIsLoading] = useState(false)
     // todo стейты для чекбокса выбора товаров в корзине
-    const [ selectedItems, setSelectedItems ] = useState<number[]>([])
-    const [ onSelect, setOnSelect ] = useState(true)
+    const [selectedItems, setSelectedItems] = useState<number[]>([])
+    const [onSelect, setOnSelect] = useState(true)
 
     //так как layout дергает useEffect получения корзины и при входе на сайт назалогининого пользователя редиректит его на signin через getCartAction
-    const [ user, setUser ] = useState<AuthUser | null | undefined>(null)
+    const [user, setUser] = useState<AuthUser | null | undefined>(null)
 
     useEffect(() => {
         const loadUser = async () => {
             try {
                 const currentUser: AuthUser = await getCurrentUserAction()
                 setUser(currentUser)
-                console.log('Пользователь при загрузке пользователя CartContext', user)
-
+                console.log(
+                    'Пользователь при загрузке пользователя CartContext',
+                    user
+                )
             } catch (error) {
                 console.log('Ошибка при загрузке пользователя', error)
                 setUser(null) // Важно: установить null при ошибке, чтобы избежать зацикливания или некорректного состояния
@@ -80,16 +77,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             if (prev.includes(id)) {
                 return prev.filter((newId) => newId !== id)
             } else {
-                return [ ...prev, id ]
+                return [...prev, id]
             }
         })
     }, [])
 
     //  Функции для выбора/сброса всех элементов корзины
     const selectAll = useCallback(() => {
-        const allIds = [ ...cartRows.map((row) => row.id) ]
+        const allIds = [...cartRows.map((row) => row.id)]
         setSelectedItems(allIds)
-    }, [ cartRows ])
+    }, [cartRows])
 
     const unselectAll = useCallback(() => {
         setSelectedItems([])
@@ -98,8 +95,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     // Функция для подсчета общей суммы только выбранных товаров
     const selectedTotalAmount = cartRows
         ? cartRows
-            .filter((row) => selectedItems.includes(row.id))
-            .reduce((sum, item) => sum + item.productVariant.price * item.quantity, 0)
+              .filter((row) => selectedItems.includes(row.id))
+              .reduce(
+                  (sum, item) =>
+                      sum + item.productVariant.price * item.quantity,
+                  0
+              )
         : 0
 
     // Функция получения содержимого корзины зависит от наличия нового юзера
@@ -122,7 +123,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             }
         }
         fetchCart()
-    }, [ user ])
+    }, [user])
 
     //   Функция обновления количества элемента корзины
     const updateQuantity = async (
@@ -131,7 +132,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     ): Promise<void> => {
         const updatedCartRows = await updateQuantityAction({
             id: cartId,
-            newQuantity,
+            newQuantity
         })
         setCartRows(updatedCartRows)
     }
@@ -159,12 +160,21 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
 
     //   Функция добавления элемента корзины
-    const addProductToCart = async (selectedVariantId: number, quantity = 1) => {
-        if(!user) {
+    const addProductToCart = async (
+        selectedVariantId: number,
+        quantity = 1
+    ) => {
+        if (!user) {
             throw new UnauthorizedError()
         }
-        const updatedCartRows = await addProductToCartAction(selectedVariantId, quantity)
-        console.log('updatedCartRows from addProductToCart CartContext', updatedCartRows)
+        const updatedCartRows = await addProductToCartAction(
+            selectedVariantId,
+            quantity
+        )
+        console.log(
+            'updatedCartRows from addProductToCart CartContext',
+            updatedCartRows
+        )
         setCartRows(updatedCartRows)
     }
 
@@ -191,9 +201,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     const finalAmount = cartRows
         ? cartRows.reduce(
-            (sum, item) => sum + item.productVariant.price * item.quantity,
-            0
-        )
+              (sum, item) => sum + item.productVariant.price * item.quantity,
+              0
+          )
         : 0
 
     const value = {
@@ -215,7 +225,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         selectAll,
         unselectAll,
         selectedTotalAmount,
-        isLoading,
+        isLoading
     }
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>

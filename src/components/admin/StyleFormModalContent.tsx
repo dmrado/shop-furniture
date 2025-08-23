@@ -10,14 +10,22 @@ type StyleFormModalContentProps = {
     initialData?: DictionaryItem | null
 }
 
-const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormModalContentProps) => {
-    const [ name, setName ] = useState(initialData?.name || '')
-    const [ description, setDescription ] = useState(initialData?.description || '')
-    const [ isActive, setIsActive ] = useState(initialData?.isActive ?? true)
-    const [ descriptionCharCount, setDescriptionCharCount ] = useState(initialData?.description?.length || 0)
+const StyleFormModalContent = ({
+    onClose,
+    onSuccess,
+    initialData
+}: StyleFormModalContentProps) => {
+    const [name, setName] = useState(initialData?.name || '')
+    const [description, setDescription] = useState(
+        initialData?.description || ''
+    )
+    const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(
+        initialData?.description?.length || 0
+    )
 
-    const [ error, setError ] = useState<string | null>(null)
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         if (initialData) {
@@ -32,9 +40,11 @@ const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormMod
             setDescriptionCharCount(0)
         }
         setError(null)
-    }, [ initialData ])
+    }, [initialData])
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const value = e.target.value
         setDescription(value)
         setDescriptionCharCount(value.length)
@@ -67,10 +77,15 @@ const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormMod
             </h3>
             <form action={handleSubmit} className="space-y-4">
                 {initialData?.id && (
-                    <input type="hidden" name="id" value={initialData.id}/>
+                    <input type="hidden" name="id" value={initialData.id} />
                 )}
                 <div>
-                    <label htmlFor="styleName" className="block text-sm font-medium text-gray-700">Название стиля</label>
+                    <label
+                        htmlFor="styleName"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Название стиля
+                    </label>
                     <input
                         type="text"
                         placeholder={'введите от 2-х символов'}
@@ -84,7 +99,10 @@ const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormMod
                     />
                 </div>
                 <div>
-                    <label htmlFor="styleDescription" className="block text-sm font-medium text-gray-700">
+                    <label
+                        htmlFor="styleDescription"
+                        className="block text-sm font-medium text-gray-700"
+                    >
                         Описание
                         <span className="ml-2 text-gray-500 text-xs">
                             ({descriptionCharCount}/255 символов)
@@ -114,7 +132,10 @@ const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormMod
                         className="mr-2 leading-tight"
                         disabled={isLoading}
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                    <label
+                        htmlFor="isActive"
+                        className="text-gray-700 text-sm font-bold"
+                    >
                         Активен
                     </label>
                 </div>
@@ -138,7 +159,8 @@ const StyleFormModalContent = ({ onClose, onSuccess, initialData }: StyleFormMod
                         className="button_green px-4 py-2"
                         disabled={isLoading}
                     >
-                        {initialData ? 'Сохранить изменения' : 'Создать стиль'} ✅
+                        {initialData ? 'Сохранить изменения' : 'Создать стиль'}{' '}
+                        ✅
                     </button>
                 </div>
             </form>

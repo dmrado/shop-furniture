@@ -10,16 +10,18 @@ const StylesManagementPage = async ({ searchParams }) => {
     // TODO: Добавить пагинацию в getStyles
     const styles = await getAllStyles()
 
-    return <>
-        <Title title="Управление стилями" />
-        <StyleManager
-            initialStyles={styles}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            // TODO: Передать totalCount для пагинации
-            totalCount={styles.length}
-        />
-    </>
+    return (
+        <>
+            <Title title="Управление стилями" />
+            <StyleManager
+                initialStyles={styles}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                // TODO: Передать totalCount для пагинации
+                totalCount={styles.length}
+            />
+        </>
+    )
 }
 
 export default StylesManagementPage

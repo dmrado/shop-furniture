@@ -26,26 +26,31 @@ const SearchProduct = ({
     namePlaceholder = 'Поиск по названию',
     articulPlaceholder = 'Поиск по артикулу',
     debounceTime = 300,
-    categoryOptions = [],
+    categoryOptions = []
 }: ProductSearchProps) => {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
     // Инициализируем состояние из URL
-    const [ nameSearchTerm, setNameSearchTerm ] = useState(searchParams.get(nameQueryKey) || '')
-    const [ articulSearchTerm, setArticulSearchTerm ] = useState(searchParams.get(articulQueryKey) || '')
-    const [ categorySearchTerm, setCategorySearchTerm ] = useState(searchParams.get(categoryQueryKey) || '')
+    const [nameSearchTerm, setNameSearchTerm] = useState(
+        searchParams.get(nameQueryKey) || ''
+    )
+    const [articulSearchTerm, setArticulSearchTerm] = useState(
+        searchParams.get(articulQueryKey) || ''
+    )
+    const [categorySearchTerm, setCategorySearchTerm] = useState(
+        searchParams.get(categoryQueryKey) || ''
+    )
 
     // Обновляем состояние, если URL меняется извне (например, кнопкой "Сбросить фильтры")
     useEffect(() => {
         setNameSearchTerm(searchParams.get(nameQueryKey) || '')
         setArticulSearchTerm(searchParams.get(articulQueryKey) || '')
         setCategorySearchTerm(searchParams.get(categoryQueryKey) || '')
+    }, [searchParams, nameQueryKey, articulQueryKey, categoryQueryKey])
 
-    }, [ searchParams, nameQueryKey, articulQueryKey, categoryQueryKey ])
-
-    const handleSearchChange = (queryKey:string, queryValue: string) => {
+    const handleSearchChange = (queryKey: string, queryValue: string) => {
         const current = new URLSearchParams(searchParams.toString())
         if (queryValue) {
             current.set(queryKey, queryValue)
@@ -62,7 +67,7 @@ const SearchProduct = ({
         }, debounceTime)
 
         return () => clearTimeout(handler)
-    }, [ nameSearchTerm ])
+    }, [nameSearchTerm])
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -70,12 +75,12 @@ const SearchProduct = ({
         }, debounceTime)
 
         return () => clearTimeout(handler)
-    }, [ articulSearchTerm ])
+    }, [articulSearchTerm])
 
     // Отдельный useEffect для select. Для select, в отличие от input, не нужен debounce, так как событие `onChange` срабатывает только один раз при выборе
     useEffect(() => {
         handleSearchChange(categoryQueryKey, categorySearchTerm)
-    }, [ categorySearchTerm, categoryQueryKey ])
+    }, [categorySearchTerm, categoryQueryKey])
 
     return (
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">

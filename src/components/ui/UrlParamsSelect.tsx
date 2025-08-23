@@ -26,14 +26,20 @@ const UrlParamsSelect = ({ options, label, queryKey, placeHolder }: Props) => {
     console.log('selectedValue', selectedValue)
 
     const updateUrlParam = (option: Option | null) => {
-        console.log('option in updateUrlParam он же объект selectedOption из select Select-a', option)
+        console.log(
+            'option in updateUrlParam он же объект selectedOption из select Select-a',
+            option
+        )
         // const searchParams = new URLSearchParams(queryParams.toString()) queryParams (результат useSearchParams()) всегда является объектом URLSearchParams, даже если в URL нет параметров. Он никогда не бывает null или undefined. Поэтому проверка queryParams ? ... : ... лишняя. Можно просто и безопасно использовать new URLSearchParams(queryParams.toString()) или, что ещё лучше, new URLSearchParams(queryParams).
         const searchParams = queryParams
             ? new URLSearchParams(queryParams.toString())
             : new URLSearchParams()
         if (option) {
             searchParams.set(queryKey, option.value)
-            console.log('грубо brand = value', `brang ${queryKey} with value${option.value} полетело в  router.push`)
+            console.log(
+                'грубо brand = value',
+                `brang ${queryKey} with value${option.value} полетело в  router.push`
+            )
         } else {
             searchParams.delete(queryKey)
         }

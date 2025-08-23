@@ -1,9 +1,18 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 import { AuthUserModel } from '@/db/models/users.model'
 
 export interface Address extends InferAttributes<AddressModel> {}
-export class AddressModel extends Model<InferAttributes<AddressModel>, InferCreationAttributes<AddressModel>> {
+export class AddressModel extends Model<
+    InferAttributes<AddressModel>,
+    InferCreationAttributes<AddressModel>
+> {
     declare id: CreationOptional<number>
     declare userId: string
     declare phone: string
@@ -20,7 +29,7 @@ AddressModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.UUID, // Если id в таблице users тоже UUID
@@ -32,19 +41,19 @@ AddressModel.init(
         },
         phone: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         city: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         street: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         home: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: false
         },
         corps: {
             type: DataTypes.STRING,
@@ -58,11 +67,11 @@ AddressModel.init(
         },
         isMain: {
             type: DataTypes.BOOLEAN,
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },
     {
         sequelize,
-        tableName: 'address',
+        tableName: 'address'
     }
 )

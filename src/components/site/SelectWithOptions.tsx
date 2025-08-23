@@ -60,7 +60,8 @@ const SelectWithOptions = ({
         option.label?.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-    const selectedLabel = options.find((opt) => opt.value === value)?.label || placeholder
+    const selectedLabel =
+        options.find((opt) => opt.value === value)?.label || placeholder
 
     return (
         <div className="relative w-full sm:w-auto" ref={selectRef}>
@@ -101,7 +102,9 @@ const SelectWithOptions = ({
                             </div>
                         ))
                     ) : (
-                        <div className="p-3 text-gray-500 text-sm">Ничего не найдено</div>
+                        <div className="p-3 text-gray-500 text-sm">
+                            Ничего не найдено
+                        </div>
                     )}
                 </div>
             )}

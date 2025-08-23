@@ -28,11 +28,11 @@ const UnauthorizedUser = () => {
                             strokeWidth="2"
                         />
                         {/* Отверстия для глаз */}
-                        <circle cx="85" cy="85" r="8" fill="#111827"/>
-                        <circle cx="115" cy="85" r="8" fill="#111827"/>
+                        <circle cx="85" cy="85" r="8" fill="#111827" />
+                        <circle cx="115" cy="85" r="8" fill="#111827" />
                         {/* Блики на очках */}
-                        <circle cx="82" cy="82" r="2" fill="white"/>
-                        <circle cx="112" cy="82" r="2" fill="white"/>
+                        <circle cx="82" cy="82" r="2" fill="white" />
+                        <circle cx="112" cy="82" r="2" fill="white" />
                         {/* Тело (маленькое) */}
                         <path
                             d="M85 120V150C85 160 115 160 115 150V120"
@@ -60,7 +60,8 @@ const UnauthorizedUser = () => {
                     Кто вы, незнакомец?
                 </h2>
                 <p className="text-gray-500 mb-8">
-                    Похоже, вы ещё не вошли в систему. Авторизуйтесь, чтобы получить доступ к персональным функциям.
+                    Похоже, вы ещё не вошли в систему. Авторизуйтесь, чтобы
+                    получить доступ к персональным функциям.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

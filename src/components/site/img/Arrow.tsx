@@ -1,13 +1,18 @@
 import React from 'react'
 
 interface ArrowProps {
-    width?: number | string; // Optional: можно задать как число, так и строку (например, "1em")
-    height?: number | string;
-    className?: string; // Для классов Tailwind
-    fill?: string; // Если хотите менять цвет стрелки через пропс
+    width?: number | string // Optional: можно задать как число, так и строку (например, "1em")
+    height?: number | string
+    className?: string // Для классов Tailwind
+    fill?: string // Если хотите менять цвет стрелки через пропс
 }
 
-export const Arrow: React.FC<ArrowProps> = ({ width = 16, height = 6, className = '', fill = 'white' }) => {
+export const Arrow: React.FC<ArrowProps> = ({
+    width = 16,
+    height = 6,
+    className = '',
+    fill = 'white'
+}) => {
     // Устанавливаем значения по умолчанию, если пропсы не переданы
     return (
         <svg

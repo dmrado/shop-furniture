@@ -1,9 +1,17 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 // import { AuthUserModel } from '@/db/models/users.model'
 // todo: This model is not needed. Please double check and remove.
-export class AccountModel extends Model<InferAttributes<AccountModel>, InferCreationAttributes<AccountModel>> {
-
+export class AccountModel extends Model<
+    InferAttributes<AccountModel>,
+    InferCreationAttributes<AccountModel>
+> {
     declare id: CreationOptional<string>
     declare type: string
     declare provider: string
@@ -24,7 +32,7 @@ AccountModel.init(
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
+            primaryKey: true
         },
         type: { type: DataTypes.STRING, allowNull: false },
         provider: { type: DataTypes.STRING, allowNull: false },
@@ -36,18 +44,20 @@ AccountModel.init(
         scope: { type: DataTypes.STRING },
         id_token: { type: DataTypes.TEXT },
         session_state: { type: DataTypes.STRING },
-        userId: { type: DataTypes.UUID,
+        userId: {
+            type: DataTypes.UUID,
             field: 'userId',
             references: {
                 model: 'auth_users',
                 key: 'id'
-            } },
+            }
+        },
         AuthUserModelId: { type: DataTypes.UUID }
     },
 
     {
         sequelize,
-        tableName: 'auth_accounts',
+        tableName: 'auth_accounts'
     }
 )
 

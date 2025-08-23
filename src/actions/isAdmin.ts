@@ -5,7 +5,7 @@ export const isAdmin = (session: Session | null) => {
     if (!session) {
         return false //пользователь не залогинен
     }
-    if(!session.user || !session.user.email) {
+    if (!session.user || !session.user.email) {
         return false //если есть ошибка на стороне гугла или яндекса: они вернули сессию без юзера
     }
     const adminEmails = process.env.USER_EMAIL?.split(',') ?? []

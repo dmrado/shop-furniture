@@ -1,9 +1,18 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 
 export interface MaterialDTO extends InferAttributes<MaterialModel> {}
 
-export class MaterialModel extends Model<InferAttributes<MaterialModel>, InferCreationAttributes<MaterialModel>> {
+export class MaterialModel extends Model<
+    InferAttributes<MaterialModel>,
+    InferCreationAttributes<MaterialModel>
+> {
     declare id: CreationOptional<number>
     declare code: string
     declare name: string
@@ -15,15 +24,15 @@ MaterialModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         code: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         isActive: {
             type: DataTypes.BOOLEAN,
@@ -33,6 +42,6 @@ MaterialModel.init(
     },
     {
         sequelize,
-        tableName: 'materials',
+        tableName: 'materials'
     }
 )

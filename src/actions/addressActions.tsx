@@ -4,15 +4,15 @@ import { revalidatePath } from 'next/cache'
 
 // Определение типа AddressRow
 interface AddressRow {
-    id: number;
-    userId: string;
-    phone: string;
-    city: string;
-    street: string;
-    home: string;
-    corps: string;
-    appart: string;
-    isMain: boolean;
+    id: number
+    userId: string
+    phone: string
+    city: string
+    street: string
+    home: string
+    corps: string
+    appart: string
+    isMain: boolean
 }
 
 /**
@@ -44,12 +44,15 @@ export const getAddressListAction = async (): Promise<AddressRow[]> => {
         return []
     }
     // Преобразуем каждый адрес в формат AddressRow
-    return result.rows.map(address => mapAddressRow(address))
+    return result.rows.map((address) => mapAddressRow(address))
 }
 
 export const getAddressByIdAction = async (id: number) => {
     const address = await AddressModel.findByPk(id)
-    console.log('>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> address getAddressById', address)
+    console.log(
+        '>>>>>>>>>>>>>>>>> >>>>>>>>>>>>>>>>>> address getAddressById',
+        address
+    )
 
     if (!address) {
         return null

@@ -30,21 +30,21 @@ const CategoryScroll = ({ categories }: { categories: CategoryModel[] }) => {
 
     return (
         <div className="h-[450px] overflow-auto hide-scrollbar grid p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
-
             {/*todo добавить модель категорий привязку один-ко-многим к модели продуктов и обращаться к ней и как-то переделать grandCategory*/}
 
-            {categories.length
-                ? categories.map(category => (
+            {categories.length ? (
+                categories.map((category) => (
                     <div className="h-[200px] mb-2" key={category.id}>
                         {/* Передаем категорию первого уровня и её дочерние категории (второго уровня) */}
-                        <ProductCategory category={category}/>
+                        <ProductCategory category={category} />
                     </div>
                 ))
-                : <div className='flex justify-center my-6 text-red-700'>
+            ) : (
+                <div className="flex justify-center my-6 text-red-700">
                     {/*{categories.length !== count ? 'Загружаем еще...' : 'Простите, это весь список.'}*/}
                     <p>В этой категории нет подкатегорий (дебаг)</p>
                 </div>
-            }
+            )}
         </div>
     )
 }

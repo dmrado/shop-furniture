@@ -1,5 +1,10 @@
 import React from 'react'
-import { getCategory, getCategoryChildren, getCategoryParents, getChildrenIds } from '@/actions/categoryActions'
+import {
+    getCategory,
+    getCategoryChildren,
+    getCategoryParents,
+    getChildrenIds
+} from '@/actions/categoryActions'
 import { getProducts } from '@/actions/productActions'
 import ReactPaginateWrapper from '@/components/site/ReactPaginateWrapper'
 import ProductCard from '@/components/site/ProductCard'
@@ -9,16 +14,26 @@ import { notFound } from 'next/navigation'
 import Title from '@/components/site/Title'
 import Breadcrumbs from '@/components/site/Breadcrumbs'
 import AdminFilter from '@/components/site/navigation/AdminFilter'
-import { BrandModel, CollectionModel, CountryModel, StyleModel } from '@/db/models'
+import {
+    BrandModel,
+    CollectionModel,
+    CountryModel,
+    StyleModel
+} from '@/db/models'
 import { DictionaryItem } from '@/db/types/common-types'
-import { getBrands, getActiveCollections, getActiveCountries, getActiveStyles } from '@/actions/dictionaryActions'
+import {
+    getBrands,
+    getActiveCollections,
+    getActiveCountries,
+    getActiveStyles
+} from '@/actions/dictionaryActions'
 
 type Props = {
-    params: { slug: string };
-    searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>;
-};
+    params: { slug: string }
+    searchParams: Record<'page' | 'itemsPerPage', string | string[] | undefined>
+}
 
-const CategoryPage = async ({ params, searchParams, }: Props) => {
+const CategoryPage = async ({ params, searchParams }: Props) => {
     const categorySlug = params.slug
     console.log('>>>>>>>> >>>>> categorySlug from SlugPage', categorySlug)
 
@@ -39,14 +54,21 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
 
     //Запрос дерева категорий
     const categoryChildren = await getCategoryChildren(category.id)
-    console.log('************* categoryChildren from SlugPage', categoryChildren)
+    console.log(
+        '************* categoryChildren from SlugPage',
+        categoryChildren
+    )
 
     //Запрос продуктов категории из params
 
     const flatChilrenIds = await getChildrenIds(categoryChildren)
     console.log('flatChilrenIds', flatChilrenIds)
 
-    const { count, products } = await getProducts([ category.id, ...flatChilrenIds ], offset, limit)
+    const { count, products } = await getProducts(
+        [category.id, ...flatChilrenIds],
+        offset,
+        limit
+    )
 
     // const tags = await getTags()
     // console.log('???????????? tags from SlugPage', tags)
@@ -60,7 +82,7 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <Title title={category.name}/>
+            <Title title={category.name} />
 
             {/*h2 category.service-instructions*/}
             {/*h3 category.description*/}
@@ -74,18 +96,21 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
                         label: 'Каталог',
                         href: '/category'
                     },
-                    ...categoryParents.map(category => ({
+                    ...categoryParents.map((category) => ({
                         label: category.name,
                         href: `/category/${category.slug}`
-                    })) ] }
+                    }))
+                ]}
             />
 
-            <h1 className="text-2xl font-bold mb-6">Категория: {categorySlug}</h1>
+            <h1 className="text-2xl font-bold mb-6">
+                Категория: {categorySlug}
+            </h1>
 
             {/* Отображаем подкатегории, если они есть */}
             {categoryChildren && categoryChildren.length > 0 && (
                 <div className="mb-8">
-                    <CategoryBar categoryChildren={categoryChildren}/>
+                    <CategoryBar categoryChildren={categoryChildren} />
                 </div>
             )}
 
@@ -93,8 +118,11 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
                 {/* Боковая панель с фильтрами */}
                 <div className="w-full md:w-1/4">
                     <div className="flex flex-col bg-white p-6 rounded-lg shadow-md mb-2">
-                        <h3 className="text-lg font-bold mb-2">Фильтр продуктов</h3>
-                        <AdminFilter brands={brands}
+                        <h3 className="text-lg font-bold mb-2">
+                            Фильтр продуктов
+                        </h3>
+                        <AdminFilter
+                            brands={brands}
                             collections={collections}
                             countries={countries}
                             styles={styles}
@@ -107,7 +135,10 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {products.map((product) => (
-                                    <ProductCard key={product.id} product={product}/>
+                                    <ProductCard
+                                        key={product.id}
+                                        product={product}
+                                    />
                                 ))}
                             </div>
 
@@ -123,7 +154,9 @@ const CategoryPage = async ({ params, searchParams, }: Props) => {
                         </>
                     ) : (
                         <div className="text-center py-12">
-                            <p className="text-lg text-gray-600">Товары не найдены</p>
+                            <p className="text-lg text-gray-600">
+                                Товары не найдены
+                            </p>
                         </div>
                     )}
                 </div>

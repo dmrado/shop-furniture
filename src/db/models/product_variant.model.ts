@@ -1,13 +1,22 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 import { ProductModel } from '@/db/models/product.model'
 import { ColorModel } from '@/db/models/color.model'
 import { MaterialModel } from '@/db/models/material.model'
 
-export interface ProductVariantDTO extends InferAttributes<ProductVariantModel> {
-}
+export interface ProductVariantDTO
+    extends InferAttributes<ProductVariantModel> {}
 
-export class ProductVariantModel extends Model<InferAttributes<ProductVariantModel>, InferCreationAttributes<ProductVariantModel>> {
+export class ProductVariantModel extends Model<
+    InferAttributes<ProductVariantModel>,
+    InferCreationAttributes<ProductVariantModel>
+> {
     declare id: CreationOptional<number>
     declare isActive: boolean // управляет отображением на сайте (в каталоге)
     declare articul: string
@@ -35,7 +44,7 @@ ProductVariantModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         // cartId: {
         //     type: DataTypes.INTEGER,
@@ -76,51 +85,51 @@ ProductVariantModel.init(
         },
         articul: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         length: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         width: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         height: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         weight: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         box_length: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         box_width: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         box_height: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         box_weight: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         quantity: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         price: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },
     {
         sequelize,
-        tableName: 'product_variants',
+        tableName: 'product_variants'
     }
 )

@@ -16,23 +16,23 @@ import Footer from '@/components/site/Footer'
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
     variable: '--font-geist-sans',
-    weight: '100 900',
+    weight: '100 900'
 })
 const geistMono = localFont({
     src: './fonts/GeistMonoVF.woff',
     variable: '--font-geist-mono',
-    weight: '100 900',
+    weight: '100 900'
 })
 
 export const metadata: Metadata = {
     title: 'Shop-furniture',
-    description: 'Main page furniture',
+    description: 'Main page furniture'
 }
 
 export default function RootLayout({
-    children,
+    children
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode
 }>) {
     console.warn('app.layout')
 
@@ -49,7 +49,7 @@ export default function RootLayout({
                     <Header />
                     <ToastContainer />
                     <main className="pt-[137px] ">{children}</main>
-                    <Footer/>
+                    <Footer />
                 </CartProvider>
             </body>
         </html>

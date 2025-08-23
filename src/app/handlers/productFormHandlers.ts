@@ -23,7 +23,11 @@ export const editHandler = async (
         try {
             const initialData = await fetchFunction(id)
             if (initialData) {
-                setModalState({ isOpen: true, type: type, initialData: initialData })
+                setModalState({
+                    isOpen: true,
+                    type: type,
+                    initialData: initialData
+                })
             } else {
                 alert(`${type} не найден.`)
             }

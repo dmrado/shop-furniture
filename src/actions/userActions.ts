@@ -16,7 +16,7 @@ export const getCurrentUserAction = async () => {
 // для useEffect в Agreement
 export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
     const result = await ProfileModel.findOne({
-        where: { userId },
+        where: { userId }
     })
     if (!result) {
         return false // Если пользователь не найден
@@ -27,17 +27,17 @@ export const isAgreedFromModelAction = async (userId): Promise<boolean> => {
 // Функция обновления состояния согласия на обработку персональных данных
 export const updateUserAgreementAction = async (userId: string, isAgreed) => {
     const profile = await ProfileModel.findOne({
-        where: { userId },
+        where: { userId }
     })
 
     if (profile) {
         await ProfileModel.update(
             {
                 isAgreed,
-                agreementDate: isAgreed ? new Date() : null,
+                agreementDate: isAgreed ? new Date() : null
             },
             {
-                where: { userId },
+                where: { userId }
             }
         )
         return
@@ -46,7 +46,7 @@ export const updateUserAgreementAction = async (userId: string, isAgreed) => {
         userId,
         isAgreed,
         isActive: true,
-        agreementDate: isAgreed ? new Date() : null,
+        agreementDate: isAgreed ? new Date() : null
     })
 }
 
@@ -59,13 +59,21 @@ export const createUserProfileAction = async (userId) => {
 }
 
 // изменяем Розового зайку на ФИО и ФИО на ФИО сколько угодно раз
-export const updateUserNameAction = async ({ userId, name, fatherName, surName }) => {
+export const updateUserNameAction = async ({
+    userId,
+    name,
+    fatherName,
+    surName
+}) => {
     // Пусть он хоть 10 раз меняет свои ФИО
-    const [ result ] = await ProfileModel.update({ name, fatherName, surName }, {
-        where: { userId }
-    })
+    const [result] = await ProfileModel.update(
+        { name, fatherName, surName },
+        {
+            where: { userId }
+        }
+    )
     if (result === 0) {
-        return false// Если ни одна запись не была обновлена
+        return false // Если ни одна запись не была обновлена
     }
     const updatedUserName = await ProfileModel.findOne({
         where: { userId }
@@ -78,9 +86,12 @@ export const updateUserNameAction = async ({ userId, name, fatherName, surName }
 }
 
 // ПОКА ОНА ЗАГЛУШЕНА сохраняет упрощенного юзера из InstantOrderModal - быстрый заказ
-export const createInstantUserAction = async ({ name, phone, }: {
-    name: InferAttributes<ProfileModel> | string;
-    phone: InferAttributes<AddressModel> | string;
+export const createInstantUserAction = async ({
+    name,
+    phone
+}: {
+    name: InferAttributes<ProfileModel> | string
+    phone: InferAttributes<AddressModel> | string
 }) => {
     // Сначала проверяем, существует ли пользователь с таким телефоном
     const existingUser = await ProfileModel.findOne({
@@ -88,16 +99,16 @@ export const createInstantUserAction = async ({ name, phone, }: {
             {
                 model: AddressModel,
                 as: 'addresses',
-                where: { phone: phone },
-            },
-        ],
+                where: { phone: phone }
+            }
+        ]
     })
     if (existingUser) {
         return {
             success: false,
             message:
                 'Пользователь с таким номером телефона уже существует. Пожалуйста, войдите в свой аккаунт.',
-            existingUser: existingUser.toJSON(),
+            existingUser: existingUser.toJSON()
         }
     }
 
@@ -106,7 +117,7 @@ export const createInstantUserAction = async ({ name, phone, }: {
             name: name,
             isActive: true,
             canContact: true,
-            isAgreed: true,
+            isAgreed: true
         })
 
     if (!instantUser) {
@@ -121,7 +132,7 @@ export const createInstantUserAction = async ({ name, phone, }: {
         home: 'Уточняется',
         corps: '', // есть defaultValue в модели
         appart: '', // есть defaultValue в модели
-        isMain: true,
+        isMain: true
     })
 
     const newInstantUser = await ProfileModel.findOne({
@@ -129,10 +140,10 @@ export const createInstantUserAction = async ({ name, phone, }: {
             {
                 model: AddressModel,
                 as: 'addresses',
-                attributes: [ 'phone' ],
-            },
+                attributes: ['phone']
+            }
         ],
-        where: { id: instantUser.id },
+        where: { id: instantUser.id }
     })
 
     if (!newInstantUser) {
@@ -141,6 +152,6 @@ export const createInstantUserAction = async ({ name, phone, }: {
 
     return {
         success: true,
-        user: newInstantUser.toJSON(),
+        user: newInstantUser.toJSON()
     }
 }

@@ -12,7 +12,8 @@ import {
     ProfileModel,
     ProductModel,
     StockModel,
-    AuthUserModel, ImageModel,
+    AuthUserModel,
+    ImageModel
 } from '@/db/models'
 
 import { CategoryModel } from '@/db/models/category.model'
@@ -45,12 +46,15 @@ const registeredModels = [
     MaterialModel,
     CollectionModel,
     BrandModel,
-    CountryModel,
+    CountryModel
 ]
 
 const runDbSync = async () => {
-    console.log('Syncing DB schema for: ', registeredModels.map(m => m.name).join(', '))
-    await sequelize.sync({ alter: true, })
+    console.log(
+        'Syncing DB schema for: ',
+        registeredModels.map((m) => m.name).join(', ')
+    )
+    await sequelize.sync({ alter: true })
     console.log('...done syncing DB schema')
 }
 runDbSync()

@@ -1,12 +1,21 @@
 // export {}
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 import { AuthUserModel } from '@/db/models/users.model'
 import { AddressModel } from '@/db/models/address.model'
 
 export interface Profile extends InferAttributes<ProfileModel> {}
 
-export class ProfileModel extends Model<InferAttributes<ProfileModel>, InferCreationAttributes<ProfileModel>> {
+export class ProfileModel extends Model<
+    InferAttributes<ProfileModel>,
+    InferCreationAttributes<ProfileModel>
+> {
     //todo проверить нужен ли знак  ?
     declare id?: CreationOptional<number>
     declare userId: string
@@ -25,7 +34,7 @@ ProfileModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.UUID, // Если id в таблице users тоже UUID
@@ -37,25 +46,25 @@ ProfileModel.init(
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: true,
+            allowNull: true
         },
         surName: {
             type: DataTypes.STRING(128),
-            allowNull: true,
+            allowNull: true
         },
         fatherName: {
             type: DataTypes.STRING(128),
-            allowNull: true,
+            allowNull: true
         },
         canContact: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-            allowNull: true,
+            allowNull: true
         },
         isActive: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-            allowNull: true,
+            allowNull: true
         },
         isAgreed: {
             type: DataTypes.BOOLEAN,
@@ -65,10 +74,10 @@ ProfileModel.init(
         agreementDate: {
             type: DataTypes.DATE,
             allowNull: true
-        },
+        }
     },
     {
         sequelize,
-        tableName: 'profiles',
+        tableName: 'profiles'
     }
 )

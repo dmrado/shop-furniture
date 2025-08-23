@@ -15,19 +15,21 @@ class ValidationError extends Error {
 }
 
 type UserDeliveryAddress = {
-    id?: number,
-    userId: number,
+    id?: number
+    userId: number
     phone: string
-    city: string,
-    street: string,
-    home: string,
-    corps: string,
-    appart: string,
-    isMain: boolean,
+    city: string
+    street: string
+    home: string
+    corps: string
+    appart: string
+    isMain: boolean
 }
 
 const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
-    const id = deliveryAddress.get('id') ? Number(deliveryAddress.get('id')) : undefined
+    const id = deliveryAddress.get('id')
+        ? Number(deliveryAddress.get('id'))
+        : undefined
     const phone = deliveryAddress.get('phone')
     // const email = deliveryAddress.get('email')
     const city = deliveryAddress.get('city')
@@ -47,7 +49,8 @@ const cleanFormData = (deliveryAddress: FormData): UserDeliveryAddress => {
     ) {
         throw new ValidationError('I see you! Filedata in text fields')
     }
-    if (!phone ||
+    if (
+        !phone ||
         !city ||
         !street ||
         !home //||
@@ -79,49 +82,54 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
     const session = await getServerSession(authOptions)
     const userId = session.user.id
     try {
-        const {
-            id,
+        const { id, phone, city, street, home, corps, appart, isMain } =
+            cleanFormData(deliveryAddress)
+        console.warn(
+            'userAddressFormAction',
+            userId,
             phone,
             city,
             street,
             home,
-            corps,
-            appart,
-            isMain
-        } = cleanFormData(deliveryAddress)
-        console.warn('userAddressFormAction', userId, phone, city, street, home, corps)
+            corps
+        )
         const previewPhoneNumber = sanitizeAndTruncate(phone, 50)
         const previewCity = sanitizeAndTruncate(city)
         const previewStreet = sanitizeAndTruncate(street)
 
-        const existingAddress: AddressModel | null = await AddressModel.findOne({
-            where: {
-                // id,
-                userId,
-                phone: previewPhoneNumber,
-                city: previewCity,
-                street: previewStreet,
-                home,
-                corps,
-                appart,
-                isMain
+        const existingAddress: AddressModel | null = await AddressModel.findOne(
+            {
+                where: {
+                    // id,
+                    userId,
+                    phone: previewPhoneNumber,
+                    city: previewCity,
+                    street: previewStreet,
+                    home,
+                    corps,
+                    appart,
+                    isMain
+                }
             }
-        })
+        )
         if (existingAddress) {
             return { error: 'Такой адрес уже существует' }
         }
 
         let address: AddressModel | null = null
         if (id) {
-            await AddressModel.update({
-                phone,
-                city,
-                street,
-                home,
-                corps,
-                appart,
-                isMain
-            }, { where: { id } })
+            await AddressModel.update(
+                {
+                    phone,
+                    city,
+                    street,
+                    home,
+                    corps,
+                    appart,
+                    isMain
+                },
+                { where: { id } }
+            )
             address = await AddressModel.findByPk(id)
         } else {
             address = await AddressModel.create({
@@ -138,7 +146,6 @@ export const userAddressFormAction = async (deliveryAddress: FormData) => {
         }
 
         return { success: true, address: address?.toJSON() }
-
     } catch (err) {
         console.error('Error on handleForm:  ', err)
         if (err instanceof ValidationError) {

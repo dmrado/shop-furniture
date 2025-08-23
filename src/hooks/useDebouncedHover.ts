@@ -3,7 +3,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 // Вспомогательная функция debounce (та же, что и раньше)
 function debounce(func, delay) {
     let timeoutId
-    return function(...args) {
+    return function (...args) {
         const context = this
         clearTimeout(timeoutId)
         timeoutId = setTimeout(() => func.apply(context, args), delay)
@@ -11,7 +11,7 @@ function debounce(func, delay) {
 }
 
 export function useDebouncedHover(initialState = false, delay = 100) {
-    const [ isHovered, setIsHovered ] = useState(initialState)
+    const [isHovered, setIsHovered] = useState(initialState)
 
     // useRef для сохранения debounced функций между рендерами
     const debouncedSetHoveredTrueRef = useRef(
@@ -44,6 +44,6 @@ export function useDebouncedHover(initialState = false, delay = 100) {
     return {
         isHovered,
         onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
+        onMouseLeave: handleMouseLeave
     }
 }

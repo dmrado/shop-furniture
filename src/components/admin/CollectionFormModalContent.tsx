@@ -10,14 +10,22 @@ type CollectionFormModalContentProps = {
     initialData?: DictionaryItem | null
 }
 
-const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: CollectionFormModalContentProps) => {
-    const [ name, setName ] = useState(initialData?.name || '')
-    const [ description, setDescription ] = useState(initialData?.description || '')
-    const [ isActive, setIsActive ] = useState(initialData?.isActive ?? true)
-    const [ descriptionCharCount, setDescriptionCharCount ] = useState(initialData?.description?.length || 0)
+const CollectionFormModalContent = ({
+    onClose,
+    onSuccess,
+    initialData
+}: CollectionFormModalContentProps) => {
+    const [name, setName] = useState(initialData?.name || '')
+    const [description, setDescription] = useState(
+        initialData?.description || ''
+    )
+    const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(
+        initialData?.description?.length || 0
+    )
 
-    const [ error, setError ] = useState<string | null>(null)
-    const [ isLoading, setIsLoading ] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         if (initialData) {
@@ -32,9 +40,11 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
             setDescriptionCharCount(0)
         }
         setError(null)
-    }, [ initialData ])
+    }, [initialData])
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const value = e.target.value
         setDescription(value)
         setDescriptionCharCount(value.length)
@@ -54,7 +64,9 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
             onClose()
         } catch (error: any) {
             console.error('Ошибка в модалке CollectionFormModalContent:', error)
-            setError(error.message || 'Произошла ошибка при сохранении коллекции.')
+            setError(
+                error.message || 'Произошла ошибка при сохранении коллекции.'
+            )
         } finally {
             setIsLoading(false)
         }
@@ -63,14 +75,21 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
     return (
         <>
             <h3 className="text-xl font-bold mb-4">
-                {initialData ? 'Редактировать коллекцию' : 'Добавить новую коллекцию'}
+                {initialData
+                    ? 'Редактировать коллекцию'
+                    : 'Добавить новую коллекцию'}
             </h3>
             <form action={handleSubmit} className="space-y-4">
                 {initialData?.id && (
-                    <input type="hidden" name="id" value={initialData.id}/>
+                    <input type="hidden" name="id" value={initialData.id} />
                 )}
                 <div>
-                    <label htmlFor="collectionName" className="block text-sm font-medium text-gray-700">Название коллекции</label>
+                    <label
+                        htmlFor="collectionName"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Название коллекции
+                    </label>
                     <input
                         type="text"
                         placeholder={'введите от 2-х символов'}
@@ -84,7 +103,10 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
                     />
                 </div>
                 <div>
-                    <label htmlFor="collectionDescription" className="block text-sm font-medium text-gray-700">
+                    <label
+                        htmlFor="collectionDescription"
+                        className="block text-sm font-medium text-gray-700"
+                    >
                         Описание
                         <span className="ml-2 text-gray-500 text-xs">
                             ({descriptionCharCount}/255 символов)
@@ -114,7 +136,10 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
                         className="mr-2 leading-tight"
                         disabled={isLoading}
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                    <label
+                        htmlFor="isActive"
+                        className="text-gray-700 text-sm font-bold"
+                    >
                         Активен
                     </label>
                 </div>
@@ -138,7 +163,10 @@ const CollectionFormModalContent = ({ onClose, onSuccess, initialData }: Collect
                         className="button_green px-4 py-2"
                         disabled={isLoading}
                     >
-                        {initialData ? 'Сохранить изменения' : 'Создать коллекцию'} ✅
+                        {initialData
+                            ? 'Сохранить изменения'
+                            : 'Создать коллекцию'}{' '}
+                        ✅
                     </button>
                 </div>
             </form>

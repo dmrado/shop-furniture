@@ -12,7 +12,7 @@ type DictionarySearchDeduplicatorProps = {
 const DictionarySearchDeduplicator = ({
     searchResults,
     onSelectExisting,
-    label,
+    label
 }: DictionarySearchDeduplicatorProps) => {
     if (searchResults.length === 0) {
         return null

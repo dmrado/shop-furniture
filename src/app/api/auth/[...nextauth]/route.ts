@@ -11,20 +11,30 @@ import { AuthUserModel } from '@/db/models/users.model'
 
 //todo добавить isSessionExpired(session) или он зашит в JWT
 export const authOptions: AuthOptions = {
-    adapter: SequelizeAdapter(sequelize,
-        {
-            // timestamps: true, // важно!
-            models: {
-                User: AuthUserModel,
-                // Account: AccountModel,
-                // VerificationToken: VerificationTokenModel,
-                // Session: SessionModel
-                Account: sequelize.define('AuthAccount', { ...models.Account }, { tableName: 'auth_accounts' }),
-                VerificationToken: sequelize.define('AuthVerificationToken', { ...models.VerificationToken }, { tableName: 'auth_verification_tokens' }),
-                Session: sequelize.define('AuthSession', { ...models.Session }, { tableName: 'auth_sessions' })
-            }
+    adapter: SequelizeAdapter(sequelize, {
+        // timestamps: true, // важно!
+        models: {
+            User: AuthUserModel,
+            // Account: AccountModel,
+            // VerificationToken: VerificationTokenModel,
+            // Session: SessionModel
+            Account: sequelize.define(
+                'AuthAccount',
+                { ...models.Account },
+                { tableName: 'auth_accounts' }
+            ),
+            VerificationToken: sequelize.define(
+                'AuthVerificationToken',
+                { ...models.VerificationToken },
+                { tableName: 'auth_verification_tokens' }
+            ),
+            Session: sequelize.define(
+                'AuthSession',
+                { ...models.Session },
+                { tableName: 'auth_sessions' }
+            )
         }
-    ),
+    }),
     secret: process.env.NEXTAUTH_SECRET,
     session: { strategy: 'jwt' },
 
@@ -55,8 +65,8 @@ export const authOptions: AuthOptions = {
                     email: token.email,
                     id: token.sub,
                     name: token.name,
-                    picture: token.picture,
-                },
+                    picture: token.picture
+                }
                 // include: [
                 //     {
                 //         model: AddressModel,
@@ -78,7 +88,15 @@ export const authOptions: AuthOptions = {
 
             return baseUrl
         },
-        async jwt({ token, user, account, profile, trigger, isNewUser, session }) {
+        async jwt({
+            token,
+            user,
+            account,
+            profile,
+            trigger,
+            isNewUser,
+            session
+        }) {
             console.warn('jwt session', session)
             console.warn('jwt token', token)
             console.warn('jwt user', user)
@@ -87,7 +105,7 @@ export const authOptions: AuthOptions = {
             console.warn('jwt profile', profile)
             console.warn('jwt account', account)
             return {
-                ...token,
+                ...token
             }
         }
     },
@@ -101,12 +119,12 @@ export const authOptions: AuthOptions = {
                     access_type: 'offline',
                     response_type: 'code'
                 }
-            },
+            }
         }),
         YandexProvider({
             clientId: process.env.YANDEX_CLIENT_ID ?? '',
             clientSecret: process.env.YANDEX_CLIENT_SECRET ?? ''
-        }),
+        })
         // Credentials({
         // credentials: {
         //    email: { label: 'email', type: 'email', required: true },
@@ -122,7 +140,7 @@ export const authOptions: AuthOptions = {
         //    return null
         // }
         // })
-    ],
+    ]
     // todo Добавьте настройки для cookies в конфигурацию NextAuth иначе: TypeError: State cookie was missing.
     //  name: 'OAuthCallbackError',
     //     code: undefined

@@ -42,7 +42,9 @@ const BrandManager = ({
 
     const [brands, setBrands] = useState<DictionaryItem[]>(initialBrands) // Состояние для брендов
     const [showModal, setShowModal] = useState(false) // Состояние для модального окна
-    const [currentBrand, setCurrentBrand] = useState<BrandFormState | null>(null) // Для редактирования/создания
+    const [currentBrand, setCurrentBrand] = useState<BrandFormState | null>(
+        null
+    ) // Для редактирования/создания
     const [isActive, setIsActive] = useState(true)
     //для подсчета символов в description
     const [descriptionCharCount, setDescriptionCharCount] = useState(0)
@@ -52,10 +54,14 @@ const BrandManager = ({
 
     // Для модального окна подтверждения удаления
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
-    const [brandToDelete, setBrandToDelete] = useState<DictionaryItem | null>(null)
+    const [brandToDelete, setBrandToDelete] = useState<DictionaryItem | null>(
+        null
+    )
 
     // Функция для обновления счетчика символов при изменении textarea
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         setDescriptionCharCount(e.target.value.length)
     }
 
@@ -145,13 +151,18 @@ const BrandManager = ({
     const brandActionsContainerStyle =
         'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
     // Стили для кнопок внутри карточки
-    const brandActionButtonStyle = 'w-full button_blue text-xs px-2 py-1.5 justify-center'
-    const brandDeleteButtonStyle = 'w-full button_red text-xs px-2 py-1.5 justify-center'
+    const brandActionButtonStyle =
+        'w-full button_blue text-xs px-2 py-1.5 justify-center'
+    const brandDeleteButtonStyle =
+        'w-full button_red text-xs px-2 py-1.5 justify-center'
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
             <div className="flex flex-col sm:flex-row w-full justify-between align-center px-12 gap-2">
-                <button onClick={handleAddClick} className="button_green mb-6 px-5 py-2">
+                <button
+                    onClick={handleAddClick}
+                    className="button_green mb-6 px-5 py-2"
+                >
                     Добавить новый бренд 🛠️
                 </button>
                 <Link href={'/admin/products'}>Вернуться</Link>
@@ -170,21 +181,27 @@ const BrandManager = ({
             {/* Список брендов в виде карточек */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 {brands.length === 0 ? (
-                    <p className="col-span-full text-gray-600">Бренды не найдены.</p>
+                    <p className="col-span-full text-gray-600">
+                        Бренды не найдены.
+                    </p>
                 ) : (
                     brands.map((brand) => (
                         <div key={brand.id} className={brandCardStyle}>
                             <div className="relative flex flex-col items-center flex-grow">
                                 <div
                                     className={
-                                        brandIdStyle.replace('rounded-lg', '') + ' rounded-t-lg'
+                                        brandIdStyle.replace('rounded-lg', '') +
+                                        ' rounded-t-lg'
                                     }
                                 >
                                     <span className="p-2">ID: {brand.id}</span>
                                 </div>
 
                                 {/* Название и описание */}
-                                <span className={brandNameStyle} title={brand.name}>
+                                <span
+                                    className={brandNameStyle}
+                                    title={brand.name}
+                                >
                                     {brand.name}
                                 </span>
                                 <span
@@ -228,11 +245,17 @@ const BrandManager = ({
                     {' '}
                     {/* Сброс счетчика при закрытии модалки */}
                     <h3 className="text-xl font-bold mb-4">
-                        {currentBrand ? 'Редактировать бренд' : 'Добавить новый бренд'}
+                        {currentBrand
+                            ? 'Редактировать бренд'
+                            : 'Добавить новый бренд'}
                     </h3>
                     <form action={handleSubmit} className="space-y-4">
                         {currentBrand?.id && (
-                            <input type="hidden" name="id" value={currentBrand.id} />
+                            <input
+                                type="hidden"
+                                name="id"
+                                value={currentBrand.id}
+                            />
                         )}
                         <div>
                             <label
@@ -303,8 +326,14 @@ const BrandManager = ({
                             >
                                 Отмена 🚫
                             </button>
-                            <button type="submit" className="button_green px-4 py-2">
-                                {currentBrand ? 'Сохранить изменения' : 'Создать бренд'} ✅
+                            <button
+                                type="submit"
+                                className="button_green px-4 py-2"
+                            >
+                                {currentBrand
+                                    ? 'Сохранить изменения'
+                                    : 'Создать бренд'}{' '}
+                                ✅
                             </button>
                         </div>
                     </form>
@@ -324,8 +353,10 @@ const BrandManager = ({
                     </h3>
                     <p className="mb-6 text-gray-700">
                         Вы уверены, что хотите удалить бренд "
-                        <span className="font-semibold">{brandToDelete.name}</span>"? Это
-                        действие нельзя отменить. 💡
+                        <span className="font-semibold">
+                            {brandToDelete.name}
+                        </span>
+                        "? Это действие нельзя отменить. 💡
                     </p>
                     <div className="flex justify-end gap-3">
                         <button

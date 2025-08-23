@@ -1,9 +1,16 @@
 export const Heart = ({ color }) => {
     return (
-        <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+            width="20"
+            height="18"
+            viewBox="0 0 20 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
             <path
                 d="M0 6.137C0 11 4.02 13.591 6.962 15.911C8 16.729 9 17.5 10 17.5C11 17.5 12 16.73 13.038 15.91C15.981 13.592 20 11 20 6.138C20 1.276 14.5 -2.175 10 2.501C5.5 -2.175 0 1.274 0 6.137Z"
-                fill={color}/>
+                fill={color}
+            />
         </svg>
     )
 }

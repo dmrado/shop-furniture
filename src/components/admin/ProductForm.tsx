@@ -56,25 +56,30 @@ type ProductFormProps = {
 }
 
 const ProductForm = ({
-                         product,
-                         onSuccess,
-                         onCancel,
-                         initialBrands = [],
-                         initialCollections = [],
-                         initialCountries = [],
-                         initialStyles = [],
-                         initialCategories = []
-                     }: ProductFormProps) => {
-
+    product,
+    onSuccess,
+    onCancel,
+    initialBrands = [],
+    initialCollections = [],
+    initialCountries = [],
+    initialStyles = [],
+    initialCategories = []
+}: ProductFormProps) => {
     // Инициализируем состояния, используя данные из product или значения по умолчанию
     const [name, setName] = useState(product?.name || '')
     const [articul, setArticul] = useState(product?.articul || '')
     const [sku, setSku] = useState(product?.sku || '')
-    const [descriptionShort, setDescriptionShort] = useState(product?.descriptionShort || '')
-    const [descriptionLong, setDescriptionLong] = useState(product?.descriptionLong || '')
+    const [descriptionShort, setDescriptionShort] = useState(
+        product?.descriptionShort || ''
+    )
+    const [descriptionLong, setDescriptionLong] = useState(
+        product?.descriptionLong || ''
+    )
     const [isNew, setIsNew] = useState(product?.isNew || false)
     const [isActive, setIsActive] = useState(product?.isActive || true)
-    const [productImages, setProductImages] = useState<ImageDTO[]>(product?.images || [])
+    const [productImages, setProductImages] = useState<ImageDTO[]>(
+        product?.images || []
+    )
 
     // Инициализируем
     const [brandId, setBrandId] = useState<number | string>('') // Должен быть number или string
@@ -86,14 +91,19 @@ const ProductForm = ({
     const initialCategoryId = product?.categories?.length
         ? String(product.categories[0].id)
         : ''
-    const [categoryId, setCategoryId] = useState<string | number>(initialCategoryId)
+    const [categoryId, setCategoryId] = useState<string | number>(
+        initialCategoryId
+    )
 
     //  СОСТОЯНИЯ ДЛЯ ХРАНЕНИЯ СПИСКОВ СПРАВОЧНИКОВ
     const [brands, setBrands] = useState<DictionaryItem[]>(initialBrands)
-    const [collections, setCollections] = useState<DictionaryItem[]>(initialCollections)
-    const [countries, setCountries] = useState<DictionaryItem[]>(initialCountries)
+    const [collections, setCollections] =
+        useState<DictionaryItem[]>(initialCollections)
+    const [countries, setCountries] =
+        useState<DictionaryItem[]>(initialCountries)
     const [styles, setStyles] = useState<DictionaryItem[]>(initialStyles)
-    const [categories, setCategories] = useState<DictionaryItem[]>(initialCategories)
+    const [categories, setCategories] =
+        useState<DictionaryItem[]>(initialCategories)
 
     // Состояния для валидации
     const [touchedName, setTouchedName] = useState(false)
@@ -207,7 +217,8 @@ const ProductForm = ({
     }
 
     // Валидация для 'name'
-    const isNameValid = () => !touchedName || (touchedName && name.length >= TITLE_MIN_LENGTH)
+    const isNameValid = () =>
+        !touchedName || (touchedName && name.length >= TITLE_MIN_LENGTH)
 
     const productFormSelect = [
         {
@@ -218,7 +229,8 @@ const ProductForm = ({
             options: brands,
             onChange: (e) => setBrandId(Number(e.target.value)),
             onAddClick: () => addHandler('brand', setModalState),
-            onEditClick: () => editHandler(brandId, 'brand', setModalState, getBrandById),
+            onEditClick: () =>
+                editHandler(brandId, 'brand', setModalState, getBrandById),
             showEditButton: !!brandId,
             href: 'brands'
         },
@@ -231,7 +243,12 @@ const ProductForm = ({
             onChange: (e) => setCollectionId(Number(e.target.value)),
             onAddClick: () => addHandler('collection', setModalState),
             onEditClick: () =>
-                editHandler(collectionId, 'collection', setModalState, getCollectionById),
+                editHandler(
+                    collectionId,
+                    'collection',
+                    setModalState,
+                    getCollectionById
+                ),
             showEditButton: !!collectionId,
             href: 'collections'
         },
@@ -243,7 +260,13 @@ const ProductForm = ({
             options: countries,
             onChange: (e) => setCountryId(Number(e.target.value)),
             onAddClick: () => addHandler('country', setModalState),
-            onEditClick: () => editHandler(countryId, 'country', setModalState, getCountryById),
+            onEditClick: () =>
+                editHandler(
+                    countryId,
+                    'country',
+                    setModalState,
+                    getCountryById
+                ),
             showEditButton: !!countryId,
             href: 'countries'
         },
@@ -255,7 +278,8 @@ const ProductForm = ({
             options: styles,
             onChange: (e) => setStyleId(Number(e.target.value)),
             onAddClick: () => addHandler('style', setModalState),
-            onEditClick: () => editHandler(styleId, 'style', setModalState, getStyleById),
+            onEditClick: () =>
+                editHandler(styleId, 'style', setModalState, getStyleById),
             showEditButton: !!styleId,
             href: 'styles'
         }
@@ -277,7 +301,13 @@ const ProductForm = ({
         <>
             <form className="bg-white rounded px-1 pt-6 pb-8" action={onSubmit}>
                 {/* ID продукта - скрытое поле, если редактируем */}
-                <input hidden type="number" name="id" value={product?.id || ''} readOnly />
+                <input
+                    hidden
+                    type="number"
+                    name="id"
+                    value={product?.id || ''}
+                    readOnly
+                />
 
                 {/* Контейнер для полей в две колонки на md и выше */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -304,7 +334,8 @@ const ProductForm = ({
                         />
                         {!isNameValid() && (
                             <span style={{ color: 'red' }}>
-                                Название должно быть не менее {TITLE_MIN_LENGTH} символов.
+                                Название должно быть не менее {TITLE_MIN_LENGTH}{' '}
+                                символов.
                             </span>
                         )}
                     </div>
@@ -319,10 +350,16 @@ const ProductForm = ({
                             >
                                 Категория товара:
                             </label>
-                            <input hidden type="text" name="categoryId" value={categoryId} readOnly />
+                            <input
+                                hidden
+                                type="text"
+                                name="categoryId"
+                                value={categoryId}
+                                readOnly
+                            />
                             {/*кастомный React-компонент, я сам определяю, какие пропсы он принимает и что он с ними делает, я решил абстрагироваться от деталей HTML и передавать в пропс onChange сразу готовое значение value, а не объект события event.*/}
                             <SelectWithOptions
-                                options={initialCategories.map(cat => ({
+                                options={initialCategories.map((cat) => ({
                                     label: cat.name,
                                     value: String(cat.id)
                                 }))}
@@ -438,7 +475,10 @@ const ProductForm = ({
                         onChange={(e) => setIsNew(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
-                    <label htmlFor="isNew" className="text-gray-700 text-lg font-medium">
+                    <label
+                        htmlFor="isNew"
+                        className="text-gray-700 text-lg font-medium"
+                    >
                         Новинка
                     </label>
                 </div>
@@ -451,7 +491,10 @@ const ProductForm = ({
                         onChange={(e) => setIsActive(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-lg font-medium">
+                    <label
+                        htmlFor="isActive"
+                        className="text-gray-700 text-lg font-medium"
+                    >
                         Активен (отображать на сайте)
                     </label>
                 </div>
@@ -459,11 +502,13 @@ const ProductForm = ({
                 {/* Поле для загрузки файла ---------------------------------------------------*/}
                 {/*todo перенести в отдельный компонент DragAndDropFileUploader там все функции есть*/}
                 <div className="flex flex-col my-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_picture">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="product_picture"
+                    >
                         Изображение товара:
                     </label>
-                    <div
-                        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors duration-200">
+                    <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors duration-200">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-12 w-12 text-gray-400"
@@ -481,12 +526,16 @@ const ProductForm = ({
                         <p className="mt-2 text-sm font-medium text-gray-600">
                             Перетащите сюда файлы с расширением:
                         </p>
-                        <p className="text-xs text-blue-500 font-medium my-2">PNG, JPEG, JPG, GIF, TIFF, HEIC до 2МБ</p>
+                        <p className="text-xs text-blue-500 font-medium my-2">
+                            PNG, JPEG, JPG, GIF, TIFF, HEIC до 2МБ
+                        </p>
                         <div className="text-sm font-medium text-gray-600">
                             <ProductImagePicker
                                 value={productImages}
                                 label="или нажмите для загрузки"
-                                productName={product?.name ?? 'Неизвестный товар'}
+                                productName={
+                                    product?.name ?? 'Неизвестный товар'
+                                }
                                 onFilesReady={(fileDto) => {
                                     // alert(`Uploaded ${fileDto.length} files`)
                                     setProductImages(fileDto)
@@ -520,47 +569,61 @@ const ProductForm = ({
                         Записать ✅
                     </button>
                     {product && ( // Добавляем кнопку отмены только если редактируем
-                        <button type="button" onClick={onCancel} className="button_red ml-4">
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                            className="button_red ml-4"
+                        >
                             Отмена 🚫
                         </button>
                     )}
                 </div>
             </form>
 
-            {
-                modalState.isOpen && (
-                    <Modal onClose={() => setModalState({ ...modalState, isOpen: false })}>
-                        {modalState.type === 'brand' && (
-                            <BrandFormModalContent
-                                onClose={() => setModalState({ ...modalState, isOpen: false })}
-                                onSuccess={refreshBrands}
-                                initialData={modalState.initialData}
-                            />
-                        )}
-                        {modalState.type === 'collection' && (
-                            <CollectionFormModalContent
-                                onClose={() => setModalState({ ...modalState, isOpen: false })}
-                                onSuccess={refreshCollections}
-                                initialData={modalState.initialData}
-                            />
-                        )}
-                        {modalState.type === 'country' && (
-                            <CountryFormModalContent
-                                onClose={() => setModalState({ ...modalState, isOpen: false })}
-                                onSuccess={refreshCountries}
-                                initialData={modalState.initialData}
-                            />
-                        )}
-                        {modalState.type === 'style' && (
-                            <StyleFormModalContent
-                                onClose={() => setModalState({ ...modalState, isOpen: false })}
-                                onSuccess={refreshStyles}
-                                initialData={modalState.initialData}
-                            />
-                        )}
-                    </Modal>
-                )
-            }
+            {modalState.isOpen && (
+                <Modal
+                    onClose={() =>
+                        setModalState({ ...modalState, isOpen: false })
+                    }
+                >
+                    {modalState.type === 'brand' && (
+                        <BrandFormModalContent
+                            onClose={() =>
+                                setModalState({ ...modalState, isOpen: false })
+                            }
+                            onSuccess={refreshBrands}
+                            initialData={modalState.initialData}
+                        />
+                    )}
+                    {modalState.type === 'collection' && (
+                        <CollectionFormModalContent
+                            onClose={() =>
+                                setModalState({ ...modalState, isOpen: false })
+                            }
+                            onSuccess={refreshCollections}
+                            initialData={modalState.initialData}
+                        />
+                    )}
+                    {modalState.type === 'country' && (
+                        <CountryFormModalContent
+                            onClose={() =>
+                                setModalState({ ...modalState, isOpen: false })
+                            }
+                            onSuccess={refreshCountries}
+                            initialData={modalState.initialData}
+                        />
+                    )}
+                    {modalState.type === 'style' && (
+                        <StyleFormModalContent
+                            onClose={() =>
+                                setModalState({ ...modalState, isOpen: false })
+                            }
+                            onSuccess={refreshStyles}
+                            initialData={modalState.initialData}
+                        />
+                    )}
+                </Modal>
+            )}
         </>
     )
 }

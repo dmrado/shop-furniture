@@ -33,10 +33,10 @@ const ProductImagePicker = (props: Props) => {
     // todo: нам нужно проверить, что у продукта, который уже имеет файлы - они отображются корретно
     // нам надо еще сделать ссылочку на картинку, чтобы админ мог ее открыть и удалить если нужно (должно работать)
     console.log('ProductImagePicker', value)
-    const [ isSubmitting, setSubmitting ] = useState(false)
+    const [isSubmitting, setSubmitting] = useState(false)
 
     const validateFile = async (file: File) => {
-        if (file.size > FILE_SIZE_LIMIT * (1024 ** 2)) {
+        if (file.size > FILE_SIZE_LIMIT * 1024 ** 2) {
             alert('Размер файла превышает допустимый лимит')
             return false
         }
@@ -55,7 +55,7 @@ const ProductImagePicker = (props: Props) => {
         }
 
         for (const file of files) {
-            if (!await validateFile(file)) {
+            if (!(await validateFile(file))) {
                 console.warn('File validation failed', file)
                 return
             }
@@ -70,20 +70,24 @@ const ProductImagePicker = (props: Props) => {
                 fileDtos.push(fileDto)
             }
         } catch (error) {
-            alert(error instanceof Error && error.message ? error.message : 'Не удалось загрузить файл')
+            alert(
+                error instanceof Error && error.message
+                    ? error.message
+                    : 'Не удалось загрузить файл'
+            )
         } finally {
             setSubmitting(false)
         }
 
         if (multiple) {
-            onFilesReady([ ...(value ? value : []), ...fileDtos ])
+            onFilesReady([...(value ? value : []), ...fileDtos])
         } else {
             onFilesReady(fileDtos)
         }
     }
 
     const handleClearClick = async (fileId: number) => {
-        const files = value?.filter(file => file.id !== fileId)
+        const files = value?.filter((file) => file.id !== fileId)
         if (!files) {
             return
         }
@@ -97,25 +101,29 @@ const ProductImagePicker = (props: Props) => {
     return (
         <div>
             <div>
-                <label htmlFor="component-simple" >{label}</label>
-                <div id="component-simple" >
-                    {value.map((fileDto) =>
+                <label htmlFor="component-simple">{label}</label>
+                <div id="component-simple">
+                    {value.map((fileDto) => (
                         <div key={fileDto.id}>
-                            <a href={`/img/${fileDto.path}`}/>
-                            {fileDto.path} : <button
-                                type='button'
+                            <a href={`/img/${fileDto.path}`} />
+                            {fileDto.path} :{' '}
+                            <button
+                                type="button"
                                 disabled={disabled}
-                                onClick={() => handleClearClick(fileDto.id)}>
-                                        Очистить
+                                onClick={() => handleClearClick(fileDto.id)}
+                            >
+                                Очистить
                             </button>
                         </div>
-                    )}
+                    ))}
                 </div>
                 <input
                     name="file_ids"
-                    value={value.map(fileDto => fileDto.id).join(',')}
-                    hidden/>
-                <input id="file"
+                    value={value.map((fileDto) => fileDto.id).join(',')}
+                    hidden
+                />
+                <input
+                    id="file"
                     name="file"
                     accept={IMAGE_TYPES.join(',')}
                     type="file"
@@ -123,7 +131,8 @@ const ProductImagePicker = (props: Props) => {
                     multiple={multiple}
                 />
             </div>
-        </div>)
+        </div>
+    )
 }
 
 export default ProductImagePicker

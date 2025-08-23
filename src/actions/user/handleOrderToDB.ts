@@ -2,14 +2,14 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { OrderModel } from '@/db/models'
-const validPaymentMethods = [ 'cash', 'card', 'online' ] as const
-type PaymentMethod = typeof validPaymentMethods[number]
+const validPaymentMethods = ['cash', 'card', 'online'] as const
+type PaymentMethod = (typeof validPaymentMethods)[number]
 
 interface CleanedFormData {
-    addressId: number;
-    comment: string;
-    paymentMethod: PaymentMethod;
-    deliveryDate: Date;
+    addressId: number
+    comment: string
+    paymentMethod: PaymentMethod
+    deliveryDate: Date
 }
 
 class ValidationError extends Error {
@@ -19,7 +19,7 @@ class ValidationError extends Error {
     }
 }
 
-const cleanFormData = (formData: FormData) : CleanedFormData => {
+const cleanFormData = (formData: FormData): CleanedFormData => {
     const addressId = formData.get('addressId')
     const comment = formData.get('comment') ?? ''
 
@@ -83,7 +83,14 @@ export const handleOrderToDB = async (formData: FormData) => {
         const userId = 1 // todo: брать пользователя из кукис
         const { addressId, comment, deliveryDate } = cleanFormData(formData)
 
-        await OrderModel.create({ userId, addressId, comment, orderDate: new Date(), cartPrice: 999, deliveryDate })
+        await OrderModel.create({
+            userId,
+            addressId,
+            comment,
+            orderDate: new Date(),
+            cartPrice: 999,
+            deliveryDate
+        })
     } catch (err) {
         console.error('Error on handleForm:  ', err)
         if (err instanceof ValidationError) {

@@ -57,7 +57,7 @@ export async function seedColors() {
                 isActive: true,
                 code: '#800080',
                 name: 'Фиолетовый'
-            },
+            }
         ]
 
         // Используем bulkCreate для более эффективного добавления нескольких записей

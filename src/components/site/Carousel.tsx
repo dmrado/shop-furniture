@@ -8,25 +8,22 @@ import sampleImage3 from '@/components/site/img/sample-carousel3.jpg'
 import Link from 'next/link'
 
 const Carousel = () => {
-    const images = [ sampleImage, sampleImage2, sampleImage3 ]
-    const [ currentImageIndex, setCurrentImageIndex ] = useState(0)
-    const [ nextImageIndex, setNextImageIndex ] = useState(1)
+    const images = [sampleImage, sampleImage2, sampleImage3]
+    const [currentImageIndex, setCurrentImageIndex] = useState(0)
+    const [nextImageIndex, setNextImageIndex] = useState(1)
     const timerRef = useRef<NodeJS.Timeout | null>(null)
-    const [ isAnimate, setIsAnimate ] = useState(false)
+    const [isAnimate, setIsAnimate] = useState(false)
 
     // Функция для смены изображения
     const changeImage = (index: number) => {
-
         setIsAnimate(true) //NextImage "opacity-100", CurrentImage "opacity-0"
 
         setTimeout(() => {
-            setNextImageIndex(index)// Устанавливаем следующий индекс
+            setNextImageIndex(index) // Устанавливаем следующий индекс
             setCurrentImageIndex(index) // Обновляем изображение после анимации
             setNextImageIndex((index + 1) % images.length)
-
         }, 500)
         setIsAnimate(false)
-
     }
 
     // Автоматическая смена изображения Если индекс меньше длины массива, получаем сам индекс
@@ -42,7 +39,7 @@ const Carousel = () => {
         return () => {
             if (timerRef.current) clearInterval(timerRef.current) // Очистка таймера при размонтировании
         }
-    }, [ currentImageIndex, images.length ])
+    }, [currentImageIndex, images.length])
 
     // Сброс таймера при ручной смене изображения
     const handleManualChange = (index: number) => {
@@ -83,13 +80,12 @@ const Carousel = () => {
             </div>
 
             {/* Полупрозрачная плашка */}
-            <div
-                className="absolute left-[68px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-8 max-w-[589px] h-[265px]">
+            <div className="absolute left-[68px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-8 max-w-[589px] h-[265px]">
                 <h1 className="text-4xl mb-4 font-semibold mt-7">
-                    Новая коллекция диванов <br/>
+                    Новая коллекция диванов <br />
                     со скидкой 10%
                 </h1>
-                <Link href='/products'>
+                <Link href="/products">
                     <button className="flex items-center px-4 py-5 bg-[#171613] transition-all duration-200 mt-5">
                         Подробнее
                         <Arrow
@@ -99,7 +95,6 @@ const Carousel = () => {
                         />
                     </button>
                 </Link>
-
             </div>
 
             {/* Точки навигации */}

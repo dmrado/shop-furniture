@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-const transporter = nodemailer.createTransport = {
+const transporter = (nodemailer.createTransport = {
     host: 'russian.education',
     port: 587,
     to: process.env.NODEMAILER_SEND_TO,
@@ -11,12 +11,12 @@ const transporter = nodemailer.createTransport = {
     tls: {
         rejectUnauthorized: false
     }
-}
+})
 
 type SendMailProps = {
-    name: string,
-    email: string,
-    title: string,
+    name: string
+    email: string
+    title: string
     message: string
 }
 const renderHtml = ({ name, email, title, message }: SendMailProps) => {
@@ -27,7 +27,6 @@ const renderHtml = ({ name, email, title, message }: SendMailProps) => {
         <h4>Сообщение: ${message}</h4>`
 }
 export const sendMail = async (props: SendMailProps) => {
-
     const result = await transporter.sendMail({
         from: `"My team" <${config.auth.user}>`,
         to: config.to,

@@ -4,12 +4,15 @@ import {
     DataTypes,
     InferAttributes,
     InferCreationAttributes,
-    Model,
+    Model
 } from 'sequelize'
 
 export interface CategoryDTO extends InferAttributes<CategoryModel> {}
 
-export class CategoryModel extends Model<InferAttributes<CategoryModel>, InferCreationAttributes<CategoryModel>> {
+export class CategoryModel extends Model<
+    InferAttributes<CategoryModel>,
+    InferCreationAttributes<CategoryModel>
+> {
     declare id: CreationOptional<number>
     declare parentId: number | null
     declare name: string
@@ -22,27 +25,27 @@ CategoryModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         parentId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: true
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         slug: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         image: {
             type: DataTypes.STRING(128),
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },
     {
         sequelize,
-        tableName: 'categories',
+        tableName: 'categories'
     }
 )

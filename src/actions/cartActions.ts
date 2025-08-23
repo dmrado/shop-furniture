@@ -1,5 +1,10 @@
 'use server'
-import { CartModel, ColorModel, ProductModel, ProductVariantModel } from '@/db/models'
+import {
+    CartModel,
+    ColorModel,
+    ProductModel,
+    ProductVariantModel
+} from '@/db/models'
 import { Op } from 'sequelize'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
@@ -7,33 +12,35 @@ import { redirect } from 'next/navigation'
 import { CartModelDTO } from '@/db/models/cart.model'
 
 export type CartRow = {
-    id: number;
-    productId: number;
-    colorId: number;
-    isActive: boolean;
-    articul: string;
-    length: number;
-    width: number;
-    height: number;
-    weight: number;
-    box_length: number;
-    box_height: number;
-    box_weight: number;
-    price: number;
-    product?: { // Опционально, если не всегда включается или может быть null
-        id: number;
-        name: string;
-        articul: string;
-        sku: string;
-        descriptionShort: string;
-        descriptionLong: string;
-    };
-    color?: { // Опционально
-        id: number;
-        name: string;
-        code: string;
-    };
-};
+    id: number
+    productId: number
+    colorId: number
+    isActive: boolean
+    articul: string
+    length: number
+    width: number
+    height: number
+    weight: number
+    box_length: number
+    box_height: number
+    box_weight: number
+    price: number
+    product?: {
+        // Опционально, если не всегда включается или может быть null
+        id: number
+        name: string
+        articul: string
+        sku: string
+        descriptionShort: string
+        descriptionLong: string
+    }
+    color?: {
+        // Опционально
+        id: number
+        name: string
+        code: string
+    }
+}
 
 // изначально CartModel определена так, что поле productVariant в ней — это просто число (number), потому что это foreignKey (внешний ключ).
 //Omit<CartModelDTO, 'productVariant'>: Мы берем исходный тип CartModelDTO (который говорит, что productVariant это number). И мы исключаем из него поле productVariant. В результате получается тип, у которого нет поля productVariant. Затем мы используем оператор & (intersection type) для объединения этого нового типа с другим типом. Этот другой тип просто добавляет поле productVariant, но теперь с правильным, "расширенным" типом CartProductVariant (который описывает, что это целый объект).
@@ -46,9 +53,9 @@ export type CartModel = Omit<
 }
 
 type DeleteResult = {
-    success: boolean;
-    deletedCount?: number;
-    error?: string;
+    success: boolean
+    deletedCount?: number
+    error?: string
 }
 
 const CART_INCLUDE = [
@@ -68,19 +75,24 @@ const CART_INCLUDE = [
             'box_length',
             'box_height',
             'box_weight',
-            'price',
+            'price'
             // 'cartId'
         ],
         include: [
             {
                 model: ProductModel,
                 as: 'product',
-                attributes: [ 'id', 'name', 'descriptionShort', 'descriptionLong' ]
+                attributes: [
+                    'id',
+                    'name',
+                    'descriptionShort',
+                    'descriptionLong'
+                ]
             },
             {
                 model: ColorModel,
                 as: 'color',
-                attributes: [ 'id', 'name', 'code' ]
+                attributes: ['id', 'name', 'code']
             }
         ]
     }
@@ -88,7 +100,9 @@ const CART_INCLUDE = [
 
 const mapCartRow = (cartItem: CartModel) => {
     if (!cartItem.product_variants) {
-        throw new Error(`Cart item with id ${cartItem.id} contains no product variant.`)
+        throw new Error(
+            `Cart item with id ${cartItem.id} contains no product variant.`
+        )
     }
 
     const variant = cartItem.product_variants
@@ -117,14 +131,14 @@ const mapCartRow = (cartItem: CartModel) => {
                     // articul: variant.product.articul,
                     // sku: variant.product.sku,
                     descriptionShort: variant.product.descriptionShort,
-                    descriptionLong: variant.product.descriptionLong,
+                    descriptionLong: variant.product.descriptionLong
                 }
             }),
             ...(variant.color && {
                 color: {
                     id: variant.color.id,
                     name: variant.color.name,
-                    code: variant.color.code,
+                    code: variant.color.code
                 }
             })
         }
@@ -140,7 +154,9 @@ export async function getCartAction(): Promise<CartRow[]> {
     // }
 
     if (!session || !session.user || !session.user.id) {
-        console.log('User not authenticated for cart action. Returning empty cart.')
+        console.log(
+            'User not authenticated for cart action. Returning empty cart.'
+        )
         return []
     }
 
@@ -154,7 +170,14 @@ export async function getCartAction(): Promise<CartRow[]> {
     return rows.map(mapCartRow)
 }
 
-export const updateQuantityAction = async ({ id, newQuantity }: { id: number, newQuantity: number, userId?: number}): Promise<CartRow[]> => {
+export const updateQuantityAction = async ({
+    id,
+    newQuantity
+}: {
+    id: number
+    newQuantity: number
+    userId?: number
+}): Promise<CartRow[]> => {
     // await new Promise(async (resolve) => {setTimeout(() => { resolve(undefined) }, 2000)})
     const session = await getServerSession(authOptions)
     console.log('Cart Session', session)
@@ -163,18 +186,15 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
     }
     const userId = session.user.id
     if (newQuantity <= 1) {
-        await CartModel.update(
-            { quantity: 1 },
-            { where: { id } }
-        )
+        await CartModel.update({ quantity: 1 }, { where: { id } })
     } else {
-        await CartModel.update(
-            { quantity: newQuantity },
-            { where: { id } }
-        )
+        await CartModel.update({ quantity: newQuantity }, { where: { id } })
     }
 
-    const updatedCart = await CartModel.findAll({ where: { userId }, include: CART_INCLUDE })
+    const updatedCart = await CartModel.findAll({
+        where: { userId },
+        include: CART_INCLUDE
+    })
     if (!updatedCart.length) {
         throw new Error('updated cart not found')
     }
@@ -185,19 +205,20 @@ export const updateQuantityAction = async ({ id, newQuantity }: { id: number, ne
 export const deleteCartRowAction = async (cartId: number) => {
     await CartModel.destroy({
         where: {
-            id: cartId,
+            id: cartId
         }
     })
 }
 
-export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<DeleteResult> => {
+export const deleteSelectedCartRowsAction = async (
+    cartIds: number[]
+): Promise<DeleteResult> => {
     const ids = await CartModel.destroy({
         where: {
             id: {
                 [Op.in]: cartIds
             }
         }
-
     })
     return {
         success: true,
@@ -205,8 +226,10 @@ export const deleteSelectedCartRowsAction = async (cartIds: number[]): Promise<D
     }
 }
 
-export const addProductToCartAction = async (selectedVariantId: number, quantity: number): Promise<CartRow[]> => {
-
+export const addProductToCartAction = async (
+    selectedVariantId: number,
+    quantity: number
+): Promise<CartRow[]> => {
     const session = await getServerSession(authOptions)
 
     console.log('Cart Session', session)
@@ -217,19 +240,19 @@ export const addProductToCartAction = async (selectedVariantId: number, quantity
     const existingCartItem = await CartModel.findOne({
         where: {
             productVariant: selectedVariantId,
-            userId,
+            userId
         },
         include: CART_INCLUDE
     })
     if (existingCartItem) {
         await existingCartItem.update({
-            quantity: existingCartItem.quantity + quantity,
+            quantity: existingCartItem.quantity + quantity
         })
     } else {
         await CartModel.create({
             quantity: quantity,
             productVariant: selectedVariantId,
-            userId,
+            userId
         })
     }
     return getCartAction(userId)

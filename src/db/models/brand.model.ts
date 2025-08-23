@@ -1,9 +1,18 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 
 export interface BrandlDTO extends InferAttributes<BrandModel> {}
 
-export class BrandModel extends Model<InferAttributes<BrandModel>, InferCreationAttributes<BrandModel>> {
+export class BrandModel extends Model<
+    InferAttributes<BrandModel>,
+    InferCreationAttributes<BrandModel>
+> {
     declare id: CreationOptional<number>
     declare name: string
     declare description: string

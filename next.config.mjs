@@ -6,23 +6,23 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'lh3.googleusercontent.com',
                 port: '',
-                pathname:  '/**',
-                search: '',
+                pathname: '/**',
+                search: ''
             },
             {
                 protocol: 'https',
                 hostname: 'avatars.yandex.net', // <--- ДОБАВЬТЕ ЭТУ ЗАПИСЬ
                 port: '',
-                pathname:  '/**',
-                search: '', // Необязательно
-            },
-        ],
+                pathname: '/**',
+                search: '' // Необязательно
+            }
+        ]
     },
     typescript: {
-        ignoreBuildErrors: true,
+        ignoreBuildErrors: true
     },
     eslint: {
-        ignoreDuringBuilds: true,
-    },
+        ignoreDuringBuilds: true
+    }
 }
-export default nextConfig;
+export default nextConfig

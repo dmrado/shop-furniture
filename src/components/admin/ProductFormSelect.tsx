@@ -62,7 +62,10 @@ const ProductFormSelect = ({
     return (
         <div className="mb-4">
             <div className="flex flex-row">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={id}>
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor={id}
+                >
                     {label}:
                 </label>
                 <Link href={`/admin/${href}`} className="text-xs">

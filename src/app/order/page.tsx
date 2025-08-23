@@ -24,13 +24,13 @@ const OrderPage = async () => {
     const addresses = await AddressModel.findAll({
         where: {
             id: userId
-        },
+        }
     })
 
     const profile = await ProfileModel.findOne({
         where: {
             id: userId
-        },
+        }
     })
 
     const user = session.user
@@ -60,9 +60,15 @@ const OrderPage = async () => {
     //     }))
     // }
 
-    return <>
-        <UserOrderForm user={user} addresses={addresses} profile={profile}/>
-    </>
+    return (
+        <>
+            <UserOrderForm
+                user={user}
+                addresses={addresses}
+                profile={profile}
+            />
+        </>
+    )
 }
 
 export default OrderPage

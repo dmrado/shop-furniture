@@ -5,32 +5,32 @@ const styleSeedData = [
         id: 1, // Можно указать ID явно или позволить автоинкременту
         name: 'Классический',
         description: 'Традиционный и элегантный стиль',
-        isActive: true,
+        isActive: true
     },
     {
         id: 2,
         name: 'Современный',
         description: 'Минималистичный и функциональный стиль',
-        isActive: true,
+        isActive: true
     },
     {
         id: 3,
         name: 'Лофт',
         description: 'Индустриальный и урбанистический стиль',
-        isActive: true,
+        isActive: true
     },
     {
         id: 4,
         name: 'Скандинавский',
         description: 'Светлый, уютный и натуральный стиль',
-        isActive: true,
+        isActive: true
     },
     {
         id: 5,
         name: 'Прованс',
         description: 'Романтичный и деревенский стиль',
-        isActive: true,
-    },
+        isActive: true
+    }
     // Добавьте другие стили по мере необходимости
 ]
 

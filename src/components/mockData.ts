@@ -5,7 +5,7 @@ export const previousOrders = [
         title: 'Элитный диван',
         description: 'Удобный и стильный диван для вашего дома.',
         price: 1200,
-        image: '/modulnyj-divan.jpg',
+        image: '/modulnyj-divan.jpg'
     },
     {
         id: 2,
@@ -13,7 +13,7 @@ export const previousOrders = [
         title: 'Кофейный столик',
         description: 'Красивая и функциональная мебель.',
         price: 400,
-        image: '/kofeinii-stolik-elite.webp',
+        image: '/kofeinii-stolik-elite.webp'
     },
     {
         id: 1,
@@ -21,7 +21,7 @@ export const previousOrders = [
         title: 'Элитный диван',
         description: 'Удобный и стильный диван для вашего дома.',
         price: 1200,
-        image: '/modulnyj-divan.jpg',
+        image: '/modulnyj-divan.jpg'
     },
     {
         id: 2,
@@ -29,7 +29,7 @@ export const previousOrders = [
         title: 'Кофейный столик',
         description: 'Красивая и функциональная мебель.',
         price: 400,
-        image: '/kofeinii-stolik-elite.webp',
+        image: '/kofeinii-stolik-elite.webp'
     },
     {
         id: 1,
@@ -37,7 +37,7 @@ export const previousOrders = [
         title: 'Элитный диван',
         description: 'Удобный и стильный диван для вашего дома.',
         price: 1200,
-        image: '/modulnyj-divan.jpg',
+        image: '/modulnyj-divan.jpg'
     },
 
     {
@@ -46,7 +46,7 @@ export const previousOrders = [
         title: 'Славянский шкаф',
         description: 'Красивая и функциональная мебель.',
         price: 2700,
-        image: '/slavianskii-shkaf.jpg',
+        image: '/slavianskii-shkaf.jpg'
     },
     {
         id: 4,
@@ -54,6 +54,6 @@ export const previousOrders = [
         title: 'Тумбочка для славянского шкафа',
         description: 'Красивая и функциональная мебель.',
         price: 300,
-        image: '/tumbochka-for-slavianskii-shkaf.jpg',
-    },
+        image: '/tumbochka-for-slavianskii-shkaf.jpg'
+    }
 ]

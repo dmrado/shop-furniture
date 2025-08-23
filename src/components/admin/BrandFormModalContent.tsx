@@ -2,7 +2,11 @@
 'use client' // Этот компонент должен быть клиентским
 
 import React, { useState, useEffect } from 'react'
-import { createBrand, searchBrandByName, updateBrand } from '@/actions/dictionaryActions'
+import {
+    createBrand,
+    searchBrandByName,
+    updateBrand
+} from '@/actions/dictionaryActions'
 import { DictionaryItem } from '@/db/types/common-types' // Ваши серверные экшены
 import DictionarySearchDeduplicator from '@/components/admin/DictionarySearchDeduplicator'
 
@@ -12,11 +16,19 @@ type BrandFormModalContentProps = {
     initialData?: DictionaryItem | null // Данные для редактирования
 }
 
-const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormModalContentProps) => {
+const BrandFormModalContent = ({
+    onClose,
+    onSuccess,
+    initialData
+}: BrandFormModalContentProps) => {
     const [name, setName] = useState(initialData?.name || '')
-    const [description, setDescription] = useState(initialData?.description || '')
+    const [description, setDescription] = useState(
+        initialData?.description || ''
+    )
     const [isActive, setIsActive] = useState(initialData?.isActive ?? true)
-    const [descriptionCharCount, setDescriptionCharCount] = useState(initialData?.description?.length || 0)
+    const [descriptionCharCount, setDescriptionCharCount] = useState(
+        initialData?.description?.length || 0
+    )
 
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
@@ -41,7 +53,9 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                 // Проверяем дубликат только в режиме создания
                 if (!initialData && exactMatch) {
                     setIsDuplicate(true)
-                    setError('❌ Такой бренд уже существует. Пожалуйста, выберите его из списка.')
+                    setError(
+                        '❌ Такой бренд уже существует. Пожалуйста, выберите его из списка.'
+                    )
                 } else {
                     // если дубликата нет
                     setIsDuplicate(false)
@@ -66,7 +80,9 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
     }
 
     const handleSelectExisting = (brand: DictionaryItem) => {
-        setError('❌ Такой бренд уже существует. Пожалуйста, выберите его из списка.')
+        setError(
+            '❌ Такой бренд уже существует. Пожалуйста, выберите его из списка.'
+        )
         setIsDuplicate(true) // Убираем дубликат
         setSearchResults([]) // Скрываем результаты поиска после выбора
     }
@@ -87,7 +103,9 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
         setError(null) // Сброс ошибок при каждом открытии
     }, [initialData])
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const value = e.target.value
         setDescription(value)
         setDescriptionCharCount(value.length)
@@ -126,7 +144,9 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
     }
 
     return (
-        <> {/* Заменил div на React.Fragment, так как это только содержимое для Modal */}
+        <>
+            {' '}
+            {/* Заменил div на React.Fragment, так как это только содержимое для Modal */}
             <h3 className="text-xl font-bold mb-4">
                 {initialData ? 'Редактировать бренд' : 'Добавить новый бренд'}
             </h3>
@@ -135,8 +155,12 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                     <input type="hidden" name="id" value={initialData.id} />
                 )}
                 <div>
-                    <label htmlFor="brandName" className="block text-sm font-medium text-gray-700">Название
-                        бренда</label>
+                    <label
+                        htmlFor="brandName"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Название бренда
+                    </label>
                     <input
                         onChange={handleNameChange}
                         type="text"
@@ -162,10 +186,13 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                 )}
 
                 <div>
-                    <label htmlFor="brandDescription"
-                        className="block text-sm font-medium text-gray-700">Описание
+                    <label
+                        htmlFor="brandDescription"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Описание
                         <span className="ml-2 text-gray-500 text-xs">
-                                ({descriptionCharCount}/255 символов)
+                            ({descriptionCharCount}/255 символов)
                         </span>
                     </label>
                     <textarea
@@ -193,7 +220,10 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                         className="mr-2 leading-tight"
                         disabled={isLoading}
                     />
-                    <label htmlFor="isActive" className="text-gray-700 text-sm font-bold">
+                    <label
+                        htmlFor="isActive"
+                        className="text-gray-700 text-sm font-bold"
+                    >
                         Активен
                     </label>
                 </div>
@@ -217,7 +247,9 @@ const BrandFormModalContent = ({ onClose, onSuccess, initialData }: BrandFormMod
                         className="button_green px-4 py-2"
                         disabled={isLoading || isDuplicate}
                     >
-                        {isDuplicate ? '🐛' : `${initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅`}
+                        {isDuplicate
+                            ? '🐛'
+                            : `${initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅`}
                     </button>
                 </div>
             </form>

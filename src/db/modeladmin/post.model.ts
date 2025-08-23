@@ -1,8 +1,18 @@
-import { Model, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, DataTypes } from 'sequelize'
+import {
+    Model,
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional,
+    ForeignKey,
+    DataTypes
+} from 'sequelize'
 import { Admin } from './admin.model'
 import { sequelize } from '../connection'
 
-export class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
+export class Post extends Model<
+    InferAttributes<Post>,
+    InferCreationAttributes<Post>
+> {
     declare id: CreationOptional<number>
     declare title: string
     declare text: string
@@ -12,37 +22,42 @@ export class Post extends Model<InferAttributes<Post>, InferCreationAttributes<P
     declare updatedAt: CreationOptional<Date>
 }
 
-Post.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+Post.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        title: {
+            // unique: true,
+            type: DataTypes.STRING
+        },
+        text: {
+            // defaultValue: 'ЭТОТ ПОСТ НЕ ИМЕЛ ТЕКСТА ПРИ СОЗДАНИИ',
+            type: DataTypes.TEXT,
+            defaultValue: '-- default --'
+        },
+        preview: {
+            //для сохранения текста поста без HTML-разметки для PostsPrewiev
+            type: DataTypes.STRING
+        },
+        path: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        createdAt: { type: DataTypes.DATE },
+        updatedAt: { type: DataTypes.DATE }
     },
-    title: {
-        // unique: true,
-        type: DataTypes.STRING
-    },
-    text: {
-        // defaultValue: 'ЭТОТ ПОСТ НЕ ИМЕЛ ТЕКСТА ПРИ СОЗДАНИИ',
-        type: DataTypes.TEXT,
-        defaultValue: '-- default --'
-    },
-    preview: {
-        //для сохранения текста поста без HTML-разметки для PostsPrewiev
-        type: DataTypes.STRING
-    },
-    path: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    createdAt: { type: DataTypes.DATE },
-    updatedAt: { type: DataTypes.DATE }
-},
-{
-    sequelize,
-    tableName: 'posts',
-    timestamps: true
-})
+    {
+        sequelize,
+        tableName: 'posts',
+        timestamps: true
+    }
+)
 Post.belongsTo(Admin)
 
-export type PostPreview = Pick< Post, 'id' | 'title' | 'preview' | 'path' | 'createdAt' >
+export type PostPreview = Pick<
+    Post,
+    'id' | 'title' | 'preview' | 'path' | 'createdAt'
+>

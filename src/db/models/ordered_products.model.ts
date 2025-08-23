@@ -1,9 +1,18 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 import { OrderedProducts } from '../types/interfaces'
 // import {OrderModel} from "@/db/models";
 
-export class OrderedProductsModel extends Model<InferAttributes<OrderedProductsModel>, InferCreationAttributes<OrderedProductsModel>> {
+export class OrderedProductsModel extends Model<
+    InferAttributes<OrderedProductsModel>,
+    InferCreationAttributes<OrderedProductsModel>
+> {
     declare id: CreationOptional<number>
     declare orderId: number
     declare product: number
@@ -16,28 +25,28 @@ OrderedProductsModel.init(
         id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         orderId: {
             type: DataTypes.BIGINT,
-            allowNull: false,
+            allowNull: false
         },
         product: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         quantity: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         status: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },
     {
         sequelize,
-        tableName: 'ordered_products',
+        tableName: 'ordered_products'
     }
 )
 //иначе не цепляет внешний ключ если в index.ts только

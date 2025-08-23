@@ -16,7 +16,7 @@ import CartTotalAmount from '@/components/cart/CartTotalAmount'
 
 const Header = () => {
     // для мобильного меню
-    const [ isOpen, setIsOpen ] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     // todo предотвратить для иконок "залипание" состояния React попробуй debounce
     // Используем хук для каждой иконки
@@ -37,12 +37,12 @@ const Header = () => {
     } = useDebouncedHover(false, 100)
 
     // для подменю в десктопном меню
-    const [ activeMenu, setActiveMenu ] = useState<string | null>(null)
-    const [ menuTimer, setMenuTimer ] = useState<NodeJS.Timeout | null>(null)
+    const [activeMenu, setActiveMenu] = useState<string | null>(null)
+    const [menuTimer, setMenuTimer] = useState<NodeJS.Timeout | null>(null)
 
     // для аккордеона в мобильном меню
-    const [ activeMenuItem, setActiveMenuItem ] = useState<string | null>(null)
-    const [ hoveredItem, setHoveredItem ] = useState<string | null>(null)
+    const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null)
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
     // const [ session, setSession ] = useState(null)
 
@@ -62,27 +62,27 @@ const Header = () => {
         {
             name: 'Каталог',
             href: '/category',
-            subItems: [ 'Мебель', 'Декор', 'Текстиль' ]
+            subItems: ['Мебель', 'Декор', 'Текстиль']
         },
         {
             name: 'Кухни',
             href: '/category/kitchen',
-            subItems: [ 'Модульные кухни', 'Аксессуары' ]
+            subItems: ['Модульные кухни', 'Аксессуары']
         },
         {
             name: 'Свет',
             href: '/category/smartphones',
-            subItems: [ 'Люстры', 'Торшеры', 'Бра' ]
+            subItems: ['Люстры', 'Торшеры', 'Бра']
         },
         {
             name: 'Диваны',
             href: '/category/mens-clothing',
-            subItems: [ 'Кожаные', 'Тканевые' ]
+            subItems: ['Кожаные', 'Тканевые']
         },
         {
             name: 'Декор',
             href: '/category/computers',
-            subItems: [ 'Картины', 'Зеркала' ]
+            subItems: ['Картины', 'Зеркала']
         }
     ]
 

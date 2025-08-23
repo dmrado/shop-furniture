@@ -19,7 +19,9 @@ import { CategoryModel } from '@/db/models/category.model'
 //     }
 // }
 
-export const getCategoryParents = async (categoryId: number): Promise<any[]> => {
+export const getCategoryParents = async (
+    categoryId: number
+): Promise<any[]> => {
     const parents = []
     let category = await CategoryModel.findByPk(categoryId)
 
@@ -32,40 +34,46 @@ export const getCategoryParents = async (categoryId: number): Promise<any[]> => 
     return parents
 }
 
-export const getChildrenIds = async (categories: any[]):Promise<number[]> => {
+export const getChildrenIds = async (categories: any[]): Promise<number[]> => {
     if (categories.length === 0) {
         return []
     }
 
     const directChildren = categories.reduce(
-        (acc, category) => [ ...acc, ...(category?.children ?? []) ],
+        (acc, category) => [...acc, ...(category?.children ?? [])],
         []
     )
     return [
-        ...categories.map(cat => cat.id),
+        ...categories.map((cat) => cat.id),
         // ...directChildren.map(child => child.id),
         ...(await getChildrenIds(directChildren))
     ]
 }
 
 //Наиболее эффективный способ получения дерева категорий можно использовать один запрос с включением (include)
-export const getCategoryChildren = async (categoryId: number | null = null): Promise<any[]> => {
+export const getCategoryChildren = async (
+    categoryId: number | null = null
+): Promise<any[]> => {
     const categories = await CategoryModel.findAll({
         where: {
             parentId: categoryId
         },
-        include: [{
-            model: CategoryModel,
-            as: 'children',
-            include: [{
+        include: [
+            {
                 model: CategoryModel,
-                as: 'children'
-                // Можно добавить больше уровней вложенности при необходимости
-            }]
-        }]
+                as: 'children',
+                include: [
+                    {
+                        model: CategoryModel,
+                        as: 'children'
+                        // Можно добавить больше уровней вложенности при необходимости
+                    }
+                ]
+            }
+        ]
     })
 
-    return categories.map(category => category.toJSON())
+    return categories.map((category) => category.toJSON())
 }
 export const getCategory = async (categorySlug: string) => {
     return await CategoryModel.findOne({

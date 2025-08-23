@@ -49,7 +49,7 @@ const CartTotal = () => {
         selectAll,
         unselectAll,
         selectedItems,
-        deleteSelectedCartRows,
+        deleteSelectedCartRows
     } = useCartContext()
 
     // Расчет общей суммы
@@ -65,7 +65,7 @@ const CartTotal = () => {
             await navigator.share({
                 title: 'Моя корзина',
                 text: `Товаров в корзине: ${count}`,
-                url: window.location.href,
+                url: window.location.href
             })
         } catch (error) {
             console.error('Ошибка при попытке поделиться:', error)
@@ -94,7 +94,9 @@ const CartTotal = () => {
                                 type="checkbox"
                                 className="rounded"
                                 onChange={(e) =>
-                                    e.target.checked ? selectAll() : unselectAll()
+                                    e.target.checked
+                                        ? selectAll()
+                                        : unselectAll()
                                 }
                             />
                             <span
@@ -103,13 +105,17 @@ const CartTotal = () => {
                                 aria-label="select all"
                                 className="text-xl text-blue-500"
                             >
-                ☑️
+                                ☑️
                             </span>
                         </label>
                         <button
                             className="px-4 py-2 rounded transition-all duration-200 text-red-600 hover:bg-red-50 active:bg-red-100 disabled:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
                             onClick={() => {
-                                if (confirm('Вы уверены, что хотите удалить выбранные?')) {
+                                if (
+                                    confirm(
+                                        'Вы уверены, что хотите удалить выбранные?'
+                                    )
+                                ) {
                                     deleteSelectedCartRows()
                                 }
                             }}
@@ -121,7 +127,7 @@ const CartTotal = () => {
                                 aria-label="delete selected"
                                 className="text-xl"
                             >
-                🗑️
+                                🗑️
                             </span>
                         </button>
 
@@ -135,7 +141,7 @@ const CartTotal = () => {
                                 aria-label="share"
                                 className="text-xl"
                             >
-                ↗️
+                                ↗️
                             </span>
                         </button>
                     </div>
@@ -143,7 +149,7 @@ const CartTotal = () => {
 
                 <div className="mt-6 text-right">
                     <div className="text-2xl text-green-600 font-bold">
-                        Итого: <CartTotalAmount/> ₽
+                        Итого: <CartTotalAmount /> ₽
                     </div>
                     {/*<div className="flex justify-end font-bold">*/}
                     {/*    <span>Общая сумма:&nbsp;</span>*/}
@@ -163,13 +169,9 @@ const CartTotal = () => {
                         Товарных позиций: {isLoading ? '...' : count}
                     </div>
 
-                    <button
-                        className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
-                        <Link href='/order'>
-                            Оформить доставку
-                        </Link>
+                    <button className="w-full sm:w-60 border border-[#E99C28] text-[#383838] hover:text-white px-6 py-3 mt-6 font-medium hover:bg-[#E99C28] transition-colors duration-200 cursor-pointer">
+                        <Link href="/order">Оформить доставку</Link>
                     </button>
-
                 </div>
             </div>
         </>

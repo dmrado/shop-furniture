@@ -6,15 +6,14 @@ import { FILE_LIMIT, TITLE_MIN_LENGTH } from '@/app/constants.ts'
 import { sendMail } from '@/actions/nodemailer.ts'
 import { validateGoogleRecaptcha } from '@/actions/googleRecaptcha.ts'
 
-class ValidationError extends Error {
-}
+class ValidationError extends Error {}
 
 type ContactData = {
-    name: string,
-    email: string,
-    title: string,
-    message: string,
-    recaptchaToken: string,
+    name: string
+    email: string
+    title: string
+    message: string
+    recaptchaToken: string
 }
 const cleanFormData = (formData: FormData): ContactData => {
     const name = formData.get('name')
@@ -23,7 +22,13 @@ const cleanFormData = (formData: FormData): ContactData => {
     const message = formData.get('message')
     const recaptchaToken = formData.get('recaptcha_token') ?? ''
 
-    if (typeof recaptchaToken !== 'string' || typeof name !== 'string' || typeof email !== 'string' || typeof title !== 'string' || typeof message !== 'string') {
+    if (
+        typeof recaptchaToken !== 'string' ||
+        typeof name !== 'string' ||
+        typeof email !== 'string' ||
+        typeof title !== 'string' ||
+        typeof message !== 'string'
+    ) {
         throw new ValidationError('Filedata in text fields')
     }
     if (!title || !message || !name || !email) {
@@ -40,11 +45,15 @@ const cleanFormData = (formData: FormData): ContactData => {
     return { name, email, title, message, recaptchaToken }
 }
 
-export const handleContactForm = async (formState: {message: string}, formData: FormData) => {
+export const handleContactForm = async (
+    formState: { message: string },
+    formData: FormData
+) => {
     try {
-        const { name, email, title, message, recaptchaToken } = cleanFormData(formData)
+        const { name, email, title, message, recaptchaToken } =
+            cleanFormData(formData)
         console.log('name, email, title, message', name, email, title, message)
-        if (!await validateGoogleRecaptcha(recaptchaToken)) {
+        if (!(await validateGoogleRecaptcha(recaptchaToken))) {
             return { message: 'Мы не смогли проверить что вы не робот' }
         }
         await sendMail({ name, email, title, message })

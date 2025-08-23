@@ -5,7 +5,9 @@ async function GET(request: Request) {
     const params = new URLSearchParams(queryString)
     const code = params.get('code') || 500
     const message = params.get('message')
-    return new NextResponse('Error occurred: ' + message, { status: Number(code) })
+    return new NextResponse('Error occurred: ' + message, {
+        status: Number(code)
+    })
 }
 
 export { GET }

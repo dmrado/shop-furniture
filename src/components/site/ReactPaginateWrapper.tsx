@@ -6,20 +6,23 @@ import { useEffect, useState } from 'react'
 //  опциональный пропс onPageChange. Если этот пропс передан, компонент будет использовать его для обработки смены страницы. Если нет, он вернется к поведению по умолчанию, использующему router.push.
 
 type ReactPaginateWrapperProps = {
-    pages: number; // Общее количество страниц (переименовано из totalPages для соответствия вашему коду)
-    currentPage: number; // Текущая страница (1-индексированная)
-    onPageChange?: (selectedPage: { selected: number }) => void; // Опциональный колбэк для внешней обработки
-};
+    pages: number // Общее количество страниц (переименовано из totalPages для соответствия вашему коду)
+    currentPage: number // Текущая страница (1-индексированная)
+    onPageChange?: (selectedPage: { selected: number }) => void // Опциональный колбэк для внешней обработки
+}
 
-const ReactPaginateWrapper = ({ pages, currentPage, onPageChange }: ReactPaginateWrapperProps) => {
-
+const ReactPaginateWrapper = ({
+    pages,
+    currentPage,
+    onPageChange
+}: ReactPaginateWrapperProps) => {
     // ReactPaginate использует 0-индексацию, поэтому currentPage - 1
-    const [ activePage, setActivePage ] = useState(currentPage - 1)
+    const [activePage, setActivePage] = useState(currentPage - 1)
     const router = useRouter()
     // Состояние для количества страниц, отображаемых в диапазоне
-    const [ pageRange, setPageRange ] = useState(5)
+    const [pageRange, setPageRange] = useState(5)
     // Состояние для количества страниц, отображаемых по краям
-    const [ marginPages, setMarginPages ] = useState(2)
+    const [marginPages, setMarginPages] = useState(2)
 
     useEffect(() => {
         setActivePage(currentPage - 1)
@@ -41,7 +44,7 @@ const ReactPaginateWrapper = ({ pages, currentPage, onPageChange }: ReactPaginat
 
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
-    }, [ currentPage ]) // currentPage добавлено в зависимости, чтобы пересчитывать activePage
+    }, [currentPage]) // currentPage добавлено в зависимости, чтобы пересчитывать activePage
 
     console.log('Wrapper - pages:', pages, 'currentPage:', currentPage)
 
@@ -64,17 +67,24 @@ const ReactPaginateWrapper = ({ pages, currentPage, onPageChange }: ReactPaginat
             pageRangeDisplayed={pageRange}
             onPageChange={handlePageClick}
             forcePage={activePage} // Принудительно устанавливаем активную страницу
-            containerClassName={'flex justify-center gap-1 sm:gap-2 mt-8 px-2 sm:px-0'} // Уменьшаем gap и добавляем горизонтальный padding
-            pageClassName={'rounded border hover:bg-indigo-50 text-sm sm:text-base'} // Уменьшаем размер текста на мобильных
+            containerClassName={
+                'flex justify-center gap-1 sm:gap-2 mt-8 px-2 sm:px-0'
+            } // Уменьшаем gap и добавляем горизонтальный padding
+            pageClassName={
+                'rounded border hover:bg-indigo-50 text-sm sm:text-base'
+            } // Уменьшаем размер текста на мобильных
             pageLinkClassName={'px-2 py-1 block'} // Уменьшаем padding на мобильных
             activeClassName={'bg-[#E99C28] text-white'}
-            previousClassName={'rounded border hover:bg-indigo-50 text-sm sm:text-base'} // Уменьшаем размер текста
+            previousClassName={
+                'rounded border hover:bg-indigo-50 text-sm sm:text-base'
+            } // Уменьшаем размер текста
             previousLinkClassName={'px-2 py-1 block'} // Уменьшаем padding
-            nextClassName={'rounded border hover:bg-indigo-50 text-sm sm:text-base'} // Уменьшаем размер текста
+            nextClassName={
+                'rounded border hover:bg-indigo-50 text-sm sm:text-base'
+            } // Уменьшаем размер текста
             nextLinkClassName={'px-2 py-1 block'} // Уменьшаем padding
             disabledClassName={'opacity-50 cursor-not-allowed'}
             breakClassName={'px-2 py-1 text-sm sm:text-base'} // Уменьшаем padding и размер текста
-
         />
     )
 }

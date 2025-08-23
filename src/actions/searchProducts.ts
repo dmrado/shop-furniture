@@ -29,11 +29,15 @@ export async function getProductList(
             ...(filters.collectionId && { collectionId: filters.collectionId }),
             ...(filters.countryId && { countryId: filters.countryId }),
             ...(filters.styleId && { styleId: filters.styleId }),
-            ...(filters.nameQuery && { name: { [Op.like]: `%${filters.nameQuery}%` } }),
+            ...(filters.nameQuery && {
+                name: { [Op.like]: `%${filters.nameQuery}%` }
+            }),
             ...(filters.articulQuery && {
                 [Op.or]: {
                     articul: { [Op.like]: `%${filters.articulQuery}%` },
-                    '$variants.articul$': { [Op.like]: `%${filters.articulQuery}%` }
+                    '$variants.articul$': {
+                        [Op.like]: `%${filters.articulQuery}%`
+                    }
                 }
             })
         }
@@ -50,7 +54,9 @@ export async function getProductList(
                 required: !!filters.categoryId, // Делаем обязательным только если есть фильтр, логика: filters.categoryId ? true : false
                 through: {
                     where: {
-                        ...(filters.categoryId && { categoryId: filters.categoryId }) // <-- Условие фильтрации внутри include
+                        ...(filters.categoryId && {
+                            categoryId: filters.categoryId
+                        }) // <-- Условие фильтрации внутри include
                     }
                 }
             }
@@ -69,7 +75,7 @@ export async function getProductList(
             include: includeConditions,
             limit: limit,
             offset: offset,
-            order: [ [ 'createdAt', 'DESC' ] ],
+            order: [['createdAt', 'DESC']],
             // attributes: ['id', 'name', 'descriptionShort', 'isNew'],
             distinct: true, // Возвращает только уникальные строки. Важно для запросов с LEFT JOIN, чтобы избежать дублирования продуктов из-за вариантови получить правильный totalCount.
             col: 'id', // Считать уникальные продукты по их ID

@@ -7,8 +7,17 @@ import Agreement from '@/components/site/Agreement'
 import GoogleCaptcha from '@/components/site/GoogleCaptcha'
 // import { createInstantUserAction } from '@/actions/userActions'
 
-export const InputField = ({ label, autoComplete, type, value, onChange, required = true, name, id }) => {
-    const [ isFocused, setIsFocused ] = useState(false)
+export const InputField = ({
+    label,
+    autoComplete,
+    type,
+    value,
+    onChange,
+    required = true,
+    name,
+    id
+}) => {
+    const [isFocused, setIsFocused] = useState(false)
     // todo: make autocomplete
     return (
         <div className="relative">
@@ -27,7 +36,8 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
                     ${value ? 'pt-4' : ''}
                     focus:pt-4 focus:border-indigo-600`}
             />
-            <label htmlFor={id}
+            <label
+                htmlFor={id}
                 className={`absolute left-4 transition-all pointer-events-none
                     ${value || isFocused ? 'text-xs top-1' : 'text-base top-3'}
                     ${isFocused ? 'text-indigo-600' : 'text-gray-500'}`}
@@ -38,21 +48,18 @@ export const InputField = ({ label, autoComplete, type, value, onChange, require
     )
 }
 //пользователь хочет купить товар мгновенно, он отмечает checked в Agreement, ему НЕ заводится строка в модели user. На этой форме визитер делает заказ без регистрации, данные отправляются только через nodeMailerInstantOrder админу. Структура офрмления мгновенного заказа подразумевает активацию кногпки "Отправить" только в случае согласия с политикой.
-export const InstantOrderForm = ({ onClose }: {
-    onClose: () => void;
-}) => {
-
-    const [ captchaToken, setCaptchaToken ] = useState<string>('')
+export const InstantOrderForm = ({ onClose }: { onClose: () => void }) => {
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     // для Disclosure согласия на обработку перс данных
     // хранит состояние самого чекбокса
-    const [ agreed, setAgreed ] = useState<boolean>(false)
+    const [agreed, setAgreed] = useState<boolean>(false)
 
     // для показа сообщения пользователю об успехе отправки заказа перед закрытиекм модального окна 2 сек
-    const [ success, setSuccess ] = useState<boolean>(false)
+    const [success, setSuccess] = useState<boolean>(false)
 
     // в момент отправки меняет надпись на кнопке
-    const [ isClosing, setIsClosing ] = useState<boolean>(false)
+    const [isClosing, setIsClosing] = useState<boolean>(false)
 
     //+++++++start validation формы отправки мгновенного заказа+++++
     class ValidationError extends Error {
@@ -63,7 +70,6 @@ export const InstantOrderForm = ({ onClose }: {
     }
 
     const onSubmit = async (formData: FormData) => {
-
         const name = formData.get('name')
         const phone = formData.get('phone')
 
@@ -77,7 +83,9 @@ export const InstantOrderForm = ({ onClose }: {
             throw new ValidationError('Filedata in text fields')
         }
         if (!name && !phone) {
-            throw new ValidationError('Все обязательные поля должны быть заполнены')
+            throw new ValidationError(
+                'Все обязательные поля должны быть заполнены'
+            )
         }
         if (!captchaToken) {
             alert('Пожалуйста, подтвердите, что вы не робот')
@@ -91,20 +99,26 @@ export const InstantOrderForm = ({ onClose }: {
         // параллельная отправка почты и сохранения в БД
         try {
             setIsClosing(true)
-            const [ mailSuccess, dbResult ] = await Promise.all([
-                nodeMailerInstantOrder({ name, phone }),
+            const [mailSuccess, dbResult] = await Promise.all([
+                nodeMailerInstantOrder({ name, phone })
                 // createInstantUserAction({name, phone}) //заглушка функции, ее можно будет активировать если захотим в будущем все же делать упрощенную регистрацию
             ])
             if (mailSuccess) {
                 setSuccess(true)
-                alert('Заявка успешно отправлена, ожидайте звонка для оформления заказа!')
+                alert(
+                    'Заявка успешно отправлена, ожидайте звонка для оформления заказа!'
+                )
                 // setCaptchaToken('');
             } else {
-                alert('Возникла проблема при отправке заявки. Пожалуйста, попробуйте позже.')
+                alert(
+                    'Возникла проблема при отправке заявки. Пожалуйста, попробуйте позже.'
+                )
             }
         } catch (error) {
             console.error('Ошибка:', error)
-            alert('Произошла ошибка при обработке заявки. Пожалуйста, попробуйте позже.')
+            alert(
+                'Произошла ошибка при обработке заявки. Пожалуйста, попробуйте позже.'
+            )
         }
         // это дублирующий варинат блока try выше последовательной отправки письма и сохраненипыя в БД, не проверял какой работает лучше.
         // send by mail independently
@@ -119,78 +133,79 @@ export const InstantOrderForm = ({ onClose }: {
         setIsClosing(false)
     }
 
-    return <>
-        <form className="space-y-4" action={onSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <InputField
-                    name="name"
-                    defaultValue=""
-                    label="Имя*"
-                    id="given-name"
-                    autoComplete="given-name"
-                    autocomplete="on"
-                    type="text"
-                />
-                <InputField
-                    name="phone"
-                    defaultValue=""
-                    label="Телефон*"
-                    id="tel"
-                    autoComplete="tel"
-                    type="tel"
-                    pattern="[0-9]*"
-                />
-            </div>
-
-            <input hidden value={captchaToken}/>
-
-            {/* Accordion section */}
-            <Agreement
-                setAgreed={setAgreed}
-                agreed={agreed}
-            />
-
-            {/* Buttons section */}
-            <div
-                className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
-                <div className="flex justify-center">
-                    <GoogleCaptcha onTokenChange={(token) => {
-                        setCaptchaToken(token)
-                    }}/>
+    return (
+        <>
+            <form className="space-y-4" action={onSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <InputField
+                        name="name"
+                        defaultValue=""
+                        label="Имя*"
+                        id="given-name"
+                        autoComplete="given-name"
+                        autocomplete="on"
+                        type="text"
+                    />
+                    <InputField
+                        name="phone"
+                        defaultValue=""
+                        label="Телефон*"
+                        id="tel"
+                        autoComplete="tel"
+                        type="tel"
+                        pattern="[0-9]*"
+                    />
                 </div>
 
-                {success && <Success/>}
+                <input hidden value={captchaToken} />
 
-                <button
-                    type="button"
-                    onClick={() => {
-                        onClose()
-                        setAgreed(false)
-                    }}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
-                >
-                    Отмена
-                </button>
+                {/* Accordion section */}
+                <Agreement setAgreed={setAgreed} agreed={agreed} />
 
-                <button
-                    type="submit"
-                    disabled={!agreed}
-                    onClick={() => setTimeout(() => {
-                        onClose()
-                    }, 2000)}
+                {/* Buttons section */}
+                <div className="flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
+                    <div className="flex justify-center">
+                        <GoogleCaptcha
+                            onTokenChange={(token) => {
+                                setCaptchaToken(token)
+                            }}
+                        />
+                    </div>
 
-                    className={`
+                    {success && <Success />}
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            onClose()
+                            setAgreed(false)
+                        }}
+                        className="w-full sm:w-auto px-6 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200"
+                    >
+                        Отмена
+                    </button>
+
+                    <button
+                        type="submit"
+                        disabled={!agreed}
+                        onClick={() =>
+                            setTimeout(() => {
+                                onClose()
+                            }, 2000)
+                        }
+                        className={`
                                     w-full sm:w-auto px-6 py-2.5 rounded-lg transition-all duration-200
-                                    ${agreed
-        ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
-        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-}
+                                    ${
+                                        agreed
+                                            ? 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white'
+                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    }
                                 `}
-                >
-                    {isClosing ? 'Отправка...' : 'Отправить'}
-                </button>
-            </div>
-        </form>
-
-    </>
+                    >
+                        {isClosing ? 'Отправка...' : 'Отправить'}
+                    </button>
+                </div>
+            </form>
+        </>
+    )
 }

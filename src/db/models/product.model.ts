@@ -1,18 +1,29 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 import { StyleDTO, StyleModel } from '@/db/models/style.model'
 import { CollectionModel } from '@/db/models/collection.model'
 import { BrandModel } from '@/db/models/brand.model'
 import { CountryModel } from '@/db/models/country.model'
 // import { CategoryModel } from '@/db/models/category.model'
-import { ProductVariantDTO, ProductVariantModel } from '@/db/models/product_variant.model'
+import {
+    ProductVariantDTO,
+    ProductVariantModel
+} from '@/db/models/product_variant.model'
 import { CategoryDTO } from '@/db/models/category.model'
 import { ImageDTO } from '@/db/models/image.model'
 
-export interface ProductDTO extends InferAttributes<ProductModel> {
-}
+export interface ProductDTO extends InferAttributes<ProductModel> {}
 
-export class ProductModel extends Model<InferAttributes<ProductModel>, InferCreationAttributes<ProductModel>> {
+export class ProductModel extends Model<
+    InferAttributes<ProductModel>,
+    InferCreationAttributes<ProductModel>
+> {
     declare id: CreationOptional<number>
 
     // declare categoryId: number
@@ -43,7 +54,7 @@ ProductModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         // categoryId: {
         //     type: DataTypes.INTEGER,
@@ -59,7 +70,7 @@ ProductModel.init(
             allowNull: false,
             references: {
                 model: StyleModel,
-                key: 'id',
+                key: 'id'
                 // onDelete: 'RESTRICT',
                 // defaultValue: 1
             }
@@ -90,37 +101,37 @@ ProductModel.init(
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         articul: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         sku: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         descriptionShort: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         descriptionLong: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: false
         },
         isNew: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: false,
+            defaultValue: false
         },
         isActive: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true
-        },
+        }
     },
     {
         sequelize,
-        tableName: 'products',
+        tableName: 'products'
     }
 )

@@ -10,15 +10,15 @@ const userOrderHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             service: 'gmail', // или другой почтовый сервис
             auth: {
                 user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
+                pass: process.env.EMAIL_PASS
+            }
         })
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_RECEIVER,
             subject: 'Новый заказ',
-            text: `Получатель: ${fullName}nТелефон: ${phoneNumber}nАдрес: ${selectedAddress}`,
+            text: `Получатель: ${fullName}nТелефон: ${phoneNumber}nАдрес: ${selectedAddress}`
         }
 
         try {
@@ -29,7 +29,7 @@ const userOrderHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             res.status(500).json({ message: 'Ошибка при отправке заказа' })
         }
     } else {
-        res.setHeader('Allow', [ 'POST' ])
+        res.setHeader('Allow', ['POST'])
         res.status(405).end(`Method ${req.method} Not Allowed`)
     }
 }

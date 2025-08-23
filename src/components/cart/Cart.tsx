@@ -12,11 +12,11 @@ const Cart = () => {
 
     return (
         <ul>
-            {cartRows.map(cart =>
+            {cartRows.map((cart) => (
                 <li key={cart.id}>
-                    <CartRow cartRow={cart}/>
+                    <CartRow cartRow={cart} />
                 </li>
-            )}
+            ))}
         </ul>
     )
 }

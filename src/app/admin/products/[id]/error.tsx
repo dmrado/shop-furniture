@@ -12,7 +12,7 @@ export default function Error({
     useEffect(() => {
         // Optionally log the error to an error reporting service
         console.error(error)
-    }, [ error ])
+    }, [error])
 
     return (
         <main className="flex ">

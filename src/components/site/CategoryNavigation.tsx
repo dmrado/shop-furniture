@@ -3,9 +3,11 @@ import Link from 'next/link'
 const CategoryNavigation = ({ categories }) => {
     return (
         <nav className="bg-gray-50 p-4 rounded-lg mb-8">
-            <h2 className="text-lg font-medium mb-3">Навигация по категориям</h2>
+            <h2 className="text-lg font-medium mb-3">
+                Навигация по категориям
+            </h2>
             <ul className="space-y-2">
-                {categories.map(category => (
+                {categories.map((category) => (
                     <li key={category.id}>
                         <Link
                             href={`/category/${category.slug}`}
@@ -16,7 +18,7 @@ const CategoryNavigation = ({ categories }) => {
 
                         {category.children && category.children.length > 0 && (
                             <ul className="ml-4 mt-1 space-y-1">
-                                {category.children.map(subcategory => (
+                                {category.children.map((subcategory) => (
                                     <li key={subcategory.id}>
                                         <Link
                                             href={`/category/${category.slug}/${subcategory.slug}`}
@@ -26,20 +28,29 @@ const CategoryNavigation = ({ categories }) => {
                                         </Link>
 
                                         {/* Отображение подкатегорий третьего уровня */}
-                                        {subcategory.children && subcategory.children.length > 0 && (
-                                            <ul className="ml-3 mt-1">
-                                                {subcategory.children.map(thirdLevel => (
-                                                    <li key={thirdLevel.id}>
-                                                        <Link
-                                                            href={`/category/${category.slug}/${subcategory.slug}/${thirdLevel.slug}`}
-                                                            className="text-gray-600 hover:underline text-xs"
-                                                        >
-                                                            {thirdLevel.name}
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
+                                        {subcategory.children &&
+                                            subcategory.children.length > 0 && (
+                                                <ul className="ml-3 mt-1">
+                                                    {subcategory.children.map(
+                                                        (thirdLevel) => (
+                                                            <li
+                                                                key={
+                                                                    thirdLevel.id
+                                                                }
+                                                            >
+                                                                <Link
+                                                                    href={`/category/${category.slug}/${subcategory.slug}/${thirdLevel.slug}`}
+                                                                    className="text-gray-600 hover:underline text-xs"
+                                                                >
+                                                                    {
+                                                                        thirdLevel.name
+                                                                    }
+                                                                </Link>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            )}
                                     </li>
                                 ))}
                             </ul>

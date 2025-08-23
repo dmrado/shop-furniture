@@ -16,8 +16,7 @@ import {
 } from 'sequelize'
 import { ProductVariantModel } from '@/db/models'
 
-class ValidationError extends Error {
-}
+class ValidationError extends Error {}
 
 const saveFile = async (file: File, productName: string): Promise<string> => {
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -62,7 +61,9 @@ const saveFile = async (file: File, productName: string): Promise<string> => {
         })
 
     if (!resizedBuffer) {
-        throw new ValidationError('Формат файла не поддерживается или обработка изображения не удалась.')
+        throw new ValidationError(
+            'Формат файла не поддерживается или обработка изображения не удалась.'
+        )
     }
 
     // Сохранение обработанного буфера в файл
@@ -155,19 +156,29 @@ const cleanFormData = (formData: FormData): ProductFormData => {
     //fixme требуется что бы brandId collectionId countryId styleId мог быть null в БД иначе см ниже
     //более мягкая проверка (старая ниже) иначе падает сохранение продукта если каждый раз не выбирать все поля форме, так как форма незримо отправляет пустую строку соответствующую "все бренды"
     if (parsedBrandId !== null && parsedBrandId <= 0) {
-        throw new ValidationError('ID бренда не может быть нулем или отрицательным')
+        throw new ValidationError(
+            'ID бренда не может быть нулем или отрицательным'
+        )
     }
     if (parsedCollectionId !== null && parsedCollectionId <= 0) {
-        throw new ValidationError('ID коллекции не может быть нулем или отрицательным')
+        throw new ValidationError(
+            'ID коллекции не может быть нулем или отрицательным'
+        )
     }
     if (parsedCountryId !== null && parsedCountryId <= 0) {
-        throw new ValidationError('ID страны не может быть нулем или отрицательным')
+        throw new ValidationError(
+            'ID страны не может быть нулем или отрицательным'
+        )
     }
     if (parsedStyleId !== null && parsedStyleId <= 0) {
-        throw new ValidationError('ID стиля не может быть нулем или отрицательным')
+        throw new ValidationError(
+            'ID стиля не может быть нулем или отрицательным'
+        )
     }
     if (parsedCategoryId === null || parsedCategoryId <= 0) {
-        throw new ValidationError('ID категории не может быть пустым или отрицательным.')
+        throw new ValidationError(
+            'ID категории не может быть пустым или отрицательным.'
+        )
     }
 
     // if (
@@ -294,7 +305,9 @@ export const handleForm = async (formData: FormData) => {
                 where: { articul: productData.articul }
             })
             if (articulExists && articulExists.id !== productData.id) {
-                throw new Error(`Артикул ${productData.articul} уже используется другим продуктом.`)
+                throw new Error(
+                    `Артикул ${productData.articul} уже используется другим продуктом.`
+                )
             }
 
             // Обновляем данные
@@ -305,7 +318,9 @@ export const handleForm = async (formData: FormData) => {
             // Находим обновлённый продукт, чтобы работать с ассоциациями
             product = await ProductModel.findByPk(productData.id)
             if (!product) {
-                throw new Error('Не удалось найти обновленный продукт для работы с категориями.')
+                throw new Error(
+                    'Не удалось найти обновленный продукт для работы с категориями.'
+                )
             }
             console.log(`Продукт с ID ${product.id} был обновлен.`)
         } else {
@@ -314,7 +329,9 @@ export const handleForm = async (formData: FormData) => {
                 where: { articul: productData.articul }
             })
             if (existingArticul) {
-                throw new Error(`Продукт с артикулом ${productData.articul} уже существует.`)
+                throw new Error(
+                    `Продукт с артикулом ${productData.articul} уже существует.`
+                )
             }
 
             product = await ProductModel.create(productDataToSave)
@@ -323,8 +340,10 @@ export const handleForm = async (formData: FormData) => {
 
         // Работаем с категориями, так как "product" теперь всегда полноценный экземпляр
         if (productData.categoryId) {
-            console.log(`Попытка привязать категорию с ID: ${productData.categoryId} к продукту ID: ${product.id}`)
-            await product.setCategories([ productData.categoryId ])
+            console.log(
+                `Попытка привязать категорию с ID: ${productData.categoryId} к продукту ID: ${product.id}`
+            )
+            await product.setCategories([productData.categoryId])
             console.log('Категория успешно привязана.')
         }
 
@@ -338,7 +357,10 @@ export const handleForm = async (formData: FormData) => {
             // Теперь передаём имя продукта в saveFile
             const fileName = await saveFile(formFile, productData.name)
             // Обновляем запись в БД, добавляя путь к изображению
-            await ProductModel.update({ path: `/img/${fileName}` }, { where: { id: product.id } })
+            await ProductModel.update(
+                { path: `/img/${fileName}` },
+                { where: { id: product.id } }
+            )
         }
 
         //todo разобраться с хранением ссылок на картинки в БД и раскомментировать

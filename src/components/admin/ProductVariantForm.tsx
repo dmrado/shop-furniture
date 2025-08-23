@@ -1,7 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { handleProductVariantForm as handleProductVariantFormAction } from '@/actions/handleProductVariantForm.ts'
-import { getActiveColors, getActiveMaterials } from '@/actions/dictionaryActions.ts'
+import {
+    getActiveColors,
+    getActiveMaterials
+} from '@/actions/dictionaryActions.ts'
 
 // Типы для элементов справочника (Product, Color)
 type DictionaryItem = {
@@ -26,37 +29,61 @@ type ProductVariantFormProps = {
     onCancel?: () => void // функция, вызываемая при отмене редактирования
 }
 
-const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: ProductVariantFormProps) => {
+const ProductVariantForm = ({
+    productVariant,
+    productId,
+    onSuccess,
+    onCancel
+}: ProductVariantFormProps) => {
     console.log('ProductVariantForm received productVariant:', productVariant)
 
     // Инициализируем состояния, используя данные из productVariant или значения по умолчанию
     // Используем ?? '' для числовых полей, чтобы избежать 0 при отсутствии значения
-    const [ isActive, setIsActive ] = useState(productVariant?.isActive ?? true)
-    const [ articul, setArticul ] = useState(productVariant?.articul ?? '')
+    const [isActive, setIsActive] = useState(productVariant?.isActive ?? true)
+    const [articul, setArticul] = useState(productVariant?.articul ?? '')
 
     // ID внешних ключей
-    const [ colorId, setColorId ] = useState(productVariant?.colorId ?? '') // Используем '' для пустого/невыбранного
-    const [ materialId, setMaterialId ] = useState(productVariant?.materialId ?? '')
+    const [colorId, setColorId] = useState(productVariant?.colorId ?? '') // Используем '' для пустого/невыбранного
+    const [materialId, setMaterialId] = useState(
+        productVariant?.materialId ?? ''
+    )
 
     // Числовые поля - могут быть числом или пустой строкой
-    const [ length, setLength ] = useState<number | ''>(productVariant?.length ?? '')
-    const [ width, setWidth ] = useState<number | ''>(productVariant?.width ?? '')
-    const [ height, setHeight ] = useState<number | ''>(productVariant?.height ?? '')
-    const [ box_length, setBoxLength ] = useState<number | ''>(productVariant?.box_length ?? '')
-    const [ box_width, setBoxWidth ] = useState<number | ''>(productVariant?.box_width ?? '')
-    const [ box_height, setBoxHeight ] = useState<number | ''>(productVariant?.box_height ?? '')
-    const [ box_weight, setBoxWeight ] = useState<number | ''>(productVariant?.box_weight ?? '')
-    const [ weight, setWeight ] = useState<number | ''>(productVariant?.weight ?? '')
-    const [ price, setPrice ] = useState<number | ''>(productVariant?.price ?? '')
-    const [ quantity, setQuantity ] = useState<number | ''>(productVariant?.quantity ?? '')
+    const [length, setLength] = useState<number | ''>(
+        productVariant?.length ?? ''
+    )
+    const [width, setWidth] = useState<number | ''>(productVariant?.width ?? '')
+    const [height, setHeight] = useState<number | ''>(
+        productVariant?.height ?? ''
+    )
+    const [box_length, setBoxLength] = useState<number | ''>(
+        productVariant?.box_length ?? ''
+    )
+    const [box_width, setBoxWidth] = useState<number | ''>(
+        productVariant?.box_width ?? ''
+    )
+    const [box_height, setBoxHeight] = useState<number | ''>(
+        productVariant?.box_height ?? ''
+    )
+    const [box_weight, setBoxWeight] = useState<number | ''>(
+        productVariant?.box_weight ?? ''
+    )
+    const [weight, setWeight] = useState<number | ''>(
+        productVariant?.weight ?? ''
+    )
+    const [price, setPrice] = useState<number | ''>(productVariant?.price ?? '')
+    const [quantity, setQuantity] = useState<number | ''>(
+        productVariant?.quantity ?? ''
+    )
 
     // Состояния для хранения списков справочников
-    const [ colors, setColors ] = useState<ColorItem[]>([])
-    const [ materials, setMaterials ] = useState<MaterialItem[]>([])
+    const [colors, setColors] = useState<ColorItem[]>([])
+    const [materials, setMaterials] = useState<MaterialItem[]>([])
 
     // Состояния для валидации
-    const [ touchedArticul, setTouchedArticul ] = useState(false)
-    const isArticulValid = () => !touchedArticul || (touchedArticul && articul.length > 0) // Простая валидация
+    const [touchedArticul, setTouchedArticul] = useState(false)
+    const isArticulValid = () =>
+        !touchedArticul || (touchedArticul && articul.length > 0) // Простая валидация
 
     // useEffect для загрузки данных при монтировании компонента
     useEffect(() => {
@@ -70,7 +97,9 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
             // Установка выбранных значений для редактирования
             if (productVariant?.colorId) {
-                if (fetchedColors.some(c => c.id === productVariant.colorId)) {
+                if (
+                    fetchedColors.some((c) => c.id === productVariant.colorId)
+                ) {
                     setColorId(productVariant.colorId)
                 } else if (fetchedColors.length > 0) {
                     setColorId(fetchedColors[0].id) // Fallback
@@ -80,7 +109,11 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
             }
             // Установка выбранных значений для МАТЕРИАЛА
             if (productVariant?.materialId) {
-                if (fetchedMaterials.some(m => m.id === productVariant.materialId)) {
+                if (
+                    fetchedMaterials.some(
+                        (m) => m.id === productVariant.materialId
+                    )
+                ) {
                     setMaterialId(productVariant.materialId)
                 } else if (fetchedMaterials.length > 0) {
                     setMaterialId(fetchedMaterials[0].id) // Fallback: если ID не найден, выбираем первый доступный
@@ -97,8 +130,13 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
     useEffect(() => {
         setIsActive(productVariant?.isActive ?? false)
         setArticul(productVariant?.articul ?? '')
-        setColorId(productVariant?.colorId ?? (colors.length > 0 ? colors[0].id : '')) // Учитываем загруженные цвета при сбросе
-        setMaterialId(productVariant?.materialId ?? (materials.length > 0 ? materials[0].id : ''))
+        setColorId(
+            productVariant?.colorId ?? (colors.length > 0 ? colors[0].id : '')
+        ) // Учитываем загруженные цвета при сбросе
+        setMaterialId(
+            productVariant?.materialId ??
+                (materials.length > 0 ? materials[0].id : '')
+        )
         setLength(productVariant?.length ?? '')
         setWidth(productVariant?.width ?? '')
         setHeight(productVariant?.height ?? '')
@@ -110,7 +148,7 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
         setPrice(productVariant?.price ?? '')
         setQuantity(productVariant?.quantity ?? '')
         setTouchedArticul(false) // Сбрасываем состояние валидации при смене варианта
-    }, [ productVariant, colors, materials ])
+    }, [productVariant, colors, materials])
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -147,7 +185,8 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
         try {
             await handleProductVariantFormAction(formData) // Вызываем Server Action
-            if (onSuccess) { // Проверка для TS опциональной функции
+            if (onSuccess) {
+                // Проверка для TS опциональной функции
                 onSuccess() // Вызываем переданный колбэк при успехе
             }
         } catch (error) {
@@ -167,13 +206,16 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
     }
 
     // Вспомогательная функция для рендеринга опций select
-    const renderOptions = (items: DictionaryItem[] | ColorItem[] | MaterialItem[]) => {
+    const renderOptions = (
+        items: DictionaryItem[] | ColorItem[] | MaterialItem[]
+    ) => {
         if (items.length === 0) {
             return <option value="">Загрузка...</option>
         }
-        return items.map(item => (
+        return items.map((item) => (
             <option key={item.id} value={item.id}>
-                {'code' in item ? `${item.name} (${item.code})` : item.name} {/* Для цвета можно отобразить код */}
+                {'code' in item ? `${item.name} (${item.code})` : item.name}{' '}
+                {/* Для цвета можно отобразить код */}
             </option>
         ))
     }
@@ -194,16 +236,19 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
     }
 
     return (
-        <form className="bg-white rounded px-8 pt-6 pb-8"
-            onSubmit={onSubmit}> {/* Используем onSubmit для client-side */}
+        <form className="bg-white rounded px-8 pt-6 pb-8" onSubmit={onSubmit}>
+            {' '}
+            {/* Используем onSubmit для client-side */}
             {/* ID варианта продукта - скрытое поле, если редактируем */}
             {/* id будет добавляться в formData вручную в onSubmit */}
             {/* productId также будет добавляться в formData вручную */}
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {/* Выбор Цвета */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="colorId">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="colorId"
+                    >
                         Цвет:
                     </label>
                     <select
@@ -220,7 +265,10 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
                 {/* Выбор Материала */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="materialId">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="materialId"
+                    >
                         Материал:
                     </label>
                     <select
@@ -235,9 +283,11 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                     </select>
                 </div>
             </div>
-
             <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="articul">
+                <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="articul"
+                >
                     Артикул варианта:
                 </label>
                 <input
@@ -247,143 +297,220 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                     onChange={(e) => setArticul(e.target.value)}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="text"
-                    name='articul'
+                    name="articul"
                     placeholder="Артикул для данного варианта"
                 />
-                {!isArticulValid() && <span style={{ color: 'red' }}>Артикул не может быть пустым.</span>}
+                {!isArticulValid() && (
+                    <span style={{ color: 'red' }}>
+                        Артикул не может быть пустым.
+                    </span>
+                )}
             </div>
-
             {/* Числовые поля */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="length">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="length"
+                    >
                         Длина (см):
                     </label>
                     <input
                         required
                         value={length}
-                        onChange={(e) => setLength(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setLength(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='length'
+                        name="length"
                         placeholder="Длина"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="width">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="width"
+                    >
                         Ширина (см):
                     </label>
                     <input
                         required
                         value={width}
-                        onChange={(e) => setWidth(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setWidth(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='width'
+                        name="width"
                         placeholder="Ширина"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="height">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="height"
+                    >
                         Высота (см):
                     </label>
                     <input
                         required
                         value={height}
-                        onChange={(e) => setHeight(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setHeight(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-shadow-outline"
                         type="number"
-                        name='height'
+                        name="height"
                         placeholder="Высота"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="weight">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="weight"
+                    >
                         Вес (кг):
                     </label>
                     <input
                         required
                         value={weight}
-                        onChange={(e) => setWeight(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setWeight(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='weight'
+                        name="weight"
                         placeholder="Вес"
                         step="0.01"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_length">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="box_length"
+                    >
                         Длина коробки (см):
                     </label>
                     <input
                         required
                         value={box_length}
-                        onChange={(e) => setBoxLength(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setBoxLength(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='box_length'
+                        name="box_length"
                         placeholder="Длина коробки"
                         min="0"
                     />
                 </div>
                 {/* НОВОЕ ПОЛЕ: box_width */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_width">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="box_width"
+                    >
                         Ширина коробки (см):
                     </label>
                     <input
                         required
                         value={box_width}
-                        onChange={(e) => setBoxWidth(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setBoxWidth(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='box_width'
+                        name="box_width"
                         placeholder="Ширина коробки"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_height">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="box_height"
+                    >
                         Высота коробки (см):
                     </label>
                     <input
                         required
                         value={box_height}
-                        onChange={(e) => setBoxHeight(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setBoxHeight(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='box_height'
+                        name="box_height"
                         placeholder="Высота коробки"
                         min="0"
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="box_weight">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="box_weight"
+                    >
                         Вес коробки (кг):
                     </label>
                     <input
                         required
                         value={box_weight}
-                        onChange={(e) => setBoxWeight(e.target.value === '' ? '' : Number(e.target.value))}
+                        onChange={(e) =>
+                            setBoxWeight(
+                                e.target.value === ''
+                                    ? ''
+                                    : Number(e.target.value)
+                            )
+                        }
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="number"
-                        name='box_weight'
+                        name="box_weight"
                         placeholder="Вес коробки"
                         step="0.01"
                         min="0"
                     />
                 </div>
             </div>
-
             {/* Отдельная строка для Цены и Количества */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="price"
+                    >
                         Цена (руб):
                     </label>
                     <input
@@ -401,7 +528,10 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
 
                 {/* НОВОЕ ПОЛЕ: quantity */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantity">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="quantity"
+                    >
                         Количество на складе:
                     </label>
                     <input
@@ -417,7 +547,6 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                     />
                 </div>
             </div>
-
             <div className="mb-4">
                 <label className="inline-flex items-center">
                     <input
@@ -427,15 +556,18 @@ const ProductVariantForm = ({ productVariant, productId, onSuccess, onCancel }: 
                         onChange={(e) => setIsActive(e.target.checked)}
                         className="form-checkbox h-5 w-5 text-gray-600"
                     />
-                    <span className="ml-2 text-gray-700 text-sm font-bold">Активен</span>
+                    <span className="ml-2 text-gray-700 text-sm font-bold">
+                        Активен
+                    </span>
                 </label>
             </div>
-
             <div className="flex items-center justify-center mt-2">
                 <button
                     disabled={!isArticulValid()}
                     className={buttonStyle()}
-                    type="submit">Записать ✅
+                    type="submit"
+                >
+                    Записать ✅
                 </button>
                 {productVariant && ( // Показываем кнопку "Отмена" только если productVariant передан (т.е. в режиме редактирования)
                     <button

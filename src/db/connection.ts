@@ -11,5 +11,5 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASSWORD,
     dialect: 'mysql',
     dialectModule: mysql2,
-    database: process.env.DB_NAME,
+    database: process.env.DB_NAME
 }) as Sequelize

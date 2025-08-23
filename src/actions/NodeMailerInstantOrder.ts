@@ -32,14 +32,16 @@ type SendMailProps = {
     phone: string
 }
 
-export const nodeMailerInstantOrder = async ({ name, phone }: SendMailProps) => {
+export const nodeMailerInstantOrder = async ({
+    name,
+    phone
+}: SendMailProps) => {
     try {
         const mailOptions = {
             from: process.env.NODEMAILER_SEND_FROM,
             to: process.env.NODEMAILER_SEND_TO,
             subject: 'Новый заказ',
-            html:
-                    `<h2>Новая заявка на заказ</h2>
+            html: `<h2>Новая заявка на заказ</h2>
                     <p><strong>Имя:</strong> ${name}</p>
                     <p><strong>Телефон:</strong> ${phone}</p>
                     <p><strong>Дата:</strong> ${new Date().toLocaleString()}</p>`

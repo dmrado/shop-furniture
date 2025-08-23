@@ -8,18 +8,30 @@ import { where } from 'sequelize'
 class ValidationError extends Error {}
 
 type AlertData = {
-    id: number | undefined,
-    title: string,
-    text: string,
-    startDate: Date,
+    id: number | undefined
+    title: string
+    text: string
+    startDate: Date
     endDate: Date
 }
 const cleanFormData = (formData: FormData): AlertData => {
     const id = formData.get('id')
     const title = formData.get('title')
     const text = formData.get('text')
-    console.log('>>>>>>> >>>>console.log handleAlert:', 'id', id, 'title', title, 'text', text)
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof text !== 'string') {
+    console.log(
+        '>>>>>>> >>>>console.log handleAlert:',
+        'id',
+        id,
+        'title',
+        title,
+        'text',
+        text
+    )
+    if (
+        typeof id !== 'string' ||
+        typeof title !== 'string' ||
+        typeof text !== 'string'
+    ) {
         throw new ValidationError('Filedata in text fields')
     }
     if (!title || !text) {
@@ -30,14 +42,14 @@ const cleanFormData = (formData: FormData): AlertData => {
     }
     const startDate = formData.get('start_date')
     const endDate = formData.get('end_date')
-    if(typeof startDate !== 'string' || typeof endDate !== 'string') {
+    if (typeof startDate !== 'string' || typeof endDate !== 'string') {
         throw new ValidationError('Filedata in date fields')
     }
     if (!startDate || !endDate) {
         throw new ValidationError('startDate or endDate is null')
     }
     // todo проверить обе даты должны быть больше сегодня, дата окончания больше или равна дате начала. Проверить что это точно даты
-    return{
+    return {
         title,
         text,
         id: id && !isNaN(Number(id)) ? Number(id) : undefined,
@@ -49,7 +61,7 @@ const cleanFormData = (formData: FormData): AlertData => {
 export const handleAlert = async (formData: FormData) => {
     try {
         const { id, title, text, startDate, endDate } = cleanFormData(formData)
-        if(id) {
+        if (id) {
             await Alert.update(
                 { title, text, startDate, endDate },
                 { where: { id } }
@@ -68,10 +80,8 @@ export const handleAlert = async (formData: FormData) => {
     redirect('/alerts')
 }
 
-export const deleteAlert = async (id: number) : Promise<void> => {
-    await Alert.destroy(
-        { where: { id } }
-    )
+export const deleteAlert = async (id: number): Promise<void> => {
+    await Alert.destroy({ where: { id } })
     revalidatePath('/alerts')
     redirect('/alerts')
 }

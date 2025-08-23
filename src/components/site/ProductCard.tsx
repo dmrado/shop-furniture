@@ -5,9 +5,15 @@ import Link from 'next/link'
 import { useCartContext } from '@/components/cart/CartContext'
 import { ProductListItem } from '@/actions/productActions'
 
-const ProductCard = ({ product, categorySlug }: { product: ProductListItem, categorySlug: string }) => {
+const ProductCard = ({
+    product,
+    categorySlug
+}: {
+    product: ProductListItem
+    categorySlug: string
+}) => {
     const { addProductToCart } = useCartContext()
-    const [ isHovered, setIsHovered ] = useState(false)
+    const [isHovered, setIsHovered] = useState(false)
     const discount = (1 - product.new_price / product.old_price) * 100
 
     return (
@@ -21,12 +27,13 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                 <div className="absolute top-3 right-3 z-10 space-y-2">
                     {discount > 0 && (
                         <span className="block px-3 py-1 text-xs font-medium text-white bg-red-500 rounded-sm">
-              -{discount.toFixed()}%</span>
+                            -{discount.toFixed()}%
+                        </span>
                     )}
                     {product.isNew && (
-                        <span
-                            className="block px-3 py-1 text-xs font-medium text-white bg-green-600 text-color-[#171613] rounded-sm">
-              Новинка </span>
+                        <span className="block px-3 py-1 text-xs font-medium text-white bg-green-600 text-color-[#171613] rounded-sm">
+                            Новинка{' '}
+                        </span>
                     )}
                 </div>
 
@@ -47,7 +54,8 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
             <div className="relative h-48 p-4 flex flex-col">
                 <div className="flex justify-between items-center space-x-2">
                     <span className="text-xs text-[#383838] bg-white/80 px-1 rounded">
-                        <span className="text-amber-500 text-xs mr-1">★</span>В наличии
+                        <span className="text-amber-500 text-xs mr-1">★</span>В
+                        наличии
                     </span>
 
                     {/* Кнопка добавления в избранное */}
@@ -73,7 +81,6 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                             />
                         </svg>
                     </button>
-
                 </div>
 
                 {/* Product */}
@@ -91,7 +98,9 @@ const ProductCard = ({ product, categorySlug }: { product: ProductListItem, cate
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex justify-between items-center">
                         <div className="space-y-1">
-                            <div className="text-md text-[#383838]">{product.new_price}₽</div>
+                            <div className="text-md text-[#383838]">
+                                {product.new_price}₽
+                            </div>
                             {/* {product.old_price > product.new_price && (
                 <div className="text-sm text-gray-500 line-through">
                   {product.old_price}₽

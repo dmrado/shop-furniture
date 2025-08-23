@@ -12,12 +12,13 @@ import Link from 'next/link'
 // }
 
 type Props = {
-  cartRow: TCartRow;
-};
+    cartRow: TCartRow
+}
 
 const CartRow = ({ cartRow }: Props) => {
-    const { updateQuantity, deleteCartRow, selectedItems, toggleSelection } = useCartContext()
-    const [ isUpdating, setIsUpdating ] = useState(false)
+    const { updateQuantity, deleteCartRow, selectedItems, toggleSelection } =
+        useCartContext()
+    const [isUpdating, setIsUpdating] = useState(false)
 
     console.log('>>>> this is one product on the Cart', cartRow)
 
@@ -60,7 +61,10 @@ const CartRow = ({ cartRow }: Props) => {
                             </div>
                             <div className="text-sm text-gray-600">
                                 {`${cartRow.productVariant.product.descriptionLong?.slice(0, 60)}${
-                                    cartRow.productVariant.product.descriptionLong?.length > 60 ? '...' : ''
+                                    cartRow.productVariant.product
+                                        .descriptionLong?.length > 60
+                                        ? '...'
+                                        : ''
                                 }`}
                             </div>
                         </Link>
@@ -69,16 +73,24 @@ const CartRow = ({ cartRow }: Props) => {
                     {/* Кнопки действий */}
                     <div className="flex flex-wrap gap-2 mt-2">
                         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500">
-                            <span role="img" aria-label="favorite" className="text-xl">
-                ❤️
+                            <span
+                                role="img"
+                                aria-label="favorite"
+                                className="text-xl"
+                            >
+                                ❤️
                             </span>
                         </button>
                         <button
                             onClick={() => deleteCartRow(cartRow.id)}
                             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-red-500"
                         >
-                            <span role="img" aria-label="delete" className="text-xl">
-                🗑
+                            <span
+                                role="img"
+                                aria-label="delete"
+                                className="text-xl"
+                            >
+                                🗑
                             </span>
                         </button>
                     </div>
@@ -90,10 +102,16 @@ const CartRow = ({ cartRow }: Props) => {
                 {/* Цена */}
                 <div className="text-right">
                     <div className="text-green-600 font-bold text-lg md:text-xl">
-                        {(cartRow.productVariant.price * cartRow.quantity).toFixed(2)} ₽
+                        {(
+                            cartRow.productVariant.price * cartRow.quantity
+                        ).toFixed(2)}{' '}
+                        ₽
                     </div>
                     <div className="text-gray-400 line-through text-sm">
-                        {(cartRow.productVariant.price * cartRow.quantity).toFixed(2)} ₽
+                        {(
+                            cartRow.productVariant.price * cartRow.quantity
+                        ).toFixed(2)}{' '}
+                        ₽
                     </div>
                 </div>
 

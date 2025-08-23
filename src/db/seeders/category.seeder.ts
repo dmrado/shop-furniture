@@ -1,5 +1,8 @@
 import { CategoryModel } from '../models/category.model'
-import { ProductCategoryDTO, ProductCategoryModel } from '@/db/models/product_category.model'
+import {
+    ProductCategoryDTO,
+    ProductCategoryModel
+} from '@/db/models/product_category.model'
 
 export async function seedCategories() {
     try {
@@ -376,15 +379,15 @@ export async function seedProductCategories() {
             // 20 (Мебель для ванной)
             {
                 productId: 15,
-                categoryId: 1,
+                categoryId: 1
             },
             {
                 productId: 15,
-                categoryId: 6,
+                categoryId: 6
             },
             {
                 productId: 15,
-                categoryId: 20,
+                categoryId: 20
             },
             // Добавим еще примеры, чтобы показать работу с "реальными" категориями
             { productId: 1, categoryId: 7 }, // Продукт 1 (диван) -> Диваны и кресла
@@ -392,16 +395,20 @@ export async function seedProductCategories() {
             { productId: 2, categoryId: 12 }, // Продукт 2 (офисный стол) -> Офисные столы
             { productId: 3, categoryId: 15 }, // Продукт 3 (лампа) -> Освещение
             { productId: 4, categoryId: 16 }, // Продукт 4 (шторы) -> Текстиль
-            { productId: 5, categoryId: 47 }, // Продукт 5 (картина) -> Картины и постеры
-
+            { productId: 5, categoryId: 47 } // Продукт 5 (картина) -> Картины и постеры
         ]
 
         // Создаем записи в базе данных
         await ProductCategoryModel.bulkCreate(productCategoryLinks)
 
-        console.log('Связи продуктов с категориями успешно добавлены в базу данных')
+        console.log(
+            'Связи продуктов с категориями успешно добавлены в базу данных'
+        )
     } catch (error) {
-        console.error('Ошибка при заполнении таблицы связей продуктов с категориями:', error)
+        console.error(
+            'Ошибка при заполнении таблицы связей продуктов с категориями:',
+            error
+        )
     }
 }
 

@@ -5,15 +5,23 @@ import { Description, Dialog } from '@headlessui/react'
 import 'react-toastify/dist/ReactToastify.css'
 import Success from '@/components/site/Success'
 import Modal from '@/components/site/Modal'
-import { deleteAddressRowAction, getAddressByIdAction, getAddressListAction } from '@/actions/addressActions'
+import {
+    deleteAddressRowAction,
+    getAddressByIdAction,
+    getAddressListAction
+} from '@/actions/addressActions'
 
 //пользователь хочет удалить адрес
 
-const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) => {
-
-    const [ status, setStatus ] = useState('idle') // 'idle', 'loading', 'success', 'error'
-    const [ errorMessage, setErrorMessage ] = useState('')
-    const [ address, setAddress ] = useState(null)
+const UserAddressDeleteModal = ({
+    id,
+    setAddressList,
+    isOpenModal,
+    onClose
+}) => {
+    const [status, setStatus] = useState('idle') // 'idle', 'loading', 'success', 'error'
+    const [errorMessage, setErrorMessage] = useState('')
+    const [address, setAddress] = useState(null)
 
     const fetchAddress = async (id: number) => {
         try {
@@ -31,17 +39,18 @@ const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) =>
         if (id) {
             fetchAddress(id)
         }
-    }, [ id ])
+    }, [id])
 
     // Функция для обработки формы удаления адреса
     const onSubmit = async (formData) => {
-
         const addressId = formData.get('id')
 
         try {
             setStatus('loading')
             await deleteAddressRowAction(addressId)
-            setAddressList(prevList => prevList.filter(address => address.id !== addressId))
+            setAddressList((prevList) =>
+                prevList.filter((address) => address.id !== addressId)
+            )
             setStatus('success')
             setTimeout(() => {
                 onClose()
@@ -50,7 +59,10 @@ const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) =>
         } catch (error) {
             console.error('Ошибка при удалении:', error)
             setStatus('error')
-            setErrorMessage(error.message || 'Не удалось удалить адрес. Пожалуйста, попробуйте позже.')
+            setErrorMessage(
+                error.message ||
+                    'Не удалось удалить адрес. Пожалуйста, попробуйте позже.'
+            )
         }
     }
 
@@ -69,7 +81,7 @@ const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) =>
 
             {status === 'success' && (
                 <div className="text-center mb-6 py-4 text-green-600">
-                    <Success props={'Адрес удален'}/>
+                    <Success props={'Адрес удален'} />
                 </div>
             )}
 
@@ -79,26 +91,32 @@ const UserAddressDeleteModal = ({ id, setAddressList, isOpenModal, onClose }) =>
                     <button
                         onClick={() => setStatus('idle')}
                         className="mt-2 px-4 py-2 bg-gray-200 rounded"
-                    >Попробовать снова
+                    >
+                        Попробовать снова
                     </button>
                 </div>
             )}
 
             {status === 'idle' && (
                 <form action={onSubmit} className="w-full">
-
                     {/* Скрытое поле для передачи id адреса */}
-                    <input type="hidden" name="id" value={id}/>
+                    <input type="hidden" name="id" value={id} />
 
                     {address && (
-                        <Description className='text-center mb-4 flex-col'>
-                            <span className="mr-2 text-5xl mb-4 inline-block">⚠️</span>
-                            <h3 className='text-red-500 font-bold mb-2'>
-
+                        <Description className="text-center mb-4 flex-col">
+                            <span className="mr-2 text-5xl mb-4 inline-block">
+                                ⚠️
+                            </span>
+                            <h3 className="text-red-500 font-bold mb-2">
                                 Вы действительно хотите удалить этот адрес?
                             </h3>
 
-                            <p> {address.city || ''} {address.street || ''} {address.home || ''} {address.corps || ''} {address.appart || ''} </p>
+                            <p>
+                                {' '}
+                                {address.city || ''} {address.street || ''}{' '}
+                                {address.home || ''} {address.corps || ''}{' '}
+                                {address.appart || ''}{' '}
+                            </p>
                             <p> {address.phone || ''}</p>
                         </Description>
                     )}

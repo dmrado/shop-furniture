@@ -4,7 +4,7 @@ type Props = {
     onTokenChange: (token: string) => void
 }
 const GoogleCaptcha = ({ onTokenChange }: Props) => {
-    const onChange = (token: string|null) => {
+    const onChange = (token: string | null) => {
         if (!token) {
             console.warn('No token provided')
             return

@@ -1,9 +1,18 @@
 import { sequelize } from '../connection'
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from 'sequelize'
 // import {AddressModel} from "@/db/models"
 // import {OuruserModel} from "@/db/models"
 
-export class OrderModel extends Model<InferAttributes<OrderModel>, InferCreationAttributes<OrderModel>> {
+export class OrderModel extends Model<
+    InferAttributes<OrderModel>,
+    InferCreationAttributes<OrderModel>
+> {
     declare id: CreationOptional<number>
     declare userId: string
     declare addressId: number
@@ -18,36 +27,36 @@ OrderModel.init(
         id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         userId: {
             type: DataTypes.UUID, // Если id в таблице users тоже UUID
-            allowNull: false,
+            allowNull: false
         },
         addressId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false
         },
         orderDate: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: false
         },
         deliveryDate: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: false
         },
         cartPrice: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false,
+            allowNull: false
         },
         comment: {
             type: DataTypes.TEXT,
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },
     {
         sequelize,
-        tableName: 'orders',
+        tableName: 'orders'
     }
 )
 //

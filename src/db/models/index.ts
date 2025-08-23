@@ -124,12 +124,12 @@ CartModel.belongsTo(AuthUserModel, {
 
 AddressModel.belongsTo(AuthUserModel, {
     // targetKey: 'id',
-    foreignKey: 'userId',
+    foreignKey: 'userId'
 })
 AuthUserModel.hasMany(AddressModel, {
     // sourceKey: 'id',
     foreignKey: 'userId',
-    as: 'addresses', // Алиас для связи
+    as: 'addresses' // Алиас для связи
 })
 
 AuthUserModel.hasOne(ProfileModel, {

@@ -46,7 +46,9 @@ const saveFile = async (file: File, productName: string): Promise<string> => {
         })
 
     if (!resizedBuffer) {
-        throw new ValidationError('Формат файла не поддерживается или обработка изображения не удалась.')
+        throw new ValidationError(
+            'Формат файла не поддерживается или обработка изображения не удалась.'
+        )
     }
 
     await fs.writeFile(outputImagePath, resizedBuffer)
@@ -58,14 +60,14 @@ const saveFile = async (file: File, productName: string): Promise<string> => {
 const cleanFormFile = (formData: FormData): File => {
     const file = formData.get('file')
     if (file == null) {
-        throw new Error('No file found in formData with key \'file\'')
+        throw new Error("No file found in formData with key 'file'")
     }
     if (!(file instanceof File)) {
         throw new ValidationError('Unexpected file type for product_picture')
     }
 
     if (file.size === 0) {
-        throw new Error('No file data found with key \'file\'')
+        throw new Error("No file data found with key 'file'")
     }
     if (file.size > FILE_LIMIT) {
         throw new ValidationError(`File is bigger than limit: "${FILE_LIMIT}"`)
@@ -73,14 +75,20 @@ const cleanFormFile = (formData: FormData): File => {
     return file
 }
 
-export const handleProductImageUpload = async (formData: FormData, productName: string): Promise<FileDTO> => {
+export const handleProductImageUpload = async (
+    formData: FormData,
+    productName: string
+): Promise<FileDTO> => {
     try {
         const formFile = cleanFormFile(formData)
         const fileName = await saveFile(formFile, productName)
-        const file = await ImageModel.create({
-            path: fileName,
-            // size: formFile.size
-        }, { returning: true })
+        const file = await ImageModel.create(
+            {
+                path: fileName
+                // size: formFile.size
+            },
+            { returning: true }
+        )
         return {
             id: file.id,
             path: file.path,
@@ -88,7 +96,6 @@ export const handleProductImageUpload = async (formData: FormData, productName: 
             productVariantId: null
             // size: file.size
         } satisfies ImageDTO
-
     } catch (err: any) {
         console.error('Error on handleForm:  ', err)
         // Если это ошибка валидации, выбрасываем ее как ValidationError

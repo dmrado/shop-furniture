@@ -25,17 +25,17 @@ type ProductFilterAndListProps = {
 }
 
 const ProductFilterListForm = ({
-                                   products,
-                                   initialBrands = [], //дефолтное значение пустой массив
-                                   initialCollections = [],
-                                   initialCountries = [],
-                                   initialStyles = [],
-                                   initialCategories = [],
-                                   removeProduct,
-                                   itemsPerPage,
-                                   totalProductsCount,
-                                   currentPage
-                               }: ProductFilterAndListProps) => {
+    products,
+    initialBrands = [], //дефолтное значение пустой массив
+    initialCollections = [],
+    initialCountries = [],
+    initialStyles = [],
+    initialCategories = [],
+    removeProduct,
+    itemsPerPage,
+    totalProductsCount,
+    currentPage
+}: ProductFilterAndListProps) => {
     console.log('initialCategories array', initialCategories)
     const router = useRouter()
     const path = usePathname()
@@ -43,10 +43,14 @@ const ProductFilterListForm = ({
 
     //URL для кнопки "Поделиться"
     const currentQueryString = searchParams.toString()
-    const urlForShare = currentQueryString ? `${path}?${currentQueryString}` : path
+    const urlForShare = currentQueryString
+        ? `${path}?${currentQueryString}`
+        : path
 
     // Состояние для редактируемого продукта (null для создания нового)
-    const [editingProduct, setEditingProduct] = useState<ProductDTO | null>(null)
+    const [editingProduct, setEditingProduct] = useState<ProductDTO | null>(
+        null
+    )
 
     // для пагинации
     const pageCount = Math.ceil(totalProductsCount / itemsPerPage)
@@ -161,7 +165,10 @@ const ProductFilterListForm = ({
                 </div>
 
                 <div className="flex justify-end mt-4">
-                    <button onClick={resetFilters} className="button_blue px-4 py-2 text-sm">
+                    <button
+                        onClick={resetFilters}
+                        className="button_blue px-4 py-2 text-sm"
+                    >
                         Сбросить фильтры
                     </button>
                     <button
@@ -191,7 +198,9 @@ const ProductFilterListForm = ({
                 )}
 
                 {products.length === 0 ? (
-                    <p className="text-gray-600">Нет продуктов, соответствующих фильтрам.</p>
+                    <p className="text-gray-600">
+                        Нет продуктов, соответствующих фильтрам.
+                    </p>
                 ) : (
                     <ul className="divide-y divide-gray-200">
                         {products.map((product) => (
@@ -211,13 +220,14 @@ const ProductFilterListForm = ({
                                         {' '}
                                         {/* flex-grow позволит ему занять доступное пространство */}
                                         {/* Миниатюра */}
-                                        <div
-                                            className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
+                                        <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border border-gray-200">
                                             <Image
                                                 width={64} // 16 * 4 = 64px
                                                 height={64} // 16 * 4 = 64px
                                                 src={
-                                                    product.path ? product.path : '/spalni.png'
+                                                    product.path
+                                                        ? product.path
+                                                        : '/spalni.png'
                                                 }
                                                 alt={`Картинка продукта ${product.name}`}
                                                 className="object-cover w-full h-full"
@@ -235,10 +245,11 @@ const ProductFilterListForm = ({
                                     </div>
                                 </Link>
                                 {/* Контейнер для кнопок */}
-                                <div
-                                    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-y-1 sm:gap-x-2 flex-shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
                                     <button
-                                        onClick={() => handleEditProduct(product)}
+                                        onClick={() =>
+                                            handleEditProduct(product)
+                                        }
                                         className="button_blue text-sm px-3 py-1.5 w-full justify-center"
                                     >
                                         Редактировать

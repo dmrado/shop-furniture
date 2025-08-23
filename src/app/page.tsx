@@ -7,7 +7,7 @@ export default async function Home() {
     console.log('session MainPage', session)
     return (
         <div className="">
-            <MainPage/>
+            <MainPage />
         </div>
     )
 }

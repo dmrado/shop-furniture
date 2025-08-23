@@ -6,7 +6,10 @@ import { isSessionExpired } from '@/actions/isSessionExpired.ts'
 import { previousOrders } from '@/components/mockData'
 import React from 'react'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { createUserProfileAction, updateUserAgreementAction } from '@/actions/userActions'
+import {
+    createUserProfileAction,
+    updateUserAgreementAction
+} from '@/actions/userActions'
 // import { revalidatePath } from 'next/cache'
 
 //todo хистори - это отфильтровано за период в Orders
@@ -48,9 +51,9 @@ const ProfilePage = async () => {
         where: {
             userId: session.user.id
         }
-    }).then(adList => adList.map(ad => ad.toJSON()))
+    }).then((adList) => adList.map((ad) => ad.toJSON()))
 
-    const addresses = result.map(item => {
+    const addresses = result.map((item) => {
         return {
             _id: item.id,
             city: item.city,
@@ -61,7 +64,8 @@ const ProfilePage = async () => {
             appart: item.appart,
             userId: item.userId,
             isMain: item.isMain
-        }})
+        }
+    })
 
     // console.log('addresses from profile page', addresses)
 
@@ -77,9 +81,15 @@ const ProfilePage = async () => {
 
     //todo какого юзера использовать из сессии или из Profile. Если первого то могут быть ошибки дальше, если второго -он может не прийти. я бы второго, ног тогда как изменить Розового зайку на нормалоьное имя для счет-фактуры
 
-    return <>
-        <UserProfile user={user} ad={[ ...result ]} previousOrders={previousOrders}/>
-    </>
+    return (
+        <>
+            <UserProfile
+                user={user}
+                ad={[...result]}
+                previousOrders={previousOrders}
+            />
+        </>
+    )
 }
 
 export default ProfilePage

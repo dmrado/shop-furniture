@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react'
 import {
     Disclosure,
     DisclosureButton,
-    DisclosurePanel,
+    DisclosurePanel
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
@@ -14,7 +14,7 @@ const SideBar = ({ tags }) => {
     const disclosureButtonRef = useRef<HTMLButtonElement | null>(null)
 
     const tagsArray =
-    tags && tags.tags && Array.isArray(tags.tags) ? tags.tags : []
+        tags && tags.tags && Array.isArray(tags.tags) ? tags.tags : []
 
     // Находим родительские теги (parentId === null)
     const parentTags = tagsArray.filter((tag) => tag.parentId === null)
@@ -44,7 +44,10 @@ const SideBar = ({ tags }) => {
                                                         {parentTag.name}
                                                     </h3>
                                                     <ChevronDownIcon
-                                                        className={clsx('w-5', open && 'rotate-180')}
+                                                        className={clsx(
+                                                            'w-5',
+                                                            open && 'rotate-180'
+                                                        )}
                                                     />
                                                 </DisclosureButton>
                                             </div>
@@ -54,8 +57,13 @@ const SideBar = ({ tags }) => {
                                                     className="origin-top transition duration-300 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 px-4 pt-4 pb-2 text-sm text-gray-500"
                                                 >
                                                     {/* Отображаем дочерние теги для текущего родительского тега */}
-                                                    {getChildTags(parentTag.id).map((childTag) => (
-                                                        <div key={childTag.id} className="pl-2">
+                                                    {getChildTags(
+                                                        parentTag.id
+                                                    ).map((childTag) => (
+                                                        <div
+                                                            key={childTag.id}
+                                                            className="pl-2"
+                                                        >
                                                             <button
                                                                 className="w-full text-left py-1 text-[#383838] hover:text-[#E99C28]"
                                                                 // todo server action в БД через TagModel за products со slug или id
@@ -129,8 +137,11 @@ const SideBar = ({ tags }) => {
                                 className="form-checkbox h-4 w-4 text-amber-500"
                                 // onChange={e => applyFilter('inStock', e.target.checked)}
                             />
-                            <label htmlFor="inStock" className="ml-2 text-sm text-[#383838]">
-                В наличии
+                            <label
+                                htmlFor="inStock"
+                                className="ml-2 text-sm text-[#383838]"
+                            >
+                                В наличии
                             </label>
                         </div>
                         <div className="flex items-center">
@@ -140,8 +151,11 @@ const SideBar = ({ tags }) => {
                                 className="form-checkbox h-4 w-4 text-amber-500"
                                 // onChange={e => applyFilter('new2024', e.target.checked)}
                             />
-                            <label htmlFor="new2024" className="ml-2 text-sm text-[#383838]">
-                Новинки 2024
+                            <label
+                                htmlFor="new2024"
+                                className="ml-2 text-sm text-[#383838]"
+                            >
+                                Новинки 2024
                             </label>
                         </div>
                         <div className="flex items-center">
@@ -151,8 +165,11 @@ const SideBar = ({ tags }) => {
                                 className="form-checkbox h-4 w-4 text-amber-500"
                                 // onChange={e => applyFilter('discounted', e.target.checked)}
                             />
-                            <label htmlFor="discounted" className="ml-2 text-sm text-[#383838]">
-                Со скидками
+                            <label
+                                htmlFor="discounted"
+                                className="ml-2 text-sm text-[#383838]"
+                            >
+                                Со скидками
                             </label>
                         </div>
                     </div>
@@ -162,7 +179,7 @@ const SideBar = ({ tags }) => {
                         className="flex items-center text-sm text-[#383838] hover:text-black"
                         // onClick={() => clearAllFilters}
                     >
-            Очистить все
+                        Очистить все
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-4 w-4 ml-1"

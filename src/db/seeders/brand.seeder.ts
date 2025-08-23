@@ -35,7 +35,7 @@ const brandSeedData = [
         description: 'Датский розничный торговец товарами для дома',
         isActive: true,
         isDeleted: false
-    },
+    }
     // Добавьте другие бренды по мере необходимости
 ]
 

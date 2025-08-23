@@ -123,7 +123,9 @@ export default function Breadcrumbs({ items }: { items: Breadcrumb[] }) {
             <ol className="flex flex-wrap items-center space-x-2">
                 {items.map((item, idx) => (
                     <li key={idx} className="flex items-center">
-                        {idx > 0 && <span className="mx-2 text-gray-400">›</span>}
+                        {idx > 0 && (
+                            <span className="mx-2 text-gray-400">›</span>
+                        )}
                         {item.href ? (
                             <a
                                 href={item.href}
@@ -132,7 +134,9 @@ export default function Breadcrumbs({ items }: { items: Breadcrumb[] }) {
                                 {item.label}
                             </a>
                         ) : (
-                            <span className="text-gray-700 font-medium">{item.label}</span>
+                            <span className="text-gray-700 font-medium">
+                                {item.label}
+                            </span>
                         )}
                     </li>
                 ))}

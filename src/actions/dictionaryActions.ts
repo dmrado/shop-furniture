@@ -166,13 +166,16 @@ export async function searchBrandByName(name: string) {
                 },
                 isDeleted: false
             },
-            attributes: [ 'id', 'name', 'isActive' ],
+            attributes: ['id', 'name', 'isActive'],
             limit: 10,
-            order: [ [ 'name', 'ASC' ] ]
+            order: [['name', 'ASC']]
         })
-        console.log('Результаты поиска стран:', brands.map(c => c.toJSON()))
+        console.log(
+            'Результаты поиска стран:',
+            brands.map((c) => c.toJSON())
+        )
 
-        return brands.map(brand => brand.toJSON()) as DictionaryItem[]
+        return brands.map((brand) => brand.toJSON()) as DictionaryItem[]
     } catch (error) {
         console.error('Ошибка при поиске брендов по названию:', error)
         return []
@@ -184,17 +187,19 @@ export async function searchBrandByName(name: string) {
 export async function getActiveCollections(): Promise<DictionaryItem[]> {
     const collections = await CollectionModel.findAll({
         where: { isActive: true },
-        attributes: [ 'id', 'name' ],
-        order: [ [ 'name', 'ASC' ] ]
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']]
     })
-    return collections.map((collection) => collection.toJSON()) as DictionaryItem[]
+    return collections.map((collection) =>
+        collection.toJSON()
+    ) as DictionaryItem[]
 }
 
 export async function getAllCollections(): Promise<DictionaryItem[]> {
     try {
         const collections = await CollectionModel.findAll({
-            attributes: [ 'id', 'name', 'description', 'isActive' ],
-            order: [ [ 'name', 'ASC' ] ]
+            attributes: ['id', 'name', 'description', 'isActive'],
+            order: [['name', 'ASC']]
         })
         return collections.map((collection) => collection.toJSON())
     } catch (error) {
@@ -203,7 +208,9 @@ export async function getAllCollections(): Promise<DictionaryItem[]> {
     }
 }
 
-export async function getCollectionById(id: number): Promise<DictionaryItem | null> {
+export async function getCollectionById(
+    id: number
+): Promise<DictionaryItem | null> {
     const collection = await CollectionModel.findByPk(id)
     if (!collection) {
         return null
@@ -281,17 +288,22 @@ export async function searchCollectionsByName(name: string) {
             where: {
                 name: {
                     [Op.like]: `%${name.toLowerCase()}%`
-                },
+                }
                 //todo раскомментировать после добавлления функционала как для collections
                 // isDeleted: false // Исключаем "мягко" удаленные записи
             },
-            attributes: [ 'id', 'name', 'isActive' ],
+            attributes: ['id', 'name', 'isActive'],
             limit: 10,
-            order: [ [ 'name', 'ASC' ] ]
+            order: [['name', 'ASC']]
         })
-        console.log('Результаты поиска коллекций:', collections.map(c => c.toJSON()))
+        console.log(
+            'Результаты поиска коллекций:',
+            collections.map((c) => c.toJSON())
+        )
 
-        return collections.map((collection) => collection.toJSON()) as DictionaryItem[]
+        return collections.map((collection) =>
+            collection.toJSON()
+        ) as DictionaryItem[]
     } catch (error) {
         console.error('Ошибка при поиске коллекций по названию:', error)
         return []
@@ -322,7 +334,9 @@ export async function getAllCountries(): Promise<DictionaryItem[]> {
     }
 }
 
-export async function getCountryById(id: number): Promise<DictionaryItem | null> {
+export async function getCountryById(
+    id: number
+): Promise<DictionaryItem | null> {
     const country = await CountryModel.findByPk(id)
     if (!country) {
         return null
@@ -415,16 +429,19 @@ export async function searchCountriesByName(name: string) {
             where: {
                 name: {
                     [Op.like]: `%${name.toLowerCase()}%`
-                },
+                }
                 //todo раскомментировать после добавлления функционала как для брендов
                 // isDeleted: false // Исключаем "мягко" удаленные записи
             },
-            attributes: [ 'id', 'name', 'isActive' ],
+            attributes: ['id', 'name', 'isActive'],
             limit: 10,
-            order: [ [ 'name', 'ASC' ] ]
+            order: [['name', 'ASC']]
         })
 
-        console.log('Результаты поиска стран:', countries.map(c => c.toJSON()))
+        console.log(
+            'Результаты поиска стран:',
+            countries.map((c) => c.toJSON())
+        )
 
         return countries.map((country) => country.toJSON()) as DictionaryItem[]
     } catch (error) {
@@ -534,15 +551,18 @@ export async function searchStylesByName(name: string) {
             where: {
                 name: {
                     [Op.like]: `%${name.toLowerCase()}%`
-                },
+                }
                 //todo раскомментировать после добавлления функционала как для collections
                 // isDeleted: false // Исключаем "мягко" удаленные записи
             },
-            attributes: [ 'id', 'name', 'isActive' ],
+            attributes: ['id', 'name', 'isActive'],
             limit: 10,
-            order: [ [ 'name', 'ASC' ] ]
+            order: [['name', 'ASC']]
         })
-        console.log('Результаты поиска стилей:', styles.map(c => c.toJSON()))
+        console.log(
+            'Результаты поиска стилей:',
+            styles.map((c) => c.toJSON())
+        )
 
         return styles.map((style) => style.toJSON()) as DictionaryItem[]
     } catch (error) {
@@ -560,14 +580,18 @@ export async function getAllCategories(): Promise<DictionaryItem[]> {
             order: [['name', 'ASC']]
         })
         // findAll без raw:true возвращает экземпляры моделей, у которых есть метод toJSON(), а при использовании raw:true - простые объекты у которых нет метода toJSON()
-        return categories.map((category) => category.toJSON()) as DictionaryItem[]
+        return categories.map((category) =>
+            category.toJSON()
+        ) as DictionaryItem[]
     } catch (error) {
         console.error('Ошибка при получении списка активных категорий:', error)
         throw new Error('Не удалось получить список активных категорий.')
     }
 }
 
-export async function getCategoryByProductid(id): Promise<DictionaryItem | null> {
+export async function getCategoryByProductid(
+    id
+): Promise<DictionaryItem | null> {
     try {
         const category = await CategoryModel.findOne({
             where: {
@@ -577,7 +601,10 @@ export async function getCategoryByProductid(id): Promise<DictionaryItem | null>
         if (!category) {
             throw new Error('Категория для данного продукта не определена')
         }
-        console.log('++++++++++++++++++++++++ category from :', category.toJSON())
+        console.log(
+            '++++++++++++++++++++++++ category from :',
+            category.toJSON()
+        )
         return category.toJSON()
     } catch (error) {
         console.error('Не удалось получить категорию для данного продукта.')
