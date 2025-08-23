@@ -167,6 +167,7 @@ const CountryFormModalContent = ({
                         searchResults={searchResults}
                         onSelectExisting={handleSelectExisting}
                         label="страны"
+                        href={'countries'}
                     />
                 )}
 
@@ -220,21 +221,21 @@ const CountryFormModalContent = ({
                         type="button"
                         onClick={() => {
                             onClose()
-                            setDescriptionCharCount(0)
+                            setDescriptionCharCount(0) // Сброс при закрытии
                         }}
-                        className="button_red px-4 py-2"
+                        className={`px-4 py-2 ${isDuplicate ? 'button_blue' : 'button_red'}`}
                         disabled={isLoading}
                     >
-                        Отмена 🚫
+                        {isDuplicate ? 'Назад' : 'Отмена'}
                     </button>
                     <button
                         type="submit"
-                        className="button_green px-4 py-2"
+                        className={`px-4 py-2 ${isDuplicate ? 'button_red' : 'button_green'}`}
                         disabled={isLoading || isDuplicate}
                     >
                         {isDuplicate
-                            ? '🐛'
-                            : `${initialData ? 'Сохранить изменения' : 'Создать'} ✅`}
+                            ? 'Ошибка'
+                            : `${initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅`}
                     </button>
                 </div>
             </form>

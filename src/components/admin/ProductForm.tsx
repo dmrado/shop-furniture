@@ -227,7 +227,7 @@ const ProductForm = ({
             id: 'brandId',
             value: brandId,
             options: brands,
-            onChange: (e) => setBrandId(Number(e.target.value)),
+            onChange: e => setBrandId(Number(e.target.value)),
             onAddClick: () => addHandler('brand', setModalState),
             onEditClick: () =>
                 editHandler(brandId, 'brand', setModalState, getBrandById),
@@ -240,7 +240,7 @@ const ProductForm = ({
             id: 'collectionId',
             value: collectionId,
             options: collections,
-            onChange: (e) => setCollectionId(Number(e.target.value)),
+            onChange: e => setCollectionId(Number(e.target.value)),
             onAddClick: () => addHandler('collection', setModalState),
             onEditClick: () =>
                 editHandler(
@@ -258,7 +258,7 @@ const ProductForm = ({
             id: 'countryId',
             value: countryId,
             options: countries,
-            onChange: (e) => setCountryId(Number(e.target.value)),
+            onChange: e => setCountryId(Number(e.target.value)),
             onAddClick: () => addHandler('country', setModalState),
             onEditClick: () =>
                 editHandler(
@@ -276,7 +276,7 @@ const ProductForm = ({
             id: 'styleId',
             value: styleId,
             options: styles,
-            onChange: (e) => setStyleId(Number(e.target.value)),
+            onChange: e => setStyleId(Number(e.target.value)),
             onAddClick: () => addHandler('style', setModalState),
             onEditClick: () =>
                 editHandler(styleId, 'style', setModalState, getStyleById),
@@ -323,7 +323,7 @@ const ProductForm = ({
                             required
                             value={name}
                             onBlur={() => setTouchedName(true)}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setName(e.target.value)
                             }}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -359,29 +359,15 @@ const ProductForm = ({
                             />
                             {/*кастомный React-компонент, я сам определяю, какие пропсы он принимает и что он с ними делает, я решил абстрагироваться от деталей HTML и передавать в пропс onChange сразу готовое значение value, а не объект события event.*/}
                             <SelectWithOptions
-                                options={initialCategories.map((cat) => ({
+                                options={initialCategories.map(cat => ({
                                     label: cat.name,
                                     value: String(cat.id)
                                 }))}
                                 placeholder={'Выбрать категорию'}
                                 value={categoryId}
-                                onChange={(value) => setCategoryId(value)}
+                                onChange={value => setCategoryId(value)}
                             />
                         </div>
-
-                        {/*    <input*/}
-                        {/*        required*/}
-                        {/*        value={name}*/}
-                        {/*        onBlur={() => setTouchedName(true)}*/}
-                        {/*        onChange={(e) => {*/}
-                        {/*            setCategory(e.target.value)*/}
-                        {/*        }}*/}
-                        {/*        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"*/}
-                        {/*        type="text"*/}
-                        {/*        name="category"*/}
-                        {/*        placeholder="Категория товарной позиции (мин. 3, макс. 180 символов)"*/}
-                        {/*        maxLength={180}*/}
-                        {/*    />*/}
                     </div>
                 </div>
 
@@ -405,7 +391,7 @@ const ProductForm = ({
                         <input
                             required
                             value={articul}
-                            onChange={(e) => setArticul(e.target.value)}
+                            onChange={e => setArticul(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="articul"
@@ -424,7 +410,7 @@ const ProductForm = ({
                         <input
                             required
                             value={sku}
-                            onChange={(e) => setSku(e.target.value)}
+                            onChange={e => setSku(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="sku"
@@ -443,7 +429,7 @@ const ProductForm = ({
                     </label>
                     <textarea
                         value={descriptionShort}
-                        onChange={(e) => setDescriptionShort(e.target.value)}
+                        onChange={e => setDescriptionShort(e.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="descriptionShort"
                         placeholder="Краткое описание товара"
@@ -472,7 +458,7 @@ const ProductForm = ({
                         type="checkbox"
                         name="isNew"
                         checked={isNew}
-                        onChange={(e) => setIsNew(e.target.checked)}
+                        onChange={e => setIsNew(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
                     <label
@@ -488,7 +474,7 @@ const ProductForm = ({
                         type="checkbox"
                         name="isActive"
                         checked={isActive}
-                        onChange={(e) => setIsActive(e.target.checked)}
+                        onChange={e => setIsActive(e.target.checked)}
                         className="mr-2 leading-tight"
                     />
                     <label
@@ -536,7 +522,7 @@ const ProductForm = ({
                                 productName={
                                     product?.name ?? 'Неизвестный товар'
                                 }
-                                onFilesReady={(fileDto) => {
+                                onFilesReady={fileDto => {
                                     // alert(`Uploaded ${fileDto.length} files`)
                                     setProductImages(fileDto)
                                 }}

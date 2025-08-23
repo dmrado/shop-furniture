@@ -1,10 +1,10 @@
 import React from 'react'
 import HeaderButtons from '@/components/admin/HeaderButtons'
-import { ProductModel } from '@/db/models/product.model'
+import {ProductModel} from '@/db/models/product.model'
 import ProductFilterListForm from '@/components/admin/ProductFilterListForm'
-import { NUMBER_OF_PRODUCTS_TO_FETCH } from '@/app/constants'
-import { revalidatePath } from 'next/cache'
-import { getProductList } from '@/actions/searchProducts'
+import {NUMBER_OF_PRODUCTS_TO_FETCH} from '@/app/constants'
+import {revalidatePath} from 'next/cache'
+import {getProductList} from '@/actions/searchProducts'
 import {
     getActiveBrands,
     getActiveCollections,
@@ -67,7 +67,7 @@ const ProductsManagementPage = async ({
     const nameQuery = searchParams.name || undefined // Получаем запрос по названию
     const articulQuery = searchParams.articul || undefined // Получаем запрос по артикулу
 
-    const { products, totalCount: totalProductsCount } = await getProductList(
+    const {products, totalCount: totalProductsCount} = await getProductList(
         currentPage,
         itemsPerPage,
         {
@@ -86,11 +86,12 @@ const ProductsManagementPage = async ({
     const countries = await getActiveCountries()
     const styles = await getActiveStyles()
     const categories = await getAllCategories()
+
     // console.log('Categories array', categories)
 
     async function removeProduct(id: number) {
         'use server'
-        await ProductModel.destroy({ where: { id } })
+        await ProductModel.destroy({where: {id}})
         revalidatePath('/admin/products')
     }
 

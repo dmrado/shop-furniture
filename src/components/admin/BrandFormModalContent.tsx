@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react'
 import {
     createBrand,
-    searchBrandByName,
+    searchBrandsByName,
     updateBrand
 } from '@/actions/dictionaryActions'
 import { DictionaryItem } from '@/db/types/common-types' // Ваши серверные экшены
@@ -33,7 +33,7 @@ const BrandFormModalContent = ({
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    //-----блок для поиска похожих значений по name для избегания дубликатов start---------------
+    //----блок для поиска похожих значений по name для избегания дубликатов start----------
     //массив значений брендов из БД
     const [searchResults, setSearchResults] = useState<DictionaryItem[]>([])
     // для отслеживания дубликатов
@@ -44,9 +44,9 @@ const BrandFormModalContent = ({
         // Дебаунсер  300 мс
         const handler = setTimeout(async () => {
             if (name.length >= 2) {
-                const results = await searchBrandByName(name)
+                const results = await searchBrandsByName(name)
                 setSearchResults(results)
-                //Проверяем, есть ли точное совпадение
+                //Проверяем, есть ли точное совпадение с текущим брендом
                 const exactMatch = results.find(
                     (c) => c.name.toLowerCase() === name.toLowerCase()
                 )
@@ -79,6 +79,8 @@ const BrandFormModalContent = ({
         }
     }
 
+    // для блокирования кнопки и показа, что есть такой бренд и дальнейшей инструкции юзеру
+    //fixme этот аргумент brand просто нужен олдин аргумент для функции
     const handleSelectExisting = (brand: DictionaryItem) => {
         setError(
             '❌ Такой бренд уже существует. Пожалуйста, выберите его из списка.'
@@ -86,7 +88,7 @@ const BrandFormModalContent = ({
         setIsDuplicate(true) // Убираем дубликат
         setSearchResults([]) // Скрываем результаты поиска после выбора
     }
-    // -----блок для поиска похожих значений по name для избегания дубликатов end---------------
+    // ----блок для поиска похожих значений по name для избегания дубликатов end----------
 
     useEffect(() => {
         if (initialData) {
@@ -145,7 +147,6 @@ const BrandFormModalContent = ({
 
     return (
         <>
-            {' '}
             {/* Заменил div на React.Fragment, так как это только содержимое для Modal */}
             <h3 className="text-xl font-bold mb-4">
                 {initialData ? 'Редактировать бренд' : 'Добавить новый бренд'}
@@ -177,11 +178,12 @@ const BrandFormModalContent = ({
                 </div>
 
                 {/* Компонент для дедупликации */}
-                {name.length >= 3 && (
+                {name.length >= 2 && (
                     <DictionarySearchDeduplicator
                         searchResults={searchResults}
                         onSelectExisting={handleSelectExisting}
                         label="бренды"
+                        href={'brands'}
                     />
                 )}
 
@@ -237,18 +239,18 @@ const BrandFormModalContent = ({
                             onClose()
                             setDescriptionCharCount(0) // Сброс при закрытии
                         }}
-                        className="button_red px-4 py-2"
+                        className={`px-4 py-2 ${isDuplicate ? 'button_blue' : 'button_red'}`}
                         disabled={isLoading}
                     >
-                        Отмена 🚫
+                        {isDuplicate ? 'Назад' : 'Отмена'}
                     </button>
                     <button
                         type="submit"
-                        className="button_green px-4 py-2"
+                        className={`px-4 py-2 ${isDuplicate ? 'button_red' : 'button_green'}`}
                         disabled={isLoading || isDuplicate}
                     >
                         {isDuplicate
-                            ? '🐛'
+                            ? '🐛 Ошибка'
                             : `${initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅`}
                     </button>
                 </div>

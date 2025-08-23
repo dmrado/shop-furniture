@@ -5,7 +5,7 @@ import { DictionaryItem } from '@/db/types/common-types'
 import {
     createCollection,
     getAllCollections,
-    removeCollection,
+    softDeleteCollections,
     updateCollection
 } from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
@@ -36,6 +36,9 @@ const CollectionManager = ({
     const [showModal, setShowModal] = useState(false)
     const [currentCollection, setCurrentCollection] =
         useState<DictionaryItem | null>(null)
+
+    const [isActive, setIsActive] = useState(true)
+
     const [descriptionCharCount, setDescriptionCharCount] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
@@ -58,12 +61,14 @@ const CollectionManager = ({
             description: desc,
             isActive: collection.isActive ?? true
         })
+        setIsActive(collection.isActive ?? true)
         setDescriptionCharCount(desc.length)
         setShowModal(true)
     }
 
     const handleAddClick = () => {
         setCurrentCollection(null)
+        setIsActive(true)
         setDescriptionCharCount(0)
         setShowModal(true)
     }
@@ -91,16 +96,21 @@ const CollectionManager = ({
     }
 
     const handleConfirmDelete = async () => {
-        if (collectionToDelete?.id) {
-            try {
-                await removeCollection(collectionToDelete.id)
-                setShowConfirmDeleteModal(false)
-                setCollectionToDelete(null)
-                router.refresh()
-            } catch (error: any) {
-                console.error('Ошибка при удалении коллекции:', error)
-                alert(`Ошибка при удалении: ${error.message}`)
-            }
+        if (!collectionToDelete || !collectionToDelete.id) {
+            alert('Коллекция для удаления не выбрана.')
+            return
+        }
+        try {
+            await softDeleteCollections(collectionToDelete.id)
+            setShowConfirmDeleteModal(false)
+            setCollectionToDelete(null)
+            const updatedCollections = await getAllCollections()
+            setCollections(updatedCollections)
+        } catch (error: any) {
+            console.error('Ошибка при удалении коллекции:', error)
+            alert(
+                `Не удалось выполнить операцию удаления: ${error.message || 'Попробуйте снова позже'}`
+            )
         }
     }
 
@@ -137,6 +147,8 @@ const CollectionManager = ({
                 </button>
                 <Link href={'/admin/products'}>Вернуться</Link>
             </div>
+
+            {/*{pageCount > 1 && (*/}
             <div className="my-6">
                 <ReactPaginateWrapper
                     pages={pageCount}
@@ -144,6 +156,8 @@ const CollectionManager = ({
                     onPageChange={handlePageChange}
                 />
             </div>
+            {/*)}*/}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 {collections.length === 0 ? (
                     <p className="col-span-full text-gray-600">
@@ -266,9 +280,8 @@ const CollectionManager = ({
                                 id="isActive"
                                 type="checkbox"
                                 name="isActive"
-                                defaultChecked={
-                                    currentCollection?.isActive ?? true
-                                }
+                                checked={isActive}
+                                onChange={(e) => setIsActive(e.target.checked)}
                                 className="mr-2 leading-tight"
                             />
                             <label
@@ -302,6 +315,8 @@ const CollectionManager = ({
                     </form>
                 </Modal>
             )}
+
+            {/* Модальное окно подтверждения удаления */}
             {showConfirmDeleteModal && collectionToDelete && (
                 <Modal
                     onClose={() => {

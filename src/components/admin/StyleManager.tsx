@@ -6,6 +6,7 @@ import {
     createStyle,
     getAllStyles,
     removeStyle,
+    softDeleteStyles,
     updateStyle
 } from '@/actions/dictionaryActions'
 import Modal from '@/components/ui/Modal'
@@ -36,6 +37,7 @@ const StyleManager = ({
     const [currentStyle, setCurrentStyle] = useState<DictionaryItem | null>(
         null
     )
+    const [isActive, setIsActive] = useState(true)
     const [descriptionCharCount, setDescriptionCharCount] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
@@ -59,12 +61,14 @@ const StyleManager = ({
             description: desc,
             isActive: style.isActive ?? true
         })
+        setIsActive(style.isActive ?? true)
         setDescriptionCharCount(desc.length)
         setShowModal(true)
     }
 
     const handleAddClick = () => {
         setCurrentStyle(null)
+        setIsActive(true) // Для нового бренда по умолчанию активен
         setDescriptionCharCount(0)
         setShowModal(true)
     }
@@ -94,10 +98,11 @@ const StyleManager = ({
     const handleConfirmDelete = async () => {
         if (styleToDelete?.id) {
             try {
-                await removeStyle(styleToDelete.id)
+                await softDeleteStyles(styleToDelete.id)
                 setShowConfirmDeleteModal(false)
                 setStyleToDelete(null)
-                router.refresh()
+                const updatedStyles = await getAllStyles()
+                setStyles(updatedStyles)
             } catch (error: any) {
                 console.error('Ошибка при удалении стиля:', error)
                 alert(`Ошибка при удалении: ${error.message}`)
@@ -258,7 +263,8 @@ const StyleManager = ({
                                 id="isActive"
                                 type="checkbox"
                                 name="isActive"
-                                defaultChecked={currentStyle?.isActive ?? true}
+                                checked={isActive}
+                                onChange={(e) => setIsActive(e.target.checked)}
                                 className="mr-2 leading-tight"
                             />
                             <label
@@ -292,6 +298,8 @@ const StyleManager = ({
                     </form>
                 </Modal>
             )}
+
+            {/* Модальное окно подтверждения удаления */}
             {showConfirmDeleteModal && styleToDelete && (
                 <Modal
                     onClose={() => {

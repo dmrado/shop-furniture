@@ -136,18 +136,11 @@ export async function softDeleteBrand(id: number) {
         }
         // Обновляем поле isDeleted на true вместо удаления
         await brand.update({ isDeleted: true })
-        // revalidatePath('/admin/brands')
         return { success: true }
     } catch (error) {
         console.error('Ошибка при мягком удалении бренда:', error)
         throw new Error('Не удалось удалить бренд.')
     }
-}
-
-export async function removeBrand(id: number) {
-    'use server'
-    await BrandModel.destroy({ where: { id } })
-    revalidatePath('/admin/brands')
 }
 
 /**
@@ -156,7 +149,7 @@ export async function removeBrand(id: number) {
  * @returns {Promise<DictionaryItem[]>} - Найденные бренды.
  */
 // для модальных окон в форме доавления продукта
-export async function searchBrandByName(name: string) {
+export async function searchBrandsByName(name: string) {
     try {
         console.log('Поиск брендов по названию:', name)
         const brands = await BrandModel.findAll({
@@ -273,12 +266,22 @@ export async function updateCollection(formData: FormData) {
         throw new Error('Не удалось обновить коллекцию.')
     }
 }
-
-export async function removeCollection(id: number) {
-    //fixme удалить   'use server'
-    'use server'
-    await CollectionModel.destroy({ where: { id } })
-    revalidatePath('/admin/collections')
+export async function softDeleteCollections(id: number) {
+    if (!id) {
+        throw new Error('ID коллекции отсутствует для удаления.')
+    }
+    try {
+        const collection = await CollectionModel.findByPk(id)
+        if (!collection) {
+            throw new Error(`Коллекция с ID ${id} не найден.`)
+        }
+        // Обновляем поле isDeleted на true вместо удаления
+        await collection.update({ isDeleted: true })
+        return { success: true }
+    } catch (error: Error) {
+        console.error('Ошибка при мягком удалении коллекции:', error)
+        throw new Error('Не удалось удалить коллекцию.')
+    }
 }
 
 //для модального окна для исключения дубликатов
@@ -538,10 +541,22 @@ export async function updateStyle(formData: FormData) {
     }
 }
 
-export async function removeStyle(id: number) {
-    'use server'
-    await StyleModel.destroy({ where: { id } })
-    revalidatePath('/admin/styles')
+export async function softDeleteStyles(id: number) {
+    if (!id) {
+        throw new Error('ID стиля отсутствует для удаления.')
+    }
+    try {
+        const style = await StyleModel.findByPk(id)
+        if (!style) {
+            throw new Error(`Стиль с ID ${id} не найден.`)
+        }
+        // Обновляем поле isDeleted на true вместо удаления
+        await style.update({ isDeleted: true })
+        return { success: true }
+    } catch (error) {
+        console.error('Ошибка при мягком удалении стиля:', error)
+        throw new Error('Не удалось удалить стиль.')
+    }
 }
 
 //для модального окна для исключения дубликатов

@@ -1,8 +1,13 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createCollection, updateCollection } from '@/actions/dictionaryActions'
-import { DictionaryItem } from '@/db/types/common-types' // Используем ваш тип DictionaryItem
+import {
+    createCollection,
+    updateCollection,
+    searchCollectionsByName
+} from '@/actions/dictionaryActions'
+import { DictionaryItem } from '@/db/types/common-types'
+import DictionarySearchDeduplicator from '@/components/admin/DictionarySearchDeduplicator' // Используем ваш тип DictionaryItem
 
 type CollectionFormModalContentProps = {
     onClose: () => void
@@ -26,6 +31,61 @@ const CollectionFormModalContent = ({
 
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
+
+    //-----блок для поиска похожих значений по name для избегания дубликатов start---------------
+    //массив значений коллекций из БД
+    const [searchResults, setSearchResults] = useState<DictionaryItem[]>([])
+    // для отслеживания дубликатов
+    const [isDuplicate, setIsDuplicate] = useState(false)
+    const debounceTime = 300
+
+    useEffect(() => {
+        // Дебаунсер  300 мс
+        const handler = setTimeout(async () => {
+            if (name.length >= 3) {
+                const results = await searchCollectionsByName(name)
+                setSearchResults(results)
+                //Проверяем, есть ли точное совпадение
+                const exactMatch = results.find(
+                    (c) => c.name.toLowerCase() === name.toLowerCase()
+                )
+                // Проверяем дубликат только в режиме создания
+                if (!initialData && exactMatch) {
+                    setIsDuplicate(true)
+                    setError(
+                        '❌ Такая коллекция уже существует. Пожалуйста, выберите её из списка.'
+                    )
+                } else {
+                    // если дубликата нет
+                    setIsDuplicate(false)
+                    setError(null)
+                }
+            } else {
+                setSearchResults([])
+                setIsDuplicate(false)
+                setError(null) // Сбрасываем ошибку
+            }
+        }, debounceTime)
+        // Очистка таймера при каждом новом вводе
+        return () => clearTimeout(handler)
+    }, [name, initialData])
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = e.target.value
+        setName(newName)
+        if (newName === '') {
+            setIsActive(true)
+        }
+    }
+
+    const handleSelectExisting = (collection: DictionaryItem) => {
+        setError(
+            '❌ Такая коллекция уже существует. Пожалуйста, выберите его из списка.'
+        )
+        setIsDuplicate(true) // Убираем дубликат
+        setSearchResults([]) // Скрываем результаты поиска после выбора
+    }
+    // -----блок для поиска похожих значений по name для избегания дубликатов end---------------
 
     useEffect(() => {
         if (initialData) {
@@ -91,17 +151,30 @@ const CollectionFormModalContent = ({
                         Название коллекции
                     </label>
                     <input
+                        onChange={handleNameChange}
                         type="text"
-                        placeholder={'введите от 2-х символов'}
+                        placeholder={'введите от 3-х символов'}
                         id="collectionName"
                         name="name"
-                        defaultValue={initialData?.name || ''}
+                        value={name}
+                        // defaultValue={initialData?.name || ''}
                         required
                         minLength={2}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                         disabled={isLoading}
                     />
                 </div>
+
+                {/* Компонент для дедупликации */}
+                {name.length >= 3 && (
+                    <DictionarySearchDeduplicator
+                        searchResults={searchResults}
+                        onSelectExisting={handleSelectExisting}
+                        label="коллекции"
+                        href={'collections'}
+                    />
+                )}
+
                 <div>
                     <label
                         htmlFor="collectionDescription"
@@ -117,7 +190,8 @@ const CollectionFormModalContent = ({
                         placeholder={'введите от 2-х до 255 символов'}
                         id="collectionDescription"
                         name="description"
-                        defaultValue={initialData?.description || ''}
+                        value={description}
+                        // defaultValue={initialData?.description || ''}
                         required
                         minLength={2}
                         maxLength={255}
@@ -151,22 +225,21 @@ const CollectionFormModalContent = ({
                         type="button"
                         onClick={() => {
                             onClose()
-                            setDescriptionCharCount(0)
+                            setDescriptionCharCount(0) // Сброс при закрытии
                         }}
-                        className="button_red px-4 py-2"
+                        className={`px-4 py-2 ${isDuplicate ? 'button_blue' : 'button_red'}`}
                         disabled={isLoading}
                     >
-                        Отмена 🚫
+                        {isDuplicate ? 'Назад' : 'Отмена'}
                     </button>
                     <button
                         type="submit"
-                        className="button_green px-4 py-2"
-                        disabled={isLoading}
+                        className={`px-4 py-2 ${isDuplicate ? 'button_red' : 'button_green'}`}
+                        disabled={isLoading || isDuplicate}
                     >
-                        {initialData
-                            ? 'Сохранить изменения'
-                            : 'Создать коллекцию'}{' '}
-                        ✅
+                        {isDuplicate
+                            ? 'Ошибка'
+                            : `${initialData ? 'Сохранить изменения' : 'Создать бренд'} ✅`}
                     </button>
                 </div>
             </form>

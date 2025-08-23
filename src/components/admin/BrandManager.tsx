@@ -96,7 +96,7 @@ const BrandManager = ({
             }
             setShowModal(false) // Закрываем модальное окно
             setDescriptionCharCount(0)
-            const updatedBrands = await getAllBrands() // Получаем полный список брендов ща исключением мягко-удаленных
+            const updatedBrands = await getAllBrands() // Получаем полный список брендов за исключением мягко-удаленных
             setBrands(updatedBrands) // Обновляем стейт
             router.refresh() // Перезагружаем данные на странице через Server Component
             // В реальном приложении можно было бы обновить только стейт brands, но refresh проще
@@ -113,18 +113,20 @@ const BrandManager = ({
 
     // Выполнить удаление после подтверждения
     const handleConfirmDelete = async () => {
-        if (brandToDelete?.id) {
-            try {
-                // Вызываем Server Action напрямую
-                await softDeleteBrand(brandToDelete.id)
-                setShowConfirmDeleteModal(false) // Закрываем модалку подтверждения
-                setBrandToDelete(null) // Очищаем выбранный бренд
-                const updatedBrands = await getAllBrands() // Получаем актуальный список брендов
-                setBrands(updatedBrands) // Обновляем стейт
-            } catch (error: any) {
-                console.error('Ошибка при удалении бренда:', error)
-                alert(`Ошибка при удалении: ${error.message}`)
-            }
+        if (!brandToDelete || !brandToDelete.id) {
+            alert('Бренд для удаления не выбран.')
+            return
+        }
+        try {
+            // Вызываем Server Action напрямую
+            await softDeleteBrand(brandToDelete.id)
+            setShowConfirmDeleteModal(false) // Закрываем модалку подтверждения
+            setBrandToDelete(null) // Очищаем выбранный бренд
+            const updatedBrands = await getAllBrands() // Получаем актуальный список брендов
+            setBrands(updatedBrands) // Обновляем стейт
+        } catch (error: any) {
+            console.error('Ошибка при удалении бренда:', error)
+            alert(`Ошибка при удалении: ${error.message}`)
         }
     }
 
@@ -136,24 +138,24 @@ const BrandManager = ({
     }
 
     // Базовый стиль карточки
-    const brandCardStyle =
+    const cardStyle =
         'relative flex flex-col justify-between p-3 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group w-full h-44'
     // Стили для имени бренда
-    const brandNameStyle =
+    const nameStyle =
         'text-lg font-semibold text-gray-800 group-hover:text-[#E99C28] mb-1 text-center truncate break-words'
     // Стили для описания бренда
-    const brandDescriptionStyle =
+    const descriptionStyle =
         'text-sm text-gray-600 overflow-hidden text-center flex-grow line-clamp-3 break-words'
     // Стили для ID при ховере - НЕТ, ЭТОТ БУДЕТ ПРИМЕНЕН К ОВЕРЛЕЮ ВНУТРИ!
-    const brandIdStyle =
+    const idStyle =
         'absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-75 text-white text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg'
     // Стили для контейнера кнопок действий
-    const brandActionsContainerStyle =
+    const actionsContainerStyle =
         'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
     // Стили для кнопок внутри карточки
-    const brandActionButtonStyle =
+    const actionButtonStyle =
         'w-full button_blue text-xs px-2 py-1.5 justify-center'
-    const brandDeleteButtonStyle =
+    const deleteButtonStyle =
         'w-full button_red text-xs px-2 py-1.5 justify-center'
 
     return (
@@ -167,6 +169,7 @@ const BrandManager = ({
                 </button>
                 <Link href={'/admin/products'}>Вернуться</Link>
             </div>
+
             {/*fixme не работает*/}
             {/*{pageCount > 1 && (*/}
             <div className="my-6">
@@ -186,11 +189,11 @@ const BrandManager = ({
                     </p>
                 ) : (
                     brands.map((brand) => (
-                        <div key={brand.id} className={brandCardStyle}>
+                        <div key={brand.id} className={cardStyle}>
                             <div className="relative flex flex-col items-center flex-grow">
                                 <div
                                     className={
-                                        brandIdStyle.replace('rounded-lg', '') +
+                                        idStyle.replace('rounded-lg', '') +
                                         ' rounded-t-lg'
                                     }
                                 >
@@ -198,14 +201,11 @@ const BrandManager = ({
                                 </div>
 
                                 {/* Название и описание */}
-                                <span
-                                    className={brandNameStyle}
-                                    title={brand.name}
-                                >
+                                <span className={nameStyle} title={brand.name}>
                                     {brand.name}
                                 </span>
                                 <span
-                                    className={brandDescriptionStyle}
+                                    className={descriptionStyle}
                                     title={brand.description || ''}
                                 >
                                     {brand.description}
@@ -213,17 +213,17 @@ const BrandManager = ({
                             </div>
 
                             {/* Кнопки действий */}
-                            <div className={brandActionsContainerStyle}>
+                            <div className={actionsContainerStyle}>
                                 <button
                                     onClick={() => handleEditClick(brand)}
-                                    className={brandActionButtonStyle}
+                                    className={actionButtonStyle}
                                 >
                                     <PencilIcon className="h-4 w-4 mr-1" />
                                     Редактировать
                                 </button>
                                 <button
                                     onClick={() => handleDeleteClick(brand)}
-                                    className={brandDeleteButtonStyle}
+                                    className={deleteButtonStyle}
                                 >
                                     <TrashIcon className="h-4 w-4 mr-1" />
                                     Удалить
@@ -340,7 +340,7 @@ const BrandManager = ({
                 </Modal>
             )}
 
-            {/* НОВОЕ: Модальное окно подтверждения удаления */}
+            {/* Модальное окно подтверждения удаления */}
             {showConfirmDeleteModal && brandToDelete && (
                 <Modal
                     onClose={() => {

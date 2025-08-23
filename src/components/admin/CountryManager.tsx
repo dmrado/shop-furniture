@@ -37,6 +37,8 @@ const CountryManager = ({
     const [currentCountry, setCurrentCountry] = useState<DictionaryItem | null>(
         null
     )
+
+    const [isActive, setIsActive] = useState(true)
     const [descriptionCharCount, setDescriptionCharCount] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
@@ -92,16 +94,21 @@ const CountryManager = ({
     }
 
     const handleConfirmDelete = async () => {
-        if (countryToDelete?.id) {
-            try {
-                await softDeleteCountry(countryToDelete.id)
-                setShowConfirmDeleteModal(false)
-                setCountryToDelete(null)
-                router.refresh()
-            } catch (error: any) {
-                console.error('Ошибка при удалении страны:', error)
-                alert(`Ошибка при удалении: ${error.message}`)
-            }
+        if (!countryToDelete || !countryToDelete.id) {
+            alert('Коллекция для удаления не выбрана.')
+            return
+        }
+        try {
+            await softDeleteCountry(countryToDelete.id)
+            setShowConfirmDeleteModal(false)
+            setCountryToDelete(null)
+            const updatedCountries = await getAllCountries()
+            setCountries(updatedCountries)
+        } catch (error: any) {
+            console.error('Ошибка при удалении страны:', error)
+            alert(
+                `Ошибка при удалении: ${error.message || 'Попробуйте снова позже'}`
+            )
         }
     }
 
@@ -263,9 +270,8 @@ const CountryManager = ({
                                 id="isActive"
                                 type="checkbox"
                                 name="isActive"
-                                defaultChecked={
-                                    currentCountry?.isActive ?? true
-                                }
+                                checked={isActive}
+                                onChange={(e) => setIsActive(e.target.checked)}
                                 className="mr-2 leading-tight"
                             />
                             <label
@@ -299,6 +305,8 @@ const CountryManager = ({
                     </form>
                 </Modal>
             )}
+
+            {/* Модальное окно подтверждения удаления */}
             {showConfirmDeleteModal && countryToDelete && (
                 <Modal
                     onClose={() => {
