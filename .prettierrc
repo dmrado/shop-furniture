@@ -4,5 +4,6 @@
   "tabWidth": 4,
   "trailingComma": "none",
   "bracketSpacing": true,
-  "printWidth": 96
+  "useTabs": false,
+  "proseWrap": "never"
 }

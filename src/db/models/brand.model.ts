@@ -16,15 +16,15 @@ BrandModel.init(
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey: true,
+            primaryKey: true
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false,
+            allowNull: false
         },
         description: {
             type: DataTypes.STRING(255),
-            allowNull: false,
+            allowNull: false
         },
         isActive: {
             type: DataTypes.BOOLEAN,
@@ -39,6 +39,6 @@ BrandModel.init(
     },
     {
         sequelize,
-        tableName: 'brands',
+        tableName: 'brands'
     }
 )

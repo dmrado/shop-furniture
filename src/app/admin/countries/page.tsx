@@ -10,16 +10,18 @@ const CountriesManagementPage = async ({ searchParams }) => {
     // TODO: Добавить пагинацию в getCountries
     const countries = await getAllCountries()
 
-    return <>
-        <Title title="Управление странами" />
-        <CountryManager
-            initialCountries={countries}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            // TODO: Передать totalCount для пагинации
-            totalCount={countries.length}
-        />
-    </>
+    return (
+        <>
+            <Title title="Управление странами" />
+            <CountryManager
+                initialCountries={countries}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                // TODO: Передать totalCount для пагинации
+                totalCount={countries.length}
+            />
+        </>
+    )
 }
 
 export default CountriesManagementPage

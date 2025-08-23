@@ -31,17 +31,23 @@ const CountryManager = ({
     const path = usePathname()
     const searchParams = useSearchParams()
 
-    const [countries, setCountries] = useState<DictionaryItem[]>(initialCountries)
+    const [countries, setCountries] =
+        useState<DictionaryItem[]>(initialCountries)
     const [showModal, setShowModal] = useState(false)
-    const [currentCountry, setCurrentCountry] = useState<DictionaryItem | null>(null)
+    const [currentCountry, setCurrentCountry] = useState<DictionaryItem | null>(
+        null
+    )
     const [descriptionCharCount, setDescriptionCharCount] = useState(0)
 
     const pageCount = Math.ceil(totalCount / itemsPerPage)
 
     const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false)
-    const [countryToDelete, setCountryToDelete] = useState<DictionaryItem | null>(null)
+    const [countryToDelete, setCountryToDelete] =
+        useState<DictionaryItem | null>(null)
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         setDescriptionCharCount(e.target.value.length)
     }
 
@@ -116,13 +122,18 @@ const CountryManager = ({
         'absolute inset-0 flex items-center justify-center bg-gray-400 bg-opacity-75 text-white text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg'
     const actionsContainerStyle =
         'flex flex-col sm:flex-row gap-1 mt-auto w-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pt-2'
-    const actionButtonStyle = 'w-full button_blue text-xs px-2 py-1.5 justify-center'
-    const deleteButtonStyle = 'w-full button_red text-xs px-2 py-1.5 justify-center'
+    const actionButtonStyle =
+        'w-full button_blue text-xs px-2 py-1.5 justify-center'
+    const deleteButtonStyle =
+        'w-full button_red text-xs px-2 py-1.5 justify-center'
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
             <div className="flex flex-col sm:flex-row w-full justify-between align-center px-12 gap-2">
-                <button onClick={handleAddClick} className="button_green mb-6 px-5 py-2">
+                <button
+                    onClick={handleAddClick}
+                    className="button_green mb-6 px-5 py-2"
+                >
                     Добавить новую страну 🛠️
                 </button>
                 <Link href={'/admin/products'}>Вернуться</Link>
@@ -136,19 +147,27 @@ const CountryManager = ({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 {countries.length === 0 ? (
-                    <p className="col-span-full text-gray-600">Страны не найдены.</p>
+                    <p className="col-span-full text-gray-600">
+                        Страны не найдены.
+                    </p>
                 ) : (
                     countries.map((country) => (
                         <div key={country.id} className={cardStyle}>
                             <div className="relative flex flex-col items-center flex-grow">
                                 <div
                                     className={
-                                        idStyle.replace('rounded-lg', '') + ' rounded-t-lg'
+                                        idStyle.replace('rounded-lg', '') +
+                                        ' rounded-t-lg'
                                     }
                                 >
-                                    <span className="p-2">ID: {country.id}</span>
+                                    <span className="p-2">
+                                        ID: {country.id}
+                                    </span>
                                 </div>
-                                <span className={nameStyle} title={country.name}>
+                                <span
+                                    className={nameStyle}
+                                    title={country.name}
+                                >
                                     {country.name}
                                 </span>
                                 <span
@@ -163,13 +182,15 @@ const CountryManager = ({
                                     onClick={() => handleEditClick(country)}
                                     className={actionButtonStyle}
                                 >
-                                    <PencilIcon className="h-4 w-4 mr-1" /> Редактировать
+                                    <PencilIcon className="h-4 w-4 mr-1" />{' '}
+                                    Редактировать
                                 </button>
                                 <button
                                     onClick={() => handleDeleteClick(country)}
                                     className={deleteButtonStyle}
                                 >
-                                    <TrashIcon className="h-4 w-4 mr-1" /> Удалить
+                                    <TrashIcon className="h-4 w-4 mr-1" />{' '}
+                                    Удалить
                                 </button>
                             </div>
                         </div>
@@ -184,11 +205,17 @@ const CountryManager = ({
                     }}
                 >
                     <h3 className="text-xl font-bold mb-4">
-                        {currentCountry ? 'Редактировать страну' : 'Добавить новую страну'}
+                        {currentCountry
+                            ? 'Редактировать страну'
+                            : 'Добавить новую страну'}
                     </h3>
                     <form action={handleSubmit} className="space-y-4">
                         {currentCountry?.id && (
-                            <input type="hidden" name="id" value={currentCountry.id} />
+                            <input
+                                type="hidden"
+                                name="id"
+                                value={currentCountry.id}
+                            />
                         )}
                         <div>
                             <label
@@ -236,7 +263,9 @@ const CountryManager = ({
                                 id="isActive"
                                 type="checkbox"
                                 name="isActive"
-                                defaultChecked={currentCountry?.isActive ?? true}
+                                defaultChecked={
+                                    currentCountry?.isActive ?? true
+                                }
                                 className="mr-2 leading-tight"
                             />
                             <label
@@ -257,8 +286,14 @@ const CountryManager = ({
                             >
                                 Отмена 🚫
                             </button>
-                            <button type="submit" className="button_green px-4 py-2">
-                                {currentCountry ? 'Сохранить изменения' : 'Создать страну'} ✅
+                            <button
+                                type="submit"
+                                className="button_green px-4 py-2"
+                            >
+                                {currentCountry
+                                    ? 'Сохранить изменения'
+                                    : 'Создать страну'}{' '}
+                                ✅
                             </button>
                         </div>
                     </form>
@@ -276,8 +311,10 @@ const CountryManager = ({
                     </h3>
                     <p className="mb-6 text-gray-700">
                         Вы уверены, что хотите удалить страну "
-                        <span className="font-semibold">{countryToDelete.name}</span>"? Это
-                        действие нельзя отменить. 💡
+                        <span className="font-semibold">
+                            {countryToDelete.name}
+                        </span>
+                        "? Это действие нельзя отменить. 💡
                     </p>
                     <div className="flex justify-end gap-3">
                         <button
