@@ -119,9 +119,9 @@ const ProductPage = async ({ params }: ProductPageParams) => {
                 {/*Блок вариантов продукта*/}
                 {/* клиентский компонент для управления вариантами */}
                 <ProductVariantManager
-                    initialVariants={variants.map((v) => v.toJSON())}
+                    initialVariants={variants.map(v => v.toJSON())}
                     productId={product.id}
-                    allColors={colors.map((v) => v.toJSON())}
+                    allColors={colors.map(v => v.toJSON())}
                     itemsPerPage={NUMBER_OF_PRODUCTS_TO_FETCH}
                 />
             </div>

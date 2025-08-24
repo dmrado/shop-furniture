@@ -25,15 +25,15 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     // Отфильтрованные варианты на основе свойств выше
     const filteredVariants: ProductVariantDTO[] = product.variants
         .filter(
-            (variant) =>
+            variant =>
                 selectedColorId === null || variant.colorId === selectedColorId
         )
         .filter(
-            (variant) =>
+            variant =>
                 selectedLength === null || variant.length === selectedLength
         )
 
-    const allColors = filteredVariants.map((variant) => ({
+    const allColors = filteredVariants.map(variant => ({
         id: variant.color.id,
         label: variant.color.code
     }))
@@ -46,8 +46,8 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
     )
 
     const allLength = Array.from(
-        new Set(filteredVariants.map((variant) => variant.length))
-    ).map((length) => ({ id: length, label: length }))
+        new Set(filteredVariants.map(variant => variant.length))
+    ).map(length => ({ id: length, label: length }))
 
     // хранит финально выбранный пользователем вариант продукта по умолчанию первый
     const [selectedVariant, setSelectedVariant] =
@@ -86,7 +86,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
         // что ранее выбранный вариант больше не подходит).
         if (
             selectedVariant === null ||
-            !filteredVariants.some((v) => v.id === selectedVariant.id)
+            !filteredVariants.some(v => v.id === selectedVariant.id)
         ) {
             // Устанавливаем первый вариант из отфильтрованного списка как новый selectedVariant.
             setSelectedVariant(filteredVariants[0])
@@ -103,7 +103,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
 
     // todo: temp option
     const minPrice = product.variants
-        ? Math.min(...product.variants.map((variant) => variant.price))
+        ? Math.min(...product.variants.map(variant => variant.price))
         : 999
 
     return (
@@ -115,11 +115,16 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                         <div className="space-y-4">
                             <div className="aspect-w-1 aspect-h-1 rounded-xl overflow-hidden">
                                 <Image
-                                    src="/modulnyj-divan.jpg"
+                                    src="https://d46140d3-6c850d2f-c0cc-4077-86c6-d5d4d7bdfa74.s3.twcstorage.ru/images/Prob.png"
+                                    alt="Product Image"
+                                    width={500} // желаемая ширина, на которую изображение будет изменено.
+                                    height={500} // желаемая высота (если не хочешь, чтобы было деформировано)
+                                    quality={1}
+                                    // src="/modulnyj-divan.jpg"
                                     // src={product.image}
-                                    alt={product.name}
-                                    width={500}
-                                    height={300}
+                                    // alt={product.name}
+                                    // width={500}
+                                    // height={300}
                                     priority={false}
                                     className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                                 />
@@ -162,7 +167,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                 <select
                                     className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
                                     value={selectedLength ?? ''}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         console.log(
                                             ' setSelectedLength ',
                                             e.target.value
@@ -180,7 +185,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                         <p className="mt-2 text-sm text-[#383838]"></p>
                                     </option>
 
-                                    {allLength.map((length) => (
+                                    {allLength.map(length => (
                                         <option
                                             key={length.id}
                                             value={length.id}
@@ -198,7 +203,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                 <select
                                     className="px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm hover:border-[#383838] focus:border-[#383838]"
                                     value={selectedColorId ?? ''}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         console.log(
                                             ' setSelectedColorId ',
                                             e.target.value
@@ -216,7 +221,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                         <p className="mt-2 text-sm text-[#383838]"></p>
                                     </option>
 
-                                    {uniqueColors.map((color) => (
+                                    {uniqueColors.map(color => (
                                         <option key={color.id} value={color.id}>
                                             <p>Цвет: {color.label}</p>
                                         </option>
@@ -232,7 +237,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                 <select
                                     className="min-w-64 px-2 py-1 bg-gray-50 border border-gray-200 rounded-sm  hover:border-[#383838] focus:border-[#383838]"
                                     value={selectedVariant?.id}
-                                    onChange={(e) => {
+                                    onChange={e => {
                                         console.log(
                                             'selectedVariant?.id variant.id',
                                             e.target.value,
@@ -240,7 +245,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                         )
                                         const finalVariant =
                                             product.variants.find(
-                                                (variant) =>
+                                                variant =>
                                                     variant.id ===
                                                     Number(e.target.value)
                                             ) ?? null
@@ -251,7 +256,7 @@ const ProductFullDescription = ({ product }: { product: Product }) => {
                                         setSelectedVariant(finalVariant)
                                     }}
                                 >
-                                    {filteredVariants.map((variant) => (
+                                    {filteredVariants.map(variant => (
                                         <option
                                             key={variant.id}
                                             value={variant.id}
