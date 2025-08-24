@@ -87,7 +87,7 @@ const ProductImagePicker = (props: Props) => {
     }
 
     const handleClearClick = async (fileId: number) => {
-        const files = value?.filter((file) => file.id !== fileId)
+        const files = value?.filter(file => file.id !== fileId)
         if (!files) {
             return
         }
@@ -103,7 +103,7 @@ const ProductImagePicker = (props: Props) => {
             <div>
                 <label htmlFor="component-simple">{label}</label>
                 <div id="component-simple">
-                    {value.map((fileDto) => (
+                    {value.map(fileDto => (
                         <div key={fileDto.id}>
                             <a href={`/img/${fileDto.path}`} />
                             {fileDto.path} :{' '}
@@ -118,8 +118,9 @@ const ProductImagePicker = (props: Props) => {
                     ))}
                 </div>
                 <input
+                    readOnly
                     name="file_ids"
-                    value={value.map((fileDto) => fileDto.id).join(',')}
+                    value={value.map(fileDto => fileDto.id).join(',')}
                     hidden
                 />
                 <input
